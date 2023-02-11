@@ -14,12 +14,12 @@ class AppColors {
   static Color whiteColor = const Color(0xFFFFFFFF);
   static Color greyColor = const Color(0xFF9E9E9E);
   static Color blueLightColor = const Color(0xFFc797f7);
-  static Color blackColor =  Color(0xFF393939);
+  static Color blackColor =  const Color(0xFF393939);
   static Color redColor =  Colors.red;
   static Color purpleColor = const Color(0xFF6A56EA);
-  static Color purpleColorLight = Color(0xFF9796FF);
-  static Color greenColorLight = Color(0xFFEEFFE5);
-  static Color greenColor = Color(0xFF28933A);
-  static Color pinkColorLight = Color(0xFFFEDEFB);
-  static Color blueColorLight = Color(0xFFF3F2FD);
+  static Color purpleColorLight = const Color(0xFF9796FF);
+  static Color greenColorLight = const Color(0xFFEEFFE5);
+  static Color greenColor = const Color(0xFF28933A);
+  static Color pinkColorLight = const Color(0xFFFEDEFB);
+  static Color blueColorLight = const Color(0xFFF3F2FD);
 }
