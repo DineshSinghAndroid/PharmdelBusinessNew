@@ -58,12 +58,13 @@ class CustomTextField extends StatelessWidget{
         height: isError == true ? 60:54,
         width: Get.width,
         decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(0),
+          color: Colors.black.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
           margin: const EdgeInsets.only(bottom: 5),
           child: TextFormField(
+
             focusNode: focus,
             autofillHints: autofillHints,
             validator: validator,
@@ -79,6 +80,7 @@ class CustomTextField extends StatelessWidget{
             style: TextStyle(fontFamily: FontFamily.josefinRegular,fontSize: 16),
             controller: controller,
             decoration: InputDecoration(
+               
                 prefixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 50),
                 contentPadding: const EdgeInsets.only(top: 6.0,left: 15),
                 counter: const Offstage(),

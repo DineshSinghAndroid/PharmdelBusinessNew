@@ -1,11 +1,10 @@
 
 
-import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:toast/toast.dart';
 class ToastCustom{
 
   static showToast({required String msg}){
-    Fluttertoast.showToast(msg: msg);
+    Toast.show( msg);
   }
 
 }

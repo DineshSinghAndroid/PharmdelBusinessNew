@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Controller/Firebase/FirebaseMessaging/FirebaseMessaging.dart';
+import 'Controller/Helper/Dimensions/Dimensions.dart';
 import 'Controller/Helper/PrintLog/PrintLog.dart';
 import 'Controller/Helper/Shared Preferences/SharedPreferences.dart';
 import 'Controller/ProjectController/MainController/main_controller.dart';
@@ -10,7 +11,8 @@ import 'Controller/ProjectController/MainController/main_controller.dart';
 
 String authToken = "";
 StreamController<int> msgController = StreamController<int>.broadcast();
-
+double addHeight = Dimensions.screenHeight;
+double addWidth = Dimensions.screenWidth;
 
 Future<void> main() async {
   await runZonedGuarded(() async {

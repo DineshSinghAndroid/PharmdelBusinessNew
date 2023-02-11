@@ -13,12 +13,20 @@ class BuildText{
           fontSize: 16.0),
     );
   }
-  static Widget buildText({required String text,TextDecoration? decoration,String? fontFamily,double? size,Color? color}){
+  static Widget buildText({required
+  String text,
+    TextStyle? style,
+    TextDecoration?decoration,
+    String?fontFamily,
+    double? size,
+    FontWeight? weight,
+    Color? color}){
     return Text(
         text,
-        style: TextStyle(
+        style: style ?? TextStyle(
           fontFamily: fontFamily ?? FontFamily.josefinRegular,
           fontSize: size ?? 14,
+          fontWeight: weight,
           color: color ?? CustomColors.blackColor,
           decoration: decoration ?? TextDecoration.none,
         )

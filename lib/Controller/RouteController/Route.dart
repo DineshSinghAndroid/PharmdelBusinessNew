@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pharmdel/View/Login/login_screen.dart';
 import '../../View/Splash/splash_screen.dart';
 import 'RouteNames.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
 
-    case splashScreenRoute:
-      return MaterialPageRoute(builder: (context) => SplashScreen());
+    case splashScreenRoute: return MaterialPageRoute(builder: (context) => const SplashScreen());
+    case loginScreenRoute: return MaterialPageRoute(builder: (context) => const LoginScreen());
 
     // case introScreenRoute:
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
@@ -19,6 +20,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
     default:
-      return MaterialPageRoute(builder: (context) => SplashScreen());
+      return MaterialPageRoute(builder: (context) => const SplashScreen());
   }
 }

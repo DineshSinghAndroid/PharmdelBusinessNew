@@ -15,6 +15,7 @@ class AppSharedPreferences {
 
   static String authToken = "token";
   static String fcmToken = "fcm_token";
+  static String userId = "user_id";
 
 
 
