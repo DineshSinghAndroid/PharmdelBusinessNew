@@ -11,6 +11,7 @@ class AppColors {
   static Color transparentColor   = const Color(0x0);
   static Color darkblueprofile = const Color(0xFF00008B);
   static Color bluearrowcolor = const Color(0xFF011C50);
+  static Color colorAccent = Color(0xffff8600);
   static Color whiteColor = const Color(0xFFFFFFFF);
   static Color greyColor = const Color(0xFF9E9E9E);
   static Color blueLightColor = const Color(0xFFc797f7);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import '../../Helper/TextController/FontFamily/FontFamily.dart';
 
 class CustomTextField extends StatelessWidget{
@@ -53,57 +54,46 @@ class CustomTextField extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      // margin: EdgeInsets.all(5),
-        height: isError == true ? 60:54,
-        width: Get.width,
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 5),
-          child: TextFormField(
-
-            focusNode: focus,
-            autofillHints: autofillHints,
-            validator: validator,
-            textInputAction: inputAction,
-            keyboardType: inputType,
-            autofocus: false,
-            enabled: enable,
-            readOnly: readOnly,
-            maxLength: maxLength,
-            maxLines: maxLines,
-            inputFormatters: inputFormatters,
-            obscureText: obscureText != null ? obscureText! : false,
-            style: TextStyle(fontFamily: FontFamily.josefinRegular,fontSize: 16),
-            controller: controller,
-            decoration: InputDecoration(
-               
-                prefixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 50),
-                contentPadding: const EdgeInsets.only(top: 6.0,left: 15),
-                counter: const Offstage(),
-                hintText: hintText,
-                errorText: errorText,
-                suffixIcon: suffixIcon,
-                suffix: suffixWidget,
-                labelText:labelText,
-                border: InputBorder.none,
-                prefixIcon: prefixIcon,
-                suffixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 55),
-                hintStyle: TextStyle(fontFamily: FontFamily.josefinRegular,color: Colors.grey)
-            ),
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focus);
-            },
-            onChanged: (value){
-              if(onChanged != null) {
-                onChanged!(value);
-              }
-            },
-          ),
-        )
+    return TextFormField(
+      focusNode: focus,
+      autofillHints: autofillHints,
+      validator: validator,
+      textInputAction: inputAction,
+      keyboardType: inputType,
+      autofocus: false,
+      enabled: enable,
+      readOnly: readOnly,
+      maxLength: maxLength,
+      maxLines: maxLines,
+      inputFormatters: inputFormatters,
+      obscureText: obscureText != null ? obscureText! : false,
+      style: TextStyle(fontFamily: FontFamily.josefinRegular,fontSize: 14),
+      controller: controller,
+      decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30),borderSide: BorderSide(color: AppColors.greyColor)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30),borderSide: BorderSide(color: AppColors.greyColor)),
+          prefixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 50),
+          contentPadding: const EdgeInsets.only(top: 6.0,left: 15),
+          hintText: hintText,
+          errorText: errorText,
+          suffixIcon: suffixIcon,
+          suffix: suffixWidget,
+          labelText:labelText,
+          border: InputBorder.none,
+          prefixIcon: prefixIcon,
+          filled: true,
+          fillColor: AppColors.greyColor.withOpacity(0.1),
+          suffixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 55),
+          hintStyle: TextStyle(fontFamily: FontFamily.josefinRegular,color: Colors.grey)
+      ),
+      onFieldSubmitted: (v) {
+        FocusScope.of(context).requestFocus(focus);
+      },
+      onChanged: (value){
+        if(onChanged != null) {
+          onChanged!(value);
+        }
+      },
     );
   }
 

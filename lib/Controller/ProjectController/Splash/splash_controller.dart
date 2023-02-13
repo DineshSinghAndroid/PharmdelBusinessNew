@@ -34,7 +34,7 @@ class SplashController extends GetxController {
         print("Going to Home Screen");
 
       } else {
-        Get.toNamed(loginScreenRoute);
+        Get.toNamed(setupPinScreenRoute);
         print("Going to Login Screen");
 
       }
