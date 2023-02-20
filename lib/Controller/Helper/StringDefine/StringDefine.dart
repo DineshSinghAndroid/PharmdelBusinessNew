@@ -1,16 +1,13 @@
 
-
-
-
 const String kSplashTitle = "Pharmdel";
 const String kLogin = "Login";
 const String kEmail = "Email";
 const String kPassword = "Password";
- const String kMobileNumber = "Mobile number";
- const String kRememberMe = "Remember Me";
+const String kMobileNumber = "Mobile number";
+const String kRememberMe = "Remember Me";
 const String kName = "Name";
 const String kSubmit = "Submit";
- const String kSkip = "Skip";
+const String kSkip = "Skip";
 const String kRetry = "Retry";
 const String kBack = "Back";
 const String kEmptyData = "Empty";
@@ -21,6 +18,7 @@ const String kSearchArea = "Search area";
 const String kSearch = "Search...";
 const String kDistance = "Distance type";
 const String kRange = "Range";
+const String kContinue = "Continue";
 const String kRenewSub = "Renew Subscription";
 const String kApply = "Apply";
 const String kReset = "Reset";
@@ -54,14 +52,25 @@ const String kNo  = "No";
 const String kDone  = "Done";
 const String kChangePin  = 'Change Pin';
 const String kCancel  = "Cancel";
+const String kConfirm  = "Confirm";
 const String kNotAuthenticated  = "Not Authenticated";
 const String kAuthenticatedDes  = "Someone trying to login in another device so you logout form here!";
 const String kQueryDes  = "Thank you for submitting your request we will get in touch with you shortly.";
 const String kAreYouSureWantToLogout  = "Are you sure want to logout!";
+const String kTouchAndFaceNtAct  = "touch or Face Id is not activated on your device!";
 const String kApplyCoupon  = "Apply Coupon";
+const String kUserLastTime = "lastTime";
+const String kUserName = "name";
+const String kQuickPin = "quickPin";
+const String kEnterSecurePin = "Enter Secure Pin";
+const String kForgotMPIN = "Forgot M-Pin?";
+const String kusediffAcc = "Use different Account?";
+const String kUSERTYPE = "userType"; //Branch Admin + OR +
 
 
+///Png Define
 
+const String strimg_logo = 'assets/logo/logo.png';
 
 
 // Validation string
@@ -183,3 +192,4 @@ const String kUpdatePictureToastMsg = "Please update your picture";
 const String kSecurePinNotMatch = "Secure pin does not match";
 const String kOldPinNotMatch = "'Old pin not correct'";
 const String kPlsEntDigPin = "Please enter digit Pin'";
+const String kPinDidNotMatch = "''Pin did not match''";

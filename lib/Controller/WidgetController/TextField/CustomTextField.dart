@@ -12,7 +12,7 @@ class CustomTextField extends StatelessWidget{
   FocusNode? focus;
   bool? enable;
   bool readOnly;
-  TextInputType? inputType;
+  TextInputType? keyboardType;
   TextInputAction? inputAction;
   double? leftPadding;
   String? hintText ;
@@ -37,7 +37,7 @@ class CustomTextField extends StatelessWidget{
     required this.readOnly,
     this.onChanged,
     this.labelText,
-    this.inputType,
+    this.keyboardType,
     this.inputAction,
     this.hintText,
     this.maxLength,
@@ -59,7 +59,7 @@ class CustomTextField extends StatelessWidget{
       autofillHints: autofillHints,
       validator: validator,
       textInputAction: inputAction,
-      keyboardType: inputType,
+      keyboardType: keyboardType,
       autofocus: false,
       enabled: enable,
       readOnly: readOnly,
@@ -67,11 +67,9 @@ class CustomTextField extends StatelessWidget{
       maxLines: maxLines,
       inputFormatters: inputFormatters,
       obscureText: obscureText != null ? obscureText! : false,
-      style: TextStyle(fontFamily: FontFamily.josefinRegular,fontSize: 14),
+      style: TextStyle(fontFamily: FontFamily.NexaRegular,fontSize: 14,),
       controller: controller,
-      decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30),borderSide: BorderSide(color: AppColors.greyColor)),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(30),borderSide: BorderSide(color: AppColors.greyColor)),
+      decoration: InputDecoration(      
           prefixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 50),
           contentPadding: const EdgeInsets.only(top: 6.0,left: 15),
           hintText: hintText,
@@ -79,12 +77,18 @@ class CustomTextField extends StatelessWidget{
           suffixIcon: suffixIcon,
           suffix: suffixWidget,
           labelText:labelText,
-          border: InputBorder.none,
+          enabledBorder: OutlineInputBorder(            
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: AppColors.greyColor,)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: AppColors.greyColor,)),           
           prefixIcon: prefixIcon,
           filled: true,
-          fillColor: AppColors.greyColor.withOpacity(0.1),
+          fillColor: AppColors.greyColor.withOpacity(0.03),
           suffixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 55),
-          hintStyle: TextStyle(fontFamily: FontFamily.josefinRegular,color: Colors.grey)
+          hintStyle: TextStyle(fontFamily: FontFamily.NexaRegular,color: Colors.grey),
+          labelStyle: TextStyle(fontFamily: FontFamily.NexaRegular,color: Colors.grey),
       ),
       onFieldSubmitted: (v) {
         FocusScope.of(context).requestFocus(focus);

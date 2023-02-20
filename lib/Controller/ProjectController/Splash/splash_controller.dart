@@ -6,6 +6,7 @@ import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
+import '../../Helper/StringDefine/StringDefine.dart';
 
 class SplashController extends GetxController {
   String userId = "";
@@ -34,10 +35,15 @@ class SplashController extends GetxController {
         print("Going to Home Screen");
 
       } else {
-        Get.toNamed(setupPinScreenRoute);
+        Get.toNamed(homeScreenRoute);
         print("Going to Login Screen");
 
       }
     });
   }
+  Future<void> setLastTime() async {
+  final prefs = await SharedPreferences.getInstance();
+  DateTime now = DateTime.now();
+  prefs.setInt(kUserLastTime, now.millisecondsSinceEpoch);
+}
 }

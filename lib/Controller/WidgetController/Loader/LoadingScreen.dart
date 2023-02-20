@@ -4,7 +4,7 @@ import 'LoadingWidget.dart';
 
 class CustomLoading{
 
-  // bool isDialogShowing = false;
+  bool isDialogShowing = false;
   BuildContext? contextDialog;
   static const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rnd = Random();
@@ -18,8 +18,10 @@ class CustomLoading{
 
 
 
-  Future<bool> show(BuildContext context)async{
+  Future<bool> show(BuildContext context, bool isShowing)async{
     try {
+       if (!isDialogShowing && isShowing) {
+        isDialogShowing = true;
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -42,7 +44,16 @@ class CustomLoading{
             );
           });
       return Future.value(true);
-    }catch(_){
+    }
+    else {
+        if (!isShowing && isDialogShowing) {
+          isDialogShowing = false;
+          Navigator.pop(contextDialog!);
+        }
+        return Future.value(true);
+      }
+    }
+    catch(_){
       return Future.value(true);
     }
   }

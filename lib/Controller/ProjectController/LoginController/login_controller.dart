@@ -9,7 +9,7 @@ class LoginController extends GetxController{
   void changeSuccessValue(bool value){
     isSuccess = value;
     update();
-  }
+  } 
   void changeLoadingValue(bool value){
     isLoading = value;
     update();

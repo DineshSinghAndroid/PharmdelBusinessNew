@@ -15,6 +15,7 @@ class ButtonCustom extends MaterialButton{
   Color? backgroundColor;
   Color? textColor;
   bool? useBorder;
+  BorderRadius? borderRadius;
   ButtonCustom({
     required this.onPress,
     required this.text,
@@ -24,7 +25,8 @@ class ButtonCustom extends MaterialButton{
     this.radius,
     this.textColor,
     this.backgroundColor,
-    this.useBorder
+    this.useBorder,
+    this.borderRadius
   }) : super(onPressed: onPress);
 
   @override
@@ -39,7 +41,7 @@ class ButtonCustom extends MaterialButton{
           //color: Colors.buttoncolor,
           color: backgroundColor ?? CustomColors.blackColor,
           border: useBorder == true ? Border.all(color: CustomColors.blackColor) : null,
-          borderRadius: BorderRadius.all(Radius.circular(radius ?? 50.0)),
+          borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius ?? 50.0)),
         ),
         child: Container(
           height: buttonHeight,

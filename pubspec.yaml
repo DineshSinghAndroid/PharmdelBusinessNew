@@ -74,6 +74,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
   intl: ^0.18.0
+  logger: ^1.1.0
+  local_auth: ^2.1.3
+  url_launcher: ^6.1.9
+  syncfusion_flutter_pdfviewer: ^20.4.50
 
 dev_dependencies:
   flutter_test:
@@ -102,7 +106,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/logo/
-    - assets/svg/
+#    - assets/svg/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -115,12 +119,27 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Nexa
+      fonts:
+        - asset: assets/fonts/nexa_bold.otf
+        - asset: assets/fonts/nexa_light.otf
+        - asset: assets/fonts/NexaBlack.otf
+        - asset: assets/fonts/NexaBlackItalic.otf
+        - asset: assets/fonts/NexaBold.otf
+        - asset: assets/fonts/NexaBoldItalic.otf
+        - asset: assets/fonts/NexaBook.otf
+        - asset: assets/fonts/NexaBookItalic.otf
+        - asset: assets/fonts/NexaHeavy.otf
+        - asset: assets/fonts/NexaHeavyItalic.otf
+        - asset: assets/fonts/NexaLight.otf
+        - asset: assets/fonts/NexaLightItalic.otf
+        - asset: assets/fonts/NexaRegular.otf
+        - asset: assets/fonts/NexaRegularItalic.otf
+        - asset: assets/fonts/NexaThin.otf
+        - asset: assets/fonts/NexaThinItalic.otf
+        - asset: assets/fonts/NexaXBold.otf
+        - asset: assets/fonts/NexaXBoldItalic.otf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

@@ -1,21 +1,24 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/ColorController/CustomColors.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/ProjectController/SetupPinController/setupPinController.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/WidgetController/TextField/CustomTextField.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../Controller/Helper/FormFieldValidator/formFieldValidator.dart';
-import '../../Controller/Helper/StringDefine/StringDefine.dart';
-import '../../Controller/WidgetController/Toast/ToastCustom.dart';
+import '../../../Controller/Helper/FormFieldValidator/formFieldValidator.dart';
+import '../../../Controller/Helper/StringDefine/StringDefine.dart';
+import '../../../Controller/WidgetController/Loader/LoadingScreen.dart';
+import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
+import '../Login/login_screen.dart';
 
 
 class SetupPinScreen extends StatefulWidget {
-  final bool isChangePassword;
-  static const String ROUTE_ID = 'SetupPin';
-  // final bool? isFromSetting;
+  final bool isChangePassword;  
   const SetupPinScreen({Key? key, required this.isChangePassword,}) : super(key: key);
 
   @override
@@ -24,22 +27,11 @@ class SetupPinScreen extends StatefulWidget {
 
 class _SetupPinScreenState extends State<SetupPinScreen> {
 
+  SetupMPinController setupMpinCtrl = Get.put(SetupMPinController());
+
   TextEditingController txtOldPin = TextEditingController();
   TextEditingController txtEnterOtp = TextEditingController();
   TextEditingController txtConfirmOtp = TextEditingController();
-
-
-  FocusNode pin1focusNode = FocusNode();
-  FocusNode pin2focusNode = FocusNode();
-
-  void nextField(String value, FocusNode focusNode, [FocusNode? focusNode1]) {
-    if (value.length == 1) {
-      focusNode.requestFocus();
-    } else {
-      focusNode1?.requestFocus();
-    }
-    setState(() {});
-  }
 
 
   bool isOld = true, isNew = true, isConfirm = true;
@@ -109,7 +101,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                                           controller: txtOldPin,
                                           maxLength: 4,
                                           obscureText: true,
-                                          inputType: TextInputType.number,
+                                          keyboardType: TextInputType.number,
                                           inputAction: TextInputAction.next,
                                           // onFieldSubmitted: (v) {
                                           //   FocusScope.of(context).requestFocus(focusPin);
@@ -128,7 +120,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                                     hintText: 'Enter Secure Pin',
                                     obscureText: true,
                                     inputAction: TextInputAction.next,
-                                    inputType: TextInputType.number,
+                                    keyboardType: TextInputType.number,
                                     validator: MultiValidator([
                                       RequiredValidator(errorText: kEnterMobileNo),
                                       MinLengthValidator(10, errorText: kEnterDigPin),
@@ -148,7 +140,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                                     maxLength: 4,
                                     hintText: 'Confirm Secure Pin',
                                     obscureText: true,
-                                    inputType: TextInputType.number,
+                                    keyboardType: TextInputType.number,
                                     inputAction: TextInputAction.done,
                                     validator: MultiValidator([
                                       RequiredValidator(errorText: kEnterMobileNo),
@@ -193,6 +185,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
       ),
     );
   }
+
   void validatePin()async{
     myFocusNode?.requestFocus();
     FocusScope.of(context).unfocus();
@@ -201,7 +194,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
       isNew = true;
       isConfirm = true;
     });
-    if (widget.isChangePassword! && (txtOldPin.text == "" || txtOldPin.text.length < 4)) {
+    if (widget.isChangePassword && (txtOldPin.text == "" || txtOldPin.text.length < 4)) {
       setState(() {
         isOld = false;
       });
@@ -223,21 +216,73 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
         ToastCustom.showToast(msg: kPlsEntDigPin);
       } else {
         final prefs = await SharedPreferences.getInstance();
-        var strPin = prefs.get('WebConstant.kQuickPin');
-        if (widget.isChangePassword!) {
+        var strPin = prefs.get(kQuickPin);
+        if (widget.isChangePassword) {
           if (strPin != txtOldPin.text) {
             ToastCustom.showToast(msg: kOldPinNotMatch);
           } else {
-            // setUpPin();
+            await setupMpinCtrl.setupMpinApi(
+              context: context, 
+              pin: int.parse(txtConfirmOtp.text)).then((value){
+          FocusScope.of(context).unfocus();
+        });
           }
         } else {
           if (txtEnterOtp.text != txtConfirmOtp.text) {
             ToastCustom.showToast(msg: kSecurePinNotMatch);
-          } else {
+          } else {            
+             await setupMpinCtrl.setupMpinApi(
+              context: context, 
+              pin: int.parse(txtConfirmOtp.text)).then((value){
+          FocusScope.of(context).unfocus();
+        });
             // setUpPin();
           }
         }
       }
     }
   }
+
+  // void setUpPin() async {
+ 
+  //   await CustomLoading().show(context, true);
+  //   String url = WebConstant.SETPIV_DRIVER + "?pin=" + txtConfirmOtp.text.trim();
+  //   _apiCallFram.postFormDataAPI(url, authKey, "", context).then((responce) async {
+  //     // ProgressDialog(context, isDismissible: false).hide();
+  //     await CustomLoading().show(context, false);
+  //     if (responce != null && responce.body != null && responce.body == "Unauthenticated") {
+  //       ToastCustom.showToast(msg: "Authentication Failed. Login again");
+  //       final prefs = await SharedPreferences.getInstance();
+  //       prefs.remove('token');
+  //       prefs.remove('userId');
+  //       prefs.remove('name');
+  //       prefs.remove('email');
+  //       prefs.remove('mobile');
+  //       prefs.remove('route_list');
+  //       Navigator.pushAndRemoveUntil(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (BuildContext context) => LoginScreen(),
+  //           ),
+  //           ModalRoute.withName('/login_screen'));
+  //     } else {
+  //       respons = json.decode(responce.body);
+  //       if (respons["error"] == false) {
+  //         final prefs = await SharedPreferences.getInstance();
+  //         if (prefs.containsKey(WebConstant.kQuickPin)) {
+  //           prefs.remove(WebConstant.kQuickPin);
+  //         }
+  //         prefs.setBool(WebConstant.IS_LOGIN, true);
+  //         Fluttertoast.showToast(msg: "Pin set successfully");
+  //         prefs.setString(WebConstant.kQuickPin, txtConfirmOtp.text);
+  //         dashboardScreen(context);
+  //       } else {
+  //         // print(respons["message"]);
+  //         Fluttertoast.showToast(msg: respons["message"]);
+  //       }
+  //       // EasyLoading.dismiss();
+  //     }
+  //   });
+  // }
+  
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../Controller/Helper/StringDefine/StringDefine.dart';
-import '../../Controller/ProjectController/Splash/splash_controller.dart';
-import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
+
+import '../../../Controller/Helper/StringDefine/StringDefine.dart';
+import '../../../Controller/ProjectController/Splash/splash_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -35,15 +36,20 @@ class _SplashScreenState extends State<SplashScreen> {
                             child: Column(
                   children: [
                     Image.asset(
-                      'assets/logo/logo.png',
+                      strimg_logo,
                       height: 200,
                       width: 200,
                     ),
-                    SizedBox(height: 80),
-                    CircularProgressIndicator()
+                    const SizedBox(height: 80),
+                   CircularProgressIndicator(color: AppColors.colorAccent,)
                   ],
                 )))),
               ));
         });
   }
+  Future<void> setLastTime() async {
+  final prefs = await SharedPreferences.getInstance();
+  DateTime now = DateTime.now();
+  // prefs.setInt(WebConstant.USER_LASTTIME, now.millisecondsSinceEpoch);
+}
 }

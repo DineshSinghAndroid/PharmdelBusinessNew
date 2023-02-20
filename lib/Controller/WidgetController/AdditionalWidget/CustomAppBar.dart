@@ -7,7 +7,7 @@ class CustomAppBar{
   static AppBar appBar({bool? showBackBtn,Color? backgroundColor,bool? centerTitle,double? elevation,double? leadingWidth,String? title, Color? titleColor,double? fontSize,required onTap, Color? leadingColor}){
     return AppBar(
       toolbarHeight: 55,
-      title: Text(title ?? '',style: TextStyle(color: titleColor ?? Colors.black,fontSize: fontSize ?? 20, fontFamily: FontFamily.josefinRegular)),
+      title: Text(title ?? '',style: TextStyle(color: titleColor ?? Colors.black,fontSize: fontSize ?? 20, fontFamily: FontFamily.NexaRegular)),
       leading:
           Visibility(
             visible: showBackBtn ?? true,

@@ -8,7 +8,7 @@ class BuildText{
       text,
       style: TextStyle(
           color: color,
-          fontFamily: FontFamily.josefinRegular,
+          fontFamily: FontFamily.NexaRegular,
           letterSpacing: 2.0,
           fontSize: 16.0),
     );
@@ -20,17 +20,18 @@ class BuildText{
     String?fontFamily,
     double? size,
     FontWeight? weight,
-    Color? color}){
+    Color? color,
+    TextAlign? textAlign}){
     return Text(
         text,
         style: style ?? TextStyle(
-          fontFamily: fontFamily ?? FontFamily.josefinRegular,
+          fontFamily: fontFamily ?? FontFamily.NexaRegular,
           fontSize: size ?? 14,
           fontWeight: weight,
           color: color ?? CustomColors.blackColor,
           decoration: decoration ?? TextDecoration.none,
-        )
-
+        ),
+        textAlign: textAlign ?? TextAlign.start,
     );
   }
 }
