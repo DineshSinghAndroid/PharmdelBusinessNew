@@ -30,6 +30,9 @@ const String kTotal = "Total";
 const String kPickedUp = "Picked Up";
 const String kDelivered = "Delivered";
 const String kFailed = "Failed";
+const String kStartRoute = "START ROUTE";
+const String kScanRx = "Scan Rx";
+const String kSelectRoute = "Select Route";
 
 
 ///Drawer

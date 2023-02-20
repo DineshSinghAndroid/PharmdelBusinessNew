@@ -16,5 +16,6 @@ class WebApiConstant {
   static const String TERMS_URL                              =  "${BASE_URL}terms-condition-app";
   static const String PRIVACY_URL                            =  "${BASE_URL}privacy-policy-app";
   static const String NOTIFICATION_URL                       =  "${BASE_URL}GetNotifications";
+  static const String GET_DRIVER_PROFILE_URL                 =  "${BASE_URL}GetDriverProfile";
  
 }

@@ -14,8 +14,6 @@ import '../AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
 import '../Popup/PopupCustom.dart';
 import '../StringDefine/StringDefine.dart';
 
-// import 'package:progress_dialog/progress_dialog.dart';
-
 
 class DrawerDriver extends StatefulWidget {
   static String tag = 'place_order-screen';
@@ -96,8 +94,8 @@ class DrawerDriverState extends State<DrawerDriver> {
 
   @override
   Widget build(BuildContext context) {
-    logger.w('#DRIVER TYPE : $driverType');
-    logger.w('#DRIVER TYPE : $virPop');
+    // logger.w('#DRIVER TYPE : $driverType');
+    // logger.w('#DRIVER TYPE : $virPop');
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Drawer(
       child: Scaffold(
@@ -136,17 +134,17 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       color: Colors.orangeAccent,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: Center(
-                                    child: Text(
-                                      username != null
+                                    child: BuildText.buildText(
+                                       text: username != null
                                           ? username![0].toUpperCase()
                                           : '',
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 30.0),
+                                      color: AppColors.whiteColor,
+                                      size: 30
                                     ),
                                   )),
                             buildSizeBox(0.0, 20.0),
                               BuildText.buildText(
-                                text:  name != null ? name : "",
+                                text:  name,
                                 style: const TextStyle(
                                     fontSize: 18, color: Colors.black),
                               ),
@@ -156,7 +154,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                         ],
                       ),
 
-                      if (userType == 'Driver')
+                      // if (userType == 'Driver')
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -178,17 +176,13 @@ class DrawerDriverState extends State<DrawerDriver> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 0,
-                              ),                              
                               Row(
                                 children: [
-                                  const Text(
-                                    kOff,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
+                                  BuildText.buildText(
+                                    text: kOff,
+                                    size: 16,
+                                    color: AppColors.blackColor,
+                                    weight: FontWeight.w600,                                    
                                   ),
                                   Tooltip(
                                     message: kStartLunch,
@@ -203,26 +197,25 @@ class DrawerDriverState extends State<DrawerDriver> {
                                           dragStartBehavior:
                                               DragStartBehavior.down,
                                           onChanged: (bool value) {
-                                           
+                                            onBreak = value;
                                           },
                                           value: onBreak,
-                                          activeColor: Colors.orange,
-                                          activeTrackColor: Colors.orange,
-                                          inactiveThumbColor: Colors.grey,
-                                          inactiveTrackColor: Colors.grey[400],
+                                          activeColor: AppColors.colorOrange,
+                                          activeTrackColor: AppColors.colorOrange,
+                                          inactiveThumbColor: AppColors.greyColor,
+                                          inactiveTrackColor: AppColors.greyColor
                                         ),
                                       ),
                                     ),
                                   ),
-                                  const Text(
-                                    kON,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
+                                  BuildText.buildText(
+                                    text:  kON,
+                                    size: 16,
+                                    color: AppColors.blackColor,
+                                    weight: FontWeight.w600,                                    
                                   ),
                                 ],
-                              ),
+                              ),                              
                             ],
                           ),
                         ),

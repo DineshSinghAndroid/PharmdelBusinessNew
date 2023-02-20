@@ -1,13 +1,19 @@
+import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
+import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/WidgetController/CustomDrawer/drawerDriver.dart';
 import '../../../Controller/WidgetController/Default Widget/DefaultWidget.dart';
 import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -79,19 +85,20 @@ class _HomeScreenState extends State<HomeScreen> {
             FloatingActionButton.extended(
               backgroundColor: Colors.orange,
               label: Column(
-                children: const [
-                  Icon(
+                children: [
+                  const Icon(
                     Icons.qr_code_scanner,
                     color: Colors.white,
                     size: 25.0,
                   ),
-                  Text(
-                    "Scan Rx",
-                    style: TextStyle(color: Colors.white),
+                  BuildText.buildText(
+                    text: kScanRx,
+                    color: AppColors.whiteColor
                   )
                 ],
               ),
-              onPressed: (){                
+              onPressed: (){
+                barcodeScanning();
               },
             ),
           ],
@@ -123,19 +130,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.grey.shade300)
                           ]),
                       child: Row(
-                        children: const <Widget>[
+                        children: [
                           Flexible(
                             flex: 1,
                             fit: FlexFit.tight,
-                            child: Text(
-                              "Select Route",
-                              style: TextStyle(
+                            child: BuildText.buildText(
+                              text: kSelectRoute,
+                              style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.lightBlue),
                             ),
                           ),
-                           Icon(
+                           const Icon(
                             Icons.keyboard_arrow_down,
                             color: Colors.lightBlue,
                           )
@@ -641,7 +648,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BuildText.buildText(
-                  text: "START ROUTE",
+                  text: kStartRoute,
                   color: AppColors.whiteColor,
                   size: 16,
                   weight: FontWeight.w700
@@ -652,4 +659,16 @@ class _HomeScreenState extends State<HomeScreen> {
         )
     );
   }
+
+ Future barcodeScanning() async {
+    var result = await BarcodeScanner.scan(); //options: ScanOptions()
+    PrintLog.printLog("Type:${result.type}");
+    PrintLog.printLog("RawContent:${result.rawContent}");
+    if(result.rawContent.toString().length > 10){
+      PrintLog.printLog("Product code is :${result.rawContent}");     
+    }else{
+      ToastCustom.showToast(msg: 'Not found');
+    }
+  }
+
 }

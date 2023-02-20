@@ -14,6 +14,7 @@ class AppColors {
   static Color bluearrowcolor = const Color(0xFF011C50);
   static Color colorAccent = const Color(0xffff8600);
   static Color whiteColor = const Color(0xFFFFFFFF);
+  static Color colorOrange = Colors.orange;
   static Color greyColor = const Color(0xFF9E9E9E);
   static Color blueLightColor = const Color(0xFFc797f7);
   static Color blackColor = Colors.black;
