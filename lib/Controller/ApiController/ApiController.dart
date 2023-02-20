@@ -1,5 +1,9 @@
 
+
+import 'dart:developer' as logs;
+
 import 'package:dio/dio.dart';
+import '../../Model/Login/login_model.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
 import '../../main.dart';
@@ -16,7 +20,7 @@ class ApiController {
   Map<String, String> headers = {
     "Content-type": "application/json",
     "Authorization": 'Bearer $authToken',
-    "Authkey": WebApiConstant.AUTH_KEY,
+    // "Authkey": WebApiConstant.AUTH_KEY,
     "Connection": "Keep-Alive",
     "Keep-Alive": "timeout=5, max=1000"
   };
@@ -24,8 +28,8 @@ class ApiController {
   ApiController() {
     BaseOptions options = BaseOptions(
         baseUrl: WebApiConstant.BASE_URL,
-        receiveTimeout: 60 * 1000,
-        connectTimeout: 60 * 1000,
+        receiveTimeout: Duration(minutes: 1),
+        connectTimeout: Duration(minutes: 1),
         headers: headers);
     _dio.options = options;
   }
@@ -33,26 +37,36 @@ class ApiController {
 
 
   /// Login Api
-  // Future<LoginApiResponse?> loginApi({context, required String url, dictParameter, String? token}) async {
-  //   LoginApiResponse? result;
-  //   if (await ConnectionValidator().check()) {
-  //     try {
-  //       final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-  //       if (response?.data != null && response?.statusCode == 200) {
-  //         result = LoginApiResponse.fromJson(response?.data);
-  //         return result;
-  //       } else {
-  //         return result;
-  //       }
-  //     } catch (e) {
-  //       PrintLog.printLog("Exception_main1: $e");
-  //       return result;
-  //     }
-  //   } else {
-  //     ToastCustom.showToast( msg: networkToastString);
-  //   }
-  //   return null;
-  // }
+
+
+  Future<LoginModel?> loginApi(
+      {context, required String url, dictParameter, String? token})
+  async {
+    LoginModel? result;
+    if (await ConnectionValidator().check()) {
+     logs.log("url is $url") ;
+      try {
+        final response = await requestPostForApi(context: context,
+            url: url,dictParameter: dictParameter,token: '');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = LoginModel.fromJson(response?.data);
+          print("THIS IS API RESULT FOR LOGIN API $result");
+          return result;
+        } else {
+          print("THIS IS API RESULT FOR LOGIN API $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
 
   ///Setup Pin Api
   Future<SetupMPinApiResponse?> setupMPinApi({context, required String url, dictParameter, String? token}) async {
@@ -107,7 +121,7 @@ class ApiController {
     try {
       Map<String, String> headers = {
         "Content-type": "application/json",
-        "Authkey": WebApiConstant.AUTH_KEY,
+        // "Authkey": WebApiConstant.AUTH_KEY,
         "Authorization": "Bearer $token",
         "Connection": "Keep-Alive",
         "Keep-Alive": "timeout=5, max=1000",
@@ -125,8 +139,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: 60 * 1000,
-          connectTimeout: 60 * 1000,
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
       );
@@ -156,7 +170,7 @@ class ApiController {
     try {
       Map<String, String> headers = {
         "Content-type": "application/json",
-        "Authkey": WebApiConstant.AUTH_KEY,
+        // "Authkey": WebApiConstant.AUTH_KEY,
         "Authorization": "Bearer $token",
         "Connection": "Keep-Alive",
         "Keep-Alive": "timeout=5, max=1000"
@@ -169,8 +183,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: 60 * 1000,
-          connectTimeout: 60 * 1000,
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
           headers: headers);
       _dio.options = options;
       Response response = await _dio.post(url,
@@ -197,7 +211,7 @@ class ApiController {
     try {
       Map<String, String> headers = {
         "Content-type": "application/json",
-        "Authkey": WebApiConstant.AUTH_KEY,
+        // "Authkey": WebApiConstant.AUTH_KEY,
         "Authorization": "Bearer $token",
         "Connection": "Keep-Alive",
         "Keep-Alive": "timeout=5, max=1000"
@@ -210,8 +224,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: 60 * 1000,
-          connectTimeout: 60 * 1000,
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
           headers: headers);
 
       _dio.options = options;

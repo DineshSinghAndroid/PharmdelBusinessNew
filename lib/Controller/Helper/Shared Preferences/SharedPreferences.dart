@@ -16,6 +16,15 @@ class AppSharedPreferences {
   static String authToken = "token";
   static String fcmToken = "fcm_token";
   static String userId = "user_id";
+  static String customerID = "customer_id";
+  static String userType = "user_type";
+  static String driverType = "driver_type";
+  static String startMiles = "start_miles";
+  static String endMiles = "endMiles";
+  static String userName = "username";
+  static String pharmacyID = "pharmacyID";
+  static String userPin = "userPin";
+  static String showWages = "showWages";
 
 
 
