@@ -3,6 +3,7 @@
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
+import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/Login/login_model.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
@@ -91,7 +92,6 @@ class ApiController {
   }
 
   ///Notification Api
-  ///Notification Api
     Future<NotificationApiResponse?> getNotificaitonApi({context, required String url, dictParameter, String? token}) async {
     NotificationApiResponse? result;
     if (await ConnectionValidator().check()) {
@@ -99,6 +99,28 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = NotificationApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Driver Profile
+  Future<DriverProfileApiResponse?> getDriverProfileApi({context, required String url, dictParameter, String? token}) async {
+    DriverProfileApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverProfileApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;

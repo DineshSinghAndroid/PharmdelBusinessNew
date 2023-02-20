@@ -25,7 +25,7 @@ class _LoadScreenState extends State<LoadScreen> {
           child: widget.widget!,
           isLoading: widget.isLoading!,
           opacity: 1.0,
-          color: Colors.transparent,
+          color: Colors.black45,
           progressIndicator: LoadingWidget()
 
       ),

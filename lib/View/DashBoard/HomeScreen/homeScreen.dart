@@ -27,7 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isVisiblePharmacyList = false;
   bool isVisibleRouteList = false;
   bool isToteList = false;
+  bool isRouteStart = false;
+  bool hideTote = false;
   String driverType = "";
+
+  List<String> routeList = ['north', 'south'];
 
   @override
   Widget build(BuildContext context) {
@@ -92,12 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     size: 25.0,
                   ),
                   BuildText.buildText(
-                    text: kScanRx,
-                    color: AppColors.whiteColor
-                  )
+                      text: kScanRx, color: AppColors.whiteColor)
                 ],
               ),
-              onPressed: (){
+              onPressed: () {
                 barcodeScanning();
               },
             ),
@@ -112,98 +114,115 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      if (isRouteStart) {
+                        ToastCustom.showToast(
+                            msg:
+                                "You are already on a route, you can't change before completed.");
+                      } else {
+                        if (routeList.isNotEmpty) {
+                          isVisibleRouteList = !isVisibleRouteList;
+                          isVisiblePharmacyList = false;
+                          isToteList = false;
+                          hideTote = true;
+                        } else {
+                          ToastCustom.showToast(
+                              msg:
+                                  "You don't have any route. Try again after and refresh now.");
+                          isVisibleRouteList = false;
+                        }
+                      }
+                    });
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                          left: 13.0, right: 10.0, top: 12, bottom: 12),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.white,
-                          //border: Border.all(color: Colors.grey[400]),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                                color: Colors.grey.shade300)
-                          ]),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: BuildText.buildText(
-                              text: kSelectRoute,
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.lightBlue),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                left: 13.0, right: 10.0, top: 12, bottom: 12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: Colors.white,
+                                //border: Border.all(color: Colors.grey[400]),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 1,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                      color: Colors.grey.shade300)
+                                ]),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: BuildText.buildText(
+                                    text: kSelectRoute,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.lightBlue),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.lightBlue,
+                                ),
+                              ],
                             ),
                           ),
-                           const Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.lightBlue,
-                          )
-                        ],
-                      ),
+                        ),
+                        buildSizeBox(0.0, 5.0),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {                         
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 13.0, right: 10.0, top: 12, bottom: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: Colors.white,
+                                  //border: Border.all(color: Colors.grey[400]),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 1,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                        color: Colors.grey.shade300)
+                                  ]),
+                              child: Row(
+                                children: const <Widget>[
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      kSelectPhar,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.lightBlue),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.lightBlue,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),      
-                // InkWell(
-                //   onTap: () {
-                //     setState(() {
-                //       // if (parcelBoxList.length > 0) {
-                //       //   _isToteList = !_isToteList;
-                //       //   _isVisibleRouteList = false;
-                //       //   _isVisiblePharmacyList = false;
-                //       // } else {
-                //       //   Fluttertoast.showToast(
-                //       //       msg: "Parcel Location Not Available");
-                //       //   _isToteList = false;
-                //       // }
-                //     });
-                //   },
-                //   child: Container(
-                //     padding: const EdgeInsets.only(left: 13.0,
-                //         right: 10.0,
-                //         top: 12,
-                //         bottom: 12),
-                //     decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.circular(5.0),
-                //         color: Colors.white,
-                //         //border: Border.all(color: Colors.grey[400]),
-                //         boxShadow: [
-                //           BoxShadow(
-                //               spreadRadius: 1,
-                //               blurRadius: 10,
-                //               offset: Offset(0, 4),
-                //               color: Colors.grey.shade300)
-                //         ]),
-                //     child: Row(
-                //       children: const <Widget>[
-                //         Flexible(
-                //           flex: 1,
-                //           fit: FlexFit.tight,
-                //           child: Text( 
-                //             'Parcel Location',
-                //             maxLines: 1,
-                //             style: TextStyle(
-                //                 fontSize: 14,
-                //                 fontWeight: FontWeight.w400,
-                //                 color: Colors.lightBlue),
-                //           ),
-                //         ),
-                //         Icon(
-                //           Icons.keyboard_arrow_down,
-                //           color: Colors.lightBlue,
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // ),                          
-                
+                ),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.only(
@@ -218,9 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               bgColor: AppColors.blueColor,
                               label: kTotal,
                               counter: '0',
-                              onTap: () {})
-                              ),
-            
+                              onTap: () {})),
                       Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
@@ -228,9 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               bgColor: AppColors.greyColor,
                               label: kPickedUp,
                               counter: '0',
-                              onTap: () {})
-                              ),
-            
+                              onTap: () {})),
                       Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
@@ -238,9 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               bgColor: AppColors.greenColor.withOpacity(0.7),
                               label: kDelivered,
                               counter: '0',
-                              onTap: () {})
-                              ),
-            
+                              onTap: () {})),
                       Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
@@ -248,69 +261,325 @@ class _HomeScreenState extends State<HomeScreen> {
                               bgColor: AppColors.redColor.withOpacity(0.8),
                               label: kFailed,
                               counter: '0',
-                              onTap: () {})
-                              ),
+                              onTap: () {})),
                     ],
                   ),
-                ),                
-                
+                ),
                 Visibility(
                   visible: isVisiblePharmacyList,
                   child: Container(
                     margin: const EdgeInsets.only(top: 0, bottom: 10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.white,                        
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 1, 
-                                  blurRadius: 10, 
-                                  offset: const Offset(0, 4), color: Colors.grey.shade300)
-                            ]),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                              color: Colors.grey.shade300)
+                        ]),
                     child: Column(
                       children: [
                         ListView.separated(
-                              itemCount: 2,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                // PharmacyList pharmacy = pharmacyList[index];
-                                return InkWell(
+                          itemCount: 2,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            // PharmacyList pharmacy = pharmacyList[index];
+                            return InkWell(
+                              onTap: () {
+                                // setState(() {
+                                //   selectedPharmacyDropDown =
+                                //   pharmacyList[index];
+                                //   _selectedPharmacyPosition = index;
+                                // });
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.only(
+                                    left: 13.0,
+                                    right: 10.0,
+                                    top: 12,
+                                    bottom: 12),
+                                color:
+                                    // pharmacy == selectedPharmacyDropDown //route == selectedRoute//_selectedRoutePosition == index ?
+                                    Colors.blue[50],
+                                // : Colors.transparent,
+                                child: const Text(
+                                  "Select Pharmacy",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.lightBlue),
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Divider(
+                              height: 1,
+                            );
+                          },
+                        ),
+                        const Divider(
+                          height: 1,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 12, bottom: 12),
+                          child: Row(
+                            children: <Widget>[
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: InkWell(
                                   onTap: () {
+                                    setState(() {
+                                      // selectedPharmacyDropDown =
+                                      //     selectedPharmacy;
+                                      // _isVisiblePharmacyList = false;
+                                      // hideTote = false;
+                                    });
+                                  },
+                                  child: BuildText.buildText(
+                                    text: "Cancel",
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.redAccent),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: InkWell(
+                                  onTap: () {
+                                    // if (_selectedPharmacyPosition < 0) {
+                                    //   Fluttertoast.showToast(
+                                    //       msg: "Choose Pharmacy First");
+                                    //   return;
+                                    // }
                                     // setState(() {
-                                    //   selectedPharmacyDropDown =
-                                    //   pharmacyList[index];
-                                    //   _selectedPharmacyPosition = index;
+                                    //   _isVisiblePharmacyList = false;
+                                    //   selectedPharmacy =
+                                    //   pharmacyList[_selectedPharmacyPosition];
+                                    //   pharmacyId =
+                                    //   "${selectedPharmacy.pharmacyId}";
+                                    //   hideTote = false;
                                     // });
                                   },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
-                                    color: 
-                                    // pharmacy == selectedPharmacyDropDown //route == selectedRoute//_selectedRoutePosition == index ?                                       
-                                        Colors.blue[50],
-                                        // : Colors.transparent,
-                                    child: const Text(
-                                      "Select Pharmacy",
-                                      style:
-                                      TextStyle(fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.lightBlue),
-                                    ),
+                                  child: BuildText.buildText(
+                                    text: "Confirm",
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.greenAccent),
+                                    textAlign: TextAlign.center,
                                   ),
-                                );
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: isToteList,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 0, bottom: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.white,
+                        //border: Border.all(color: Colors.grey[400]),
+                        boxShadow: [
+                          BoxShadow(
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                              color: Colors.grey.shade300)
+                        ]),
+                    child: Column(
+                      children: <Widget>[
+                        ListView.separated(
+                          itemCount: 2,
+                          // parcelBoxList != null &&
+                          //     parcelBoxList.isNotEmpty
+                          //     ? parcelBoxList.length
+                          //     : 0,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            // ParcelBoxData nusingList = parcelBoxList[index];
+                            return InkWell(
+                              onTap: () {
+                                // setState(() {
+                                //   totePosition = index;
+                                // });
                               },
-                              separatorBuilder: (BuildContext context,
-                                  int index) {
-                                return const Divider(
-                                  height: 1,
-                                );
-                              },
-                            ),
-                            const Divider(height: 1,),
-                            Container(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.only(
+                                    left: 13.0,
+                                    right: 10.0,
+                                    top: 12,
+                                    bottom: 12),
+                                color:
+                                    // totePosition ==
+                                    //     index //route == selectedRoute//_selectedRoutePosition == index ?
+                                    Colors.blue[50],
+                                // : Colors.transparent,
+                                child: BuildText.buildText(
+                                  text: 'Parcel Location',
+                                  // "${nusingList.name ?? "Parcel Location"}",
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.lightBlue),
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Divider(height: 1);
+                          },
+                        ),
+                        const Divider(height: 1),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 12, bottom: 12),
+                          child: Row(
+                            children: <Widget>[
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: InkWell(
+                                  onTap: () {
+                                    // setState(() {
+                                    //   _isToteList = false;
+                                    //   hideTote = false;
+                                    // });
+                                  },
+                                  child: BuildText.buildText(
+                                    text: kCancel,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppColors.redColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: InkWell(
+                                  onTap: () {
+                                    // if (totePosition < 0) {
+                                    //   Fluttertoast.showToast(
+                                    //       msg: "Choose Nursing Home");
+                                    //   return;
+                                    // }
+                                    // setState(() {
+                                    //   _isToteList = false;
+                                    //   _selectedTotePosition = totePosition;
+                                    //   logger.i(_selectedTotePosition);
+                                    //   hideTote = false;
+                                    // });
+                                  },
+                                  child: BuildText.buildText(
+                                    text: kConfirm,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppColors.greenColor),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: isVisibleRouteList,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 0, bottom: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                                color: Colors.grey.shade300)
+                          ]),
+                      child: Column(
+                        children: <Widget>[
+                          ListView.separated(
+                            itemCount: 2,
+                            // routeList.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              // RouteList route = routeList[index];
+                              return InkWell(
+                                onTap: () {
+                                  // setState(() {
+                                  //   selectedRouteDropDown = routeList[index];
+                                  //   _selectedRoutePosition = index;
+                                  // });
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.only(
+                                      left: 13.0,
+                                      right: 10.0,
+                                      top: 12,
+                                      bottom: 12),
+                                  color:
+                                      // route ==
+                                      // selectedRouteDropDown //route == selectedRoute//_selectedRoutePosition == index
+                                      // ?
+                                      Colors.blue[50],
+                                  // : Colors.transparent,
+                                  child: BuildText.buildText(
+                                    text: kSelectPhar,
+                                    // "${route.routeName ?? "Select Pharmacy"}",
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.lightBlue),
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const Divider(
+                                height: 1,
+                              );
+                            },
+                          ),
+                          const Divider(
+                            height: 1,
+                          ),
+                          Container(
                             width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0, top: 12, bottom: 12),
                             child: Row(
                               children: <Widget>[
                                 Flexible(
@@ -318,18 +587,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fit: FlexFit.tight,
                                   child: InkWell(
                                     onTap: () {
-                                      setState(() {
-                                        // selectedPharmacyDropDown =
-                                        //     selectedPharmacy;
-                                        // _isVisiblePharmacyList = false;
-                                        // hideTote = false;
-                                      });
+                                      // setState(() {
+                                      //   selectedRouteDropDown = selectedRoute;
+                                      //   _isVisibleRouteList = false;
+                                      //   hideTote = false;
+                                      // });
                                     },
                                     child: BuildText.buildText(
-                                      text:  "Cancel",
-                                      style: const TextStyle(fontSize: 14,
+                                      text: kCancel,
+                                      style: TextStyle(
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w800,
-                                          color: Colors.redAccent),
+                                          color: AppColors.redColor),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -339,22 +608,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fit: FlexFit.tight,
                                   child: InkWell(
                                     onTap: () {
-                                      // if (_selectedPharmacyPosition < 0) {
+                                      // if (_selectedRoutePosition < 0) {
                                       //   Fluttertoast.showToast(
-                                      //       msg: "Choose Pharmacy First");
+                                      //       msg: "Choose Route First");
                                       //   return;
                                       // }
                                       // setState(() {
-                                      //   _isVisiblePharmacyList = false;
-                                      //   selectedPharmacy =
-                                      //   pharmacyList[_selectedPharmacyPosition];
-                                      //   pharmacyId =
-                                      //   "${selectedPharmacy.pharmacyId}";
+                                      //   selectedType =
+                                      //       WebConstant.Status_total;
+                                      //   _isVisibleRouteList = false;
                                       //   hideTote = false;
+                                      //   selectedRoute =
+                                      //   routeList[_selectedRoutePosition];
+
+                                      //   routeId = "${selectedRoute.routeId}";
+                                      //   SharedPreferences.getInstance().then((
+                                      //       value) {
+                                      //     value.setString(
+                                      //         WebConstant.ROUTE_ID, routeId);
+                                      //   });
+                                      //   setState(() {
+                                      //     isProgressAvailable = true;
+                                      //   });
+                                      //   orderListType = 1;
+                                      //   fetchDeliveryList(0);
                                       // });
                                     },
                                     child: BuildText.buildText(
-                                      text:  "Confirm",
+                                      text: kConfirm,
                                       style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w800,
@@ -366,309 +647,49 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                ),
-               
-                Visibility(
-                    visible: isToteList,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 0, bottom: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.white,
-                          //border: Border.all(color: Colors.grey[400]),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 1, 
-                                blurRadius: 10, 
-                                offset: const Offset(0, 4), color: Colors.grey.shade300)
-                          ]),
-                      child: Column(
-                        children: <Widget>[
-                          ListView.separated(
-                            itemCount: 2,
-                            // parcelBoxList != null &&
-                            //     parcelBoxList.isNotEmpty
-                            //     ? parcelBoxList.length
-                            //     : 0,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              // ParcelBoxData nusingList = parcelBoxList[index];
-                              return InkWell(
-                                onTap: () {
-                                  // setState(() {
-                                  //   totePosition = index;
-                                  // });
-                                },
-                                child: Container(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width,
-                                  padding: const EdgeInsets.only(left: 13.0,
-                                      right: 10.0,
-                                      top: 12,
-                                      bottom: 12),
-                                  color: 
-                                  // totePosition ==
-                                  //     index //route == selectedRoute//_selectedRoutePosition == index ?
-                                       Colors.blue[50],
-                                      // : Colors.transparent,
-                                  child: BuildText.buildText(
-                                    text: 'Parcel Location',
-                                    // "${nusingList.name ?? "Parcel Location"}",
-                                    style:
-                                    const TextStyle(fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.lightBlue),
-                                  ),
-                                ),
-                              );
-                            },
-                            separatorBuilder: (BuildContext context,int index) {
-                              return const Divider(height: 1);
-                            },
-                          ),
-                          const Divider(height: 1),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
-                            child: Row(
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: InkWell(
-                                    onTap: () {
-                                      // setState(() {
-                                      //   _isToteList = false;
-                                      //   hideTote = false;
-                                      // });
-                                    },
-                                    child: BuildText.buildText(
-                                      text: kCancel,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w800,
-                                        color: AppColors.redColor),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: InkWell(
-                                    onTap: () {
-                                      // if (totePosition < 0) {
-                                      //   Fluttertoast.showToast(
-                                      //       msg: "Choose Nursing Home");
-                                      //   return;
-                                      // }
-                                      // setState(() {
-                                      //   _isToteList = false;
-                                      //   _selectedTotePosition = totePosition;
-                                      //   logger.i(_selectedTotePosition);
-                                      //   hideTote = false;
-                                      // });
-                                    },
-                                    child: BuildText.buildText(
-                                      text: kConfirm,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w800,
-                                          color: AppColors.greenColor),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
                   ),
-
-                Visibility(
-                    visible: isVisibleRouteList,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 0, bottom: 10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.white,                            
-                            boxShadow: [
-                              BoxShadow(
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                                color: Colors.grey.shade300)
-                            ]),
-                        child: Column(
-                          children: <Widget>[
-                            ListView.separated(
-                              itemCount: 2,
-                              // routeList.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                // RouteList route = routeList[index];
-                                return InkWell(
-                                  onTap: () {
-                                    // setState(() {
-                                    //   selectedRouteDropDown = routeList[index];
-                                    //   _selectedRoutePosition = index;
-                                    // });
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    padding: const EdgeInsets.only(left: 13.0,
-                                        right: 10.0,
-                                        top: 12,
-                                        bottom: 12),
-                                    color: 
-                                    // route ==
-                                        // selectedRouteDropDown //route == selectedRoute//_selectedRoutePosition == index
-                                        // ?
-                                         Colors.blue[50],
-                                        // : Colors.transparent,
-                                    child: BuildText.buildText(
-                                      text: 'Select Pharmacy',
-                                      // "${route.routeName ?? "Select Pharmacy"}",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.lightBlue),
-                                    ),
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (BuildContext context,int index) {
-                                return const Divider(height: 1,);
-                              },
-                            ),
-                            const Divider(height: 1,),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
-                              child: Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: InkWell(
-                                      onTap: () {
-                                        // setState(() {
-                                        //   selectedRouteDropDown = selectedRoute;
-                                        //   _isVisibleRouteList = false;
-                                        //   hideTote = false;
-                                        // });
-                                      },
-                                      child: BuildText.buildText(
-                                        text:  kCancel,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w800,
-                                            color: AppColors.redColor),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: InkWell(
-                                      onTap: () {
-                                        // if (_selectedRoutePosition < 0) {
-                                        //   Fluttertoast.showToast(
-                                        //       msg: "Choose Route First");
-                                        //   return;
-                                        // }
-                                        // setState(() {
-                                        //   selectedType =
-                                        //       WebConstant.Status_total;
-                                        //   _isVisibleRouteList = false;
-                                        //   hideTote = false;
-                                        //   selectedRoute =
-                                        //   routeList[_selectedRoutePosition];
-
-                                        //   routeId = "${selectedRoute.routeId}";
-                                        //   SharedPreferences.getInstance().then((
-                                        //       value) {
-                                        //     value.setString(
-                                        //         WebConstant.ROUTE_ID, routeId);
-                                        //   });
-                                        //   setState(() {
-                                        //     isProgressAvailable = true;
-                                        //   });
-                                        //   orderListType = 1;
-                                        //   fetchDeliveryList(0);
-                                        // });
-                                      },
-                                      child: BuildText.buildText(
-                                        text:  kConfirm,
-                                        style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.greenAccent),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-              
+                )
               ],
             ),
           ],
         ),
         bottomNavigationBar: InkWell(
-          onTap: (){
+          onTap: () {
             showDialog(
-              context: context, 
+              context: context,
               builder: (context) {
                 return const ConfirmationRouteStartDialog();
-              },);
+              },
+            );
           },
-          child: Container(          
+          child: Container(
             color: AppColors.blueColor,
-             padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BuildText.buildText(
-                  text: kStartRoute,
-                  color: AppColors.whiteColor,
-                  size: 16,
-                  weight: FontWeight.w700
-          ),
+                    text: kStartRoute,
+                    color: AppColors.whiteColor,
+                    size: 16,
+                    weight: FontWeight.w700),
               ],
-            ),        
+            ),
           ),
-        )
-    );
+        ));
   }
 
- Future barcodeScanning() async {
+  Future barcodeScanning() async {
     var result = await BarcodeScanner.scan(); //options: ScanOptions()
     PrintLog.printLog("Type:${result.type}");
     PrintLog.printLog("RawContent:${result.rawContent}");
-    if(result.rawContent.toString().length > 10){
-      PrintLog.printLog("Product code is :${result.rawContent}");     
-    }else{
+    if (result.rawContent.toString().length > 10) {
+      PrintLog.printLog("Product code is :${result.rawContent}");
+    } else {
       ToastCustom.showToast(msg: 'Not found');
     }
   }
-
 }

@@ -3,16 +3,16 @@ import 'package:get/get.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
-import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../../main.dart';
 
 
 
-class NotificationController extends GetxController{
+class DriverProfileController extends GetxController{
 
 
   ApiController apiCtrl = ApiController();
-  List<NotificationData>? notificationData;
+  DriverProfileData? driverProfileData;
 
   bool isLoading = false;
   bool isError = false;
@@ -20,7 +20,7 @@ class NotificationController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  Future<NotificationApiResponse?> notificationApi({required BuildContext context,}) async {
+  Future<DriverProfileApiResponse?> driverProfileApi({required BuildContext context,}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -32,24 +32,24 @@ class NotificationController extends GetxController{
     "":""
     };
 
-    String url = WebApiConstant.NOTIFICATION_URL;
+    String url = WebApiConstant.GET_DRIVER_PROFILE_URL;
 
-    await apiCtrl.getNotificaitonApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {
-      if(result != null){
-        if (result.status != false) {
+    await apiCtrl.getDriverProfileApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {          
+      if(result != null){        
+        if (result.status != false) {          
           try {
-            if (result.status == true) {
-              notificationData = result.data;
+            if (result.status == true) {              
+              PrintLog.printLog("email id is ::: ${result.data?.emailId}");
+              driverProfileData = result.data;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
              
-
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog(result.message);
+              PrintLog.printLog(result.status);
             }
 
           } catch (_) {
@@ -62,7 +62,7 @@ class NotificationController extends GetxController{
           changeSuccessValue(false);
           changeLoadingValue(false);
           changeErrorValue(true);
-          PrintLog.printLog(result.message);
+          PrintLog.printLog(result.status);
         }
       }else{
         changeSuccessValue(false);

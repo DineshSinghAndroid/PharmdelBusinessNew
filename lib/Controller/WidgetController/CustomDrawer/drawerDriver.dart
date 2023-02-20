@@ -7,8 +7,10 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/ProjectController/DriverProfile/driverProfileController.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import '../../../main.dart';
+import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../RouteController/RouteNames.dart';
 import '../AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
 import '../Popup/PopupCustom.dart';
@@ -29,6 +31,25 @@ class DrawerDriver extends StatefulWidget {
 }
 
 class DrawerDriverState extends State<DrawerDriver> {
+
+  DriverProfileController drProfCtrl = Get.put(DriverProfileController());
+
+   @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
+    drProfCtrl.isNetworkError = false;
+    drProfCtrl.isEmpty = false;
+    if (await ConnectionValidator().check()) {
+      await drProfCtrl.driverProfileApi(context: context);
+    } else {
+      drProfCtrl.isNetworkError = true;
+      setState(() {});
+    }
+  }
 
   Future<File>? imageFile;
   double opacity = 0.0;
@@ -88,16 +109,14 @@ class DrawerDriverState extends State<DrawerDriver> {
 
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // logger.w('#DRIVER TYPE : $driverType');
     // logger.w('#DRIVER TYPE : $virPop');
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    return Drawer(
+    return GetBuilder<DriverProfileController>(
+      init: drProfCtrl,
+      builder: (controller) {
+        return Drawer(
       child: Scaffold(
           backgroundColor: Colors.white,
           key: scaffoldKey,
@@ -144,7 +163,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                   )),
                             buildSizeBox(0.0, 20.0),
                               BuildText.buildText(
-                                text:  name,
+                                text:  controller.driverProfileData?.firstName ?? "",
                                 style: const TextStyle(
                                     fontSize: 18, color: Colors.black),
                               ),
@@ -243,7 +262,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       size: 12,
                                     ),
                                    buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: kContactNumber)
+                                    BuildText.buildText(text: kContactNumber,color: AppColors.blackColor)
                                   ],
                                 ),
                                 buildSizeBox(5.0, 0.0),
@@ -255,7 +274,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       size: 12,
                                     ),
                                    buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: kemail)
+                                    BuildText.buildText(text: controller.driverProfileData?.emailId ?? "")
                                   ],
                                 ),
                              buildSizeBox(5.0, 0.0),
@@ -342,6 +361,8 @@ class DrawerDriverState extends State<DrawerDriver> {
               ],
             ),
           )),
+    );
+      },
     );
   }
 

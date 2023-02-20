@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-import '../../Helper/ColorController/CustomColors.dart';
+import 'package:lottie/lottie.dart';
 
 
 class LoadingWidget extends StatelessWidget {
@@ -12,30 +10,25 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery.of(context).size.height;
+     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
-      color: Colors.black12,
-      child: Center(
-        child: Container(
-          height: 50,
-          width: 50,
-          padding: const EdgeInsets.all(5.0),
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white
-          ),
-          child: Center(
-            child: SpinKitSpinningLines(
-              color: CustomColors.loaderColor,
-              lineWidth: 8,
-              itemCount: 1,
-              size: 50.0
-            ),
-          ),
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+              height: 150.00,
+              width: 200.00,          
+              child: Center(
+                  child: SizedBox(
+                      height: 150.0,
+                      width: 300.0,
+                      child: Lottie.network('https://assets4.lottiefiles.com/packages/lf20_wfsunjgd.json'),
+                      ))),
+        ],
       ),
     );
   }

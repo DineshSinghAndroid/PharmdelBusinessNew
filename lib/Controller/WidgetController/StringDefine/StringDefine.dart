@@ -10,6 +10,7 @@ const String kByContOur = "By continuing, you agree to our ";
 const String kTermsOfService = 'Terms of Service';
 const String kPrivacyPolicy = 'Privacy Policy';
 
+
 /// Logo
 const String kSplashLogo = "assets/logo/logo.png";
 
@@ -19,12 +20,12 @@ const String strIMG_HomeBg = "assets/images/bottom_bg.png";
 const String strIMG_NewGIF = "assets/images/new.gif";
 const String strIMG_SpeedoMeter = "assets/images/speedometer.png";
 
+
 /// Toast Msg
 const String kStoragePermissionToast = "msg...";
 
 
 ///DashBoard Screen
-
 const String kBulkScan = "Bulk Scan";
 const String kTotal = "Total";
 const String kPickedUp = "Picked Up";
@@ -33,6 +34,7 @@ const String kFailed = "Failed";
 const String kStartRoute = "START ROUTE";
 const String kScanRx = "Scan Rx";
 const String kSelectRoute = "Select Route";
+const String kSelectPhar = 'Select Pharmacy';
 
 
 ///Drawer

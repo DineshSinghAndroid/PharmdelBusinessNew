@@ -100,12 +100,12 @@ List<String> items = [
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: BuildText.buildText(
-                                        text:  value,                                      
+                                        text:  value,
                                       ),
                                     );
                                   }).toList(),
                                   hint: BuildText.buildText(
-                                    text:  kSelectTitle,                                 
+                                    text:  kSelectTitle,
                                   ),
                                 ),
                               )),
@@ -140,7 +140,7 @@ List<String> items = [
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: BuildText.buildText(
-                                        text:  value,                                      
+                                        text: value,                                      
                                       ),
                                     );
                                   }).toList(),

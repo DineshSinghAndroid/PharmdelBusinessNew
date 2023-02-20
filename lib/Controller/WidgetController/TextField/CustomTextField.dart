@@ -84,7 +84,7 @@ class CustomTextField extends StatelessWidget{
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide(color: AppColors.greyColor,)),           
           prefixIcon: prefixIcon,
-          filled: true,
+          filled: true,          
           fillColor: AppColors.greyColor.withOpacity(0.03),
           suffixIconConstraints: const BoxConstraints(minWidth: 50, maxHeight: 55),
           hintStyle: TextStyle(fontFamily: FontFamily.NexaRegular,color: Colors.grey),
