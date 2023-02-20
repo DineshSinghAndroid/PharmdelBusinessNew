@@ -1,4 +1,4 @@
- import 'package:toast/toast.dart';
+ import 'package:fluttertoast/fluttertoast.dart';
 
 DateTime? currentBackPressTime;
 
@@ -7,7 +7,7 @@ Future<bool> onWillPop() {
   if (currentBackPressTime == null ||
       now.difference(currentBackPressTime!) > Duration(seconds: 1)) {
     currentBackPressTime = now;
-    Toast.show( "Are you sure want to exit app?");
+    Fluttertoast.showToast(msg: "Are you sure want to exit app?");
     return Future.value(false);
   }
   return Future.value(true);
