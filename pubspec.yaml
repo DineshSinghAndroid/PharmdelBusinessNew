@@ -47,7 +47,7 @@ dependencies:
 
   dio:
   get:
-  camera:
+  camera: ^0.10.3+1
   page_transition:
   pull_to_refresh:
   device_info_plus:
@@ -63,7 +63,7 @@ dependencies:
 #  toast:
   connectivity_plus:
   permission_handler:
-  image_picker:
+  image_picker: ^0.8.6+3
   shared_preferences:
   flutter_svg:
   cached_network_image:

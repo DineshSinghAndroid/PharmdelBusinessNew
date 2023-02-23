@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/Helper/TextController/FontFamily/FontFamily.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
@@ -407,8 +408,8 @@ List<String> routeList = ['north', 'south'];
                                                 text: kPickedUp,
                                                 color: AppColors.blueColorLight,
                                                 size: 12,
-                                                weight: FontWeight.w500
-                                              )
+                                                weight: FontWeight.w600
+                                              ),
                                             ],
                                           )
                                         ],

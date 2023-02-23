@@ -160,7 +160,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                   )),
                             buildSizeBox(0.0, 20.0),
                               BuildText.buildText(
-                                text:  controller.driverProfileData?.firstName ?? "",
+                                text:  controller.driverProfileData?.data?.firstName ?? "",
                                 style: const TextStyle(
                                     fontSize: 18, color: Colors.black),
                               ),
@@ -271,7 +271,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       size: 12,
                                     ),
                                    buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: controller.driverProfileData?.emailId.toString() ?? "")
+                                    BuildText.buildText(text: controller.driverProfileData?.data?.emailId.toString() ?? "")
                                   ],
                                 ),
                              buildSizeBox(5.0, 0.0),
@@ -316,7 +316,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                           onTap: () {
                             Get.toNamed(pdfViewScreenRoute,
                             arguments: PdfViewScreen(
-                              pdfUrl: "https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf",
+                              pdfUrl: controller.driverProfileData?.userManual ?? "",
                             ));
                           },
                           leading: const Icon(Icons.question_mark,size: 20),

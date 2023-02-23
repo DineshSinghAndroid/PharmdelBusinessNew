@@ -9,6 +9,8 @@ const String kHowToGuide= "How to guide";
 const String kByContOur = "By continuing, you agree to our ";
 const String kTermsOfService = 'Terms of Service';
 const String kPrivacyPolicy = 'Privacy Policy';
+const String kCustomerList = 'Customer List';
+const String kAddNewCustomer = 'Add New Customer';
 
 
 /// Logo
