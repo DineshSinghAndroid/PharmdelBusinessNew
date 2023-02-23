@@ -37,9 +37,9 @@ class NotificationController extends GetxController{
     await apiCtrl.getNotificaitonApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
-        if (result.status != false) {
-          try {
-            if (result.status == true) {
+        if (result.status != false) {          
+          try {            
+            if (result.status == true) {              
               notificationData = result.data;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);

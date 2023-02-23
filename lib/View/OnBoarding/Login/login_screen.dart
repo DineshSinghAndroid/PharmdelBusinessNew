@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
 import 'package:pharmdel/Controller/WidgetController/TextField/CustomTextField.dart';
 import 'package:pharmdel/Controller/WidgetController/Toast/ToastCustom.dart';
@@ -82,26 +83,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           size: 32,
                           weight: FontWeight.w600,
                         ),
-                        buildSizeBox(Get.height / 16, 0.0),
+                        buildSizeBox(Get.height / 16, 0.0),                      
                         CustomTextField(
                           isError: isEmail,
                           autofillHints: const [AutofillHints.name],
                           readOnly: false,
                           controller: emailCT,
-                          errorText: isEmail ? kEmail : "",
+                          // errorText: isEmail ? kEmail : "",
                           hintText: kEmail,
                           keyboardType: TextInputType.text,
                           validator: (value) {
                             return null;
                           },
                         ),
-                        // buildSizeBox(Get.height / 50, 0.0),
+                        buildSizeBox(Get.height / 50, 0.0),
                         CustomTextField(
                           isError: isPassword,
                           autofillHints: const [AutofillHints.name],
                           readOnly: false,
                           controller: passCT,
-                          errorText: isPassword ? kPassword : "",
+                          // errorText: isPassword ? kPassword : "",
                           hintText: kPassword,
                           keyboardType: TextInputType.text,
                           validator: (value) {
@@ -128,7 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         buildSizeBox(20.0, 0.0),
                         ButtonCustom(
-                          onPress: loginBtn,
+                          onPress: ()async{
+                            await loginBtn();
+                          },
                           text: kContinue,
                           buttonWidth: MediaQuery.of(context).size.width,
                           buttonHeight: 50,
@@ -198,12 +201,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  loginBtn() async {
+  Future loginBtn() async {
     if (emailCT.text.isNotEmpty && passCT.text.isNotEmpty) {
       PrintLog.printLog(":::BtnCLICK....");
       await loginCtrl.loginApi(context: context, userMail: emailCT.text.toString().trim(),
-          userPass: passCT.text.toString().trim(), deviceName: 'abce').then((value) {
-        FocusScope.of(context).unfocus();
+          userPass: passCT.text.toString().trim()).then((value) {
+        FocusScope.of(context).unfocus();        
       });
     }
     else{

@@ -3,7 +3,10 @@
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
+import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
+import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
+import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/Login/login_model.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
@@ -40,15 +43,11 @@ class ApiController {
   /// Login Api
 
 
-  Future<LoginModel?> loginApi(
-      {context, required String url, dictParameter, String? token})
-  async {
+  Future<LoginModel?> getLoginApi({context, required String url, dictParameter, String? token}) async {
     LoginModel? result;
     if (await ConnectionValidator().check()) {
-     logs.log("url is $url") ;
       try {
-        final response = await requestPostForApi(context: context,
-            url: url,dictParameter: dictParameter,token: '');
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
           result = LoginModel.fromJson(response?.data);
           print("THIS IS API RESULT FOR LOGIN API $result");
@@ -113,7 +112,74 @@ class ApiController {
     return null;
   }
 
-  ///Driver Profile
+
+  ///Notification Count Api
+    Future<NotificationCountApiResponse?> getNotificationCountApi({context, required String url, dictParameter, String? token}) async {
+    NotificationCountApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = NotificationCountApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  //Driver Dashboard Api
+  Future<DriverDashboardApiresponse?> getDriverDashboardApi({context, required String url, dictParameter, String? token}) async {
+    DriverDashboardApiresponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverDashboardApiresponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  //Driver Routes Api
+  Future< DriverRoutesApiResposne?> getDriverRoutesApi({context, required String url, dictParameter, String? token}) async {
+    DriverRoutesApiResposne? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverRoutesApiResposne.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Driver Profile Api
   Future<DriverProfileApiResponse?> getDriverProfileApi({context, required String url, dictParameter, String? token}) async {
     DriverProfileApiResponse? result;
     if (await ConnectionValidator().check()) {

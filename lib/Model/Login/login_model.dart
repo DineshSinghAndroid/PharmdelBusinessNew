@@ -1,14 +1,14 @@
 class LoginModel {
-  int? userId;
-  int? customerId;
+  String? userId;
+  String? customerId;
   String? name;
   String? email;
-  Null? mobile;
+  String? mobile;
   String? userType;
-  int? companyId;
-  int? pharmacyId;
-  int? changePassword;
-  int? routeId;
+  String? companyId;
+  String? pharmacyId;
+  String? changePassword;
+  String? routeId;
   bool? isStartRoute;
   String? driverType;
   bool? status;
@@ -18,9 +18,9 @@ class LoginModel {
   String? pin;
   bool? isAddressUpdated;
   bool? error;
-  int? startMiles;
-  Null? endMiles;
-  int? showWages;
+  String? startMiles;
+  String? endMiles;
+  String? showWages;
 
   LoginModel(
       {this.userId,
@@ -47,28 +47,28 @@ class LoginModel {
         this.showWages});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    customerId = json['customerId'];
-    name = json['name'];
-    email = json['email'];
-    mobile = json['mobile'];
-    userType = json['userType'];
-    companyId = json['companyId'];
-    pharmacyId = json['pharmacy_id'];
-    changePassword = json['changePassword'];
-    routeId = json['routeId'];
+    userId = json['userId'] != null ? json['userId'].toString():null;
+    customerId = json['customerId'] != null ? json['customerId'].toString():null;
+    name = json['name'] != null ? json['name'].toString():null;
+    email = json['email'] != null ? json['email'].toString():null;
+    mobile = json['mobile'] != null ? json['mobile'].toString():null;
+    userType = json['userType'] != null ? json['userType'].toString():null;
+    companyId = json['companyId'] != null ? json['companyId'].toString():null;
+    pharmacyId = json['pharmacy_id'] != null ? json['pharmacy_id'].toString():null;
+    changePassword = json['changePassword'] != null ? json['changePassword'].toString():null;
+    routeId = json['routeId'] != null ? json['routeId'].toString():null;
     isStartRoute = json['isStartRoute'];
-    driverType = json['driver_type'];
+    driverType = json['driver_type'] != null ? json['driver_type'].toString():null;
     status = json['status'];
-    message = json['message'];
+    message = json['message'] != null ? json['message'].toString():null;
     isOrderAvailable = json['isOrderAvailable'];
-    token = json['token'];
-    pin = json['pin'];
+    token = json['token'] != null ? json['token'].toString():null;
+    pin = json['pin'] != null ? json['pin'].toString():null;
     isAddressUpdated = json['isAddressUpdated'];
     error = json['error'];
-    startMiles = json['start_miles'];
-    endMiles = json['end_miles'];
-    showWages = json['show_wages'];
+    startMiles = json['start_miles'] != null ? json['start_miles'].toString():null;
+    endMiles = json['end_miles'] != null ? json['end_miles'].toString():null;
+    showWages = json['show_wages'] != null ? json['show_wages'].toString():null;
   }
 
   Map<String, dynamic> toJson() {

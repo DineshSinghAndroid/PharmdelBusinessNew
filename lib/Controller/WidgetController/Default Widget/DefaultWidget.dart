@@ -54,14 +54,14 @@ class DefaultWidget {
                   color: Colors.grey.shade300)
             ]),
         child: Column(
-          children: <Widget>[
-            Text(
-              label,
+          children: [
+            BuildText.buildText(
+              text: label,
               style: const TextStyle(
                   fontSize: 10, fontWeight: FontWeight.w300, color: Colors.white),
             ),
-            Text(
-              "${counter ?? 0}",
+            BuildText.buildText(
+              text: counter,
               style: const TextStyle(
                   fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white),
             ),

@@ -11,23 +11,20 @@ import 'package:pharmdel/Controller/ProjectController/DriverProfile/driverProfil
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import '../../../main.dart';
 import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
+import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../RouteController/RouteNames.dart';
 import '../AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
+import '../Popup/CustomDialogBox.dart';
 import '../Popup/PopupCustom.dart';
 import '../StringDefine/StringDefine.dart';
 
 
 class DrawerDriver extends StatefulWidget {
-  static String tag = 'place_order-screen';
 
-  String? versionCode = "";
-
-  DrawerDriver({super.key, this.versionCode, CurrentRemainingTimeIS});
+   const DrawerDriver({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {    
-    return DrawerDriverState();
-  }
+  State<StatefulWidget> createState() => DrawerDriverState();
 }
 
 class DrawerDriverState extends State<DrawerDriver> {
@@ -274,7 +271,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       size: 12,
                                     ),
                                    buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: controller.driverProfileData?.emailId ?? "")
+                                    BuildText.buildText(text: controller.driverProfileData?.emailId.toString() ?? "")
                                   ],
                                 ),
                              buildSizeBox(5.0, 0.0),
@@ -347,7 +344,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                         ),
                  
                       ListTile(
-                          onTap: () {},
+                          onTap: validateAndLogout,
                           leading: const Icon(Icons.logout,size: 20),
                           title:BuildText.buildText(text: klogout)
                         ),
@@ -364,6 +361,19 @@ class DrawerDriverState extends State<DrawerDriver> {
     );
       },
     );
+  }
+
+  void validateAndLogout() {
+    CustomDialogBox.showCustomDialogBox(
+        onPress: () async {
+          await AppSharedPreferences.clearSharedPref();
+          authToken = '';
+          Get.offAllNamed(loginScreenRoute);
+        },
+        context: context,
+        title: 'Logout',
+        message: "Are You Sure To Logout",
+        buttonTitle: "Logout");
   }
 
 //   Future<void> showStartMilesDialog() async {

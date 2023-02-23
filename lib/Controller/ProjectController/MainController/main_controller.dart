@@ -13,11 +13,10 @@ class MyApp extends StatelessWidget {
     return  Sizer(
       builder: (context, orientation, deviceType) {
         return const GetMaterialApp(
-
+          initialRoute: splashScreenRoute,
           debugShowCheckedModeBanner: false,
           onGenerateRoute: router.generateRoute,
-          // initialRoute: splashScreenRoute,
-          home: LoginScreen(),
+          // initialRoute: splashScreenRoute,          
           title: "Pharmdel Business",
         );
       },

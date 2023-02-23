@@ -39,7 +39,7 @@ class DriverProfileController extends GetxController{
       if(result != null){        
         if (result.status != false) {          
           try {
-            if (result.status == true) {              
+            if (result.status == true) {
               PrintLog.printLog("email id is ::: ${result.data?.emailId}");
               driverProfileData = result.data;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
@@ -49,7 +49,7 @@ class DriverProfileController extends GetxController{
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog(result.status);
+              PrintLog.printLog("Status is ${result.status}");
             }
 
           } catch (_) {

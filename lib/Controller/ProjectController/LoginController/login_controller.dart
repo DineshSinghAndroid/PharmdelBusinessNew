@@ -1,10 +1,8 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/WidgetController/Loader/LoadingScreen.dart';
+import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/main.dart';
-
 import '../../../Model/Login/login_model.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
@@ -24,14 +22,7 @@ class LoginController extends GetxController {
 
   LoginModel? loginModel;
 
-  Future<LoginModel?> loginApi({
-    required BuildContext context,
-    required String userMail,
-    required String userPass,
-    required String deviceName,
-
-
-  }) async {
+  Future<LoginModel?> loginApi({required BuildContext context, required String userMail, required String userPass,})async{
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -42,39 +33,31 @@ class LoginController extends GetxController {
     Map<String, dynamic> dictparm = {
       "email":userMail,
       "password":userPass,
-      "device_name":'device',
-      "fcm_token":'',
-
+      "device_name":'android',
+      "fcm_token":authToken,
     };
+
 
     String url = WebApiConstant.LOGINURL_DRIVER;
 
-    await apiCtrl.loginApi(context:context,url: url,
-        dictParameter: dictparm,token:authToken)
+    await apiCtrl.getLoginApi(context:context,url: url,dictParameter: dictparm,token:'')
         .then((result) async {
        if(result != null){
         if (result.error != true) {
           try {
             if (result.error == false) {
-              await saveUserData(loginData: result);
-
+              await saveUserData(userData: result);
               loginModel = result;
-              result == null ?
-              changeEmptyValue(true): changeEmptyValue(false);
+              Get.toNamed(homeScreenRoute);
               changeLoadingValue(false);
               changeSuccessValue(true);
               ToastCustom.showToast(msg: result.message ?? "");
-
-
-
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
               PrintLog.printLog(result.message);
               ToastCustom.showToast(msg: result.message ?? "");
-
             }
-
           } catch (_) {
             changeSuccessValue(false);
             changeLoadingValue(false);
@@ -122,18 +105,18 @@ class LoginController extends GetxController {
 }
 
 
-Future<void> saveUserData({LoginModel? loginData})async{
-  await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userId, variableValue: loginData?.userId.toString() ?? "");
-  await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.driverType, variableValue: loginData?.userType.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.customerID, variableValue: loginData?.customerId.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userName, variableValue: loginData?.name.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.pharmacyID, variableValue: loginData?.pharmacyId.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.authToken, variableValue: loginData?.token.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userPin, variableValue: loginData?.pin.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startMiles, variableValue: loginData?.startMiles.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.endMiles, variableValue: loginData?.endMiles.toString() ?? "");
-   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.showWages, variableValue: loginData?.showWages.toString() ?? "");
-  authToken = loginData?.token.toString() ?? "";
+Future<void> saveUserData({LoginModel? userData})async{
+  await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userId, variableValue: userData?.userId.toString() ?? "");
+  await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.driverType, variableValue: userData?.userType.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.customerID, variableValue: userData?.customerId.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userName, variableValue: userData?.name.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.pharmacyID, variableValue: userData?.pharmacyId.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.authToken, variableValue: userData?.token.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userPin, variableValue: userData?.pin.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startMiles, variableValue: userData?.startMiles.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.endMiles, variableValue: userData?.endMiles.toString() ?? "");
+   await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.showWages, variableValue: userData?.showWages.toString() ?? "");
+  authToken = userData?.token.toString() ?? "";
 
 }
 

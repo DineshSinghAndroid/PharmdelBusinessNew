@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
@@ -69,7 +70,7 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
             appBar: AppBar(
               title: BuildText.buildText(text: kMyNotifiaction, size: 18),
               centerTitle: true,
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.whiteColor,
               leading: InkWell(
                 onTap: () {
                   Navigator.pop(context);

@@ -23,6 +23,8 @@ const String strIMG_SpeedoMeter = "assets/images/speedometer.png";
 
 /// Toast Msg
 const String kStoragePermissionToast = "msg...";
+const String kChangeRouteMsg = "You are already on a route, you can't change before completed.";
+const String kDontHaveroute = "You don't have any route. Try again after and refresh now.";
 
 
 ///DashBoard Screen
@@ -35,6 +37,8 @@ const String kStartRoute = "START ROUTE";
 const String kScanRx = "Scan Rx";
 const String kSelectRoute = "Select Route";
 const String kSelectPhar = 'Select Pharmacy';
+const String kParcelLocation = 'Parcel Location';
+const String kAddressPara = '17 Fairwood Drive port Talbot West Glamorgan SA128NS';
 
 
 ///Drawer

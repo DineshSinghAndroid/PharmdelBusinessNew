@@ -16,15 +16,15 @@ class AppColors {
   static Color whiteColor = const Color(0xFFFFFFFF);
   static Color colorOrange = Colors.orange;
   static Color greyColor = const Color(0xFF9E9E9E);
-  static Color blueLightColor = const Color(0xFFc797f7);
   static Color blackColor = Colors.black;
   static Color redColor =  Colors.red;
   static Color purpleColor = const Color(0xFF6A56EA);
   static Color purpleColorLight = const Color(0xFF9796FF);
   static Color greenColorLight = const Color(0xFFEEFFE5);
   static Color greenColor = Colors.green;
+  static Color greenAccentColor = Colors.greenAccent;
   static Color pinkColorLight = const Color(0xFFFEDEFB);
-  static Color blueColorLight = const Color(0xFFF3F2FD);
+  static Color blueColorLight = Colors.lightBlue;
   static Color blueColor = Colors.blue;
   static Color primaryTextColor = const Color(0xFF1A1316);
   static MaterialColor materialAppThemeColor = const MaterialColor(

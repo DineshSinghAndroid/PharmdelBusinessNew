@@ -9,11 +9,15 @@ class WebApiConstant {
 
   /// Public
   static const String API_URL_INTRO                          =  "${BASE_URL}intro";
-    static const String SETPIV_DRIVER                        =  "${BASE_URL}setPin";
+  static const String SETPIV_DRIVER                          =  "${BASE_URL}setPin";
   static const String LOGINURL_DRIVER                        =  "${BASE_URL}Login";
   static const String TERMS_URL                              =  "${BASE_URL}terms-condition-app";
   static const String PRIVACY_URL                            =  "${BASE_URL}privacy-policy-app";
   static const String NOTIFICATION_URL                       =  "${BASE_URL}GetNotifications";
   static const String GET_DRIVER_PROFILE_URL                 =  "${BASE_URL}GetDriverProfile";
+  static const String GET_NOTIFICATION_COUNT                 =  "${BASE_URL}GetNotificationCount";
+  static const String GET_DELIVERY_LIST                      =  "${BASE_URL}GetDeliveryList";
+  static const String GET_DRIVER_ROUTES                      =  "${BASE_URL}GetRoutes";
+  static const String GET_DRIVER_LOGOUT_URL                  =  "${BASE_URL}Logout";
  
 }
