@@ -45,7 +45,7 @@ class DriverDashboardController extends GetxController{
       if(result != null){
         if (result.status != false) {
           try {
-            if (result.status == true) {
+            if (result.status == true) {              
               driverDashboardData = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
@@ -148,15 +148,17 @@ class DriverDashboardController extends GetxController{
 
     await apiCtrl.getDriverRoutesApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
+          PrintLog.printLog('Route List : ${result?.routeList}');
       if(result != null){
         if (result.status != false) {
           try {
             if (result.status == true) {
+              print("All Route List : ${result.allRouteList}");
               routesData = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
-
+              
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);

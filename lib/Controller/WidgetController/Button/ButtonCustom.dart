@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 
 import '../../Helper/ColorController/CustomColors.dart';
 
@@ -47,8 +48,8 @@ class ButtonCustom extends MaterialButton{
           height: buttonHeight,
           width: buttonWidth,
           alignment: Alignment.center,
-          child: Text(
-            text,style: TextStyle(color: textColor ?? Colors.white,fontSize: textSize ??  buttonHeight! * 0.35),
+          child: BuildText.buildText(
+            text: text,style: TextStyle(color: textColor ?? Colors.white,fontSize: textSize ??  buttonHeight! * 0.35),
             textAlign: TextAlign.center,
           ),
         ),
@@ -98,8 +99,8 @@ class ButtonCustomWithBorder extends MaterialButton{
                 width: 1.5),
             borderRadius: BorderRadius.circular(20)
         ),
-        child: Text(
-          text,style: TextStyle(color: textColor ?? Colors.white,fontSize: textSize ??  buttonHeight! * 0.50),
+        child: BuildText.buildText(
+          text: text,style: TextStyle(color: textColor ?? Colors.white,fontSize: textSize ??  buttonHeight! * 0.50),
           textAlign: TextAlign.center,
         ),
       ),

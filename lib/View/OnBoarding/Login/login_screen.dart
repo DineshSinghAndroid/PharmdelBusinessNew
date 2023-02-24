@@ -1,11 +1,8 @@
-import 'dart:developer';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
 import 'package:pharmdel/Controller/WidgetController/TextField/CustomTextField.dart';
 import 'package:pharmdel/Controller/WidgetController/Toast/ToastCustom.dart';
@@ -14,8 +11,8 @@ import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/Helper/StringDefine/StringDefine.dart';
 import '../../../Controller/ProjectController/LoginController/login_controller.dart';
+import '../../../Controller/WidgetController/Popup/CustomDialogBox.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../EnterPin/securePin.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -35,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController passCT = TextEditingController();
   TextEditingController emailCT = TextEditingController();
+  TextEditingController forgotEmailCT = TextEditingController();
 
   //login controller
   LoginController loginCtrl = Get.put(LoginController());
@@ -138,7 +136,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: AppColors.colorAccent,
                         ),
                         buildSizeBox(15.0, 0.0),
-                        BuildText.buildText(text: kForgotPassword, size: 16, weight: FontWeight.bold),
+                        TextButton(
+                          onPressed: (){
+                           CustomDialogBox.forgotPassDialog(
+                                  onPress: (){}, 
+                                  context: context, 
+                                  title: kForgotPassword, 
+                                  controller: forgotEmailCT);
+                          },
+                          child: BuildText.buildText(text: kForgotPassword, size: 16, weight: FontWeight.bold)),
                         buildSizeBox(Get.height / 15, 0.0),
                         const Text(
                           kHowToGuide,

@@ -1,50 +1,20 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import '../../Helper/ColorController/CustomColors.dart';
+import '../../Helper/ImagePicker/ImagePicker.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
-import '../../Helper/Shared Preferences/SharedPreferences.dart';
-import '../../Helper/TextController/FontFamily/FontFamily.dart';
-import '../Button/ButtonCustom.dart';
 import '../StringDefine/StringDefine.dart';
-
-class PopupCustom {
-  static userLogoutPopUP({required BuildContext context}) {
-    return showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (_) {
-          return const LogoutPopUP();
-        }).then((value) {
-      PrintLog.printLog("Value is: $value");
-      if (value == true) {
-        AppSharedPreferences.clearSharedPref().then((value) {
-          // Get.offAllNamed(loginScreenRoute);
-        });
-      }
-    });
-  }
-
-  static seatNotAvailablePopUP(
-      {required Function(dynamic) onValue,
-      required BuildContext context,
-      required Function()? onTap,
-      required String message}) {
-    return showDialog(
-      context: context,
-      builder: (_) {
-        return Container();
-      },
-    ).then(onValue);
-  }
-}
 
 class LogoutPopUP extends StatelessWidget {
   const LogoutPopUP({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,84 +232,156 @@ class LogoutPopUP extends StatelessWidget {
 //   }
 // }
 
-class EnterMilesDialog extends StatelessWidget {
+class EnterMilesDialog extends StatefulWidget {
   const EnterMilesDialog({super.key});
 
   @override
+  State<EnterMilesDialog> createState() => _EnterMilesDialogState();
+}
+
+class _EnterMilesDialogState extends State<EnterMilesDialog> {
+  XFile? imageFile;
+  String? profileImage;
+  CameraController? controller;
+
+  ImagePickerController? imagePicker = Get.put(ImagePickerController());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColors.blackColor.withOpacity(0.3),
-      body: DelayedDisplay(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(20)),
-              height: 320,
-              width: Get.width,
+    return GetBuilder<ImagePickerController>(
+      init: imagePicker,
+      builder: (controller) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: CustomColors.blackColor.withOpacity(0.3),
+          body: DelayedDisplay(
+            child: Center(
               child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 40),
-                child: Column(
-                  children: [
-                    BuildText.buildText(
-                        text: kEnterMiles, size: 16, weight: FontWeight.w400),
-                    buildSizeBox(5.0, 0.0),
-                    BuildText.buildText(text: 'and'),
-                    buildSizeBox(5.0, 0.0),
-                    BuildText.buildText(
-                        text: kTakeSpdMtrPic,
-                        size: 16,
-                        weight: FontWeight.w400),
-                    buildSizeBox(20.0, 0.0),
-                    SizedBox(
-                      height: 50,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            labelText: kPlsEntStrmiles,
-                            labelStyle: TextStyle(
-                                color: AppColors.blueColor, fontSize: 15),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide:
-                                    BorderSide(color: AppColors.blueColor)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide:
-                                    BorderSide(color: AppColors.blueColor))),
-                      ),
-                    ),
-                    buildSizeBox(10.0, 0.0),
-                    Image.asset(
-                      strIMG_SpeedoMeter,
-                      height: 70,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.circular(20)),
+                  height: 320,
+                  width: Get.width,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 40),
+                    child: Column(
                       children: [
-                        TextButton(
-                            onPressed: () {
-                              Get.back();
+                        BuildText.buildText(
+                            text: kEnterMiles,
+                            size: 16,
+                            weight: FontWeight.w400),
+                        buildSizeBox(5.0, 0.0),
+                        BuildText.buildText(text: 'and'),
+                        buildSizeBox(5.0, 0.0),
+                        BuildText.buildText(
+                            text: kTakeSpdMtrPic,
+                            size: 16,
+                            weight: FontWeight.w400),
+                        buildSizeBox(20.0, 0.0),
+                        SizedBox(
+                          height: 50,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                labelText: kPlsEntStrmiles,
+                                labelStyle: TextStyle(
+                                    color: AppColors.blueColor, fontSize: 15),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide:
+                                        BorderSide(color: AppColors.blueColor)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                        color: AppColors.blueColor))),
+                          ),
+                        ),
+                        buildSizeBox(10.0, 0.0),
+                        InkWell(
+                            onTap: () {
+                              getImage("Camera", context);
                             },
-                            child: BuildText.buildText(
-                                text: kNo, weight: FontWeight.w700, size: 16)),
-                        TextButton(
-                            onPressed: () {},
-                            child: BuildText.buildText(
-                                text: kYes, weight: FontWeight.w700, size: 16))
+                            child: SizedBox(
+                              height: 70,
+                              width: 70,
+                              child: ClipRRect(
+                                 borderRadius: BorderRadius.circular(50.0),
+                                child: imagePicker?.profileImage != null ?
+                                              Image.file(File(imagePicker?.profileImage?.path ?? ""),fit: BoxFit.fitWidth)
+                                                  : profileImage != null && profileImage.toString() != "" ?
+                                Image.asset(
+                                      strIMG_SpeedoMeter,
+                                       height: 70,
+                                   ) : Container()
+                              ),
+                            )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: BuildText.buildText(
+                                    text: kNo,
+                                    weight: FontWeight.w700,
+                                    size: 16)),
+                            TextButton(
+                                onPressed: () {},
+                                child: BuildText.buildText(
+                                    text: kYes,
+                                    weight: FontWeight.w700,
+                                    size: 16))
+                          ],
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+
+  void getImage(source, BuildContext context) {
+    imagePicker?.getImage(source, context, "profileImage");
+  }
+
+  //  Future<void> initCamera() async {
+  //   List<CameraDescription> cameras = await availableCameras();
+  //   controller = CameraController(cameras[0], ResolutionPreset.medium);
+  //   await controller!.initialize();
+  //   setState(() {});
+  // }
+  //   Future imageSelector(BuildContext context, String pickerType) async {
+  //   switch (pickerType) {
+  //     case "gallery":
+  //       imageFile = await ImagePicker.platform.getImage(source: ImageSource.gallery);
+  //       break;
+  //     case "camera":
+  //       imageFile = await ImagePicker.platform.getImage(source: ImageSource.camera);
+  //       break;
+  //   }
+
+  //   if (imageFile != null) {
+  //     PrintLog.printLog("You selected  image : ${imageFile!.path}");
+  //     setState(() {
+  //       debugPrint("SELECTED IMAGE PICK   $imageFile");
+  //     });
+  //   } else {
+  //     print("You have not taken image");
+  //   }
+  // }
 }
 
 class ConfirmationRouteStartDialog extends StatefulWidget {
@@ -394,8 +436,7 @@ class _ConfirmationRouteStartDialogState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BuildText.buildText(
-                              text: kStartRouteFrom,
-                              weight: FontWeight.w500),
+                              text: kStartRouteFrom, weight: FontWeight.w500),
                           buildSizeBox(5.0, 0.0),
                           //Start route Radio Tile
                           Container(
@@ -420,17 +461,15 @@ class _ConfirmationRouteStartDialogState
                             ),
                           ),
                           buildSizeBox(5.0, 0.0),
-                          Container(                            
+                          Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
                                 color: AppColors.blueColor.withOpacity(0.7),
                                 border: Border.all(
                                     width: 0.4, color: Colors.grey.shade300)),
                             child: RadioListTile(
-                              visualDensity: const VisualDensity(
-                                  horizontal: -4, vertical: -4),
-                              title:
-                                  BuildText.buildText(text: kCurrentLocation),
+                              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                              title: BuildText.buildText(text: kCurrentLocation),
                               activeColor: Colors.white,
                               contentPadding: EdgeInsets.zero,
                               value: 2,
@@ -443,11 +482,9 @@ class _ConfirmationRouteStartDialogState
                             ),
                           ),
                           buildSizeBox(10.0, 0.0),
-
                           ///End Route Radio Tile
                           BuildText.buildText(
-                              text: kEndRouteFrom,
-                              weight: FontWeight.w500),
+                              text: kEndRouteFrom, weight: FontWeight.w500),
                           buildSizeBox(5.0, 0.0),
                           //Start route Radio Tile
                           Container(

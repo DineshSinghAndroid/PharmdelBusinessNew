@@ -12,7 +12,7 @@ class DriverProfileController extends GetxController{
 
 
   ApiController apiCtrl = ApiController();
-  DriverProfileData? driverProfileData;
+  DriverProfileApiResponse? driverProfileData;
 
   bool isLoading = false;
   bool isError = false;
@@ -35,28 +35,27 @@ class DriverProfileController extends GetxController{
     String url = WebApiConstant.GET_DRIVER_PROFILE_URL;
 
     await apiCtrl.getDriverProfileApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {          
-      if(result != null){        
-        if (result.status != false) {          
+        .then((result) async {
+      if(result != null){
+        if (result.status != "false") {
           try {
-            if (result.status == true) {
-              PrintLog.printLog("email id is ::: ${result.data?.emailId}");
-              driverProfileData = result.data;
-              result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+            if (result.status == "true") {
+              driverProfileData = result;
+              result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
              
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog("Status is ${result.status}");
+              PrintLog.printLog("Status : ${result.status}");
             }
 
           } catch (_) {
             changeSuccessValue(false);
             changeLoadingValue(false);
             changeErrorValue(true);
-            PrintLog.printLog("Exception : $_");
+            PrintLog.printLog("Exception : $_");          
           }
         }else{
           changeSuccessValue(false);

@@ -30,7 +30,7 @@ class SplashController extends GetxController {
     Future.delayed(const Duration(seconds: 3), () {
 
       if (userId != "") {
-        Get.toNamed(loginScreenRoute);
+        Get.toNamed(homeScreenRoute);
 
         print("Going to Home Screen");
 
