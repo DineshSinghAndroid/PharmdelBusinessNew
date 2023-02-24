@@ -55,7 +55,6 @@ export '../../WidgetController/ImageHelper/ImageHelper.dart';
 export '../../WidgetController/Loader/LoadingScreen.dart';
 export '../../WidgetController/Popup/PopupCustom.dart';
 export '../../WidgetController/Popup/CustomDialogBox.dart';
-export '../../WidgetController/Popup/CustomAddReviewDialog.dart';
 export '../../WidgetController/RefresherIndicator/RefreshIndicatorCustom.dart';
 export '../../WidgetController/TextField/CustomTextField.dart';
 export '../../WidgetController/Toast/ToastCustom.dart';
