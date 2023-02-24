@@ -29,7 +29,6 @@ dependencies:
 #  maps_launcher: ^2.0.1
 #  google_maps_flutter: ^2.2.0
 
-<<<<<<< HEAD
   dio: ^5.0.0
   get: ^4.6.5
   camera: ^0.10.3+1
@@ -54,32 +53,6 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter_spinkit: ^5.1.0
   flutter_launcher_icons: ^0.11.0
-=======
-  dio:
-  get:
-  camera: ^0.10.3+1
-  page_transition:
-  pull_to_refresh:
-  device_info_plus:
-  flutter_screenutil:
-  loading_overlay:
-  package_info_plus:
-  delayed_display:
-  share_plus:
-  photo_view:
-  sizer:
-  preload_page_view:
-  fluttertoast:
-#  toast:
-  connectivity_plus:
-  permission_handler:
-  image_picker: ^0.8.6+3
-  shared_preferences:
-  flutter_svg:
-  cached_network_image:
-  flutter_spinkit:
-  flutter_launcher_icons:
->>>>>>> 6c12e55d84cb10cb8bb8a6d00e15adb69a41d0a0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
