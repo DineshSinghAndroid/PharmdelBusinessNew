@@ -1,8 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Model/Login/login_model.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
@@ -22,13 +24,10 @@ class LoginController extends GetxController {
 
   LoginModel? loginModel;
 
-  Future<LoginModel?> loginApi({required BuildContext context, required String userMail, required String userPass,})async{
+  Future<LoginModel?> loginApi({
+    required BuildContext context, required String userMail, required String userPass,})
+  async{
 
-    changeEmptyValue(false);
-    changeLoadingValue(true);
-    changeNetworkValue(false);
-    changeErrorValue(false);
-    changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
       "email":userMail,
@@ -44,62 +43,58 @@ class LoginController extends GetxController {
         .then((result) async {
        if(result != null){
         if (result.error != true) {
+          ToastCustom.showToast(msg: result.message ?? "");
+
           try {
             if (result.error == false) {
               await saveUserData(userData: result);
               loginModel = result;
-              Get.toNamed(homeScreenRoute);
-              changeLoadingValue(false);
-              changeSuccessValue(true);
+              _loginCheck();
               ToastCustom.showToast(msg: result.message ?? "");
             } else {
-              changeLoadingValue(false);
-              changeSuccessValue(false);
               PrintLog.printLog(result.message);
               ToastCustom.showToast(msg: result.message ?? "");
             }
           } catch (_) {
-            changeSuccessValue(false);
-            changeLoadingValue(false);
-            changeErrorValue(true);
+
             PrintLog.printLog("Exception : $_");
+            ToastCustom.showToast(msg: result.message ?? "");
+
+
           }
         }else{
-          changeSuccessValue(false);
-          changeLoadingValue(false);
-          changeErrorValue(true);
+
           PrintLog.printLog(result.message);
           ToastCustom.showToast(msg: result.message ?? "");
 
         }
       }else{
-        changeSuccessValue(false);
-        changeLoadingValue(false);
-        changeErrorValue(true);
-      }
+
+       }
     });
     update();
   }
 
-  void changeSuccessValue(bool value){
-    isSuccess = value;
-    update();
-  }
-  void changeLoadingValue(bool value){
-    isLoading = value;
-    update();
-  }
-  void changeEmptyValue(bool value){
-    isEmpty = value;
-    update();
-  }
-  void changeNetworkValue(bool value){
-    isNetworkError = value;
-    update();
-  }
-  void changeErrorValue(bool value){
-    isError = value;
-    update();
+
+
+  Future<void> _loginCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(kQuickPin, loginModel?.pin.toString()??"");
+    if (loginModel!.pin != "") {
+      if (loginModel!.userType == "Driver") {
+        Get.toNamed(homeScreenRoute);
+      }
+      else if (loginModel!.userType == "Pharmacy Staff") {
+        Get.toNamed(pharmacyHomePage);
+      }
+    }
+    else if(loginModel!.pin == "" ){
+      Get.toNamed(setupPinScreenRoute);
+    }
+    else {
+ToastCustom.showToast(msg: loginModel!.message??'');
+    }
+
   }
 
 }

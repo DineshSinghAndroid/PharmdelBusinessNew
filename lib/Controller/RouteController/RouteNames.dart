@@ -12,3 +12,8 @@ const String createPatientScreenRoute = "createPatient_screen";
 const String updateAddressScreenRoute = "updateAddress_screen";
 const String pdfViewScreenRoute = "pdfView_screen";
 
+
+
+
+//Pharmacy
+const String pharmacyHomePage = "pharmacyHomeScreen";
