@@ -128,8 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         buildSizeBox(20.0, 0.0),
                         ButtonCustom(
-                          onPress: ()async{
-                            await loginBtn();
+                          onPress: () {
+                              loginBtn();
                           },
                           text: kContinue,
                           buttonWidth: MediaQuery.of(context).size.width,
@@ -203,8 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future loginBtn() async {
     if (emailCT.text.isNotEmpty && passCT.text.isNotEmpty) {
-      PrintLog.printLog(":::BtnCLICK....");
-      await loginCtrl.loginApi(context: context, userMail: emailCT.text.toString().trim(),
+       await loginCtrl.loginApi(context: context, userMail: emailCT.text.toString().trim(),
           userPass: passCT.text.toString().trim()).then((value) {
         FocusScope.of(context).unfocus();        
       });

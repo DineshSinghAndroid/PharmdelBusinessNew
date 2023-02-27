@@ -51,15 +51,18 @@ class ApiController {
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
-        if (response?.data != null && response?.statusCode == 200) {
-          result = LoginModel.fromJson(response?.data);
+        print(response?.statusCode.toString());
+        print(response.toString());
+        if (response?.data != null && response!.statusCode == 200) {
+          result = LoginModel.fromJson(response.data);
           print("THIS IS API RESULT FOR LOGIN API $result");
           return result;
         } else {
-          print("THIS IS API RESULT FOR LOGIN API $result");
+          ToastCustom.showToast(msg: response?.statusMessage.toString()??"");
         }
       } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
+
+        PrintLog.printLog("Exception_main1s: $e");
 
         return result;
 
@@ -98,26 +101,32 @@ class ApiController {
 
 
   ///Setup Pin Api
-  Future<SetupMPinApiResponse?> setupMPinApi({context, required String url, dictParameter, String? token}) async {
-    SetupMPinApiResponse? result;
+  Future<SetUpPinModel?> setMPinAPi({context, required String url, dictParameter, String? token}) async {
+    SetUpPinModel? _result;
     if (await ConnectionValidator().check()) {
       try {
-        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token!);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = SetupMPinApiResponse.fromJson(response?.data);
-          return result;
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+         print(response.toString());
+        if (response?.data != null && response!.statusCode == 200) {
+          _result = SetUpPinModel.fromJson(response.data);
+          print("THIS IS API RESULT FOR LOGIN API $_result");
+          return _result;
         } else {
-          return result;
+          ToastCustom.showToast(msg: response?.statusMessage.toString()??"");
         }
       } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-        return result;
+
+        PrintLog.printLog("Exception_main1s: $e");
+
+        return _result;
+
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);
     }
     return null;
   }
+
 
   ///Notification Api
     Future<NotificationApiResponse?> getNotificaitonApi({context, required String url, dictParameter, String? token}) async {

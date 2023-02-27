@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_Home/HomePage.dart';
 import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
@@ -53,9 +54,18 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
 
 
-    // case dashboardScreenRoute:
-    //   final args = settings.arguments as DashboardScreen;
-    //   return PageTransition(type: PageTransitionType.bottomToTop,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: DashboardScreen(screenIndex: args.screenIndex,));
+
+
+
+
+
+
+
+      //Pharmacy
+    case pharmacyHomePage:
+       return PageTransition(type: PageTransitionType.rightToLeft,
+          duration: const Duration(milliseconds: 300),
+          alignment: Alignment.center, child:   PharmacyHomeScreen( ));
 
 
     default:
