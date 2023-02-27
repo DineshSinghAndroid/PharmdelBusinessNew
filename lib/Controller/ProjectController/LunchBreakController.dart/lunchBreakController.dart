@@ -1,13 +1,13 @@
+import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Model/LunchBreak/lunchBreakResponse.dart';
 import 'package:pharmdel/main.dart';
-import '../../../Model/ForgotPassword/forgotPasswordResponse.dart';
-import '../../../Model/Login/login_model.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
+import '../../Helper/Permission/PermissionHandler.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 
 class LunchBreakController extends GetxController {
@@ -21,7 +21,7 @@ class LunchBreakController extends GetxController {
   bool isSuccess = false;
 
  
-    Future<LunchBreakApiResponse?> lunchBreakApi({required BuildContext context,required String lat, required String lng, required String isStart})async{
+    Future<LunchBreakApiResponse?> lunchBreakApi({required BuildContext context,required double lat, required double lng, required int statusBreak})async{
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -32,7 +32,7 @@ class LunchBreakController extends GetxController {
     Map<String, dynamic> dictparm = {
       "lat":lat,
       "lng":lng,
-      "is_start":isStart,
+      "is_start":statusBreak,
     };
 
 
@@ -68,6 +68,19 @@ class LunchBreakController extends GetxController {
       }
     });
     update();
+  }
+
+
+  getLocationData({required double lat, required double lng, required BuildContext context}) async {
+    CheckPermission.checkLocationPermission(context).then((value) async {
+      if (value == true) {
+        var position = await GeolocatorPlatform.instance.getCurrentPosition(
+            locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+        lat = position.latitude;
+        lng = position.longitude;
+        logger.i("Lat and long when lunch off by driver is :::::::::::::::::$lat ::: $lng");
+      }
+    });
   }
 
   void changeSuccessValue(bool value){

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/ProjectController/LunchBreakController.dart/lunchBreakController.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 class LunchBreakScreen extends StatefulWidget {
@@ -16,6 +20,30 @@ class LunchBreakScreen extends StatefulWidget {
 }
 
 class _LunchBreakScreenState extends State<LunchBreakScreen> {
+
+  LunchBreakController LchBrkCtrl = Get.put(LunchBreakController());
+
+  double lat = 0.0;
+  double lng = 0.0;
+  int value = 0;
+
+  @override
+  void initState() {
+    LchBrkCtrl.getLocationData(lat: lat, lng: lng, context: context);
+    super.initState();
+  }
+
+  // Future<void> init()async{
+  //   LchBrkCtrl.isNetworkError = false;
+  //   LchBrkCtrl.isEmpty = false;
+  //   if (await ConnectionValidator().check()) {
+  //     await LchBrkCtrl.lunchBreakApi(context: context,lat: lat,lng: lng,isStart: 0);
+  //   } else {
+  //     LchBrkCtrl.isNetworkError = true;
+  //     setState(() {});
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +66,18 @@ class _LunchBreakScreenState extends State<LunchBreakScreen> {
             ),
             buildSizeBox(30.0, 0.0),
             ButtonCustom(
-              onPress: (){
-                Future.delayed(
+              onPress: ()async{
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                bool? isUserOnbreak = prefs.getBool("UserOnBreak");
+                // if (isUserOnbreak == true){
+                  await LchBrkCtrl.lunchBreakApi(context: context, lat: lat, lng: lng, statusBreak: 0).then((value) {
+                    prefs.setBool("UserOnBreak", false);
+                    Future.delayed(
                   const Duration(seconds: 1,),
                   () => Get.toNamed(homeScreenRoute),
                 );
+                  },);
+                // }                
               }, 
               text: kEndBreak,               
               buttonWidth: Get.width - 60, 

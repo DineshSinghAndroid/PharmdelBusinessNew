@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
 import 'package:pharmdel/Controller/WidgetController/TextField/CustomTextField.dart';
 import 'package:pharmdel/Controller/WidgetController/Toast/ToastCustom.dart';
- import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/Helper/StringDefine/StringDefine.dart';
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           size: 32,
                           weight: FontWeight.w600,
                         ),
-                        buildSizeBox(Get.height / 16, 0.0),                      
+                        buildSizeBox(Get.height / 16, 0.0),
                         CustomTextField(
                           isError: isEmail,
                           autofillHints: const [AutofillHints.name],
@@ -129,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         buildSizeBox(20.0, 0.0),
                         ButtonCustom(
                           onPress: () {
-                              loginBtn();
+                            loginBtn();
                           },
                           text: kContinue,
                           buttonWidth: MediaQuery.of(context).size.width,
@@ -138,16 +139,42 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         buildSizeBox(15.0, 0.0),
                         TextButton(
-                          onPressed: (){
-                           CustomDialogBox.forgotPassDialog(
-                                  onPress: ()async{
-                                    await loginCtrl.forgotPasswordApi(context: context, customerEmail: forgotEmailCT.text.toString().trim());
-                                  }, 
-                                  context: context, 
-                                  title: kForgotPassword, 
-                                  controller: forgotEmailCT);
-                          },
-                          child: BuildText.buildText(text: kForgotPassword, size: 16, weight: FontWeight.bold)),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => CustomDialogBox(
+                                        title: kForgotPassword,
+                                        textField: TextFormField(
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder()
+                                                ,hintText: "Enter Email"
+                                          ),
+                                          controller: forgotEmailCT,
+                                        ),
+                                        descriptions: 'Enter your mail id',
+                                        button1: MaterialButton(
+                                          onPressed: () async {
+                                            if(forgotEmailCT.text !='') {
+                                              await loginCtrl.forgotPasswordApi(context: context, customerEmail: forgotEmailCT.text.toString().trim());
+                                              Navigator.pop(context);
+                                            }
+                                            else{
+                                              ToastCustom.showToast(msg: "Please Enter Email");
+                                            }
+                                          },
+                                          child: Text("Submit"),
+                                        ),
+                                        button2: MaterialButton(
+                                          onPressed: () {                                              Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          },
+                                          child: Text("Cancel"),
+                                        ),
+                                      ));
+
+                              print("Btn clicked forgot password");
+                            },
+                            child: BuildText.buildText(text: kForgotPassword, size: 16, weight: FontWeight.bold)),
                         buildSizeBox(Get.height / 15, 0.0),
                         const Text(
                           kHowToGuide,
@@ -203,14 +230,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future loginBtn() async {
     if (emailCT.text.isNotEmpty && passCT.text.isNotEmpty) {
-       await loginCtrl.loginApi(context: context, userMail: emailCT.text.toString().trim(),
-          userPass: passCT.text.toString().trim()).then((value) {
-        FocusScope.of(context).unfocus();        
+      await loginCtrl.loginApi(context: context, userMail: emailCT.text.toString().trim(), userPass: passCT.text.toString().trim()).then((value) {
+        FocusScope.of(context).unfocus();
       });
-    }
-    else{
-      ToastCustom.showToast(msg:'Please Enter Email and password',);
-
+    } else {
+      ToastCustom.showToast(
+        msg: 'Please Enter Email and password',
+      );
     }
   }
 }

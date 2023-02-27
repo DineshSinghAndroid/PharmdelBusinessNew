@@ -6,9 +6,13 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:sizer/sizer.dart';
+<<<<<<< HEAD
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../DB_Controller/MyDatabase.dart';
+=======
+import '../../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
+>>>>>>> d9abbda302f6e1b2b9e93e6385c7868d9059fda1
 import '../../RouteController/Route.dart'as router;
 import '../../StopWatchController/stop_watch_controller.dart';
 
@@ -433,6 +437,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     return  Sizer(
       builder: (context, orientation, deviceType) {
+<<<<<<< HEAD
         return const OverlaySupport.global(
             child: GetMaterialApp(
             initialRoute: splashScreenRoute,
@@ -441,6 +446,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
             // initialRoute: splashScreenRoute,
             title: "Pharmdel Business",
           )
+=======
+        return const GetMaterialApp(
+          initialRoute: splashScreenRoute,
+          // home: PharmacyHomeScreen(),
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: router.generateRoute,
+           title: "Pharmdel Business",
+>>>>>>> d9abbda302f6e1b2b9e93e6385c7868d9059fda1
         );
 
       },

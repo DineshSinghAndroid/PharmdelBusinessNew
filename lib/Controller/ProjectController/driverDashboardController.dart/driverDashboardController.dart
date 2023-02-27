@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:location/location.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../../Controller/ApiController/ApiController.dart';
@@ -7,6 +10,7 @@ import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../../main.dart';
+import '../../Helper/Permission/PermissionHandler.dart';
 
 
 class DriverDashboardController extends GetxController{
@@ -206,6 +210,56 @@ class DriverDashboardController extends GetxController{
   void changeErrorValue(bool value){
     isError = value;
     update();
+  }
+
+    Future getLocationData({required BuildContext context}) async { 
+    CheckPermission.checkLocationPermission(context).then((value) async {
+      Location? location;
+      LocationData? locationData;
+      PermissionStatus? permissionGranted;
+      List<LocationData> locationArray = [];
+      if (value == true) {
+        if (location == null) location = Location();
+        locationData = await location.getLocation();
+        if (locationData != null) {
+          locationArray.add(locationData);
+        }
+        if (permissionGranted == PermissionStatus.denied) {
+          permissionGranted = await location.requestPermission();
+          if (permissionGranted != PermissionStatus.granted) {
+            return;
+          } 
+        }
+        if (permissionGranted == PermissionStatus.granted) {
+          locationData = await location.getLocation();
+          location.changeSettings(
+              distanceFilter: 10, accuracy: LocationAccuracy.high);
+          location.enableBackgroundMode(enable: true);
+          location.onLocationChanged.listen((LocationData currentLocation) {      
+            locationArray.add(currentLocation);
+            if (locationArray.length > 5) locationArray.removeAt(0);
+          });
+        }
+      }
+    });
+  }
+
+  _toRadians(double degree) {
+    return degree * pi / 180;
+  }
+
+    getDistance(startLatitude, startLongitude, endLatitude, endLongitude) {
+    var earthRadius = 6378137.0;
+    var dLat = _toRadians(endLatitude - startLatitude);
+    var dLon = _toRadians(endLongitude - startLongitude);
+
+    var a = pow(sin(dLat / 2), 2) +
+            pow(sin(dLon / 2), 2) *
+            cos(_toRadians(startLatitude)) *
+            cos(_toRadians(endLatitude));
+    var c = 2 * asin(sqrt(a));
+    // print("Distance between two points ${earthRadius * c}");
+    return earthRadius * c; //distance in meters
   }
 
 }
