@@ -26,6 +26,10 @@ class AppSharedPreferences {
   static String userPin = "userPin";
   static String showWages = "showWages";
 
+  static String routeID = "route_id";
+  static String isRouteStart = "is_route_start";
+  static String deviceID = "device_id";
+
 
 
   /// ADD DATA

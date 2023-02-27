@@ -1,5 +1,10 @@
 class WebApiConstant {
 
+  /// Socket Url
+  static const String SOCKET_URL = 'wss://pharmdel.com:3000'; //socket live url
+  // static const String SOCKET_URL = 'wss://pharmdel.co.uk:3000'; // socket staging url
+
+
 
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
   static const String BASE_URL                               =  BASE_URL_DOMAIN +"/api/Delivery/v22/";
@@ -19,5 +24,7 @@ class WebApiConstant {
   static const String GET_VEHICLE_LIST_URL                   =  "${BASE_URL}getVehicleList";
   static const String FORGOT_PASSWORD_URL                    =  "${BASE_URL}ForgotPassword?customerEmail=";
   static const String LUNCH_BREAK_URL                        =  "${BASE_URL}updateBreakTime";
- 
+
+  static const String DELIVERY_SIGNATURE_UPLOAD_URL          =  "${BASE_URL}Acknowledge";
+
 }

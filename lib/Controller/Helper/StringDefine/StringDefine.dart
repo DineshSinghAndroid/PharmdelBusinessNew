@@ -193,3 +193,5 @@ const String kSecurePinNotMatch = "Secure pin does not match";
 const String kOldPinNotMatch = "'Old pin not correct'";
 const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
+const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
+const String kCheckAgain = "Check Again";
