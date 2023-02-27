@@ -1,231 +1,167 @@
+ import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import '../../Helper/Colors/custom_color.dart';
-import '../../Helper/StringDefine/StringDefine.dart';
-import '../Button/ButtonCustom.dart';
-import '../StringDefine/StringDefine.dart';
+import 'package:flutter/widgets.dart';
+ // import 'package:progress_dialog/progress_dialog.dart';
 
+class CustomDialogBox extends StatefulWidget {
+  final String ? title, descriptions, btnDone, btnNo;
+  final Image ? img;
+  final Widget ? closeIcon, descriptionWidget;
+  final Widget ? textField;
+  final Widget ? cameraIcon;
+  final Widget ?button1;
+  final Widget ? button2;
+  final OnClicked ?onClicked;
+  final Icon? icon;
 
-class CustomDialogBox {
+    CustomDialogBox({  Key? key, this.icon, this.button1, this.button2, this.cameraIcon,  this.textField, this.onClicked,
+    this.title, this.descriptions, this.btnDone, this.img, this.btnNo, this.closeIcon, this.descriptionWidget}) : super(key: key);
 
-  static showCustomDialogBox({
-    required CallbackFunction onPress,
-    required BuildContext context,
-    required String title,
-    required String message,
-    required String buttonTitle,
-    String? subText,
-    String? image,
-  }) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 10),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0)), //this right here
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              height: 250,
-              width: Get.width - 30,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  /// Close Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                          )),
-                    ],
-                  ),
-
-                  // ///Dialog Image
-                  // Expanded(
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  //     child: SizedBox(
-                  //         height: 220,
-                  //         child: Image.asset(image ?? "")),
-                  //   ),
-                  // ),
-
-                  /// title
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10),
-                        child: BuildText.buildText(
-                            text: title   ,
-                            size: 25,
-                            textAlign: TextAlign.center),
-                      ),
-                    ],
-                  ),
-
-                  /// Message Text
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, right: 5),
-                        child: BuildText.buildText(
-                            text: message,
-                            color: Colors.black.withOpacity(0.5),
-                            textAlign: TextAlign.center),
-                      ),
-                    ],
-                  ),
-
-                  /// SubTitle
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 10),
-                        child: BuildText.buildText(
-                            text: subText ?? "SubTitle",
-                            color: AppColors.blackColor),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  /// Button
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 47),
-                    child: ButtonCustom(
-                      onPress: onPress,
-                      text: buttonTitle,
-                      buttonHeight: 50,
-                      buttonWidth: Get.width,
-                      backgroundColor: AppColors.colorAccent,
-                    )
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-static forgotPassDialog({
-    required CallbackFunction onPress,
-    required BuildContext context,
-    required String title,
-    required TextEditingController controller,
-
-  }) {
-    showDialog(
-      barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 10),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)), //this right here
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              height: 330,
-              width: Get.width - 30,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [                                                    
-                  /// title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 10),
-                    child: BuildText.buildText(
-                        text: title,
-                        size: 16,
-                        textAlign: TextAlign.center),
-                  ),
-
-              SizedBox(
-                height: 50,
-                width: Get.width,
-                child: TextFormField(
-                controller: controller,                                        
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.name,
-                maxLines: 1,
-                decoration: InputDecoration(
-                    labelText: kemail,
-                    labelStyle:
-                        TextStyle(color: AppColors.greyColor, fontSize: 15),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: AppColors.greyColor)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: AppColors.greyColor))),
-                          ),
-              ),
-
-                  /// Button
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Card(
-                            elevation: 2,
-                            margin: EdgeInsets.zero,
-                            child: ButtonCustom(
-                              onPress: (){
-                                Get.back();
-                              },
-                              text: kCancel,
-                              textColor: AppColors.greyColor,
-                              buttonHeight: 40,
-                              buttonWidth: Get.width,
-                              backgroundColor: AppColors.whiteColor,
-                            ),
-                          ),
-                        ),
-                        buildSizeBox(0.0, 15.0),
-                        Flexible(
-                          flex: 1,
-                          child: Card(
-                            elevation: 2,
-                            margin: EdgeInsets.zero,
-                            child: ButtonCustom(
-                              onPress: onPress,
-                              text: kSubmit,
-                              buttonHeight: 40,
-                              buttonWidth: Get.width,
-                              textColor: AppColors.colorAccent,
-                              backgroundColor: AppColors.whiteColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
+  @override
+  _CustomDialogBoxState createState() => _CustomDialogBoxState();
 }
 
+class _CustomDialogBoxState extends State<CustomDialogBox> {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 0,
+      insetPadding: EdgeInsets.all(20),
+      backgroundColor: Colors.transparent,
+      child: contentBox(context),
+    );
+  }
 
-typedef CallbackFunction = void Function();
+  contentBox(context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 10, top: 45, right: 10, bottom: 20),
+          margin: EdgeInsets.only(top: 45),
+          decoration: BoxDecoration(shape: BoxShape.rectangle, color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
+            BoxShadow(color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
+          ]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (widget.title != null)
+                Text(
+                  widget.title ??'',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+              if (widget.title != null)
+                SizedBox(
+                  height: 15,
+                ),
+              if (widget.descriptionWidget != null) widget.descriptionWidget!,
+              if (widget.descriptions != null)
+                Text(
+                  widget.descriptions??'',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              if (widget.descriptions != null || widget.descriptionWidget != null)
+                SizedBox(
+                  height: 22,
+                ),
+              if (widget.textField != null) widget.textField!,
+              if (widget.textField != null)
+                SizedBox(
+                  height: 10,
+                ),
+              if (widget.cameraIcon != null) widget.cameraIcon!,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.button1 != null) widget.button1!,
+                  Spacer(),
+                  if (widget.button2 != null) widget.button2!,
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.btnNo != null)
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: TextButton(
+                        // color: widget.btnDone == "End Route" ? Colors.grey : Colors.transparent,
+                          style: TextButton.styleFrom(
+                            fixedSize: Size.fromHeight(30),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            if (widget.onClicked != null) widget.onClicked!(false);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 0.0, right: 10),
+                            child: Text(
+                              widget.btnNo!,
+                              style: TextStyle(fontSize: 18, color: widget.btnNo == "Reoptimise stops" ? Colors.blueAccent : Colors.black),
+                              textAlign: TextAlign.start,
+                            ),
+                          )),
+                    ),
+                  Spacer(),
+                  if (widget.btnDone != null)
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                            fixedSize: Size.fromHeight(30),
+                          ),
+                          // color: widget.btnDone == "End Route" ? Colors.orange : Colors.transparent,
+                          onPressed: () {
+                            // stopWatchTimer.onResetTimer();
+                            // stopWatchTimer.onEnded();
+                            Navigator.pop(context);
+                            if (widget.onClicked != null) widget.onClicked!(true);
+                          },
+                          child: Text(
+                            widget.btnDone!,
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: widget.btnDone == "End Route"
+                                    ? Colors.red
+                                    : widget.btnDone == "Skip"
+                                    ? Colors.orange
+                                    : Colors.black),
+                          )),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (widget.closeIcon != null) widget.closeIcon!,
+        if (widget.img != null || widget.icon != null)
+          Positioned(
+            left: 20,
+            right: 20,
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 45,
+              child: Container(
+                  width: 60,
+                  height: 60,
+                  child: widget.descriptions == 'Please wait\nWe are updating your offline deliveries.' || widget.descriptions == "Please wait\nWe are updating deliveries and ending route."
+                      ? new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 3.0,
+                  )
+                      : widget.img != null
+                      ? widget.img
+                      : widget.icon),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+typedef OnClicked = void Function(bool value);

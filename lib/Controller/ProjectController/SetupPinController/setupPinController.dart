@@ -9,6 +9,7 @@ import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
 import '../../../Model/SetupPin/setupPin_model.dart';
+import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../Helper/StringDefine/StringDefine.dart';
 
 class SetupMPinController extends GetxController {
@@ -17,7 +18,7 @@ class SetupMPinController extends GetxController {
   @override
   Future<void> onInit() async {
     final prefs = await SharedPreferences.getInstance();
-      strPin = prefs.getString(kQuickPin)??"";
+      strPin = prefs.getString(AppSharedPreferences.userPin)??"";
     userType = prefs.getString(kUSERTYPE)??"";
 
     // TODO: implement onInit
@@ -124,8 +125,8 @@ PrintLog.printLog("This is dictparam" +dictparm.toString());
       pin: int.parse(txtConfirmOtp.text)).then((value) async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString(kQuickPin, txtConfirmOtp.text??"");
-    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${kQuickPin.toString()}")
+    prefs.setString(AppSharedPreferences.userPin, txtConfirmOtp.text??"");
+    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${AppSharedPreferences.userPin.toString()}")
     ;
 
     if(userType == "Pharmacy Staff"){
