@@ -7,9 +7,12 @@ import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
+import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../Model/Login/login_model.dart';
+import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
+import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../Helper/PrintLog/PrintLog.dart';
@@ -50,6 +53,32 @@ class ApiController {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
           result = LoginModel.fromJson(response?.data);
+          print("THIS IS API RESULT FOR LOGIN API $result");
+          return result;
+        } else {
+          print("THIS IS API RESULT FOR LOGIN API $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Forgot Password
+  Future<ForgotPasswordApiResponse?> getForgotPasswordApi({context, required String url, dictParameter, String? token}) async {
+    ForgotPasswordApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = ForgotPasswordApiResponse.fromJson(response?.data);
           print("THIS IS API RESULT FOR LOGIN API $result");
           return result;
         } else {
@@ -194,6 +223,55 @@ class ApiController {
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
         return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Get Vehicle List Api
+    Future<VehicleListApiResponse?> getVehicleListApi({context, required String url, dictParameter, String? token}) async {
+    VehicleListApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = VehicleListApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Lunch Break Api
+  Future<LunchBreakApiResponse?> getLunchBreakApi({context, required String url, dictParameter, String? token}) async {
+    LunchBreakApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = LunchBreakApiResponse.fromJson(response?.data);
+          print("THIS IS API RESULT FOR LOGIN API $result");
+          return result;
+        } else {
+          print("THIS IS API RESULT FOR LOGIN API $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);

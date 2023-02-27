@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/main.dart';
+import '../../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../../Model/Login/login_model.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
@@ -21,6 +22,7 @@ class LoginController extends GetxController {
   bool isSuccess = false;
 
   LoginModel? loginModel;
+    ForgotPasswordApiResponse? forgotPassData;
 
   Future<LoginModel?> loginApi({required BuildContext context, required String userMail, required String userPass,})async{
 
@@ -49,6 +51,61 @@ class LoginController extends GetxController {
               await saveUserData(userData: result);
               loginModel = result;
               Get.toNamed(homeScreenRoute);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+              ToastCustom.showToast(msg: result.message ?? "");
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+              ToastCustom.showToast(msg: result.message ?? "");
+            }
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+          ToastCustom.showToast(msg: result.message ?? "");
+
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+
+    Future<ForgotPasswordApiResponse?> forgotPasswordApi({required BuildContext context, required String customerEmail,})async{
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "customerEmail":customerEmail,
+    };
+
+
+    String url = WebApiConstant.FORGOT_PASSWORD_URL;
+
+    await apiCtrl.getForgotPasswordApi(context:context,url: url,dictParameter: dictparm,token:'')
+        .then((result) async {
+       if(result != null){
+        if (result.error != true) {
+          try {
+            if (result.error == false) {            
+              forgotPassData = result;              
               changeLoadingValue(false);
               changeSuccessValue(true);
               ToastCustom.showToast(msg: result.message ?? "");

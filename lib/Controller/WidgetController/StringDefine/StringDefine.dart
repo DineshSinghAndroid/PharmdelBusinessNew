@@ -102,3 +102,13 @@ const String kCurrentLocation = 'Current Location';
 const String kHomeLocation = 'Home Location';
 
 
+///Lunch Break
+const String kYouAreOnBreak = 'You are on Break';
+const String kEndBreak = 'End Break';
+const String kEndBreakMsg = "(Click 'End Break' button to get back to work)";
+
+///Lottie files links
+const String strLottieLunchBreak = "https://assets3.lottiefiles.com/packages/lf20_1fggr4vt.json";
+
+
+

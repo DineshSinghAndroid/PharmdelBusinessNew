@@ -1,9 +1,6 @@
 class WebApiConstant {
 
-  /// Auth key
 
-  /// Live url
-  // static const String BASE_URL_DOMAIN                        =  "http://192.168.29.105:8300";
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
   static const String BASE_URL                               =  BASE_URL_DOMAIN +"/api/Delivery/v22/";
 
@@ -19,5 +16,8 @@ class WebApiConstant {
   static const String GET_DELIVERY_LIST                      =  "${BASE_URL}GetDeliveryList";
   static const String GET_DRIVER_ROUTES                      =  "${BASE_URL}GetRoutes";
   static const String GET_DRIVER_LOGOUT_URL                  =  "${BASE_URL}Logout";
+  static const String GET_VEHICLE_LIST_URL                   =  "${BASE_URL}getVehicleList";
+  static const String FORGOT_PASSWORD_URL                    =  "${BASE_URL}ForgotPassword?customerEmail=";
+  static const String LUNCH_BREAK_URL                        =  "${BASE_URL}updateBreakTime";
  
 }

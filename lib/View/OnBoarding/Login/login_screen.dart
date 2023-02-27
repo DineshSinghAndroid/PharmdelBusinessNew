@@ -11,6 +11,7 @@ import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/Helper/StringDefine/StringDefine.dart';
 import '../../../Controller/ProjectController/LoginController/login_controller.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
 import '../../../Controller/WidgetController/Popup/CustomDialogBox.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
@@ -139,7 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextButton(
                           onPressed: (){
                            CustomDialogBox.forgotPassDialog(
-                                  onPress: (){}, 
+                                  onPress: ()async{
+                                    await loginCtrl.forgotPasswordApi(context: context, customerEmail: forgotEmailCT.text.toString().trim());
+                                  }, 
                                   context: context, 
                                   title: kForgotPassword, 
                                   controller: forgotEmailCT);
@@ -174,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  redirectToBrowser(WebApiConstant.TERMS_URL);
+                                  DefaultFuntions.redirectToBrowser(WebApiConstant.TERMS_URL);
                                 }),
                           TextSpan(text: ' and ', style: const TextStyle(fontSize: 15, color: Colors.black), children: <TextSpan>[
                             TextSpan(
@@ -182,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: const TextStyle(fontSize: 17, color: Colors.black, decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    redirectToBrowser(WebApiConstant.PRIVACY_URL);
+                                    DefaultFuntions.redirectToBrowser(WebApiConstant.PRIVACY_URL);
                                   })
                           ])
                         ])),
@@ -196,15 +199,6 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
-  }
-
-  Future<void> redirectToBrowser(String url) async {
-    var link = url;
-    if (await canLaunchUrl(Uri.parse(link))) {
-      await launchUrl(Uri.parse(link));
-    } else {
-      throw 'Could not launch $link';
-    }
   }
 
   Future loginBtn() async {

@@ -11,4 +11,5 @@ const String notificationScreenRoute = "notification_screen";
 const String createPatientScreenRoute = "createPatient_screen";
 const String updateAddressScreenRoute = "updateAddress_screen";
 const String pdfViewScreenRoute = "pdfView_screen";
+const String lunchBreakScreenRoute = "lunchBreak_screen";
 

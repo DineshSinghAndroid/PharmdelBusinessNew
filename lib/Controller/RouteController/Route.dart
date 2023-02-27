@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
+import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
 import 'package:pharmdel/View/OnBoarding/Login/login_screen.dart';
 import 'package:pharmdel/View/OnBoarding/SetupPin/setupPin.dart';
 import 'package:pharmdel/View/OnBoarding/Splash/splash_screen.dart';
@@ -44,6 +45,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   case pdfViewScreenRoute:
   final args = settings.arguments as PdfViewScreen;
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:   PdfViewScreen(pdfUrl: args.pdfUrl,));        
+
+
+  case lunchBreakScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const LunchBreakScreen());    
     // case introScreenRoute:
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
 

@@ -10,6 +10,7 @@ import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScree
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/ProjectController/driverDashboardController.dart/driverDashboardController.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
 import '../../../Controller/WidgetController/CustomDrawer/drawerDriver.dart';
 import '../../../Controller/WidgetController/Default Widget/DefaultWidget.dart';
 import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
@@ -184,7 +185,7 @@ List<String> routeList = ['north', 'south'];
                             ],
                           ),
                           onPressed: () {
-                            barcodeScanning();
+                            DefaultFuntions.barcodeScanning();
                           },
                         ),
                       ],
@@ -840,16 +841,5 @@ List<String> routeList = ['north', 'south'];
             );
       },
     );
-  }
-
-  Future barcodeScanning() async {
-    var result = await BarcodeScanner.scan(); //options: ScanOptions()
-    PrintLog.printLog("Type:${result.type}");
-    PrintLog.printLog("RawContent:${result.rawContent}");
-    if (result.rawContent.toString().length > 10) {
-      PrintLog.printLog("Product code is :${result.rawContent}");
-    } else {
-      ToastCustom.showToast(msg: 'Not found');
-    }
   }
 }

@@ -203,17 +203,21 @@ class DrawerDriverState extends State<DrawerDriver> {
                                   Tooltip(
                                     message: kStartLunch,
                                     enableFeedback: true,
-                                    waitDuration: const Duration(microseconds: 1),
+                                    waitDuration: const Duration(microseconds: 100),
                                     child: SizedBox(
-                                      width: 100,
+                                      width: 90,
                                       height: 70,
                                       child: FittedBox(
                                         fit: BoxFit.fill,
-                                        child: Switch(
-                                          dragStartBehavior:
-                                              DragStartBehavior.down,
-                                          onChanged: (bool value) {
-                                            onBreak = value;
+                                        child: Switch(                                         
+                                          onChanged: (bool value) {                                            
+                                            setState(() {
+                                              onBreak = value;
+                                            });
+                                            Future.delayed(
+                                              const Duration(seconds: 1),
+                                              () => Get.toNamed(lunchBreakScreenRoute),
+                                            );
                                           },
                                           value: onBreak,
                                           activeColor: AppColors.colorOrange,
