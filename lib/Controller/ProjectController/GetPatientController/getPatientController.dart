@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Model/OrderDetails/orderdetails_response.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
+import '../../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../../main.dart';
 
 
-
-class OrderDetailController extends GetxController{
+class GetPatientContoller extends GetxController{
 
   ApiController apiCtrl = ApiController();
-  OrderDetailApiResponse? orderDetailData;
+  List<PatientData>? patientData;
 
   bool isLoading = false;
   bool isError = false;
@@ -19,14 +19,7 @@ class OrderDetailController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  Future<OrderDetailApiResponse?> orderDetailApi({
-    required BuildContext context,
-    required String orderID,
-    required String routeID,
-    required bool isScan,
-    required bool isComplete,
-    required bool orderIdMain
-    }) async {
+  Future<GetPatientApiResposne?> getPatientApi({required BuildContext context,required String firstName}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -35,30 +28,41 @@ class OrderDetailController extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-    "OrderId":orderID,
-    "isScan":isScan,
-    "routeId":routeID,
-    "isComplete":isComplete,
-    "orderIdMain":orderIdMain
+    "firstName":firstName
     };
 
-    String url = WebApiConstant.SCAN_ORDER_BY_DRIVER;
+    String url = WebApiConstant.GET_PATAINET_LIST_URL;
 
-    await apiCtrl.getOrderDetailApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.getPatientApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
+        if (result.status != false) {
           try {
-              orderDetailData = result;
-              result == null ? changeEmptyValue(true):changeEmptyValue(false);
+            if (result.status == true) {              
+              patientData = result.list;
+              result.list == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
+              PrintLog.printLog(result.message);
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
 
           } catch (_) {
             changeSuccessValue(false);
             changeLoadingValue(false);
             changeErrorValue(true);
-            PrintLog.printLog("Exception : $_");
-          }      
+            PrintLog.printLog("Exception : $_");          
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }
       }else{
         changeSuccessValue(false);
         changeLoadingValue(false);
@@ -89,6 +93,5 @@ class OrderDetailController extends GetxController{
     isError = value;
     update();
   }
-
 }
 

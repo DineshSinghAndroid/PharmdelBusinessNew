@@ -6,6 +6,8 @@ import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
 import 'package:pharmdel/View/OnBoarding/Login/login_screen.dart';
 import 'package:pharmdel/View/OnBoarding/SetupPin/setupPin.dart';
 import 'package:pharmdel/View/OnBoarding/Splash/splash_screen.dart';
+import 'package:pharmdel/View/ScanPrescription/scan_prescription.dart';
+import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 
 import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
@@ -51,6 +53,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
   case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const LunchBreakScreen());    
+
+
+  case scanPrescriptionScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const ScanPrescriptionScreen());        
+
+
+  case searchPatientScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchPatientScreen());            
     // case introScreenRoute:
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
 

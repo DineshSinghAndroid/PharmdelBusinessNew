@@ -8,6 +8,7 @@ class WebApiConstant {
 
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
   static const String BASE_URL                               =  BASE_URL_DOMAIN +"/api/Delivery/v22/";
+  static const String BASE_URL_PHARMACY                      =  BASE_URL_DOMAIN +"/api/Pharmacy/v22/";
 
   /// Public
   static const String API_URL_INTRO                          =  "${BASE_URL}intro";
@@ -24,9 +25,12 @@ class WebApiConstant {
   static const String GET_VEHICLE_LIST_URL                   =  "${BASE_URL}getVehicleList";
   static const String FORGOT_PASSWORD_URL                    =  "${BASE_URL}ForgotPassword?customerEmail=";
   static const String LUNCH_BREAK_URL                        =  "${BASE_URL}updateBreakTime";
-
   static const String DELIVERY_SIGNATURE_UPLOAD_URL          =  "${BASE_URL}Acknowledge";
-
   static const String SCAN_ORDER_BY_DRIVER                   =  "${BASE_URL}ScanOrderByDriver";
+
+
+  ///Pharmacy
+  static const String GET_PATAINET_LIST_URL                  =  "${BASE_URL_PHARMACY}GetPatient";
+  static const String Get_PHARMACY_DriverList_ByRoute        =  "${BASE_URL_PHARMACY}GetDriverListByRoute";
  
 }

@@ -20,9 +20,16 @@ const String kSplashLogo = "assets/logo/logo.png";
 
 ///Image PNG
 const String strIMG_HomeBg = "assets/images/bottom_bg.png";
-const String strIMG_NewGIF = "assets/images/new.gif";
 const String strIMG_SpeedoMeter = "assets/images/speedometer.png";
 const String strIMG_AltAdd = "assets/images/alt-add.png";
+const String strIMG_DelTruck = "assets/images/delivery_truck.png";
+const String strIMG_Sad = "assets/images/sad.png";
+
+
+///GIF
+const String strIMG_NewGIF = "assets/images/new.gif";
+const String strGIF_processing = "assets/images/processing.gif";
+
 
 /// Toast Msg
 const String kStoragePermissionToast = "msg...";
@@ -88,6 +95,14 @@ const String kUploadingMsg = "Please wait\nWe are updating your offline deliveri
 const String kuploadingMsg1 = "Please wait\nWe are updating deliveries and ending route.";
 const String kinternetNotAvailable = "Seems like you have weak or no internet.\nPlease connect to internet first!";
 const String kStartroute = "Are you sure, you want to start route?";
+const String kAlert = "Alert...";
+const String kOkay = "Okay";
+const String kRouteEnd = "Your route has been ended";
+const String kOptimizingRouteMsg = "Pharmacy optimizing the route, please wait it might take some time";
+const String kCheckAgain = "Check Again";
+const String kEndRoute = "End Route";
+const String kNo = "No";
+const String kEndRouteWarning = "Are you sure,you want to end Route?";
 
 
 ///Update Address
@@ -115,5 +130,6 @@ const String strLottieLunchBreak = "https://assets3.lottiefiles.com/packages/lf2
 ///Search Patient Screen
 const String kNoPatAvl = 'No Patient Available';
 const String kSearchPat = "Search Patient....";
-
-
+const String kCstmList = "Customer List";
+const String kSelCustomer = "Select Customer";
+const String kDOB = "Date of Birth : ";

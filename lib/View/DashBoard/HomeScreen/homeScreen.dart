@@ -89,6 +89,7 @@ List<String> routeList = ['north', 'south'];
             WillPopScope(
               onWillPop: () async => false,
                 child: Scaffold(
+                  resizeToAvoidBottomInset: false,
                     backgroundColor: AppColors.whiteColor,
                     appBar: AppBar(
                       title: BuildText.buildText(text: kBulkScan, size: 15),
@@ -185,7 +186,9 @@ List<String> routeList = ['north', 'south'];
                             ],
                           ),
                           onPressed: () {
-                            DefaultFuntions.barcodeScanning();
+                            Get.toNamed(searchPatientScreenRoute);
+                            // Get.toNamed(scanPrescriptionScreenRoute);
+                            // DefaultFuntions.barcodeScanning();
                           },
                         ),
                       ],
