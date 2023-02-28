@@ -10,13 +10,10 @@ import '../../Helper/StringDefine/StringDefine.dart';
 
 class SplashController extends GetxController {
   String userId = "";
-<<<<<<< HEAD
   bool dialogShowing = false;
 
-=======
   String userType = "";
   String userPin = "";
->>>>>>> d9abbda302f6e1b2b9e93e6385c7868d9059fda1
 
   @override
   void onInit() {

@@ -12,13 +12,13 @@ import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/DriverProfile/profileDriverResponse.dart';
+import '../../../Model/Enum/enum.dart';
 import '../../../main.dart';
 import '../../Helper/Camera/CameraScreen.dart';
 import '../../WidgetController/Loader/LoadingScreen.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
 
 
-enum ConfirmAction { CANCEL, ACCEPT }
 
 class DriverProfileController extends GetxController{
 
