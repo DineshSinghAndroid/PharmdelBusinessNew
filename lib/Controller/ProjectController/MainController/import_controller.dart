@@ -10,7 +10,6 @@ export '../../../main.dart';
 /// GetX Controller
 export '../../ProjectController/DriverProfile/driverProfileController.dart';
 export '../../ProjectController/LoginController/login_controller.dart';
-export '../../ProjectController/MainController/main_controller.dart';
 export '../../ProjectController/NotificationController/notificationController.dart';
 export '../../ProjectController/SetupPinController/setupPinController.dart';
 export '../../ProjectController/Splash/splash_controller.dart';
@@ -48,17 +47,15 @@ export '../../WidgetController/AdditionalWidget/CustomAppBar.dart';
 export '../../WidgetController/AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
 export '../../WidgetController/BottomSheet/BottomSheetCustom.dart';
 export '../../WidgetController/Button/ButtonCustom.dart';
-export '../../WidgetController/CustomDrawer/drawerDriver.dart';
+export '../../WidgetController/CustomDrawer/profile Drawer.dart';
 export '../../WidgetController/Default Widget/DefaultWidget.dart';
 export '../../WidgetController/ErrorHandling/EmptyDataScreen.dart';
 export '../../WidgetController/ImageHelper/ImageHelper.dart';
 export '../../WidgetController/Loader/LoadingScreen.dart';
 export '../../WidgetController/Popup/PopupCustom.dart';
-export '../../WidgetController/Popup/CustomDialogBox.dart';
 export '../../WidgetController/RefresherIndicator/RefreshIndicatorCustom.dart';
 export '../../WidgetController/TextField/CustomTextField.dart';
 export '../../WidgetController/Toast/ToastCustom.dart';
-
 
 
 /// Model

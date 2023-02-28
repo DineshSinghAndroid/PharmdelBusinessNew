@@ -23,24 +23,7 @@ import '../WidgetController/Toast/ToastCustom.dart';
 import 'WebConstant.dart';
 
 class ApiController {
-  Dio _dio = new Dio();
-
-  Map<String, String> headers = {
-    "Content-type": "application/json",
-    "Authorization": 'Bearer $authToken',
-    // "Authkey": WebApiConstant.AUTH_KEY,
-    "Connection": "Keep-Alive",
-    "Keep-Alive": "timeout=5, max=1000"
-  };
-
-  ApiController() {
-    BaseOptions options = BaseOptions(
-        baseUrl: WebApiConstant.BASE_URL,
-        receiveTimeout: Duration(minutes: 1),
-        connectTimeout: Duration(minutes: 1),
-        headers: headers);
-    _dio.options = options;
-  }
+  final Dio _dio = Dio();
 
 
 
@@ -313,10 +296,7 @@ class ApiController {
   }
 
   Future<Response?> requestGetForApi(
-      {required context,
-      String? url,
-      Map<String, dynamic>? dictParameter,
-      String? token}) async {
+      {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
       Map<String, String> headers = {
         "Content-type": "application/json",
@@ -360,12 +340,8 @@ class ApiController {
     }
   }
 
-
   Future<Response?> requestPostForApi(
-      {required context,
-      required String url,
-      required Map<String, dynamic> dictParameter,
-      required String token}) async {
+      {required context, required String url,required Map<String, dynamic> dictParameter,required String token}) async {
     try {
       Map<String, String> headers = {
         "Content-type": "application/json",
@@ -440,6 +416,51 @@ class ApiController {
 
       if(response.data["authenticated"] == false){
         // PopupCustom.logoutPopUP(context: context);
+      }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  /// Background data api
+  Future<Response?> postFormBackgroundDataAPI(
+      {required context, String? url, formData}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $formData");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.post(url!,
+          data: formData,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      if(response.data["authenticated"] == false){
+        // PopupCustom.logoutPopUP(context: context);
+      }else if(response.statusCode == 200){
+        return response;
       }
       return response;
     } catch (error) {

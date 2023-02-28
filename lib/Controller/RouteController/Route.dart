@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pharmdel/PHARMACY/P_Views/P_Home/HomePage.dart';
-import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
+ import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
 import 'package:pharmdel/View/OnBoarding/Login/login_screen.dart';
@@ -9,9 +8,11 @@ import 'package:pharmdel/View/OnBoarding/SetupPin/setupPin.dart';
 import 'package:pharmdel/View/OnBoarding/Splash/splash_screen.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 
+import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/NotificationScreen/notificationScreen.dart';
+import '../../View/OnBoarding/EnterPin/securePin.dart';
 import 'RouteNames.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -21,8 +22,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case loginScreenRoute: return MaterialPageRoute(builder: (context) => const LoginScreen());
     case setupPinScreenRoute: return MaterialPageRoute(builder: (context) =>  const SetupPinScreen(isChangePassword: false,));
 
-  // case securePinScreenRoute:
-  //     return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  SecurePin());
+  case securePinScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  SecurePin());
 
 
   case homeScreenRoute:
