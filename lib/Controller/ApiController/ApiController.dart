@@ -8,6 +8,7 @@ import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart'
 import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
+import '../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../Model/Login/login_model.dart';
 import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
@@ -277,6 +278,29 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = OrderDetailApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  //Get Patient Api
+  Future<GetPatientApiResposne?> getPatientApi({context, required String url, dictParameter, String? token}) async {
+  GetPatientApiResposne? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetPatientApiResposne.fromJson(response?.data);
           return result;
         } else {
           return result;

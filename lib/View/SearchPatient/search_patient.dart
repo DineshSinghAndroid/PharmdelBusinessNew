@@ -1,7 +1,9 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
+import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
 
 class SearchPatientScreen extends StatefulWidget {
   const SearchPatientScreen({super.key});
@@ -12,199 +14,111 @@ class SearchPatientScreen extends StatefulWidget {
 
 class _SearchPatientScreenState extends State<SearchPatientScreen> {
 
-bool noData = false;
-bool isLoading = false;
 
-TextEditingController searchController = TextEditingController();
+GetPatientContoller patCtrl = Get.put(GetPatientContoller());
+TextEditingController searchTextCtrl = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
-        leading: Icon(
-          Icons.arrow_back,
-          color: AppColors.blackColor,
-        ),
-        flexibleSpace: Container(
-          margin: const EdgeInsets.only(left: 30),
-          color: Colors.transparent,
-          child: Container(
-            height: 40,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: TextFormField(
-              textAlign: TextAlign.start,
-              controller: searchController,
-              decoration: const InputDecoration(
-                  focusColor: Colors.white,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.black38),
-                  hintText: kSearchPat),
-            ),
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                //height: MediaQuery.of(context).size.height/1.5,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  strIMG_HomeBg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            CustomScrollView(slivers: <Widget>[
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      noData == true
-                          ? const SizedBox(
-                              height: 200,
-                              child: Center(
-                                child: Text(
-                                  kNoPatAvl,
-                                  style: TextStyle(color: Colors.black38, fontSize: 24),
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
-                    ]),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Padding(
-                          padding: const EdgeInsets.all(4),
-                          child:  Center(
-                            child: isLoading == true ? const CircularProgressIndicator() : const SizedBox(height: 8.0),
-                          ))
-                    ]),
-                  ),
-          ],
-        ),
-          ])
-    )
-    );
+bool? noData = false;
+bool? isLoading = false;
+
+@override
+ void initState() {
+    super.initState();
   }
 
-  SliverList _getSlivers(List myList, BuildContext context, double? c_width) {
-    const blue = Color(0xFF2188e5);
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return Visibility(
-              // visible: showList,
-              child:  InkResponse(
-                onTap: (){},
-                child:  Padding(
-                  padding: const EdgeInsets.only(top: 1, bottom: 0, left: 3, right: 3),
-                  child:  Card(
-                    color: Colors.primaries[Random().nextInt(Colors.primaries.length)].shade100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child:  Row(
-                        children: [
-                           Expanded(
-                            flex: 4,
-                            child: Column(
-                              children: [
-                                 Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child:  Row(
-                                    children: [
-                                       BuildText.buildText(
-                                        text: "$kName :",
-                                        size: 14,
-                                        color: AppColors.greyColor,                                        
-                                      ),
-                                      Flexible(
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              color: AppColors.blackColor,
-                                            ),
-                                            children: const <TextSpan>[
-                                               TextSpan(
-                                                text: "First Name",
-                                                style: TextStyle(fontSize: 14, color: Colors.black),
-                                              ),
-                                               TextSpan(text: "Middle Name", style:  TextStyle(fontSize: 14, color: Colors.black)),
-                                               TextSpan(text: "LAst Name", style:  TextStyle(fontSize: 14, color: Colors.black)),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child:  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [                                    
-                                      BuildText.buildText(
-                                        text: "$kAddress :",
-                                        size: 14,
-                                        color: AppColors.greyColor,                                        
-                                      ),
-                                 
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              child:  BuildText.buildText(
-                                                text: "Address 1", textAlign: TextAlign.left),
-                                            ),
-                                            // if (list != null && list.isNotEmpty && list[index]['alt_address'] != null && list[index]['alt_address'] != "" && list[index]['alt_address'].toString() == "t")
-                                              Image.asset(
-                                                strIMG_AltAdd,
-                                                height: 18,
-                                                width: 18,
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    
-                                    ],
-                                  ),
-                                ),
-                               
-                                 Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Row(
-                                    children: [
-                                       BuildText.buildText(
-                                        text: 'Date of Birth : ',
-                                        size: 14,
-                                        color: AppColors.greyColor,                                        
-                                      ),
-                                       BuildText.buildText(
-                                        text: "DOB",
-                                        size: 14,
-                                        color: AppColors.blackColor,                                        
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ), 
-                        ],
-                      ),
+  @override
+  void dispose() {
+    searchTextCtrl.dispose();
+    super.dispose();
+  }
+
+@override
+Widget build(BuildContext context,) {
+    return SafeArea(
+      child: GetBuilder<GetPatientContoller>(
+        init: patCtrl,
+        builder: (controller) {
+          return GestureDetector(
+            onTap: (){
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                backgroundColor: AppColors.whiteColor,
+                leading: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: AppColors.blackColor,
+                  ),
+                ),
+                flexibleSpace: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(left: 30),
+                  color: Colors.transparent,
+                  child: Container(
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: TextFormField(
+                      textAlign: TextAlign.start,
+                      controller: searchTextCtrl,
+                      decoration: const InputDecoration(
+                          focusColor: Colors.white,
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.black38),
+                          hintText: kSearchPat),
+                          onChanged: (value) async {
+                              if(value.toString().trim().isNotEmpty && value.length > 3){
+                                await controller.getPatientApi(context: context, firstName: value.toString().trim());
+                              }else{
+                                setState(() {
+                                  controller.patientData?.clear();
+                                });
+                              }
+                          },
                     ),
                   ),
                 ),
-              ));
+              ),
+              body: SafeArea(
+                  child: Stack(children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(                
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset(
+                      strIMG_HomeBg,
+                      fit: BoxFit.fill,
+                    ),
+                  ),                
+                ),
+                controller.patientData != null && controller.patientData!.isNotEmpty && searchTextCtrl.text.toString().trim().length > 2 ?
+                ListView.builder(                  
+                      itemCount: controller.patientData?.length ?? 0,
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return  PateintListWidget( 
+                        onTap: (){},                                           
+                        context: context,
+                        firstName: controller.patientData?[index].firstName ?? "",
+                        middleName: controller.patientData?[index].middleName ?? "",
+                        lastName:  controller.patientData?[index].lastName ?? "",
+                        address:  controller.patientData?[index].address1 ?? "",
+                        dob: controller.patientData?[index].dob ?? "",
+                      );  
+                      }
+                       ) : const SizedBox.shrink()
+              ]))),
+          );
         },
-        childCount: myList.length,
       ),
     );
   }

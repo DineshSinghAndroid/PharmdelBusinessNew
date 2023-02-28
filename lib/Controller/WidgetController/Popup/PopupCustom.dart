@@ -13,6 +13,80 @@ import '../../Helper/ImagePicker/ImagePicker.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../StringDefine/StringDefine.dart';
 
+
+class CustomPopUp{
+   static Widget ReArrangeRoutePopUp({required BuildContext context}){
+    return WillPopScope(
+            onWillPop: () => Future.value(true),
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              elevation: 0,
+              insetPadding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0, top: 10.0),
+              backgroundColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                       BoxShadow(
+                          color: AppColors.blackColor,
+                          offset: const Offset(0, 10),
+                          blurRadius: 10),
+                    ]),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(strGIF_processing),
+                    BuildText.buildText(
+                      text: "Processing...",
+                      size: 22,
+                      color: AppColors.redColor,
+                      weight: FontWeight.w600,                      
+                    ),
+                    buildSizeBox(30.0, 0.0),
+                    BuildText.buildText(
+                      text: kOptimizingRouteMsg,
+                      size: 16,
+                      textAlign: TextAlign.center,                      
+                    ),
+                    buildSizeBox(25.0, 0.0),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 45,
+                        width: MediaQuery.of(context).size.width * 60 / 100,
+                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        decoration: BoxDecoration(
+                            color: Colors.orangeAccent,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  blurRadius: 5.0,
+                                  spreadRadius: 3.0,
+                                  offset: const Offset(0, 3))
+                            ],
+                            borderRadius: BorderRadius.circular(50.0)),
+                        child: Center(
+                            child: BuildText.buildText(
+                              text: "Check Again",
+                              color: AppColors.whiteColor,)
+                                ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+   }
+}
+
 class LogoutPopUP extends StatelessWidget {
   const LogoutPopUP({super.key});
   @override
@@ -181,7 +255,7 @@ class _EnterMilesDialogState extends State<EnterMilesDialog> {
                                   Get.back();
                                 },
                                 child: BuildText.buildText(
-                                    text: kNo,
+                                    text: "NO",
                                     weight: FontWeight.w700,
                                     size: 16)),
                             TextButton(
@@ -450,8 +524,9 @@ class _ConfirmationRouteStartDialogState
         ),
       ),
     );
-  }
+  }  
 }
+
 
 typedef OnClicked = void Function(bool value);
 

@@ -18,3 +18,5 @@ const String lunchBreakScreenRoute = "lunchBreak_screen";
 
 //Pharmacy
 const String pharmacyHomePage = "pharmacyHomeScreen";
+const String scanPrescriptionScreenRoute = "scanPrescription_screen";
+const String searchPatientScreenRoute = "searchPatient_screen";
