@@ -9,7 +9,7 @@ import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
-import '../../../Controller/ProjectController/driverDashboardController.dart/driverDashboardController.dart';
+import '../../../Controller/ProjectController/DriverDashboardController.dart/driverDashboardController.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
 import '../../../Controller/WidgetController/CustomDrawer/drawerDriver.dart';
 import '../../../Controller/WidgetController/Default Widget/DefaultWidget.dart';
@@ -93,7 +93,7 @@ List<String> routeList = ['north', 'south'];
                     appBar: AppBar(
                       title: BuildText.buildText(text: kBulkScan, size: 15),
                       centerTitle: true,
-                      backgroundColor: AppColors.colorAccent.withOpacity(0.7),
+                      backgroundColor: AppColors.colorOrange,
                       // automaticallyImplyLeading: false,
                       iconTheme: IconThemeData(color: AppColors.blackColor),
                       actions: [

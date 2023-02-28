@@ -11,6 +11,7 @@ import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../Model/Login/login_model.dart';
 import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
+import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
 import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
@@ -248,6 +249,29 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = VehicleListApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Get Order Details Api
+    Future<OrderDetailApiResponse?> getOrderDetailApi({context, required String url, dictParameter, String? token}) async {
+    OrderDetailApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = OrderDetailApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;

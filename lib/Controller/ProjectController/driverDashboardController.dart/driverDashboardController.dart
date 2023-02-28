@@ -1,13 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
+import '../../ApiController/ApiController.dart';
+import '../../ApiController/WebConstant.dart';
+import '../../Helper/PrintLog/PrintLog.dart';
 import '../../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../../main.dart';
 import '../../Helper/Permission/PermissionHandler.dart';
@@ -49,7 +48,7 @@ class DriverDashboardController extends GetxController{
       if(result != null){
         if (result.status != false) {
           try {
-            if (result.status == true) {              
+            if (result.status == true) {
               driverDashboardData = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);

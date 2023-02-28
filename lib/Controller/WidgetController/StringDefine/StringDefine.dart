@@ -13,6 +13,7 @@ const String kCustomerList = 'Customer List';
 const String kAddNewCustomer = 'Add New Customer';
 
 
+
 /// Logo
 const String kSplashLogo = "assets/logo/logo.png";
 
@@ -21,7 +22,7 @@ const String kSplashLogo = "assets/logo/logo.png";
 const String strIMG_HomeBg = "assets/images/bottom_bg.png";
 const String strIMG_NewGIF = "assets/images/new.gif";
 const String strIMG_SpeedoMeter = "assets/images/speedometer.png";
-
+const String strIMG_AltAdd = "assets/images/alt-add.png";
 
 /// Toast Msg
 const String kStoragePermissionToast = "msg...";
@@ -110,5 +111,9 @@ const String kEndBreakMsg = "(Click 'End Break' button to get back to work)";
 ///Lottie files links
 const String strLottieLunchBreak = "https://assets3.lottiefiles.com/packages/lf20_1fggr4vt.json";
 
+
+///Search Patient Screen
+const String kNoPatAvl = 'No Patient Available';
+const String kSearchPat = "Search Patient....";
 
 
