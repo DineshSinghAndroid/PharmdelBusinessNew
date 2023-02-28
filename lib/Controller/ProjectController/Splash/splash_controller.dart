@@ -34,23 +34,9 @@ class SplashController extends GetxController {
 
   runSplash() {
     Future.delayed(const Duration(seconds: 3), () {
-      // if (userId != "" ) {
-      //   if (userPin != "" && userType == "Pharmacy Staff") {
-      //     Get.offAndToNamed (pharmacyHomePage);
-      //   } else if (userPin != "" && userType == "Driver") {
-      //     Get.offAndToNamed (homeScreenRoute);
-      //   } else if (userPin == '') {
-      //     Get.offAndToNamed(setupPinScreenRoute);
-      //   } else {
-      //     Get.offAndToNamed(loginScreenRoute);
-      //     ;
-      //   }
-      // } else {
-      //   Get.offAndToNamed(loginScreenRoute);
-      //   print("Going to Login Screen");
-      // }
 
-      if(userId != '' ){
+
+      if(userPin != '' ){
         Get.offAndToNamed(securePinScreenRoute);
       }
       else {

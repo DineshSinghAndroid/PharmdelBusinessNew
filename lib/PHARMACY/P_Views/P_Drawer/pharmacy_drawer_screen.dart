@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:pharmdel/Controller/Helper/LogoutController/logout_controller.dart';
 
+import '../../../Controller/Helper/Shared Preferences/SharedPreferences.dart';
+import '../../../Controller/Helper/TextController/BuildText/BuildText.dart';
+import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
+import '../../../Controller/WidgetController/Loader/LoadingScreen.dart';
+import '../../../Controller/WidgetController/Popup/CustomDialogBox.dart';
+import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../main.dart';
 
-class PharmacyDrawerScreen extends StatelessWidget {
-  String userName ='';
+class PharmacyDrawerScreen extends StatefulWidget {
+  String userName = '';
+  String address1 = '';
 
   var email;
 
@@ -15,16 +24,19 @@ class PharmacyDrawerScreen extends StatelessWidget {
 
   PharmacyDrawerScreen({
     super.key,
-      required this.userName,
+    required this.userName,
     required this.email,
     required this.mobile,
     required this.versionCode,
   });
 
   @override
-  Widget build(BuildContext context) {
-    String address1 ='Not Found';
+  State<PharmacyDrawerScreen> createState() => _PharmacyDrawerScreenState();
+}
 
+class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         color: Colors.white,
@@ -75,7 +87,7 @@ class PharmacyDrawerScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(50.0),
                                     child: Center(
                                         child: Text(
-                                      userName =  "",
+                                      widget.userName = "",
                                       style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
                                     )))),
                             Flexible(
@@ -87,21 +99,21 @@ class PharmacyDrawerScreen extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 2.0),
                                       child: Text(
-                                        userName ?? "",
+                                        widget.userName ?? "",
                                         style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 2.0),
                                       child: Text(
-                                        email ?? "",
+                                        widget.email ?? "",
                                         style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 2.0),
                                       child: Text(
-                                        mobile ?? "",
+                                        widget.mobile ?? "",
                                         style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
@@ -119,7 +131,6 @@ class PharmacyDrawerScreen extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-
               child: Column(
                 children: [
                   Container(
@@ -149,7 +160,7 @@ class PharmacyDrawerScreen extends StatelessWidget {
                                     width: 10,
                                   ),
                                   Text(
-                                    mobile ?? "Not Found",
+                                    widget.mobile ?? "Not Found",
                                   )
                                 ],
                               ),
@@ -167,7 +178,7 @@ class PharmacyDrawerScreen extends StatelessWidget {
                                     width: 10,
                                   ),
                                   Text(
-                                    email ?? "Not Found",
+                                    widget.email ?? "Not Found",
                                   )
                                 ],
                               ),
@@ -185,7 +196,7 @@ class PharmacyDrawerScreen extends StatelessWidget {
                                     width: 10,
                                   ),
                                   Text(
-                                    address1 ?? "Not Found",
+                                    widget.address1 ?? "Not Found",
                                   )
                                 ],
                               ),
@@ -210,142 +221,17 @@ class PharmacyDrawerScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Change Pin",
-                            style: TextStyle(color: Colors.black, fontSize: 17),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.black,
-                            size: 17,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  DrawerListTiles(text: 'Change Pin', ontap: () {}),
                   const Divider(),
-
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Create Patient",
-                            style: TextStyle(color: Colors.black, fontSize: 17),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.black,
-                            size: 17,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  DrawerListTiles(text: 'Create Patient', ontap: () {}),
                   const Divider(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10, bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "My Notification",
-                            style: TextStyle(color: Colors.black, fontSize: 17),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 17,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  DrawerListTiles(text: 'My Notification', ontap: () {}),
                   const Divider(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Privacy Policy",
-                            style: TextStyle(fontSize: 17, color: Colors.black),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 17,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  DrawerListTiles(text: 'Privacy Policy', ontap: () {}),
                   const Divider(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Terms of use",
-                            style: TextStyle(fontSize: 17, color: Colors.black),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 17,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  DrawerListTiles(text: 'Terms of user', ontap: () {}),
                   const Divider(),
-                  InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Logout",
-                            style: TextStyle(fontSize: 17, color: Colors.black),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 17,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Divider(),
+                  DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
                 ],
               ),
             ),
@@ -356,7 +242,7 @@ class PharmacyDrawerScreen extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("VERSION V.${versionCode} ", style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400)),
+                  child: Text("VERSION V.${widget.versionCode} ", style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400)),
                 ),
               ),
             ),
@@ -365,4 +251,32 @@ class PharmacyDrawerScreen extends StatelessWidget {
       ),
     );
   }
+
+  InkWell DrawerListTiles({
+    required String text,
+    ontap,
+  }) {
+    return InkWell(
+      onTap: ontap,
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              text,
+              style: TextStyle(fontSize: 17, color: Colors.black),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_sharp,
+              size: 17,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }

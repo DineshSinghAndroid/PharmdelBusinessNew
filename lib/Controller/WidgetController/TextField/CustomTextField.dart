@@ -106,3 +106,26 @@ class CustomTextField extends StatelessWidget{
 typedef OnTextChanged = void Function(String value);
 
 
+class SecurePinTextField{
+  static SizedBox pinBox({required double screenWidth,required TextEditingController controllers,required FocusNode focus,required Function(String) onChanged}) {
+  return SizedBox(
+      width: screenWidth / 8,
+      child: TextField(
+        onChanged:onChanged,
+        enabled: false,
+        focusNode: focus,
+        autofocus: true,
+        obscureText: true,
+        keyboardType: TextInputType.number,
+        controller: controllers,
+        showCursor: false,
+        textAlign: TextAlign.center,
+        maxLength: 1,
+        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+        decoration: const InputDecoration(contentPadding: EdgeInsets.all(5.0), counterText: "", border: null),
+      ));
+}
+}
+
+
+

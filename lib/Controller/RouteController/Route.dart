@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
- import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
+import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
 import 'package:pharmdel/View/OnBoarding/Login/login_screen.dart';
@@ -17,57 +17,57 @@ import 'RouteNames.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
+    case splashScreenRoute:
+      return MaterialPageRoute(builder: (context) => const SplashScreen());
+    case loginScreenRoute:
+      return MaterialPageRoute(builder: (context) => const LoginScreen());
 
-    case splashScreenRoute: return MaterialPageRoute(builder: (context) => const SplashScreen());
-    case loginScreenRoute: return MaterialPageRoute(builder: (context) => const LoginScreen());
-    case setupPinScreenRoute: return MaterialPageRoute(builder: (context) =>  const SetupPinScreen(isChangePassword: false,));
+    case securePinScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: SecurePin());
 
-  case securePinScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  SecurePin());
+    case homeScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const HomeScreen());
 
+    case customerListScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: CustomerListScreen());
 
-  case homeScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const HomeScreen());
+    case notificationScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const NotificatinScreen());
 
-  case customerListScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  CustomerListScreen());    
+    case createPatientScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const CreatePatientScreen());
 
-  case notificationScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const NotificatinScreen());        
+    case updateAddressScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const UpdateAddressScreen());
 
-
-  case createPatientScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const CreatePatientScreen());        
-
-
-  case updateAddressScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const UpdateAddressScreen());        
-
-
-  case pdfViewScreenRoute:
-  final args = settings.arguments as PdfViewScreen;
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:   PdfViewScreen(pdfUrl: args.pdfUrl,));        
+    case pdfViewScreenRoute:
+      final args = settings.arguments as PdfViewScreen;
+      return PageTransition(
+          type: PageTransitionType.rightToLeft,
+          duration: const Duration(milliseconds: 300),
+          alignment: Alignment.center,
+          child: PdfViewScreen(
+            pdfUrl: args.pdfUrl,
+          ));
 
 
-  case lunchBreakScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const LunchBreakScreen());    
+
+    case setupPinScreenRoute:
+      final args = settings.arguments;
+      print(settings.arguments.toString());
+      return MaterialPageRoute(
+          builder: (context) => SetupPinScreen(
+                isChangePin: args.toString(),
+              ));
+
+    case lunchBreakScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const LunchBreakScreen());
     // case introScreenRoute:
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
 
-
-
-
-
-
-
-
-
-      //Pharmacy
+    //Pharmacy
     case pharmacyHomePage:
-       return PageTransition(type: PageTransitionType.rightToLeft,
-          duration: const Duration(milliseconds: 300),
-          alignment: Alignment.center, child:   PharmacyHomeScreen( ));
-
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: PharmacyHomeScreen());
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());

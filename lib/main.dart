@@ -23,7 +23,6 @@ String userID = "";
 StreamController<int> msgController = StreamController<int>.broadcast();
 double addHeight = Dimensions.screenHeight;
 double addWidth = Dimensions.screenWidth;
-Logger logger = Logger();
 
 // int remainingTIme;
 IO.Socket socket = IO.io(WebApiConstant.SOCKET_URL, OptionBuilder().setTransports(['websocket']).build());

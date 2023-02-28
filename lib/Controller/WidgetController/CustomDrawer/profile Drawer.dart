@@ -10,8 +10,10 @@ import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.da
 import 'package:pharmdel/Controller/ProjectController/DriverProfile/driverProfileController.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
+import '../../../Model/Enum/enum.dart';
 import '../../../main.dart';
 import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
+import '../../Helper/LogoutController/logout_controller.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../RouteController/RouteNames.dart';
 import '../AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
@@ -302,7 +304,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                       ),
                       buildSizeBox(5.0, 0.0),
                       ListTile(
-                        onTap: () {},
+                        onTap: () {Get.toNamed(setupPinScreenRoute,arguments: 'true');},
                         leading: const Icon(Icons.lock, size: 20),
                         title: BuildText.buildText(text: kChangePin)
                       ),
@@ -345,7 +347,9 @@ class DrawerDriverState extends State<DrawerDriver> {
                         ),
                  
                       ListTile(
-                          onTap: validateAndLogout,
+                          onTap: (){
+                            return validateAndLogout(context);
+                          },
                           leading: const Icon(Icons.logout,size: 20),
                           title:BuildText.buildText(text: klogout)
                         ),
@@ -364,18 +368,5 @@ class DrawerDriverState extends State<DrawerDriver> {
     );
   }
 
-  void validateAndLogout() {
-    CustomDialogBox(
-      button1: MaterialButton(onPressed: () async {
-        CustomLoading().show(context, true);
-        await AppSharedPreferences.clearSharedPref();
-        authToken = '';
-        Get.offAllNamed(loginScreenRoute);
-        CustomLoading().show(context,false);
-      },child: Text("hello"),),
-
-
-    );
-  }
 
  }

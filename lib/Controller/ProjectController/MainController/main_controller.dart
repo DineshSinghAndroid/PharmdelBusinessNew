@@ -439,8 +439,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
             initialRoute: splashScreenRoute,
             debugShowCheckedModeBanner: false,
             onGenerateRoute: router.generateRoute,
-            // initialRoute: splashScreenRoute,
-            title: "Pharmdel Business",
+             title: "Pharmdel Business",
           )
         );
 

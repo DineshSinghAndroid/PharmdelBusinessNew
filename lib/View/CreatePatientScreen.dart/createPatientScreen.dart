@@ -57,8 +57,7 @@ List<String> items = [
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-                  logger.i("8::::::::::::::::========>");
-                  Navigator.pop(context, false);
+                   Navigator.pop(context, false);
                 },
                 child: Icon(
                   Icons.arrow_back,

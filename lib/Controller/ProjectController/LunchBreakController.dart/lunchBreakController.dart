@@ -78,8 +78,7 @@ class LunchBreakController extends GetxController {
             locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
         lat = position.latitude;
         lng = position.longitude;
-        logger.i("Lat and long when lunch off by driver is :::::::::::::::::$lat ::: $lng");
-      }
+       }
     });
   }
 

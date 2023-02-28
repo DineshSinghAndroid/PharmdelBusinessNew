@@ -13,16 +13,25 @@ import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../Helper/StringDefine/StringDefine.dart';
 
 class SetupMPinController extends GetxController {
-  String strPin ="";
+  String existingPin ="";
   String userType ="";
   @override
   Future<void> onInit() async {
     final prefs = await SharedPreferences.getInstance();
-      strPin = prefs.getString(AppSharedPreferences.userPin)??"";
-    userType = prefs.getString(kUSERTYPE)??"";
+      existingPin = prefs.getString(AppSharedPreferences.userPin)??"";
+    userType = prefs.getString(AppSharedPreferences.userType)??"";
 
     // TODO: implement onInit
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    txtOldPin.dispose();
+    newPin1.dispose();
+
+    // TODO: implement onClose
+    super.onClose();
   }
   ApiController apiCtrl = ApiController();
 
@@ -33,15 +42,16 @@ class SetupMPinController extends GetxController {
   bool isSuccess = false;
   SetUpPinModel? setUpPinModel;
   TextEditingController txtOldPin = TextEditingController();
-  TextEditingController txtEnterOtp = TextEditingController();
-  TextEditingController txtConfirmOtp = TextEditingController();
+  TextEditingController newPin1 = TextEditingController();
+  TextEditingController newPin2 = TextEditingController();
 
 
   bool isOld = true, isNew = true, isConfirm = true;
   FocusNode? myFocusNode;
+  var focusOldPin = FocusNode();
   var focusPin = FocusNode();
   var focusConfirmPin = FocusNode();
-  Future<SetUpPinModel?> setupMpinApi({  BuildContext? context, required int pin}) async {
+  Future<SetUpPinModel?> setupNewPinAPi({  BuildContext? context, required int pin}) async {
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -60,11 +70,12 @@ PrintLog.printLog("This is dictparam" +dictparm.toString());
         if (result.error != true) {
           try {
             if (result.error == false) {
-              ToastCustom.showToast(msg: result.message ?? "1");
+              ToastCustom.showToast(msg: result.message);
               changeLoadingValue(false);
               changeSuccessValue(true);
+
             } else {
-              ToastCustom.showToast(msg: result.message ?? "2");
+              ToastCustom.showToast(msg: result.message);
               changeLoadingValue(false);
               changeSuccessValue(false);
               PrintLog.printLog(result.message);
@@ -115,19 +126,48 @@ PrintLog.printLog("This is dictparam" +dictparm.toString());
     isError = value;
     update();
   }
-  void validatePin()async{
+
+
+  void setPin()async{
     myFocusNode?.requestFocus();
 
 
-    if( txtEnterOtp.text.length == 4 && txtConfirmOtp.text.length == 4 &&
-        txtConfirmOtp.text == txtEnterOtp.text){
-  await setupMpinApi(
-      pin: int.parse(txtConfirmOtp.text)).then((value) async {
+    if( newPin1.text.length == 4 && newPin2.text.length == 4 &&
+        newPin2.text == newPin1.text){
+  await setupNewPinAPi(
+      pin: int.parse(newPin2.text)).then((value) async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString(AppSharedPreferences.userPin, txtConfirmOtp.text??"");
-    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${AppSharedPreferences.userPin.toString()}")
-    ;
+    prefs.setString(AppSharedPreferences.userPin, newPin2.text);
+    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
+
+    if(userType == "Pharmacy Staff"){
+          Get.toNamed(pharmacyHomePage);
+        }
+       else if(userType == "Driver"){
+          Get.toNamed(homeScreenRoute);
+        }
+       else{
+         ToastCustom.showToast(msg: "Something Went Wrong");
+        }
+  });
+}
+  else{
+    ToastCustom.showToast(msg: "Please Retry");
+    }
+  }
+  void changePin()async{
+    myFocusNode?.requestFocus();
+
+
+    if( newPin1.text.length == 4 && newPin2.text.length == 4 &&
+        newPin2.text == newPin1.text){
+  await setupNewPinAPi(
+      pin: int.parse(newPin2.text)).then((value) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString(AppSharedPreferences.userPin, newPin2.text??"");
+    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
 
     if(userType == "Pharmacy Staff"){
           Get.toNamed(pharmacyHomePage);

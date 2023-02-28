@@ -58,6 +58,28 @@ class ApiController {
   }
 
 
+
+  // Logout Api
+  Future getLogoutApi({context, required String url,   String? token}) async {
+     if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url, token: authToken);
+
+         if (response?.data != null && response!.statusCode == 200) {
+          print(response.statusMessage);
+          print(response.statusCode);
+         return response;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1s: $e");
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
   ///Forgot Password
   Future<ForgotPasswordApiResponse?> getForgotPasswordApi({context, required String url, dictParameter, String? token}) async {
     ForgotPasswordApiResponse? result;

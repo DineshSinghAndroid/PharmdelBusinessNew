@@ -20,7 +20,7 @@ class WebApiConstant {
   static const String GET_NOTIFICATION_COUNT                 =  "${BASE_URL}GetNotificationCount";
   static const String GET_DELIVERY_LIST                      =  "${BASE_URL}GetDeliveryList";
   static const String GET_DRIVER_ROUTES                      =  "${BASE_URL}GetRoutes";
-  static const String GET_DRIVER_LOGOUT_URL                  =  "${BASE_URL}Logout";
+  static const String Logout                  =  "${BASE_URL}Logout";
   static const String GET_VEHICLE_LIST_URL                   =  "${BASE_URL}getVehicleList";
   static const String FORGOT_PASSWORD_URL                    =  "${BASE_URL}ForgotPassword?customerEmail=";
   static const String LUNCH_BREAK_URL                        =  "${BASE_URL}updateBreakTime";

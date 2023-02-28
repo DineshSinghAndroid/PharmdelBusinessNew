@@ -153,9 +153,10 @@ class LoginController extends GetxController {
 
   Future<void> _loginCheck() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(AppSharedPreferences.userPin, loginModel?.pin.toString() ?? "");
-    prefs.setString(AppSharedPreferences.userType, loginModel?.userType.toString() ?? "");
-    prefs.setString(AppSharedPreferences.userId, loginModel?.userId.toString() ?? "");
+    prefs.setString(AppSharedPreferences.userPin, loginModel!.pin.toString());
+    prefs.setString(AppSharedPreferences.userType, loginModel!.userType.toString() );
+    prefs.setString(AppSharedPreferences.userId, loginModel!.userId.toString()  );
+
     if (loginModel!.pin != "") {
       if (loginModel!.userType == "Driver") {
         Get.toNamed(securePinScreenRoute);
@@ -163,7 +164,7 @@ class LoginController extends GetxController {
         Get.toNamed(securePinScreenRoute);
       }
     } else if (loginModel!.pin == "") {
-      Get.toNamed(setupPinScreenRoute);
+      Get.toNamed(setupPinScreenRoute,arguments: 'false');
     } else {
       ToastCustom.showToast(msg: loginModel!.message ?? '');
     }

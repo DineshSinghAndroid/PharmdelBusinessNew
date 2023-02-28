@@ -188,14 +188,14 @@ class DriverProfileController extends GetxController{
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
                 ],
-                decoration: new InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Please enter start miles",
                   fillColor: Colors.white,
                   labelStyle: TextStyle(color: Colors.blue),
                   filled: true,
                   errorText: checkStartMiles ? "Enter Start Miles" : null,
                   contentPadding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  border: new OutlineInputBorder(
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50.0),
                     borderSide: BorderSide(color: Colors.blue),
                   ),
