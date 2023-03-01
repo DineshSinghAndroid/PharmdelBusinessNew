@@ -13,6 +13,7 @@ import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart'
 import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
+import '../../View/MapScreen/map_screen.dart';
 import '../../View/NotificationScreen/notificationScreen.dart';
 import '../../View/OnBoarding/EnterPin/securePin.dart';
 import 'RouteNames.dart';
@@ -44,13 +45,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;
-      return PageTransition(
-          type: PageTransitionType.rightToLeft,
-          duration: const Duration(milliseconds: 300),
-          alignment: Alignment.center,
-          child: PdfViewScreen(
-            pdfUrl: args.pdfUrl,
-          ));
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300),alignment: Alignment.center,child: PdfViewScreen(pdfUrl: args.pdfUrl));
 
 
 
@@ -62,21 +57,21 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 isChangePin: args.toString(),
               ));
 
-<<<<<<< HEAD
-    case lunchBreakScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const LunchBreakScreen());
-=======
   case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const LunchBreakScreen());    
 
 
   case scanPrescriptionScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const ScanPrescriptionScreen());        
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const ScanPrescriptionScreen());
+
+
+  case mapScreenRoute:
+  final args = settings.arguments as MapScreen;
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  MapScreen(driverId: args.driverId, routeId: args.routeId));
 
 
   case searchPatientScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchPatientScreen());            
->>>>>>> fe061ac0adef17f574092a2993478a0d45d1c4f9
     // case introScreenRoute:
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
 

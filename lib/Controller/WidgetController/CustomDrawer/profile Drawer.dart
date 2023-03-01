@@ -154,9 +154,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       borderRadius: BorderRadius.circular(50)),
                                   child: Center(
                                     child: BuildText.buildText(
-                                       text: username != null
-                                          ? username![0].toUpperCase()
-                                          : '',
+                                       text: controller.driverProfileData?.data?.firstName?[0].toUpperCase() ?? "",
                                       color: AppColors.whiteColor,
                                       size: 30
                                     ),
@@ -266,7 +264,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       size: 12,
                                     ),
                                    buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: kContactNumber,color: AppColors.blackColor)
+                                    BuildText.buildText(text: controller.driverProfileData?.data?.mobileNumber.toString() ?? "",color: AppColors.blackColor)
                                   ],
                                 ),
                                 buildSizeBox(5.0, 0.0),
@@ -290,7 +288,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                                       size: 12,
                                     ),
                                  buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: kaddress)
+                                    BuildText.buildText(text: controller.driverProfileData?.data?.addressLine1.toString() ?? "")
                                   ],
                                 ),
                                 buildSizeBox(10.0, 0.0),

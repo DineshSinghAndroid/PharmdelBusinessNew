@@ -34,14 +34,14 @@ bool? isLoading = false;
 
 @override
 Widget build(BuildContext context,) {
-    return SafeArea(
-      child: GetBuilder<GetPatientContoller>(
-        init: patCtrl,
-        builder: (controller) {
-          return GestureDetector(
-            onTap: (){
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
+    return GetBuilder<GetPatientContoller>(
+      init: patCtrl,
+      builder: (controller) {
+        return GestureDetector(
+          onTap: (){
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: SafeArea(
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
@@ -117,9 +117,9 @@ Widget build(BuildContext context,) {
                       }
                        ) : const SizedBox.shrink()
               ]))),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

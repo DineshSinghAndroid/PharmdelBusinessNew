@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Text("Submit"),
                                         ),
                                         button2: MaterialButton(
-                                          onPressed: () {                                              Navigator.pop(context);
+                                          onPressed: () {Navigator.pop(context);
                                           Navigator.pop(context);
                                           },
                                           child: Text("Cancel"),

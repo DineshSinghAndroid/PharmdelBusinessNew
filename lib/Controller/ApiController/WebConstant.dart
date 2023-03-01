@@ -4,6 +4,8 @@ class WebApiConstant {
   static const String SOCKET_URL = 'wss://pharmdel.com:3000'; //socket live url
   // static const String SOCKET_URL = 'wss://pharmdel.co.uk:3000'; // socket staging url
 
+  ///Google Api Key
+  static const String GOOGLE_API_KEY                        = "AIzaSyAE6nVrsXWIXPFY6e7D0IQ9KACpv46HWw4";
 
 
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
@@ -21,12 +23,13 @@ class WebApiConstant {
   static const String GET_NOTIFICATION_COUNT                 =  "${BASE_URL}GetNotificationCount";
   static const String GET_DELIVERY_LIST                      =  "${BASE_URL}GetDeliveryList";
   static const String GET_DRIVER_ROUTES                      =  "${BASE_URL}GetRoutes";
-  static const String Logout                  =  "${BASE_URL}Logout";
+  static const String Logout                                 =  "${BASE_URL}Logout";
   static const String GET_VEHICLE_LIST_URL                   =  "${BASE_URL}getVehicleList";
   static const String FORGOT_PASSWORD_URL                    =  "${BASE_URL}ForgotPassword?customerEmail=";
   static const String LUNCH_BREAK_URL                        =  "${BASE_URL}updateBreakTime";
   static const String DELIVERY_SIGNATURE_UPLOAD_URL          =  "${BASE_URL}Acknowledge";
   static const String SCAN_ORDER_BY_DRIVER                   =  "${BASE_URL}ScanOrderByDriver";
+  static const String GET_ALL_DELIVERY                       =  "${BASE_URL}GetAllDelivery";
 
 
   ///Pharmacy

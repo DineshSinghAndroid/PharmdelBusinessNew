@@ -1,12 +1,5 @@
 
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import '../../Helper/ColorController/CustomColors.dart';
-import '../../Helper/TextController/BuildText/BuildText.dart';
-import '../Button/ButtonCustom.dart';
-import '../StringDefine/StringDefine.dart';
 
 class EmptyDataScreen extends StatefulWidget {
   EmptyDataScreen({Key? key,required this.isShowBtn,required this.string,required this.onTap,this.isShowBackBtn}) : super(key: key);
@@ -22,44 +15,20 @@ class _EmptyDataScreenState extends State<EmptyDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.whiteColor,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // SvgPicture.asset(strSvgEmptyData),
-                    buildSizeBox(30.0, 0.0),
-                    BuildText.buildText(text: widget.string ?? ""),
-                    buildSizeBox(20.0, 0.0),
-                    buildSizeBox(80.0, 0.0),
-                    widget.isShowBtn == true ?
-                    ButtonCustom(
-                        onPress: widget.onTap!,
-                        buttonWidth: Get.width,
-                        buttonHeight: 54,
-                        text: kRetry
-
-                        ): const SizedBox.shrink(),
-                  ],
-                ),
-                widget.isShowBackBtn == true ?
-                InkWell(
-                  onTap: (){Get.back();},
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Icon(Icons.arrow_back_ios,color: CustomColors.blackColor,size: 40,),
-                  ),
-                ):const SizedBox()
-              ],
-            ),
+      body: SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(margin: const EdgeInsets.only(top: 60), height: 250, child: Image.asset("assets/images/img_no_data.png")),
           ),
-        ),
+          const SizedBox(),     
+        ],
       ),
+    )
     );
   }
 }

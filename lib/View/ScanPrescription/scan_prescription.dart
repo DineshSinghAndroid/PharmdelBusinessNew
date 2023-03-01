@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../Controller/WidgetController/AdditionalWidget/CustomerListWidget/customer_list_widget.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
@@ -62,7 +63,9 @@ class _ScanPrescriptionScreenState extends State<ScanPrescriptionScreen> {
            Align(
             alignment: Alignment.bottomCenter,
             child: MaterialButton(
-                onPressed: (){},
+                onPressed: (){
+                  Get.toNamed(searchPatientScreenRoute);
+                },
                 color: AppColors.colorOrange,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,7 +80,7 @@ class _ScanPrescriptionScreenState extends State<ScanPrescriptionScreen> {
                       color: AppColors.whiteColor,                      
                     ),
                   ],
-                )),           
+                )),
           )
         ],
       ),
