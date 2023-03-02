@@ -43,12 +43,14 @@ const String kTotal = "Total";
 const String kPickedUp = "Picked Up";
 const String kDelivered = "Delivered";
 const String kFailed = "Failed";
+const String kOnTheWay = "On the way";
 const String kStartRoute = "START ROUTE";
 const String kScanRx = "Scan Rx";
 const String kSelectRoute = "Select Route";
 const String kSelectPhar = 'Select Pharmacy';
 const String kParcelLocation = 'Parcel Location';
 const String kAddressPara = '17 Fairwood Drive port Talbot West Glamorgan SA128NS';
+const String kStatusOutForDelivery = "OutForDelivery";
 
 
 ///Drawer

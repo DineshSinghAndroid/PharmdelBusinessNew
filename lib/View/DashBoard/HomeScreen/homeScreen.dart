@@ -36,13 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
 DriverDashboardController drDashCtrl = Get.put(DriverDashboardController());
 
 bool isSwitched = false;
-bool isVisiblePharmacyList = false;
-bool isVisibleRouteList = false;
-bool isToteList = false;
-bool isRouteStart = false;
-bool hideTote = false;
+bool isVisiblePharmacyList = false; 
+bool isVisibleRouteList = false; 
+bool isToteList = false; 
+bool isRouteStart = false; 
+bool hideTote = false; 
+bool isLoadPagination = false;
+bool isProgressAvailable = false;
 bool isPickedUp = false;
 String driverType = "";
+int? page, lastPageLength, orderListType = 1;
+String selectedType = "total";
 
 List<String> routeList = ['north', 'south'];
 
@@ -87,8 +91,7 @@ List<String> routeList = ['north', 'south'];
               onTap: () {
                 Navigator.pop(context);
               }, isShowBtn: true, string: kEmptyData,
-            )
-                :
+            ) :
             WillPopScope(
               onWillPop: () async => false,
                 child: Scaffold(
@@ -340,7 +343,21 @@ List<String> routeList = ['north', 'south'];
                                             setState(() {
                                               isPickedUp = false;
                                             });
+                                            orderListType = 1;
                                           })),
+                                      isRouteStart == false ?    
+                                      Flexible(
+                                      flex: 1,
+                                      fit: FlexFit.tight,
+                                      child: DefaultWidget.topCounter(
+                                          bgColor: AppColors.yetToStartColor,
+                                          label: kOnTheWay,
+                                          counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "",
+                                          onTap: () {
+                                            setState(() {
+                                              isPickedUp = false;
+                                            });
+                                          })) :
                                   Flexible(
                                       flex: 1,
                                       fit: FlexFit.tight,
@@ -871,4 +888,32 @@ List<String> routeList = ['north', 'south'];
       },
     );
   }
+
+  // Future<void> selectWithTypeCount(String status) async {
+  //   isDelivery = false;
+  //   if (routeId.isEmpty) {
+  //     ToastCustom.showToast(msg: "Select route and try again!");
+  //   } else {
+  //     setState(() {
+  //       page = 0;
+  //       lastPageLength = -1;
+  //       selectedType = status;
+
+  //       if (!isProgressAvailable!) {
+  //         setState(() {
+  //           isProgressAvailable = true;
+  //         });
+  //       }
+
+  //       if (status == kStatusOutForDelivery) {
+  //         selectedType = kStatusOutForDelivery;
+  //         getParcelList(0);
+  //       } else {
+  //         fetchDeliveryList(0);
+  //       }
+  //     });
+  //   }
+  // }
 }
+
+

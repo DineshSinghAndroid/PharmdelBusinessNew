@@ -19,6 +19,7 @@ import 'Controller/SoketController/socket_controller.dart';
 
 String authToken = "";
 String userID = "";
+var isDelivery = false;
 
 StreamController<int> msgController = StreamController<int>.broadcast();
 double addHeight = Dimensions.screenHeight;
