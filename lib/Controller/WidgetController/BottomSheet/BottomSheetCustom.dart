@@ -44,7 +44,7 @@ class BottomSheetCustom{
   //                                 margin: const EdgeInsets.only(bottom: 20,top: 30),
   //                                 decoration: BoxDecoration(
   //                                     shape: BoxShape.circle,
-  //                                     color: CustomColors.bluearrowcolor.withOpacity(0.8),
+  //                                     color: AppColors.bluearrowcolor.withOpacity(0.8),
   //                                     image:  DecorationImage(
   //                                         image: AssetImage(str_imgSharePopup),
   //                                         fit: BoxFit.cover
@@ -53,7 +53,7 @@ class BottomSheetCustom{
   //                               ),
   //                               buildTextWithWeightOrSpacingHeight(
   //                                   "Invite friends & earn\namazing gadgets"
-  //                                   , 18.0, TextAlign.center, FontFamily.montRegular, CustomColors.signupcolor, FontWeight.w800, 0.3, 0.0),
+  //                                   , 18.0, TextAlign.center, FontFamily.montRegular, AppColors.signupcolor, FontWeight.w800, 0.3, 0.0),
   //                               buildSizedBox(15.0, 0.0),
   //                               InkWell(
   //                                 onTap: (){
@@ -65,7 +65,7 @@ class BottomSheetCustom{
   //                                   borderType: BorderType.RRect,
   //                                   radius: const Radius.circular(6),
   //                                   dashPattern: [2, 2],
-  //                                   color: CustomColors.greyColor,
+  //                                   color: AppColors.greyColor,
   //                                   strokeWidth: 1,
   //                                   child: Container(
   //                                     height: 50,
@@ -73,8 +73,8 @@ class BottomSheetCustom{
   //                                     width: MediaQuery.of(context).size.width,
   //                                     decoration: BoxDecoration(
   //                                       borderRadius: BorderRadius.circular(6),
-  //                                       color: CustomColors.transparentColor,
-  //                                       // border: Border.all(width: 1,color: CustomColors.greyColor)
+  //                                       color: AppColors.transparentColor,
+  //                                       // border: Border.all(width: 1,color: AppColors.greyColor)
   //                                     ),
   //                                     child: Center(
   //                                         child: Row(
@@ -83,7 +83,7 @@ class BottomSheetCustom{
   //                                           children: [
   //                                             Expanded(
   //                                               child: buildTextWithWeightOrSpacingHeightWithLine(
-  //                                                   shareLink, 14.0, TextAlign.left, FontFamily.montRegular, CustomColors.darkGreyColor1, FontWeight.w600, 0.0, 0.0
+  //                                                   shareLink, 14.0, TextAlign.left, FontFamily.montRegular, AppColors.darkGreyColor1, FontWeight.w600, 0.0, 0.0
   //                                               ),
   //                                             ),
   //                                             SvgPicture.asset(str_svgCopy),
@@ -112,7 +112,7 @@ class BottomSheetCustom{
   //                                             padding: const EdgeInsets.only(left: 20,right: 20),
   //                                             decoration: BoxDecoration(
   //                                                 borderRadius: BorderRadius.circular(50.0),
-  //                                                 color: CustomColors.colorWhatsApp
+  //                                                 color: AppColors.colorWhatsApp
   //                                             ),
   //                                             // margin: EdgeInsets.all(25),
   //                                             child: Row(
@@ -122,7 +122,7 @@ class BottomSheetCustom{
   //                                                 SvgPicture.asset(str_svgWhatsApp),
   //                                                 buildSizedBox(0.0, 5.0),
   //                                                 buildTextWithWeightOrSpacingHeight(
-  //                                                     "Invite via Whatsapp", 14.0, TextAlign.left, FontFamily.montBold, CustomColors.whiteColor, FontWeight.w900, 0.0, 0.0
+  //                                                     "Invite via Whatsapp", 14.0, TextAlign.left, FontFamily.montBold, AppColors.whiteColor, FontWeight.w900, 0.0, 0.0
   //                                                 )
   //                                               ],
   //                                             )
@@ -144,8 +144,8 @@ class BottomSheetCustom{
   //                                                 begin: Alignment.centerLeft,
   //                                                 end: Alignment.centerRight,
   //                                                 colors: [
-  //                                                   CustomColors.skyColor,
-  //                                                   CustomColors.purpleColor
+  //                                                   AppColors.skyColor,
+  //                                                   AppColors.purpleColor
   //                                                 ],
   //                                               )
   //                                           ),
@@ -155,7 +155,7 @@ class BottomSheetCustom{
   //                                             Padding(
   //                                               padding: const EdgeInsets.only(bottom: 5),
   //                                               child: buildTextWithWeightOrSpacingHeight(
-  //                                                   "...", 18.0, TextAlign.left, FontFamily.montRegular, CustomColors.whiteColor, FontWeight.w900, 1.0, 0.0
+  //                                                   "...", 18.0, TextAlign.left, FontFamily.montRegular, AppColors.whiteColor, FontWeight.w900, 1.0, 0.0
   //                                               ),
   //                                             ),
   //                                           )
@@ -177,7 +177,7 @@ class BottomSheetCustom{
   //                           },
   //                           child: Padding(
   //                             padding: const EdgeInsets.only(top: 15.0,right: 15.0),
-  //                             child: Icon(Icons.clear,color: CustomColors.darkGreyColor1 ,size: 30.0,),
+  //                             child: Icon(Icons.clear,color: AppColors.darkGreyColor1 ,size: 30.0,),
   //                           )
   //                       ),
   //                     ),

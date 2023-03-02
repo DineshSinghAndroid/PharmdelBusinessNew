@@ -8,8 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import '../../Helper/ColorController/CustomColors.dart';
-import '../../Helper/ImagePicker/ImagePicker.dart';
+ import '../../Helper/ImagePicker/ImagePicker.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../StringDefine/StringDefine.dart';
 
@@ -92,7 +91,7 @@ class LogoutPopUP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.blackColor.withOpacity(0.3),
+      backgroundColor: AppColors.blackColor.withOpacity(0.3),
       // body: DelayedDisplay(
       //   child: Center(
       //     child: Padding(
@@ -100,7 +99,7 @@ class LogoutPopUP extends StatelessWidget {
       //       child: Container(
       //         // height: 280,
       //         decoration: BoxDecoration(
-      //             color: CustomColors.whiteColor,
+      //             color: AppColors.whiteColor,
       //             borderRadius: BorderRadius.circular(10.0)
       //         ),
       //         child: Column(
@@ -119,7 +118,7 @@ class LogoutPopUP extends StatelessWidget {
       //               child: Wrap(
       //                   alignment: WrapAlignment.center,
       //                   children: [
-      //                     BuildText.buildText(text: kAuthenticatedDes,color: CustomColors.greyColor,size: 16),
+      //                     BuildText.buildText(text: kAuthenticatedDes,color: AppColors.greyColor,size: 16),
       //                   ]
       //               ),
       //             ),
@@ -137,10 +136,10 @@ class LogoutPopUP extends StatelessWidget {
       //                   width: 120,
       //                   decoration: BoxDecoration(
       //                     borderRadius: BorderRadius.circular(10.0),
-      //                     color: CustomColors.redColor,
+      //                     color: AppColors.redColor,
       //                   ),
       //                   child: Center(
-      //                     child: BuildText.buildText(text: kOk,color: CustomColors.whiteColor,size: 20.0,fontFamily: FontFamily.josefinBold),
+      //                     child: BuildText.buildText(text: kOk,color: AppColors.whiteColor,size: 20.0,fontFamily: FontFamily.josefinBold),
       //                   ),
       //                 ),
       //               ),
@@ -183,7 +182,7 @@ class _EnterMilesDialogState extends State<EnterMilesDialog> {
       builder: (controller) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: CustomColors.blackColor.withOpacity(0.3),
+          backgroundColor: AppColors.blackColor.withOpacity(0.3),
           body: DelayedDisplay(
             child: Center(
               child: Padding(
@@ -326,7 +325,7 @@ class _ConfirmationRouteStartDialogState
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColors.blackColor.withOpacity(0.3),
+      backgroundColor: AppColors.blackColor.withOpacity(0.3),
       body: DelayedDisplay(
         child: Center(
           child: Padding(

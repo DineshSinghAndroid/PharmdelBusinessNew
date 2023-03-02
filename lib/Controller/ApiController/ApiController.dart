@@ -6,7 +6,11 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
+<<<<<<< HEAD
 import '../../Model/DriverList/driverListResponse.dart';
+=======
+import '../../Model/CreatePatientModel/create_patient_model.dart';
+>>>>>>> 04cb8e1a9a2cf66220bd3d734421b432e9368e4c
 import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
@@ -16,7 +20,11 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
+<<<<<<< HEAD
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
+=======
+import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
+>>>>>>> 04cb8e1a9a2cf66220bd3d734421b432e9368e4c
 import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
@@ -119,7 +127,7 @@ class ApiController {
          print(response.toString());
         if (response?.data != null && response!.statusCode == 200) {
           _result = SetUpPinModel.fromJson(response.data);
-          print("THIS IS API RESULT FOR LOGIN API $_result");
+          print("THIS IS API RESULT FOR SETUP PIN API::::::::::::>>>>>>>>>>> $_result");
           return _result;
         } else {
           ToastCustom.showToast(msg: response?.statusMessage.toString()??"");
@@ -136,6 +144,64 @@ class ApiController {
     }
     return null;
   }
+
+///Create Patient Api
+  Future<CreatePatientModelResponse?> createPatientApi({context, required String url,
+    dictParameter, String? token}) async {
+    CreatePatientModelResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+         print(response.toString());
+        if (response?.data != null && response!.statusCode == 200) {
+          result = CreatePatientModelResponse.fromJson(response.data);
+          print("THIS IS API RESULT FOR CREATE PATIENT POST TYPE :::::>>>>>>>>>>>>>>>>>> ${result.toString()}");
+          return result;
+        } else {
+          return result;
+         }
+      } catch (e) {
+
+        PrintLog.printLog("Exception_main1s: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+   }
+
+
+
+   ///UPDATE CUSTOMER WITH ORDER
+  Future<UpdateCustomerWithOrderModel?> updateCustomerWithOrder({context, required String url,
+    dictParameter, String? token}) async {
+    UpdateCustomerWithOrderModel? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+         print(response.toString());
+        if (response?.data != null && response!.statusCode == 200) {
+          result = UpdateCustomerWithOrderModel.fromJson(response.data);
+          print("THIS IS API RESULT FOR UPDATE PATIENT:::::>>>>>>>>>>>>>>>>>> ${result.toString()}");
+          return result;
+        } else {
+          return result;
+         }
+      } catch (e) {
+
+        PrintLog.printLog("Exception_main1s: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+   }
 
 
   ///Notification Api

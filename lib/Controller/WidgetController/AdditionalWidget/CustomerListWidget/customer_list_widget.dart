@@ -21,7 +21,7 @@ class CustomerListWidget extends StatelessWidget {
   Widget build(BuildContext context) { 
     return Card(
       color: Colors.primaries[Random().nextInt(Colors.primaries.length)].shade100,
-      // color: CustomColors.lightPinkColor,
+      // color: AppColors.lightPinkColor,
       margin: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
       child: Column(
         children: [

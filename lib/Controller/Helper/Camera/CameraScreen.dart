@@ -33,7 +33,7 @@ class CameraScreenState extends State<CameraScreen>
   Future<void> _initCamera() async {
     try {
       _cameras = await availableCameras();
-      _controller = CameraController(_cameras[0], ResolutionPreset.medium);
+      _controller = CameraController(_cameras[0], ResolutionPreset.veryHigh);
       _controller?.initialize().then((_) {
         if (!mounted) {
           return;
@@ -118,24 +118,24 @@ class CameraScreenState extends State<CameraScreen>
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_rounded,
                 color: Colors.white,
               )),
-          Spacer(),
-          SizedBox(width: 20.0),
+          const Spacer(),
+          const SizedBox(width: 20.0),
           InkWell(
               onTap: () {
                 _onCameraSwitch();
               },
-              child: Icon(
+              child: const Icon(
                 Icons.flip_camera_ios_outlined,
                 color: Colors.white,
               )),
         ],
       ),
     )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget _buildBottomNavigationBar() {
@@ -147,12 +147,12 @@ class CameraScreenState extends State<CameraScreen>
           child: Column(
             children: [
               if (!isPhotoCaptred)
-                Text(
+                const Text(
                   'Tap to click the photo',
                   style: TextStyle(fontSize: 12.0, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               if (!isPhotoCaptred)
@@ -165,7 +165,7 @@ class CameraScreenState extends State<CameraScreen>
                       children: [
                         Container(
                           height: 70,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               shape: BoxShape.circle, color: Colors.white),
                         ),
                         Positioned(
@@ -176,7 +176,7 @@ class CameraScreenState extends State<CameraScreen>
                           child: Center(
                             child: Container(
                               height: 60,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   shape: BoxShape.circle, color: Colors.red),
                             ),
                           ),
@@ -197,13 +197,13 @@ class CameraScreenState extends State<CameraScreen>
                                 isPhotoCaptred = false;
                                 setState(() {});
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.clear,
                                 color: Colors.white,
                                 size: 30.0,
                               )),
                           IconButton(
-                            icon: Icon(Icons.check,
+                            icon: const Icon(Icons.check,
                                 color: Colors.white, size: 30.0),
                             onPressed: () {
                               Navigator.pop(context,imgPath);
@@ -239,7 +239,7 @@ class CameraScreenState extends State<CameraScreen>
     if (_controller != null) {
       await _controller?.dispose();
     }
-    _controller = CameraController(cameraDescription, ResolutionPreset.medium);
+    _controller = CameraController(cameraDescription, ResolutionPreset.veryHigh);
     _controller?.addListener(() {
       if (mounted) setState(() {});
       if (_controller!.value.hasError) {

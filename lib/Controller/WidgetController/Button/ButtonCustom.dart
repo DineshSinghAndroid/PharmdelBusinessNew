@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 
-import '../../Helper/ColorController/CustomColors.dart';
+ import '../../Helper/Colors/custom_color.dart';
 
 class ButtonCustom extends MaterialButton{
 
@@ -40,8 +40,8 @@ class ButtonCustom extends MaterialButton{
       child: Ink(
         decoration: BoxDecoration(
           //color: Colors.buttoncolor,
-          color: backgroundColor ?? CustomColors.blackColor,
-          border: useBorder == true ? Border.all(color: CustomColors.blackColor) : null,
+          color: backgroundColor ?? AppColors.primaryColor,
+          border: useBorder == true ? Border.all(color: AppColors.blackColor) : null,
           borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius ?? 50.0)),
         ),
         child: Container(
@@ -95,7 +95,7 @@ class ButtonCustomWithBorder extends MaterialButton{
         alignment: Alignment.center,
         decoration: BoxDecoration(
             border: Border.all(
-                color: CustomColors.blackColor,
+                color: AppColors.blackColor,
                 width: 1.5),
             borderRadius: BorderRadius.circular(20)
         ),

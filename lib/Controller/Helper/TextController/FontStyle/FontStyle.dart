@@ -1,8 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import '../../ColorController/CustomColors.dart';
-import '../../Colors/custom_color.dart';
+ import '../../Colors/custom_color.dart';
 import '../FontFamily/FontFamily.dart';
 
 
@@ -184,92 +183,92 @@ final TextStyle TextStylewhite20 = TextStyle(
 
 //   static TextStyle bold16Style = TextStyle(
 //     fontSize: 16.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.nexabold,
 //   );
 //   static TextStyle light18Style = TextStyle(
 //     fontSize: 18.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.nexalight,
 //   );
 //   static TextStyle buttonTextStyle = TextStyle(
 //     fontSize: 18.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaBlack,
 //   );
 //   static TextStyle italic16Style = TextStyle(
 //     fontSize: 16.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaBlackItalic,
 //   );
 //   static TextStyle nexaBold14Style = TextStyle(
 //     fontSize: 14.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaBold,
 //   );
 //   static TextStyle boldItalic12Style = TextStyle(
 //     fontSize: 12.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaBoldItalic,
 //   );
 //    static TextStyle book20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaBook,
 //   );
 //    static TextStyle bookItalic20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaBookItalic,
 //   );
 //    static TextStyle heavy20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaHeavy,
 //   );
 //    static TextStyle heavyItalic20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaHeavyItalic,
 //   );
 //    static TextStyle nexaLight20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaLight,
 //   );
 //    static TextStyle lightItalic20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaLightItalic,
 //   );
 //    static TextStyle regular20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaRegular,
 //   );
 //    static TextStyle regularItalic20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaRegularItalic,
 //   );
 //     static TextStyle thin20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaThin,
 //   );
 //     static TextStyle thinItalic20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaThinItalic,
 //   );
 //     static TextStyle xBold20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaXBold,
 //   );
 //     static TextStyle xBolditalic20Style = TextStyle(
 //     fontSize: 20.0,
-//     color: CustomColors.blackColor,
+//     color: AppColors.blackColor,
 //     fontFamily: FontFamily.NexaXBoldItalic,
 //   );
 // }

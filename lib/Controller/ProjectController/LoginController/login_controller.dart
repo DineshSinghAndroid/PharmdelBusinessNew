@@ -1,17 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
-import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
-import 'package:pharmdel/main.dart';
+ import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Model/Login/login_model.dart';
-import '../../ApiController/ApiController.dart';
-import '../../ApiController/WebConstant.dart';
-import '../../Helper/PrintLog/PrintLog.dart';
-import '../../Helper/Shared Preferences/SharedPreferences.dart';
-import '../../WidgetController/Toast/ToastCustom.dart';
 
 class LoginController extends GetxController {
   ApiController apiCtrl = ApiController();
@@ -40,7 +32,8 @@ class LoginController extends GetxController {
 
     String url = WebApiConstant.LOGINURL_DRIVER;
 
-    await apiCtrl.getLoginApi(context: context, url: url, dictParameter: dictparm, token: '').then((result) async {
+    await apiCtrl.getLoginApi(context: context, url: url,
+        dictParameter: dictparm, token: '').then((result) async {
       if (result != null) {
         if (result.error != true) {
           ToastCustom.showToast(msg: result.message ?? "");

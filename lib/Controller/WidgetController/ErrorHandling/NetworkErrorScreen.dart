@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../Helper/ColorController/CustomColors.dart';
+ import '../../Helper/Colors/custom_color.dart';
 import '../../Helper/TextController/BuildText/BuildText.dart';
 import '../Button/ButtonCustom.dart';
 import '../StringDefine/StringDefine.dart';
@@ -19,7 +19,7 @@ class _NoInternetConnectionScreenState extends State<NoInternetConnectionScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.whiteColor,
+      backgroundColor: AppColors.whiteColor,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -48,7 +48,7 @@ class _NoInternetConnectionScreenState extends State<NoInternetConnectionScreen>
                   onTap: (){Get.back();},
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Icon(Icons.arrow_back_ios,color: CustomColors.blackColor,size: 40,),
+                    child: Icon(Icons.arrow_back_ios,color: AppColors.blackColor,size: 40,),
                   ),
                 ):const SizedBox()
               ],

@@ -122,7 +122,7 @@ class DriverProfileController extends GetxController{
             return CustomDialogBox(
               // img: Image.asset("assets/delivery_truck.png"),
               descriptionWidget: Column(
-                children: [
+                children: const [
                   Text(
                     "Enter miles",
                     style: TextStyle(fontSize: 16),
@@ -139,8 +139,7 @@ class DriverProfileController extends GetxController{
               ),
               button2: TextButton(
                 onPressed: () async {
-                  if (startMilesController.text.toString().toString() == null ||
-                      startMilesController.text.toString().toString().isEmpty) {
+                  if (startMilesController.text.toString().toString().isEmpty) {
                     Fluttertoast.showToast(msg: "Enter Start Miles");
                   } else if (image == null) {
                     Fluttertoast.showToast(msg: "Take Speedometer Picture");
@@ -220,7 +219,7 @@ class DriverProfileController extends GetxController{
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CameraScreen()))
+                                  builder: (context) => const CameraScreen()))
                               .then((value) async {
                             if (value != null) {
                               setStat(() {
@@ -233,7 +232,7 @@ class DriverProfileController extends GetxController{
                         },
                         child: Container(
                           height: 75.0,
-                          child: Image.asset("assets/speedometer.png"),
+                          child: Image.asset("assets/images/speedometer.png"),
                         ),
                       ),
                       if (image != null)
