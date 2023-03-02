@@ -50,7 +50,7 @@ class DriverDashboardController extends GetxController{
     "routeId":routeID,
     "page":"2",
     "PageSize":"30",
-    "Status":"true"
+    "Status":true
     };
 
     String url = WebApiConstant.GET_DELIVERY_LIST;

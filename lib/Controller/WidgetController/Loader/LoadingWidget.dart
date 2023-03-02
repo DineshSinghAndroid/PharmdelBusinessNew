@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../StringDefine/StringDefine.dart';
+
 
 class LoadingWidget extends StatelessWidget {
   double height = 60.00;
@@ -26,7 +28,7 @@ class LoadingWidget extends StatelessWidget {
                   child: SizedBox(
                       height: 150.0,
                       width: 300.0,
-                      child: Lottie.network('https://assets4.lottiefiles.com/packages/lf20_wfsunjgd.json'),
+                      child: Image.asset(strGIF_LOADING),
                       ))),
         ],
       ),

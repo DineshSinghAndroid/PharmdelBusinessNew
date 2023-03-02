@@ -5,6 +5,7 @@ import 'dart:developer' as logs;
 import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
+import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
@@ -315,6 +316,28 @@ class ApiController {
     return null;
   }
 
+
+ ///Get All Delivery Api
+  Future<AllDeliveryApiResponse?> getAllDeliveryApi({context, required String url, dictParameter, String? token}) async {
+    AllDeliveryApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = AllDeliveryApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
 
   ///Lunch Break Api
   Future<LunchBreakApiResponse?> getLunchBreakApi({context, required String url, dictParameter, String? token}) async {

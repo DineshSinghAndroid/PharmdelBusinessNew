@@ -11,7 +11,7 @@ const String kTermsOfService = 'Terms of Service';
 const String kPrivacyPolicy = 'Privacy Policy';
 const String kCustomerList = 'Customer List';
 const String kAddNewCustomer = 'Add New Customer';
-
+const String kMapView = "Map View";
 
 
 /// Logo
@@ -29,7 +29,7 @@ const String strIMG_Sad = "assets/images/sad.png";
 ///GIF
 const String strIMG_NewGIF = "assets/images/new.gif";
 const String strGIF_processing = "assets/images/processing.gif";
-
+const String strGIF_LOADING = "assets/images/loading.gif";
 
 /// Toast Msg
 const String kStoragePermissionToast = "msg...";

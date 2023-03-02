@@ -76,7 +76,7 @@ List<String> items = [
                 children: [
                   Row(
                     children: [
-                      \..CustomTextField(readOnly: false),
+                     CustomTextField(readOnly: false),
                       Container(
                           height: 20,
                           width: 20,

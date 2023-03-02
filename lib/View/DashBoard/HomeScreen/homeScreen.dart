@@ -5,8 +5,10 @@ import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/Helper/TextController/FontFamily/FontFamily.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'package:pharmdel/View/MapScreen/map_screen.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/ProjectController/DriverDashboardController.dart/driverDashboardController.dart';
@@ -39,6 +41,7 @@ bool isVisibleRouteList = false;
 bool isToteList = false;
 bool isRouteStart = false;
 bool hideTote = false;
+bool isPickedUp = false;
 String driverType = "";
 
 List<String> routeList = ['north', 'south'];
@@ -118,14 +121,16 @@ List<String> routeList = ['north', 'south'];
                                     init();
                                   },
                                   child: const Icon(Icons.refresh)),
-                              buildSizeBox(0.0, 5.0),
+                              buildSizeBox(0.0, 10.0),
                               InkWell(
-                                  onTap: () {},
-                                  child: const Icon(
-                                    Icons.qr_code,
-                                    size: 30,
-                                  )),
-                              buildSizeBox(0.0, 5.0),
+                                  onTap: () {
+                                    Get.toNamed(mapScreenRoute,
+                                    arguments: MapScreen(
+                                      driverId: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userId), 
+                                      routeId: controller.orderDetailData?.routeId ?? ""));
+                                  },
+                                  child: Image.asset("assets/images/location_top.png",height: 25,color: AppColors.redColor,)),
+                              buildSizeBox(0.0, 10.0),
                               InkWell(
                                   onTap: () {
                                     Get.toNamed(notificationScreenRoute);
@@ -185,9 +190,8 @@ List<String> routeList = ['north', 'south'];
                                   text: kScanRx, color: AppColors.whiteColor)
                             ],
                           ),
-                          onPressed: () {
-                            Get.toNamed(searchPatientScreenRoute);
-                            // Get.toNamed(scanPrescriptionScreenRoute);
+                          onPressed: () {                            
+                            Get.toNamed(scanPrescriptionScreenRoute);
                             // DefaultFuntions.barcodeScanning();
                           },
                         ),
@@ -258,6 +262,7 @@ List<String> routeList = ['north', 'south'];
                                       ),
                                     ),
                                     buildSizeBox(0.0, 5.0),
+                                    isSwitched == true ?
                                     Expanded(
                                       child: InkWell(
                                         onTap: () {
@@ -308,10 +313,10 @@ List<String> routeList = ['north', 'south'];
                                                 color: Colors.lightBlue,
                                               )
                                             ],
-                                          ),
+                                          ) 
                                         ),
                                       ),
-                                    ),
+                                    ) : const SizedBox.shrink()
                                   ],
                                 ),
                               ),
@@ -331,7 +336,11 @@ List<String> routeList = ['north', 'south'];
                                           bgColor: AppColors.blueColor,
                                           label: kTotal,
                                           counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "",
-                                          onTap: () {})),
+                                          onTap: () {
+                                            setState(() {
+                                              isPickedUp = false;
+                                            });
+                                          })),
                                   Flexible(
                                       flex: 1,
                                       fit: FlexFit.tight,
@@ -339,7 +348,11 @@ List<String> routeList = ['north', 'south'];
                                           bgColor: AppColors.greyColor,
                                           label: kPickedUp,
                                           counter: controller.driverDashboardData?.orderCounts?.pickedupOrders ?? "",
-                                          onTap: () {})),
+                                          onTap: () {
+                                            setState(() {
+                                              isPickedUp = true;
+                                            });
+                                          })),
                                   Flexible(
                                       flex: 1,
                                       fit: FlexFit.tight,
@@ -347,7 +360,11 @@ List<String> routeList = ['north', 'south'];
                                           bgColor: AppColors.greenColor.withOpacity(0.7),
                                           label: kDelivered,
                                           counter: controller.driverDashboardData?.orderCounts?.deliveredOrders ?? "",
-                                          onTap: () {})),
+                                          onTap: () {
+                                            setState(() {
+                                              isPickedUp = false;
+                                            });
+                                          })),
                                   Flexible(
                                       flex: 1,
                                       fit: FlexFit.tight,
@@ -355,7 +372,11 @@ List<String> routeList = ['north', 'south'];
                                           bgColor: AppColors.redColor.withOpacity(0.8),
                                           label: kFailed,
                                           counter: controller.driverDashboardData?.orderCounts?.faildOrders ?? "",
-                                          onTap: () {})),
+                                          onTap: () {
+                                            setState(() {
+                                              isPickedUp = false;
+                                            });
+                                          })),
                                 ],
                               ),
                             ),
@@ -817,7 +838,9 @@ List<String> routeList = ['north', 'south'];
                         ),
                       ],
                     ),
-                    bottomNavigationBar: InkWell(
+                    bottomNavigationBar: 
+                    isPickedUp == true ?
+                    InkWell(
                       onTap: () {
                         showDialog(
                           context: context,
@@ -826,7 +849,7 @@ List<String> routeList = ['north', 'south'];
                                 ;
                             // return   ConfirmationRouteStartDialog();
                           },
-                        );
+                        );                        
                       },
                       child: Container(
                         color: AppColors.blueColor,
@@ -842,7 +865,8 @@ List<String> routeList = ['north', 'south'];
                           ],
                         ),
                       ),
-                    )),)
+                    ) : const SizedBox.shrink()
+                    ),)
             );
       },
     );
