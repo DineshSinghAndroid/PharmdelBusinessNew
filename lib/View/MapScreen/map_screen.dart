@@ -18,87 +18,91 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  AllDeliveryController allDelCtrl = Get.put(AllDeliveryController());
 
-AllDeliveryController allDelCtrl = Get.put(AllDeliveryController());
+  String? token, userId, userType;
 
-String? token, userId, userType;
+  final LatLng center = const LatLng(45.7749, -122.4194);
+  final Completer<GoogleMapController> mapController = Completer();
+  final Set<Polyline> _polyLines = {};
+  LatLng? endLocationLatLng;
+  LatLng? startLocationLatLng;
 
-final LatLng center = const LatLng(37.7749, -122.4194);
-final Completer<GoogleMapController> mapController = Completer();
-final Set<Polyline> _polyLines = {};
-LatLng? endLocationLatLng;
-LatLng? startLocationLatLng;
+  Map<String, dynamic>? mapList;
+  List<Marker> markers = [];
+  List<LatLng> polylineCoordinates = [];
+  List<LatLng> polylineCoordinatesAll = [];
 
-
-Map<String, dynamic>? mapList;
-List<Marker> markers = [];
-List<LatLng> polylineCoordinates = [];
-List<LatLng> polylineCoordinatesAll = [];
-
-
-@override
-void initState() {  
-  init();  
-  super.initState();
+  @override
+  void initState() {
+    init();
+    super.initState();
   }
 
-Future<void> init() async {
+  Future<void> init() async {
     allDelCtrl.isNetworkError = false;
     allDelCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
-      await allDelCtrl.allDeliveryApi(context: context,driverID: widget.driverId!, routeID: widget.routeId!);
+      await allDelCtrl.allDeliveryApi(context: context,driverID: widget.driverId!,routeID: widget.routeId!);
     } else {
       allDelCtrl.isNetworkError = true;
       setState(() {});
     }
-  }  
+  }
 
-@override
-Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
-        // centerTitle: true,        
-        elevation: 1,
-        leading: InkWell(
-          onTap: () {
-            Get.back(canPop: true);
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: AppColors.blackColor,
-          ),
-        ),
-        titleSpacing: 0,
-        title: BuildText.buildText(
-          text: kMapView,
-          size: 18,
-          color: AppColors.blackColor,
-          weight: FontWeight.w400,          
-        ),        
-      ),
-      body: GetBuilder<AllDeliveryController>(
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AllDeliveryController>(
       init: allDelCtrl,
       builder: (controller) {
-        return GoogleMap(
-        myLocationButtonEnabled: false,                
-        mapType: MapType.normal,
-        polylines: _polyLines,
-        myLocationEnabled: true,
-        initialCameraPosition: CameraPosition(
-          target: center,
-          zoom: 10.0,),
-        markers: Set.from(markers),
-        onMapCreated: (GoogleMapController controller){
-          mapController.complete(controller);
-           },
-      );
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.whiteColor,
+            // centerTitle: true,
+            elevation: 1,
+            leading: InkWell(
+              onTap: () {
+                Get.back(canPop: true);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: AppColors.blackColor,
+              ),
+            ),
+            titleSpacing: 0,
+            title: BuildText.buildText(
+              text: kMapView,
+              size: 18,
+              color: AppColors.blackColor,
+              weight: FontWeight.w400,
+            ),
+          ),
+          body: GetBuilder<AllDeliveryController>(
+            init: allDelCtrl,
+            builder: (controller) {
+              return GoogleMap(
+                myLocationButtonEnabled: false,
+                mapType: MapType.normal,
+                polylines: _polyLines,
+                myLocationEnabled: true,
+                initialCameraPosition: CameraPosition(
+                  target: center,
+                  zoom: 10.0,
+                ),
+                markers: Set.from(markers),
+                onMapCreated: (GoogleMapController controller) {
+                  mapController.complete(controller);
+                },
+              );
+            },
+          ),
+        );
       },
-    ),
     );
   }
 
-  Future<void> createPolyLineStart(PointLatLng startLat, PointLatLng endLat, int type) async {
+  Future<void> createPolyLineStart(
+      PointLatLng startLat, PointLatLng endLat, int type) async {
     polylineCoordinates.clear();
     PolylinePoints polylinePoints = PolylinePoints();
     await polylinePoints
@@ -107,7 +111,8 @@ Widget build(BuildContext context) {
       startLat,
       endLat,
       travelMode: TravelMode.driving,
-    ).then((value) {
+    )
+        .then((value) {
       value.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         // logger.i("print1${polylineCoordinates.length}");
@@ -124,8 +129,3 @@ Widget build(BuildContext context) {
     });
   }
 }
-
-
-
-
-

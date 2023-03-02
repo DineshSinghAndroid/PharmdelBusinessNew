@@ -42,7 +42,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           alignment: Alignment.center, child: const CreatePatientScreen());
 
     case updateAddressScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const UpdateAddressScreen());
+    final args = settings.arguments as UpdateAddressScreen;
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  UpdateAddressScreen(address1: args.address1,address2: args.address2,postCode: args.postCode,townName: args.townName,));
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;
@@ -60,9 +61,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
       case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const LunchBreakScreen());
-   case lunchBreakScreenRoute:
-   case lunchBreakScreenRoute:
-       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const LunchBreakScreen());
 
 
   case scanPrescriptionScreenRoute:
