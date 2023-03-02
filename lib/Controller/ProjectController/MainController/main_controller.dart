@@ -8,6 +8,7 @@ import 'package:pharmdel/Controller/ProjectController/MainController/import_cont
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../../Model/Enum/enum.dart';
+import '../../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../DB_Controller/MyDatabase.dart';
 import '../../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
 import '../../RouteController/Route.dart'as router;
@@ -437,6 +438,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         return const OverlaySupport.global(
             child: GetMaterialApp(
             initialRoute: splashScreenRoute,
+              // home: CreatePatientScreen(),
             debugShowCheckedModeBanner: false,
             onGenerateRoute: router.generateRoute,
              title: "Pharmdel Business",

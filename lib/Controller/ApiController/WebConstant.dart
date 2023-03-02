@@ -30,10 +30,12 @@ class WebApiConstant {
   static const String DELIVERY_SIGNATURE_UPLOAD_URL          =  "${BASE_URL}Acknowledge";
   static const String SCAN_ORDER_BY_DRIVER                   =  "${BASE_URL}ScanOrderByDriver";
   static const String GET_ALL_DELIVERY                       =  "${BASE_URL}GetAllDelivery";
+  static const String UPDATE_CUSTOMER_WITH_ORDER             =  "${BASE_URL_PHARMACY}createOrder";
+  static const String CREATE_PATIENT_URL                     =  "${BASE_URL_PHARMACY}createPatient";
 
 
   ///Pharmacy
   static const String GET_PATAINET_LIST_URL                  =  "${BASE_URL_PHARMACY}GetPatient";
   static const String Get_PHARMACY_DriverList_ByRoute        =  "${BASE_URL_PHARMACY}GetDriverListByRoute";
- 
+
 }

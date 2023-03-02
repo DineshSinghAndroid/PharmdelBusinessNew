@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/ColorController/CustomColors.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+ import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/ProjectController/SetupPinController/setupPinController.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';

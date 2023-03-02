@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import '../../ColorController/CustomColors.dart';
+ import '../../Colors/custom_color.dart';
 import '../FontFamily/FontFamily.dart';
 
 class BuildText{
@@ -28,7 +28,7 @@ class BuildText{
           fontFamily: fontFamily ?? FontFamily.NexaRegular,
           fontSize: size ?? 14,
           fontWeight: weight,
-          color: color ?? CustomColors.blackColor,
+          color: color ?? AppColors.blackColor,
           decoration: decoration ?? TextDecoration.none,
         ),
         textAlign: textAlign ?? TextAlign.start,
