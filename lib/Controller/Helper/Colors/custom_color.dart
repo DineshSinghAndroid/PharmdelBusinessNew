@@ -26,6 +26,7 @@ class AppColors {
   static Color pinkColorLight = const Color(0xFFFEDEFB);
   static Color blueColorLight = Colors.lightBlue;
   static Color blueColor = Colors.blue;
+  static Color yetToStartColor = const Color(0xFFF8A340);
   static Color primaryTextColor = const Color(0xFF1A1316);
   static MaterialColor materialAppThemeColor = const MaterialColor(
   0xFFfffcfc,
