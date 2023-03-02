@@ -29,6 +29,9 @@ class SetupMPinController extends GetxController {
   void onClose() {
     txtOldPin.dispose();
     newPin1.dispose();
+    newPin1.dispose();
+    txtOldPin.dispose();
+    newPin2.dispose();
 
     // TODO: implement onClose
     super.onClose();
@@ -155,33 +158,45 @@ PrintLog.printLog("This is dictparam" +dictparm.toString());
   else{
     ToastCustom.showToast(msg: "Please Retry");
     }
+    newPin2.clear();
+    newPin1.clear();
+    txtOldPin.clear();
   }
   void changePin()async{
     myFocusNode?.requestFocus();
 
 
-    if( newPin1.text.length == 4 && newPin2.text.length == 4 &&
-        newPin2.text == newPin1.text){
-  await setupNewPinAPi(
-      pin: int.parse(newPin2.text)).then((value) async {
-    final prefs = await SharedPreferences.getInstance();
+    if( newPin1.text.length == 4 &&
+        newPin2.text.length == 4 &&
+        newPin2.text == newPin1.text && existingPin.length ==
+        4 && txtOldPin.text == existingPin){
+      await setupNewPinAPi(
+          pin: int.parse(newPin2.text)).then((value) async {
+        final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString(AppSharedPreferences.userPin, newPin2.text??"");
-    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
+        prefs.setString(AppSharedPreferences.userPin, newPin2.text??"");
+        print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
 
-    if(userType == "Pharmacy Staff"){
+        if(userType == "Pharmacy Staff"){
           Get.toNamed(pharmacyHomePage);
         }
-       else if(userType == "Driver"){
+        else if(userType == "Driver"){
           Get.toNamed(homeScreenRoute);
         }
-       else{
-         ToastCustom.showToast(msg: "Something Went Wrong");
+
+        else{
+          ToastCustom.showToast(msg: "Something Went Wrong");
         }
-  });
+      });
+
 }
   else{
+
+    print(txtOldPin.toString() + newPin1.toString() + newPin2.toString() + existingPin);
     ToastCustom.showToast(msg: "Please Retry");
     }
+    newPin2.clear();
+    newPin1.clear();
+    txtOldPin.clear();
   }
 }

@@ -37,7 +37,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const NotificatinScreen());
 
     case createPatientScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const CreatePatientScreen());
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300),
+          alignment: Alignment.center, child: const CreatePatientScreen());
 
     case updateAddressScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const UpdateAddressScreen());
@@ -62,11 +63,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 isChangePin: args.toString(),
               ));
 
-<<<<<<< HEAD
-    case lunchBreakScreenRoute:
+     case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const LunchBreakScreen());
-=======
-  case lunchBreakScreenRoute:
+   case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const LunchBreakScreen());    
 
 
@@ -76,8 +75,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
   case searchPatientScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchPatientScreen());            
->>>>>>> fe061ac0adef17f574092a2993478a0d45d1c4f9
-    // case introScreenRoute:
+     // case introScreenRoute:
     //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
 
     //Pharmacy
