@@ -10,6 +10,7 @@ import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.da
 import 'package:pharmdel/Controller/ProjectController/DriverProfile/driverProfileController.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
+import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../../main.dart';
 import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
@@ -338,22 +339,27 @@ class DrawerDriverState extends State<DrawerDriver> {
 
                         ListTile(
                           onTap: () {
-                            Get.toNamed(updateAddressScreenRoute);
+                            Get.toNamed(updateAddressScreenRoute,
+                            arguments: UpdateAddressScreen(
+                              address1: controller.driverProfileData?.data?.addressLine1 ?? "", 
+                              address2: controller.driverProfileData?.data?.addressLine2 ?? "", 
+                              postCode: controller.driverProfileData?.data?.postCode ?? "", 
+                              townName: controller.driverProfileData?.data?.townName ?? ""),);
                           },
                           leading: const Icon(Icons.home,size: 20),
                           title:BuildText.buildText(text: kUpdateAddress)
                         ),
                  
                       ListTile(
-                          onTap: (){
-                            return validateAndLogout(context);
+                          onTap: ()async{
+                            await validateAndLogout(context);
                           },
                           leading: const Icon(Icons.logout,size: 20),
                           title:BuildText.buildText(text: klogout)
                         ),
-                  
                       const Spacer(),
-                      Text(kAppVersion + versionCode ?? ""),
+                      BuildText.buildText(
+                        text: kAppVersion + versionCode ?? ""),
                       buildSizeBox(20.0, 0.0),
                     ]),
                   ),

@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
+import '../../Model/DriverList/driverListResponse.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
@@ -15,6 +16,7 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
+import '../../Model/UpdateProfile/updateProfileResponse.dart';
 import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
@@ -62,10 +64,10 @@ class ApiController {
 
 
   // Logout Api
-  Future getLogoutApi({context, required String url,   String? token}) async {
+  Future getLogoutApi({context, required String url, dictParameter, String? token}) async {
      if (await ConnectionValidator().check()) {
       try {
-        final response = await requestGetForApi(context: context, url: url, token: authToken);
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter, token: authToken);
 
          if (response?.data != null && response!.statusCode == 200) {
           print(response.statusMessage);
@@ -339,6 +341,28 @@ class ApiController {
     return null;
   }
 
+   ///Get Driver List Api
+  Future<DriverListApiResponse?> getDriverListApi({context, required String url, dictParameter, String? token}) async {
+    DriverListApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverListApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
   ///Lunch Break Api
   Future<LunchBreakApiResponse?> getLunchBreakApi({context, required String url, dictParameter, String? token}) async {
     LunchBreakApiResponse? result;
@@ -351,6 +375,31 @@ class ApiController {
           return result;
         } else {
           print("THIS IS API RESULT FOR LOGIN API $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+   ///Update Profile Api
+  Future<UpdateProfileApiResponse?> getUpdateProfileApi({context, required String url, dictParameter, String? token}) async {
+    UpdateProfileApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = UpdateProfileApiResponse.fromJson(response?.data);
+          print("THIS IS API RESULT FOR UPDATE PROFILE $result");
+          return result;
+        } else {
+          print("THIS IS API RESULT FOR UPDATE PROFILE $result");
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");

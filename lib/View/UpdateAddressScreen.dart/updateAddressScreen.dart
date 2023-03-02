@@ -1,34 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
-import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 
-import '../../Controller/WidgetController/Button/ButtonCustom.dart';
+import '../../Controller/ProjectController/UpdateProfileController/updateProfileController.dart';
 
 class UpdateAddressScreen extends StatefulWidget {
-  const UpdateAddressScreen({super.key});
+  String? address1, address2, townName, postCode;
+   UpdateAddressScreen({super.key, required this.address1, required this.address2, required this.postCode, required this.townName});
 
   @override
   State<UpdateAddressScreen> createState() => _UpdateAddressScreenState();
 }
 
 class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
+
+  UpdateProfileController updPrfCtrl = Get.put(UpdateProfileController());
+
   TextEditingController addressController = TextEditingController();
   TextEditingController addressController2 = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController postCodeController = TextEditingController();
+
   FocusNode addressFocus = FocusNode();
   FocusNode addressFocus1 = FocusNode();
   FocusNode townFocus = FocusNode();
   FocusNode postCodeFocus2 = FocusNode();
   FocusNode surgeryFocus = FocusNode();
+
+  String accessToken = "";
   String? username;
   String? mobile;
 
+@override 
+void initState() {  
+    super.initState();
+    init();
+  }
+
+void init() async {
+  addressController.text = widget.address1!.toString().trim();
+  addressController2.text = widget.address2!;
+  townController.text = widget.townName!;
+  postCodeController.text = widget.postCode!;
+}
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return GetBuilder<UpdateProfileController>(
+      init: updPrfCtrl,
+      builder: (controller) {
+        return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -138,7 +160,14 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                 ),
                 buildSizeBox(5.0, 0.0),
                 ButtonCustom(
-                  onPress: (){}, 
+                  onPress: ()async{      
+                    updPrfCtrl.updateProfileApi(
+                      context: context, 
+                      addressLine1: addressController.text.toString().trim(), 
+                      addressLine2: addressController2.text.toString().trim(), 
+                      town: townController.text.toString().trim(), 
+                      postCode: postCodeController.text.toString().trim());              
+                  }, 
                   text: kUpdateAddress, 
                   buttonWidth: Get.width, 
                   buttonHeight: 50,
@@ -150,6 +179,8 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
           ),
         ),
       ),
+    );
+      },
     );
   }
 

@@ -38,7 +38,7 @@ class LunchBreakController extends GetxController {
 
     String url = WebApiConstant.LUNCH_BREAK_URL;
 
-    await apiCtrl.getLunchBreakApi(context:context,url: url,dictParameter: dictparm,token:'')
+    await apiCtrl.getLunchBreakApi(context:context,url: url,dictParameter: dictparm,token:authToken)
         .then((result) async {
        if(result != null){
         if (result.status != true) {

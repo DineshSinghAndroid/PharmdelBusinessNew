@@ -24,6 +24,7 @@ const String strIMG_SpeedoMeter = "assets/images/speedometer.png";
 const String strIMG_AltAdd = "assets/images/alt-add.png";
 const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
+const String strIMG_location = "assets/images/location_top.png";
 
 
 ///GIF

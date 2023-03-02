@@ -8,10 +8,9 @@ import '../../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../../main.dart';
 
 
-class GetPatientContoller extends GetxController{
+class DriverListController extends GetxController{
 
   ApiController apiCtrl = ApiController();
-  List<PatientData>? patientData;
 
   bool isLoading = false;
   bool isError = false;
@@ -19,7 +18,7 @@ class GetPatientContoller extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  Future<GetPatientApiResposne?> getPatientApi({required BuildContext context,required String firstName}) async {
+  Future<GetPatientApiResposne?> driverListApi({required BuildContext context,required String routeId}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -28,27 +27,25 @@ class GetPatientContoller extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-    "firstName":firstName
+    "routeId":routeId
     };
 
-    String url = WebApiConstant.GET_PATIENT_LIST_URL;
+    String url = WebApiConstant.Get_PHARMACY_DriverList_ByRoute;
 
-    await apiCtrl.getPatientApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.getDriverListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
-        if (result.status != false) {
+        if (result != false) {
           try {
-            if (result.status == true) {              
-              patientData = result.list;
-              result.list == null ? changeEmptyValue(true):changeEmptyValue(false);
+            if (result == true) {                                          
               changeLoadingValue(false);
-              changeSuccessValue(true);
-              PrintLog.printLog(result.message);
+              changeSuccessValue(true);        
+              PrintLog.printLog("Get driver list successfully.");      
 
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog(result.message);
+              // PrintLog.printLog(result.message);
             }
 
           } catch (_) {
@@ -61,7 +58,7 @@ class GetPatientContoller extends GetxController{
           changeSuccessValue(false);
           changeLoadingValue(false);
           changeErrorValue(true);
-          PrintLog.printLog(result.message);
+          // PrintLog.printLog(result.message);
         }
       }else{
         changeSuccessValue(false);

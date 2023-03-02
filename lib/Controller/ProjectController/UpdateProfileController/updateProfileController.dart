@@ -1,17 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
-import '../../../Model/GetPatient/getPatientApiResponse.dart';
-import '../../../main.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import '../../../Model/UpdateProfile/updateProfileResponse.dart';
 
-
-class GetPatientContoller extends GetxController{
+class UpdateProfileController extends GetxController {
 
   ApiController apiCtrl = ApiController();
-  List<PatientData>? patientData;
 
   bool isLoading = false;
   bool isError = false;
@@ -19,7 +13,8 @@ class GetPatientContoller extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  Future<GetPatientApiResposne?> getPatientApi({required BuildContext context,required String firstName}) async {
+ 
+    Future<UpdateProfileApiResponse?> updateProfileApi({required BuildContext context,required String addressLine1, required String addressLine2, required String town, required String postCode })async{
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -28,40 +23,37 @@ class GetPatientContoller extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-    "firstName":firstName
+      "addressline1":addressLine1,
+      "addressline2":addressLine2,
+      "town":town,
+      "postcode":postCode,
     };
 
-    String url = WebApiConstant.GET_PATIENT_LIST_URL;
+    String url = WebApiConstant.GET_UPDATE_PROFILE_URL;
 
-    await apiCtrl.getPatientApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.getUpdateProfileApi(context:context,url: url,dictParameter: dictparm,token:authToken)
         .then((result) async {
-      if(result != null){
+       if(result != null){
         if (result.status != false) {
           try {
-            if (result.status == true) {              
-              patientData = result.list;
-              result.list == null ? changeEmptyValue(true):changeEmptyValue(false);
+            if (result.status == true) {
+              ToastCustom.showToast(msg: "${result.message}");                                  
               changeLoadingValue(false);
               changeSuccessValue(true);
-              PrintLog.printLog(result.message);
-
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog(result.message);
             }
-
           } catch (_) {
             changeSuccessValue(false);
             changeLoadingValue(false);
             changeErrorValue(true);
-            PrintLog.printLog("Exception : $_");          
+            PrintLog.printLog("Exception : $_");
           }
         }else{
           changeSuccessValue(false);
           changeLoadingValue(false);
           changeErrorValue(true);
-          PrintLog.printLog(result.message);
         }
       }else{
         changeSuccessValue(false);
@@ -71,7 +63,6 @@ class GetPatientContoller extends GetxController{
     });
     update();
   }
-
 
   void changeSuccessValue(bool value){
     isSuccess = value;
@@ -93,5 +84,6 @@ class GetPatientContoller extends GetxController{
     isError = value;
     update();
   }
+
 }
 

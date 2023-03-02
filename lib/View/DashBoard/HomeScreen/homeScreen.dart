@@ -36,11 +36,11 @@ class _HomeScreenState extends State<HomeScreen> {
 DriverDashboardController drDashCtrl = Get.put(DriverDashboardController());
 
 bool isSwitched = false;
-bool isVisiblePharmacyList = false; 
-bool isVisibleRouteList = false; 
-bool isToteList = false; 
-bool isRouteStart = false; 
-bool hideTote = false; 
+bool isVisiblePharmacyList = false;
+bool isVisibleRouteList = false;
+bool isToteList = false;
+bool isRouteStart = false;
+bool hideTote = false;
 bool isLoadPagination = false;
 bool isProgressAvailable = false;
 bool isPickedUp = false;
@@ -60,7 +60,7 @@ List<String> routeList = ['north', 'south'];
     drDashCtrl.isNetworkError = false;
     drDashCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
-      await drDashCtrl.driverDashboardApi(context: context,routeID: '1');
+      await drDashCtrl.driverDashboardApi(context: context,routeID: "1");
     } else {
       drDashCtrl.isNetworkError = true;
       setState(() {});
@@ -132,7 +132,7 @@ List<String> routeList = ['north', 'south'];
                                       driverId: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userId), 
                                       routeId: controller.orderDetailData?.routeId ?? ""));
                                   },
-                                  child: Image.asset("assets/images/location_top.png",height: 25,color: AppColors.redColor,)),
+                                  child: Image.asset(strIMG_location,height: 25,color: AppColors.redColor,)),
                               buildSizeBox(0.0, 10.0),
                               InkWell(
                                   onTap: () {
@@ -153,7 +153,7 @@ List<String> routeList = ['north', 'south'];
                                           height: 16,
                                           width: 16,
                                           child: CircleAvatar(
-                                            backgroundColor: AppColors.redColor,
+                                            backgroundColor: AppColors.redColor,                                            
                                             child: BuildText.buildText(
                                               text: controller.driverDashboardData?.notificationCount ?? "",
                                               //controller.notificationCountData?.list ?? "",
@@ -861,10 +861,8 @@ List<String> routeList = ['north', 'south'];
                       onTap: () {
                         showDialog(
                           context: context,
-                          builder: (context) {
-                            return Text("")
-                                ;
-                            // return   ConfirmationRouteStartDialog();
+                          builder: (context) {                            
+                            return   const ConfirmationRouteStartDialog();
                           },
                         );                        
                       },
