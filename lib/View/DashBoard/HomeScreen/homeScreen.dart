@@ -1,28 +1,12 @@
-import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
-import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
-import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import 'package:pharmdel/Controller/Helper/TextController/FontFamily/FontFamily.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/View/MapScreen/map_screen.dart';
-import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/ProjectController/DriverDashboardController.dart/driverDashboardController.dart';
-import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
-import '../../../Controller/WidgetController/CustomDrawer/profile Drawer.dart';
-import '../../../Controller/WidgetController/Default Widget/DefaultWidget.dart';
-import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
-import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
-import '../../../Model/DriverRoutes/driverRoutesResponse.dart';
-import '../../../Model/NotificationCount/notificationCountResponse.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

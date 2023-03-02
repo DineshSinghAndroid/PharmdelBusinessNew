@@ -177,7 +177,7 @@ class ApiController {
          print(response.toString());
         if (response?.data != null && response!.statusCode == 200) {
           result = UpdateCustomerWithOrderModel.fromJson(response.data);
-          print("THIS IS API RESULT FOR UPDATE PATIENT:::::>>>>>>>>>>>>>>>>>> ${result.toString()}");
+          print("THIS IS API RESULT FOR CREATE PATIENT POST TYPE :::::>>>>>>>>>>>>>>>>>> ${result.toString()}");
           return result;
         } else {
           return result;
