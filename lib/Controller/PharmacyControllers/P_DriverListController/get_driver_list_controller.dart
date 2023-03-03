@@ -1,24 +1,22 @@
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ApiController/ApiController.dart';
-import 'package:pharmdel/Model/DriverRoutes/driverRoutesResponse.dart';
 
 import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
-import '../../../main.dart';
+ import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
-import '../../Helper/LogoutController/logout_controller.dart';
-import '../../Helper/PrintLog/PrintLog.dart';
+ import '../../Helper/PrintLog/PrintLog.dart';
 import '../../WidgetController/Loader/LoadingScreen.dart';
-import '../../WidgetController/Toast/ToastCustom.dart';
 
 class GetDriverListController extends GetxController
 {
    final ApiController _apiCtrl = ApiController();
-  List driverList = [];
+  List   driverList = [];
 
+   String? selectedDriverName = GetDriverListModelResponsePharmacy().firstName??"Hello";
 
    @override
    void onInit() {
-     PrintLog.printLog("GetDriverListController is initlized::::::::");
+     PrintLog.printLog("GetDriverListController is initialized::::::::");
      super.onInit();
    }
 
@@ -35,7 +33,7 @@ class GetDriverListController extends GetxController
         dictParameter: dictparm, token: authToken).then((_result) {
       if (_result != null) {
         try {
-          driverList.add(GetDriverListModelResponsePharmacy);
+          driverList.addAll(driverList);
 
           print("Driver ID Response ${driverList.toString()}");
           // driverList.addAll(_result.!);

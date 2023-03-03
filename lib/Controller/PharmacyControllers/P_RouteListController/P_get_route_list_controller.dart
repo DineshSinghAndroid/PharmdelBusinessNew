@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pharmdel/main.dart';
 
-import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_pharmacy.dart';
+import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
  import '../../Helper/PrintLog/PrintLog.dart';
@@ -12,7 +12,8 @@ class PharmacyGetRouteListController extends GetxController{
   
   final ApiController _apiCtrl = ApiController();
   List<RouteList> routeList = [];
-  String? selectedRouteValue;
+   String? selectedRouteValue = RouteList().routeName??"Hello";
+
 
 
   @override
