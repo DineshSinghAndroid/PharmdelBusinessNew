@@ -352,7 +352,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                  
                       ListTile(
                           onTap: ()async{
-                            await validateAndLogout(context);
+                            await LogoutController().validateAndLogout(context);
                           },
                           leading: const Icon(Icons.logout,size: 20),
                           title:BuildText.buildText(text: klogout)

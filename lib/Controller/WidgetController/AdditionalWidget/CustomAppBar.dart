@@ -17,7 +17,7 @@ class CustomAppBar{
                   alignment: Alignment.center,
                   width: 40,
 
-                  child: SvgPicture.asset("strSvgBackArrow",color: leadingColor ?? Colors.black,width: 20,)
+                  child: IconButton(onPressed: (){},icon: Icon(Icons.arrow_back),color: leadingColor ?? Colors.black,)
               ),
             ),
           ),

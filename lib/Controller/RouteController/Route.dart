@@ -11,6 +11,7 @@ import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 
 import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
+import '../../PHARMACY/P_Views/P_TrackOrder/pharmacy_track_order_screen.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/MapScreen/map_screen.dart';
@@ -81,6 +82,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //Pharmacy
     case pharmacyHomePage:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: PharmacyHomeScreen());
+ case trackOrderScreen:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const
+      Duration(milliseconds: 300), alignment: Alignment.center, child: const TrackOrderScreenPharmacy());
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());

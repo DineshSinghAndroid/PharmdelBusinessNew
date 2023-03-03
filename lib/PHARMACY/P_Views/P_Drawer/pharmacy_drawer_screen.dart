@@ -231,7 +231,7 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
                   const Divider(),
                   DrawerListTiles(text: 'Terms of user', ontap: () {}),
                   const Divider(),
-                  DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
+                  // DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
                 ],
               ),
             ),
@@ -252,10 +252,7 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
     );
   }
 
-  InkWell DrawerListTiles({
-    required String text,
-    ontap,
-  }) {
+  InkWell DrawerListTiles({required String text, ontap,}) {
     return InkWell(
       onTap: ontap,
       child: Container(

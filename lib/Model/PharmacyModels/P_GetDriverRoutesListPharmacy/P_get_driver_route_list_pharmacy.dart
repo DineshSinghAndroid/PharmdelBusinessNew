@@ -1,4 +1,4 @@
-class DriverRoutesApiResposne {
+class  GetDriverRouteListModelResponse {
   List<RouteList>? routeList;
   List<AllRouteList>? allRouteList;
   List<PharmacyList>? pharmacyList;
@@ -9,20 +9,20 @@ class DriverRoutesApiResposne {
   String? vehicleInspection;
   String? vehicleId;
 
-  DriverRoutesApiResposne(
+   GetDriverRouteListModelResponse(
 
       {
-      this.routeList,
-      this.allRouteList,
-      this.pharmacyList,
-      this.nHomeList,
-      this.status,
-      this.message,
-      this.isOrderAvailable,
-      this.vehicleInspection,
-      this.vehicleId});
+        this.routeList,
+        this.allRouteList,
+        this.pharmacyList,
+        this.nHomeList,
+        this.status,
+        this.message,
+        this.isOrderAvailable,
+        this.vehicleInspection,
+        this.vehicleId});
 
-  DriverRoutesApiResposne.fromJson(Map<String, dynamic> json) {
+   GetDriverRouteListModelResponse.fromJson(Map<String, dynamic> json) {
     if (json['routeList'] != null) {
       routeList = <RouteList>[];
       json['routeList'].forEach((v) {
@@ -86,10 +86,10 @@ class RouteList {
 
   RouteList(
       {this.routeId,
-      this.routeName,
-      this.isActive,
-      this.companyId,
-      this.branchId});
+        this.routeName,
+        this.isActive,
+        this.companyId,
+        this.branchId});
 
   RouteList.fromJson(Map<String, dynamic> json) {
     routeId = json['routeId'];
@@ -119,10 +119,10 @@ class AllRouteList {
 
   AllRouteList(
       {this.routeId,
-      this.routeName,
-      this.isActive,
-      this.companyId,
-      this.branchId});
+        this.routeName,
+        this.isActive,
+        this.companyId,
+        this.branchId});
 
   AllRouteList.fromJson(Map<String, dynamic> json) {
     routeId = json['routeId'];
@@ -155,13 +155,13 @@ class PharmacyList {
 
   PharmacyList(
       {this.pharmacyId,
-      this.pharmacyName,
-      this.address,
-      this.postCode,
-      this.lat,
-      this.lng,
-      this.isPresCharge,
-      this.isDelCharge});
+        this.pharmacyName,
+        this.address,
+        this.postCode,
+        this.lat,
+        this.lng,
+        this.isPresCharge,
+        this.isDelCharge});
 
   PharmacyList.fromJson(Map<String, dynamic> json) {
     pharmacyId = json['pharmacyId'];

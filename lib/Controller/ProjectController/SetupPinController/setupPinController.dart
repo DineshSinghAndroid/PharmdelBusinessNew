@@ -13,13 +13,14 @@ import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../Helper/StringDefine/StringDefine.dart';
 
 class SetupMPinController extends GetxController {
-  String existingPin ="";
-  String userType ="";
+  String existingPin = "";
+  String userType = "";
+
   @override
   Future<void> onInit() async {
     final prefs = await SharedPreferences.getInstance();
-      existingPin = prefs.getString(AppSharedPreferences.userPin)??"";
-    userType = prefs.getString(AppSharedPreferences.userType)??"";
+    existingPin = prefs.getString(AppSharedPreferences.userPin) ?? "";
+    userType = prefs.getString(AppSharedPreferences.userType) ?? "";
 
     // TODO: implement onInit
     super.onInit();
@@ -36,6 +37,7 @@ class SetupMPinController extends GetxController {
     // TODO: implement onClose
     super.onClose();
   }
+
   ApiController apiCtrl = ApiController();
 
   bool isLoading = false;
@@ -48,13 +50,14 @@ class SetupMPinController extends GetxController {
   TextEditingController newPin1 = TextEditingController();
   TextEditingController newPin2 = TextEditingController();
 
-
   bool isOld = true, isNew = true, isConfirm = true;
   FocusNode? myFocusNode;
   var focusOldPin = FocusNode();
   var focusPin = FocusNode();
   var focusConfirmPin = FocusNode();
-  Future<SetUpPinModel?> setupNewPinAPi({  BuildContext? context, required int pin}) async {
+
+  Future<SetUpPinModel?> setupNewPinAPi(
+      {BuildContext? context, required int pin}) async {
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -64,19 +67,18 @@ class SetupMPinController extends GetxController {
     Map<String, dynamic> dictparm = {
       "pin": pin,
     };
-PrintLog.printLog("This is dictparam" +dictparm.toString());
+    PrintLog.printLog("This is dict-param$dictparm");
     String url = WebApiConstant.SETPIV_DRIVER;
 
     await apiCtrl.setMPinAPi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) async {
       PrintLog.printLog("Setup m pin result is :::::>>>>>${result!.message.toString()}");
-       if (result != null) {
+      if (result != null) {
         if (result.error != true) {
           try {
             if (result.error == false) {
               ToastCustom.showToast(msg: result.message);
               changeLoadingValue(false);
               changeSuccessValue(true);
-
             } else {
               ToastCustom.showToast(msg: result.message);
               changeLoadingValue(false);
@@ -130,70 +132,53 @@ PrintLog.printLog("This is dictparam" +dictparm.toString());
     update();
   }
 
-
-  void setPin()async{
+  void setPin() async {
     myFocusNode?.requestFocus();
 
+    if (newPin1.text.length == 4 && newPin2.text.length == 4 && newPin2.text == newPin1.text) {
+      await setupNewPinAPi(pin: int.parse(newPin2.text)).then((value) async {
+        final prefs = await SharedPreferences.getInstance();
 
-    if( newPin1.text.length == 4 && newPin2.text.length == 4 &&
-        newPin2.text == newPin1.text){
-  await setupNewPinAPi(
-      pin: int.parse(newPin2.text)).then((value) async {
-    final prefs = await SharedPreferences.getInstance();
+        prefs.setString(AppSharedPreferences.userPin, newPin2.text);
+        print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
 
-    prefs.setString(AppSharedPreferences.userPin, newPin2.text);
-    print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
-
-    if(userType == "Pharmacy Staff"){
+        if (userType == "Pharmacy Staff") {
           Get.toNamed(pharmacyHomePage);
-        }
-       else if(userType == "Driver"){
+        } else if (userType == "Driver") {
           Get.toNamed(homeScreenRoute);
+        } else {
+          ToastCustom.showToast(msg: "Something Went Wrong");
         }
-       else{
-         ToastCustom.showToast(msg: "Something Went Wrong");
-        }
-  });
-}
-  else{
-    ToastCustom.showToast(msg: "Please Retry");
+      });
+    } else {
+      ToastCustom.showToast(msg: "Please Retry");
     }
     newPin2.clear();
     newPin1.clear();
     txtOldPin.clear();
   }
-  void changePin()async{
+
+  void changePin() async {
     myFocusNode?.requestFocus();
 
-
-    if( newPin1.text.length == 4 &&
-        newPin2.text.length == 4 &&
-        newPin2.text == newPin1.text && existingPin.length ==
-        4 && txtOldPin.text == existingPin){
-      await setupNewPinAPi(
-          pin: int.parse(newPin2.text)).then((value) async {
+    if (newPin1.text.length == 4 && newPin2.text.length == 4 && newPin2.text == newPin1.text && existingPin.length == 4 && txtOldPin.text == existingPin) {
+      await setupNewPinAPi(pin: int.parse(newPin2.text)).then((value) async {
         final prefs = await SharedPreferences.getInstance();
 
-        prefs.setString(AppSharedPreferences.userPin, newPin2.text??"");
+        prefs.setString(AppSharedPreferences.userPin, newPin2.text ?? "");
         print("PIN value set to shared prefs is ::::::???????:>>>>>>>>${newPin2.text}");
 
-        if(userType == "Pharmacy Staff"){
+        if (userType == "Pharmacy Staff") {
           Get.toNamed(pharmacyHomePage);
-        }
-        else if(userType == "Driver"){
+        } else if (userType == "Driver") {
           Get.toNamed(homeScreenRoute);
-        }
-
-        else{
+        } else {
           ToastCustom.showToast(msg: "Something Went Wrong");
         }
       });
-
-}
-  else{
-
-    print(txtOldPin.toString() + newPin1.toString() + newPin2.toString() + existingPin);
-    ToastCustom.showToast(msg: "Please Retry");
+    } else {
+      print(txtOldPin.toString() + newPin1.toString() + newPin2.toString() + existingPin);
+      ToastCustom.showToast(msg: "Please Retry");
     }
     newPin2.clear();
     newPin1.clear();

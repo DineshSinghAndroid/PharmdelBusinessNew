@@ -172,6 +172,7 @@ class CreatePatientController extends GetxController {
     });
     update();
     CustomLoading().show(context, false);
+    return null;
 
   }
 
