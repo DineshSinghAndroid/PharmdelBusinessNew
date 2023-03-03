@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/View/OnBoarding/Login/login_screen.dart';
 
+import '../../../Controller/PharmacyControllers/P_RouteListController/P_get_route_list_controller.dart';
 import '../P_Drawer/pharmacy_drawer_screen.dart';
 
 class PharmacyHomeScreen extends StatefulWidget {
@@ -30,6 +31,8 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       drawer: PharmacyDrawerScreen(userName: userName ??'',email: email,versionCode: versionCode,mobile: mobile,),
       backgroundColor: AppColors.whiteColor,
@@ -49,7 +52,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
               padding: const EdgeInsets.only(left: 0, right: 13, top: 30),
               child: Stack(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.notifications,
                     size: 30,
                     color: Colors.black,
@@ -92,6 +95,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: (){
+                    Get.toNamed(trackOrderScreen);
                    },
                   child: Container(
                     height: Get.height / 6,

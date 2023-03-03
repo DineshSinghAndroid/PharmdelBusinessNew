@@ -30,17 +30,30 @@ class WebApiConstant {
   static const String DELIVERY_SIGNATURE_UPLOAD_URL          =  "${BASE_URL}Acknowledge";
   static const String SCAN_ORDER_BY_DRIVER                   =  "${BASE_URL}ScanOrderByDriver";
   static const String GET_ALL_DELIVERY                       =  "${BASE_URL}GetAllDelivery";
+<<<<<<< HEAD
   static const String GET_UPDATE_PROFILE_URL                 =  "${BASE_URL}updateProfile";
   
   static const String UPDATE_CUSTOMER_WITH_ORDER             =  "${BASE_URL_PHARMACY}createOrder";
+=======
+   static const String GET_UPDATE_PROFILE_URL                 =  "${BASE_URL}updateProfile";
+  
+   static const String UPDATE_CUSTOMER_WITH_ORDER             =  "${BASE_URL_PHARMACY}createOrder";
+>>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
   static const String CREATE_PATIENT_URL                     =  "${BASE_URL_PHARMACY}createPatient";
 
 
   ///Pharmacy
   static const String GET_PATIENT_LIST_URL                   =  "${BASE_URL_PHARMACY}GetPatient";
   static const String Get_PHARMACY_DriverList_ByRoute        =  "${BASE_URL_PHARMACY}GetDriverListByRoute";
+<<<<<<< HEAD
   static const String GET_PHARMACY_PARCEL_BOX_URL            =  "${BASE_URL_PHARMACY}getParcelBoxData";
   static const String GET_PHARMACY_PATIENT_DETAILS           =  "${BASE_URL_PHARMACY}getpatientdetailsbyorderId";
   static const String GET_PHARMACY_NOTIFICATION              =  "${BASE_URL_PHARMACY}GetNotifications";
  
+=======
+   static const String GET_PHARMACY_PARCEL_BOX_URL            =  "${BASE_URL_PHARMACY}getParcelBoxData";
+  static const String GET_ROUTE_URL_PHARMACY =                       BASE_URL_PHARMACY + "GetRoutes";
+
+
+>>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 }

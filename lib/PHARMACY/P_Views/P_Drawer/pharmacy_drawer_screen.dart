@@ -249,10 +249,7 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
     );
   }
 
-  InkWell DrawerListTiles({
-    required String text,
-    ontap,
-  }) {
+  InkWell DrawerListTiles({required String text, ontap,}) {
     return InkWell(
       onTap: ontap,
       child: Container(

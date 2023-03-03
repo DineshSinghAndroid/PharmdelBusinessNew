@@ -53,6 +53,8 @@ const String kSelectPhar = 'Select Pharmacy';
 const String kParcelLocation = 'Parcel Location';
 const String kAddressPara = '17 Fairwood Drive port Talbot West Glamorgan SA128NS';
 const String kStatusOutForDelivery = "OutForDelivery";
+///pharmacy dashboard
+const String strImg_PharmacyBg = "assets/images/pharmacyHomeBg.png";
 
 
 ///Drawer

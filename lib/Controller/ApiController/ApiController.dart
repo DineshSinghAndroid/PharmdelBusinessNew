@@ -6,9 +6,15 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
+<<<<<<< HEAD
 import '../../Model/DriverList/driverListResponse.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
+=======
+ import '../../Model/DriverList/driverListResponse.dart';
+ import '../../Model/CreatePatientModel/create_patient_model.dart';
+ import '../../Model/DriverProfile/profileDriverResponse.dart';
+>>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../Model/GetPatient/getPatientApiResponse.dart';
@@ -16,10 +22,18 @@ import '../../Model/Login/login_model.dart';
 import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
+import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
+import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_pharmacy.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
+<<<<<<< HEAD
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
 import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
 import '../../Model/VehicleList/vehicleListResponse.dart';
+=======
+ import '../../Model/UpdateProfile/updateProfileResponse.dart';
+ import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
+ import '../../Model/VehicleList/vehicleListResponse.dart';
+>>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../Helper/PrintLog/PrintLog.dart';
@@ -179,7 +193,7 @@ class ApiController {
          print(response.toString());
         if (response?.data != null && response!.statusCode == 200) {
           result = UpdateCustomerWithOrderModel.fromJson(response.data);
-          print("THIS IS API RESULT FOR UPDATE PATIENT:::::>>>>>>>>>>>>>>>>>> ${result.toString()}");
+          print("THIS IS API RESULT FOR CREATE PATIENT POST TYPE :::::>>>>>>>>>>>>>>>>>> ${result.toString()}");
           return result;
         } else {
           return result;
@@ -273,6 +287,48 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = DriverRoutesApiResposne.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+///Pharmacy RoutesList Api
+  Future< GetDriverRouteListModelResponse?> getRouteListApiPharmacy({context, required String url, dictParameter, String? token}) async {
+    GetDriverRouteListModelResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetDriverRouteListModelResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+///Pharmacy Driver List Get Api
+  Future< GetDriverListModelResponsePharmacy?> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
+    GetDriverListModelResponsePharmacy? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetDriverListModelResponsePharmacy.fromJson(response?.data);
           return result;
         } else {
           return result;
