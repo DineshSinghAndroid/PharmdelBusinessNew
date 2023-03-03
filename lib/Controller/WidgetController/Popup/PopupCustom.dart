@@ -9,6 +9,7 @@ import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
  import '../../Helper/ImagePicker/ImagePicker.dart';
+import '../../Helper/LogoutController/logout_controller.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../StringDefine/StringDefine.dart';
 
@@ -87,70 +88,31 @@ class CustomPopUp{
 }
 
 class LogoutPopUP extends StatelessWidget {
-  const LogoutPopUP({super.key});
+  LogoutPopUP({super.key, required this.onTapCancel, required this.onTapOK});
+  VoidCallback? onTapCancel;
+  VoidCallback? onTapOK;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.blackColor.withOpacity(0.3),
-      // body: DelayedDisplay(
-      //   child: Center(
-      //     child: Padding(
-      //       padding: const EdgeInsets.all(10.0),
-      //       child: Container(
-      //         // height: 280,
-      //         decoration: BoxDecoration(
-      //             color: AppColors.whiteColor,
-      //             borderRadius: BorderRadius.circular(10.0)
-      //         ),
-      //         child: Column(
-      //           mainAxisSize: MainAxisSize.min,
-      //           crossAxisAlignment: CrossAxisAlignment.center,
-      //           children: [
-      //             Container(
-      //               height: 110,
-      //               width: 110,
-      //               margin: const EdgeInsets.only(top: 10),
-      //               child: Image.asset(strImgLogout),
-      //             ),
-      //             BuildText.buildText(text: kNotAuthenticated,size: 25,fontFamily: FontFamily.josefinBold),
-      //             Padding(
-      //               padding: const EdgeInsets.all(10.0),
-      //               child: Wrap(
-      //                   alignment: WrapAlignment.center,
-      //                   children: [
-      //                     BuildText.buildText(text: kAuthenticatedDes,color: AppColors.greyColor,size: 16),
-      //                   ]
-      //               ),
-      //             ),
-      //             buildSizeBox(20.0, 0.0),
-      //             Padding(
-      //               padding: const EdgeInsets.only(bottom: 20),
-      //               child: InkWell(
-      //                 onTap: () async {
-      //                   AppSharedPreferences.clearSharedPref().then((value) {
-      //                     // Get.offAllNamed(loginScreenRoute);
-      //                   });
-      //                 },
-      //                 child: Container(
-      //                   height: 45,
-      //                   width: 120,
-      //                   decoration: BoxDecoration(
-      //                     borderRadius: BorderRadius.circular(10.0),
-      //                     color: AppColors.redColor,
-      //                   ),
-      //                   child: Center(
-      //                     child: BuildText.buildText(text: kOk,color: AppColors.whiteColor,size: 20.0,fontFamily: FontFamily.josefinBold),
-      //                   ),
-      //                 ),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-    );
+    return AlertDialog(
+        title: const Text(klogout),
+        content: const Text("Are you sure you want to logout"),
+        actions: <Widget>[
+          TextButton(
+            child: const Text(
+              'CANCEL',
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: onTapCancel
+          ),
+          TextButton(
+            child: const Text(
+              'YES',
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: onTapOK
+          )
+        ],
+      );
   }
 }
 

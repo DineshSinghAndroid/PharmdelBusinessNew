@@ -13,6 +13,7 @@ const String updateAddressScreenRoute = "updateAddress_screen";
 const String pdfViewScreenRoute = "pdfView_screen";
 const String lunchBreakScreenRoute = "lunchBreak_screen";
 const String mapScreenRoute = "map_screen";
+const String updateStatusScreenRoute = "upddateStatus_screen";
 
 
 
@@ -21,4 +22,8 @@ const String mapScreenRoute = "map_screen";
 const String pharmacyHomePage = "pharmacyHomeScreen";
 const String scanPrescriptionScreenRoute = "scanPrescription_screen";
 const String searchPatientScreenRoute = "searchPatient_screen";
+<<<<<<< HEAD
+const String pharmacyNotificationScreenRoute = "pharmacyNotification_screen";
+=======
 const String trackOrderScreen = "track_order_screen";
+>>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8

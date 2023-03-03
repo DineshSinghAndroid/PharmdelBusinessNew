@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_Notification/pharmacy_notification_screen.dart';
 import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
@@ -17,6 +18,7 @@ import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/MapScreen/map_screen.dart';
 import '../../View/NotificationScreen/notificationScreen.dart';
 import '../../View/OnBoarding/EnterPin/securePin.dart';
+import '../../View/UpdateStatusScreen/updatestatus_screen.dart';
 import 'RouteNames.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -49,6 +51,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300),alignment: Alignment.center,child: PdfViewScreen(pdfUrl: args.pdfUrl));
+
+
+    case updateStatusScreenRoute:      
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300),alignment: Alignment.center,child: const UpdateStatusScreen());  
+
+
+     case pharmacyNotificationScreenRoute:      
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300),alignment: Alignment.center,child: const PharmacyNotificationScreen());    
 
 
 

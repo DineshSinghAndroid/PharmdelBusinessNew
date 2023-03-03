@@ -38,6 +38,8 @@ class DriverDashboardController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
+  
+
   Future<DriverDashboardApiresponse?> driverDashboardApi({required BuildContext context, required String routeID, }) async {
 
     changeEmptyValue(false);
@@ -162,13 +164,11 @@ class DriverDashboardController extends GetxController{
     String url = WebApiConstant.GET_DRIVER_ROUTES;
 
     await apiCtrl.getDriverRoutesApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {
-          PrintLog.printLog('Route List : ${result?.routeList}');
+        .then((result) async {          
       if(result != null){
         if (result.status != false) {
           try {
-            if (result.status == true) {
-              print("All Route List : ${result.allRouteList}");
+            if (result.status == true) {              
               routesData = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);

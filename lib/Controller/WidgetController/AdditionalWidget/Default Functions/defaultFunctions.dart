@@ -16,7 +16,7 @@ class DefaultFuntions{
 
   static Future barcodeScanning() async {
     var result = await BarcodeScanner.scan(); //options: ScanOptions()
-    PrintLog.printLog("Type:${result.type}");
+    PrintLog.printLog("Type:${result.type}"); 
     PrintLog.printLog("RawContent:${result.rawContent}");
     if (result.rawContent.toString().length > 10) {
       PrintLog.printLog("Product code is :${result.rawContent}");
@@ -24,5 +24,14 @@ class DefaultFuntions{
       ToastCustom.showToast(msg: 'Not found');
     }
   }
+
+  static void launchPhone(String phoneNumber) async {
+   var url = Uri.parse('tel:$phoneNumber');
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
   
 }

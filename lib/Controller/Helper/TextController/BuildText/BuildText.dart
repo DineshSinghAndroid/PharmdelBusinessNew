@@ -21,7 +21,9 @@ class BuildText{
     double? size,
     FontWeight? weight,
     Color? color,
-    TextAlign? textAlign}){
+    TextAlign? textAlign,
+    TextOverflow? overflow,
+    int? maxLines}){
     return Text(
         text,
         style: style ?? TextStyle(
@@ -32,8 +34,11 @@ class BuildText{
           decoration: decoration ?? TextDecoration.none,
         ),
         textAlign: textAlign ?? TextAlign.start,
+        overflow: overflow,
+        maxLines: maxLines,
     );
   }
+  
 }
 
 Widget buildSizeBox(height,width){

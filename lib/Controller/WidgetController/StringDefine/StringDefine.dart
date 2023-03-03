@@ -25,6 +25,7 @@ const String strIMG_AltAdd = "assets/images/alt-add.png";
 const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
 const String strIMG_location = "assets/images/location_top.png";
+const String strIMG_Map = "assets/images/google-maps-icon.png";
 
 
 ///GIF
@@ -138,3 +139,9 @@ const String kSearchPat = "Search Patient....";
 const String kCstmList = "Customer List";
 const String kSelCustomer = "Select Customer";
 const String kDOB = "Date of Birth : ";
+
+
+///Update Status Screen
+const String kPatientDetails = "Patient Details";
+const String kExistingNote = "Existing Note";
+const String kUpdateStatus = "Update Status";
