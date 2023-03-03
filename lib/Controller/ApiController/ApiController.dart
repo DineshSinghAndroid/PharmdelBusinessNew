@@ -6,11 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
-<<<<<<< HEAD
 import '../../Model/DriverList/driverListResponse.dart';
-=======
 import '../../Model/CreatePatientModel/create_patient_model.dart';
->>>>>>> 04cb8e1a9a2cf66220bd3d734421b432e9368e4c
 import '../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
@@ -20,11 +17,8 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
-<<<<<<< HEAD
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
-=======
 import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
->>>>>>> 04cb8e1a9a2cf66220bd3d734421b432e9368e4c
 import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';

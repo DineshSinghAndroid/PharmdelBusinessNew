@@ -1,28 +1,14 @@
-import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
-import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
-import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import 'package:pharmdel/Controller/Helper/TextController/FontFamily/FontFamily.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/View/MapScreen/map_screen.dart';
-import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/ProjectController/DriverDashboardController.dart/driverDashboardController.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
-import '../../../Controller/WidgetController/CustomDrawer/profile Drawer.dart';
-import '../../../Controller/WidgetController/Default Widget/DefaultWidget.dart';
-import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/DeliveryCardCustom/deliveryCardCustom.dart';
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
-import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
-import '../../../Model/DriverRoutes/driverRoutesResponse.dart';
-import '../../../Model/NotificationCount/notificationCountResponse.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -61,6 +47,7 @@ List<String> routeList = ['north', 'south'];
     drDashCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
       await drDashCtrl.driverDashboardApi(context: context,routeID: "1");
+      await drDashCtrl.driverRoutesApi(context: context);
     } else {
       drDashCtrl.isNetworkError = true;
       setState(() {});
@@ -71,7 +58,7 @@ List<String> routeList = ['north', 'south'];
   Widget build(BuildContext context) {
     return GetBuilder<DriverDashboardController>(
       init: drDashCtrl,
-      builder: (controller) {        
+      builder: (controller) {
         return LoadScreen(
             isLoading: controller.isLoading,
             widget: controller.isError ?
@@ -194,8 +181,9 @@ List<String> routeList = ['north', 'south'];
                             ],
                           ),
                           onPressed: () {                            
-                            Get.toNamed(scanPrescriptionScreenRoute);
-                            // DefaultFuntions.barcodeScanning();
+                            Get.toNamed(searchPatientScreenRoute);
+                            // Get.toNamed(scanPrescriptionScreenRoute);                            
+                            DefaultFuntions.barcodeScanning();
                           },
                         ),
                       ],
@@ -398,102 +386,13 @@ List<String> routeList = ['north', 'south'];
                               ),
                             ),
 
-                            Container(
-                              // height: 50,
-                              width: Get.width,
-                              margin: const EdgeInsets.only(left: 5,right: 5),
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        spreadRadius: 1,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                        color: Colors.grey.shade300)
-                                  ]
-                              ),
-                              child: Stack(
-                                children: [
-                                  Card(
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    margin: EdgeInsets.zero,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                      BuildText.buildText(
-                                          text: "Tester",
-                                          size: 14,
-                                          weight: FontWeight.bold
-                                      ),
-                                              InkWell(
-                                                onTap: (){},
-                                                child: const Icon(Icons.more_vert),
-                                              )
-                                            ],
-                                          ),
-                                          buildSizeBox(10.0, 0.0),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: BuildText.buildText(
-                                                  text: kAddressPara,
-                                                  color: AppColors.greyColor
-                                              ),),
-                                              BuildText.buildText(
-                                                text: kPickedUp,
-                                                color: AppColors.blueColorLight,
-                                                size: 12,
-                                                weight: FontWeight.w600
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      )
-                                      // Row(
-                                      //   crossAxisAlignment: CrossAxisAlignment.start,
-                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      //   children: [
-                                      //     Expanded(child: Column(
-                                      //       mainAxisAlignment: MainAxisAlignment.start,
-                                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                                      //       children: [
-                                      //         BuildText.buildText(
-                                      //             text: "Tester",
-                                      //             size: 14,
-                                      //             weight: FontWeight.bold
-                                      //         ),
-                                      //         buildSizeBox(10.0, 0.0),
-                                      //         BuildText.buildText(
-                                      //             text: kAddressPara,
-                                      //             color: AppColors.greyColor
-                                      //         )
-                                      //       ],
-                                      //     ),),
-                                      //     Column(
-                                      //       mainAxisAlignment: MainAxisAlignment.end,
-                                      //       crossAxisAlignment: CrossAxisAlignment.end,
-                                      //       children: [
-                                      //          const Icon(Icons.more_vert),
-                                      //         BuildText.buildText(
-                                      //             text: 'PickedUP',
-                                      //             color: AppColors.blueColorLight,
-                                      //             size: 12
-                                      //         )
-                                      //       ],
-                                      //     )
-                                      //   ],
-                                      // )
-                                    )
-                                  ),
-                                ],
-                              )
+                            DeliveryCardCustom(
+                              name: 'Tester',
+                              address: kAddressPara,
+                              status: kPickedUp,
+                              onTap: (){
+                                Get.toNamed(updateStatusScreenRoute);
+                              },
                             ),
 
                             Visibility(
@@ -534,7 +433,7 @@ List<String> routeList = ['north', 'south'];
                                             Colors.blue[50],
                                             // : Colors.transparent,
                                             child: BuildText.buildText(
-                                              text: kSelectPhar,
+                                              text: controller.routesData?.pharmacyList?[index].pharmacyName ?? "",
                                               size: 14,
                                               color: AppColors.blueColorLight,
                                               weight: FontWeight.w400,
@@ -720,139 +619,147 @@ List<String> routeList = ['north', 'south'];
                                 ),
                               ),
                             ),
+                          ],
+                        ),
 
-                            //Select Route
-                            Visibility(
-                              visible: isVisibleRouteList,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                                child: Container(
-                                  margin: const EdgeInsets.only(top: 0, bottom: 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      color: AppColors.whiteColor,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            spreadRadius: 1,
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
-                                            color: Colors.grey.shade300)
-                                      ]),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListView.separated(
-                                        itemCount: controller.routesData?.allRouteList?.length ?? 0,
-                                        // routeList.length,
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          // RouteList route = routeList[index];
-                                          return InkWell(
-                                            onTap: () {
-                                              // setState(() {
-                                              //   selectedRouteDropDown = routeList[index];
-                                              //   _selectedRoutePosition = index;
-                                              // });
+                        //Select Route
+                        Positioned(
+                          top: 60,
+                          child: Visibility(
+                                visible: isVisibleRouteList,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                                  child: Container(
+                                    height: 350,
+                                    margin: const EdgeInsets.only(top: 0, bottom: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                        color: AppColors.whiteColor,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 1,
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 4),
+                                              color: Colors.grey.shade300)
+                                        ]),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 300,
+                                          width: Get.width,
+                                          child: ListView.separated(
+                                            itemCount: controller.routesData?.routeList?.length ?? 0,
+                                            // routeList.length,
+                                            shrinkWrap: true,
+                                            physics: const AlwaysScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              // RouteList route = routeList[index];
+                                              return InkWell(
+                                                onTap: () {
+                                                  // setState(() {
+                                                  //   selectedRouteDropDown = routeList[index];
+                                                  //   _selectedRoutePosition = index;
+                                                  // });
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context).size.width,
+                                                  padding: const EdgeInsets.only(left: 13.0,right: 10.0,top: 12,bottom: 12),
+                                                  color:
+                                                  // route ==
+                                                  // selectedRouteDropDown //route == selectedRoute//_selectedRoutePosition == index
+                                                  // ?
+                                                  Colors.blue[50],
+                                                  // : Colors.transparent,
+                                                  child: BuildText.buildText(
+                                                    text: controller.routesData?.routeList?[index].routeName ?? "",
+                                                    // "${route.routeName ?? "Select Pharmacy"}",
+                                                    size: 14,
+                                                    color: AppColors.blueColorLight,
+                                                    weight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              );
                                             },
-                                            child: Container(
-                                              width: MediaQuery.of(context).size.width,
-                                              padding: const EdgeInsets.only(left: 13.0,right: 10.0,top: 12,bottom: 12),
-                                              color:
-                                              // route ==
-                                              // selectedRouteDropDown //route == selectedRoute//_selectedRoutePosition == index
-                                              // ?
-                                              Colors.blue[50],
-                                              // : Colors.transparent,
-                                              child: BuildText.buildText(
-                                                text: controller.routesData?.allRouteList?[index].routeName ?? "",
-                                                // "${route.routeName ?? "Select Pharmacy"}",
-                                                size: 14,
-                                                color: AppColors.blueColorLight,
-                                                weight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        separatorBuilder: (BuildContext context, int index) {
-                                          return const Divider(height: 1);
-                                        },
-                                      ),
-                                      const Divider(height: 1),
-                                      Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.tight,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  // setState(() {
-                                                  //   selectedRouteDropDown = selectedRoute;
-                                                  //   _isVisibleRouteList = false;
-                                                  //   hideTote = false;
-                                                  // });
-                                                },
-                                                child: BuildText.buildText(
-                                                    text: kCancel,
-                                                    size: 14,
-                                                    color: AppColors.redColor,
-                                                    weight: FontWeight.w800,
-                                                    textAlign: TextAlign.center
-                                                ),
-                                              ),
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.tight,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  // if (_selectedRoutePosition < 0) {
-                                                  //   Fluttertoast.showToast(
-                                                  //       msg: "Choose Route First");
-                                                  //   return;
-                                                  // }
-                                                  // setState(() {
-                                                  //   selectedType =
-                                                  //       WebConstant.Status_total;
-                                                  //   _isVisibleRouteList = false;
-                                                  //   hideTote = false;
-                                                  //   selectedRoute =
-                                                  //   routeList[_selectedRoutePosition];
-
-                                                  //   routeId = "${selectedRoute.routeId}";
-                                                  //   SharedPreferences.getInstance().then((
-                                                  //       value) {
-                                                  //     value.setString(
-                                                  //         WebConstant.ROUTE_ID, routeId);
-                                                  //   });
-                                                  //   setState(() {
-                                                  //     isProgressAvailable = true;
-                                                  //   });
-                                                  //   orderListType = 1;
-                                                  //   fetchDeliveryList(0);
-                                                  // });
-                                                },
-                                                child: BuildText.buildText(
-                                                    text: kConfirm,
-                                                    size: 14,
-                                                    color: AppColors.greenAccentColor,
-                                                    weight: FontWeight.w800,
-                                                    textAlign: TextAlign.center
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                            separatorBuilder: (BuildContext context, int index) {
+                                              return const Divider(height: 1);
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                        const Divider(height: 1),
+                                        Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                flex: 1,
+                                                fit: FlexFit.tight,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    // setState(() {
+                                                    //   selectedRouteDropDown = selectedRoute;
+                                                    //   _isVisibleRouteList = false;
+                                                    //   hideTote = false;
+                                                    // });
+                                                  },
+                                                  child: BuildText.buildText(
+                                                      text: kCancel,
+                                                      size: 14,
+                                                      color: AppColors.redColor,
+                                                      weight: FontWeight.w800,
+                                                      textAlign: TextAlign.center
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                fit: FlexFit.tight,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    // if (_selectedRoutePosition < 0) {
+                                                    //   Fluttertoast.showToast(
+                                                    //       msg: "Choose Route First");
+                                                    //   return;
+                                                    // }
+                                                    // setState(() {
+                                                    //   selectedType =
+                                                    //       WebConstant.Status_total;
+                                                    //   _isVisibleRouteList = false;
+                                                    //   hideTote = false;
+                                                    //   selectedRoute =
+                                                    //   routeList[_selectedRoutePosition];
+                                    
+                                                    //   routeId = "${selectedRoute.routeId}";
+                                                    //   SharedPreferences.getInstance().then((
+                                                    //       value) {
+                                                    //     value.setString(
+                                                    //         WebConstant.ROUTE_ID, routeId);
+                                                    //   });
+                                                    //   setState(() {
+                                                    //     isProgressAvailable = true;
+                                                    //   });
+                                                    //   orderListType = 1;
+                                                    //   fetchDeliveryList(0);
+                                                    // });
+                                                  },
+                                                  child: BuildText.buildText(
+                                                      text: kConfirm,
+                                                      size: 14,
+                                                      color: AppColors.greenAccentColor,
+                                                      weight: FontWeight.w800,
+                                                      textAlign: TextAlign.center
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                        )
                       ],
                     ),
                     bottomNavigationBar: 

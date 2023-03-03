@@ -9,6 +9,7 @@ import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../WidgetController/Loader/LoadingScreen.dart';
+import '../../WidgetController/Popup/PopupCustom.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../../WidgetController/Toast/ToastCustom.dart';
 
@@ -16,41 +17,6 @@ import '../PrintLog/PrintLog.dart';
 
 ApiController apiCtrl = ApiController();
 
-validateAndLogout(context) {
-  showDialog<ConfirmAction>(
-    context: context,
-    barrierDismissible: false, // user must tap button for close dialog!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text(klogout),
-        content: const Text("Are you sure you want to logout"),
-        actions: <Widget>[
-          TextButton(
-            child: const Text(
-              'CANCEL',
-              style: TextStyle(color: Colors.black),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-              //  Navigator.pop(_ctx);
-            },
-          ),
-          TextButton(
-            child: const Text(
-              'YES',
-              style: TextStyle(color: Colors.black),
-            ),
-            onPressed: () async {
-              // AppSharedPreferences.clearSharedPref();
-              await logoutApi(context);
-            },
-          )
-        ],
-      );
-    },
-  );
-  // Navigator.pop(context, true);
-}
 
 Future logoutApi(context) async {
   CustomLoading().show(context, true);
@@ -65,7 +31,7 @@ Future logoutApi(context) async {
     if (result != null) {
       if (result.error != true) {
         PrintLog.printLog("Logout Success");
-        ToastCustom.showToast(msg: result ?? "");        
+        ToastCustom.showToast(msg: result ?? "");
         try {
           if (result.error == false) {
             ToastCustom.showToast(msg: result ?? "");
@@ -90,4 +56,22 @@ Future logoutApi(context) async {
       }
     }
   });
+}
+
+ validateAndLogout(context) {
+  showDialog<ConfirmAction>(
+    context: context,
+    barrierDismissible: false, // user must tap button for close dialog!
+    builder: (BuildContext context) {
+      return  LogoutPopUP(
+        onTapCancel: () {
+          Get.back();
+        },
+        onTapOK: () async {
+          await logoutApi(context);
+        },
+      );
+    },
+  );
+  // Navigator.pop(context, true);
 }

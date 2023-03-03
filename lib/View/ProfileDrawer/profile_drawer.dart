@@ -1,26 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
-import 'package:pharmdel/Controller/Helper/StringDefine/StringDefine.dart';
-import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import 'package:pharmdel/Controller/ProjectController/DriverProfile/driverProfileController.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
-import '../../../Model/Enum/enum.dart';
-import '../../../main.dart';
-import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
-import '../../Helper/LogoutController/logout_controller.dart';
-import '../../Helper/Shared Preferences/SharedPreferences.dart';
-import '../../RouteController/RouteNames.dart';
-import '../AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
-import '../Popup/CustomDialogBox.dart';
-import '../Popup/PopupCustom.dart';
-import '../StringDefine/StringDefine.dart';
+import '../../Controller/Helper/LogoutController/logout_controller.dart';
+import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 
 class DrawerDriver extends StatefulWidget {

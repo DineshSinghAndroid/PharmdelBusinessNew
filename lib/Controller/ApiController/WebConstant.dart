@@ -30,22 +30,17 @@ class WebApiConstant {
   static const String DELIVERY_SIGNATURE_UPLOAD_URL          =  "${BASE_URL}Acknowledge";
   static const String SCAN_ORDER_BY_DRIVER                   =  "${BASE_URL}ScanOrderByDriver";
   static const String GET_ALL_DELIVERY                       =  "${BASE_URL}GetAllDelivery";
-<<<<<<< HEAD
   static const String GET_UPDATE_PROFILE_URL                 =  "${BASE_URL}updateProfile";
   
-=======
   static const String UPDATE_CUSTOMER_WITH_ORDER             =  "${BASE_URL_PHARMACY}createOrder";
   static const String CREATE_PATIENT_URL                     =  "${BASE_URL_PHARMACY}createPatient";
->>>>>>> 04cb8e1a9a2cf66220bd3d734421b432e9368e4c
 
 
   ///Pharmacy
   static const String GET_PATIENT_LIST_URL                   =  "${BASE_URL_PHARMACY}GetPatient";
   static const String Get_PHARMACY_DriverList_ByRoute        =  "${BASE_URL_PHARMACY}GetDriverListByRoute";
-<<<<<<< HEAD
   static const String GET_PHARMACY_PARCEL_BOX_URL            =  "${BASE_URL_PHARMACY}getParcelBoxData";
+  static const String GET_PHARMACY_PATIENT_DETAILS           =  "${BASE_URL_PHARMACY}getpatientdetailsbyorderId";
+  static const String GET_PHARMACY_NOTIFICATION              =  "${BASE_URL_PHARMACY}GetNotifications";
  
-=======
-
->>>>>>> 04cb8e1a9a2cf66220bd3d734421b432e9368e4c
 }

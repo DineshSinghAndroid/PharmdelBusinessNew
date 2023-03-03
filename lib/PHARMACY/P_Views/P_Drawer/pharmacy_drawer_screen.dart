@@ -15,11 +15,8 @@ import '../../../main.dart';
 class PharmacyDrawerScreen extends StatefulWidget {
   String userName = '';
   String address1 = '';
-
   var email;
-
   var mobile;
-
   var versionCode;
 
   PharmacyDrawerScreen({
@@ -130,108 +127,108 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
-                  Container(
-                    child: ExpansionTileCard(
-                      animateTrailing: true,
-                      title: const Text('Personal Info'),
-                      leading: const Icon(
-                        Icons.person,
-                        size: 20,
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                          ), // height: 200,
-
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.mobile_friendly_sharp,
-                                    color: Colors.black,
-                                    size: 12,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    widget.mobile ?? "Not Found",
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.email,
-                                    color: Colors.grey,
-                                    size: 12,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    widget.email ?? "Not Found",
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.location_city_outlined,
-                                    color: Colors.grey,
-                                    size: 12,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    widget.address1 ?? "Not Found",
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      onExpansionChanged: (value) {
-                        // if (value) {
-                        //   Future.delayed(const Duration(milliseconds: 500),
-                        //           () {
-                        //         for (var i = 0; i < cardKeyList.length; i++) {
-                        //           if (cardKeyList == i) {
-                        //             cardKeyList[i].currentState?.collapse();
-                        //           }
-                        //         }
-                        //       });
-                        // }
-                      },
+                  ExpansionTileCard(
+                    animateTrailing: true,
+                    title: const Text('Personal Info'),
+                    leading: const Icon(
+                      Icons.person,
+                      size: 20,
                     ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ), // height: 200,
+
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.mobile_friendly_sharp,
+                                  color: Colors.black,
+                                  size: 12,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  widget.mobile ?? "Not Found",
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                  size: 12,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  widget.email ?? "Not Found",
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_city_outlined,
+                                  color: Colors.grey,
+                                  size: 12,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  widget.address1 ?? "Not Found",
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    onExpansionChanged: (value) {
+                      // if (value) {
+                      //   Future.delayed(const Duration(milliseconds: 500),
+                      //           () {
+                      //         for (var i = 0; i < cardKeyList.length; i++) {
+                      //           if (cardKeyList == i) {
+                      //             cardKeyList[i].currentState?.collapse();
+                      //           }
+                      //         }
+                      //       });
+                      // }
+                    },
                   ),
                   DrawerListTiles(text: 'Change Pin', ontap: () {}),
                   const Divider(),
                   DrawerListTiles(text: 'Create Patient', ontap: () {}),
                   const Divider(),
-                  DrawerListTiles(text: 'My Notification', ontap: () {}),
+                  DrawerListTiles(text: 'My Notification', ontap: () {
+                    Get.toNamed(pharmacyNotificationScreenRoute);
+                  }),
                   const Divider(),
                   DrawerListTiles(text: 'Privacy Policy', ontap: () {}),
                   const Divider(),
                   DrawerListTiles(text: 'Terms of user', ontap: () {}),
                   const Divider(),
-                  DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
+                  // DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
                 ],
               ),
             ),
