@@ -82,7 +82,11 @@ const String klogout = 'Logout';
 const String kMyNotifiaction = 'My Notification';
 const String kReceived = 'Received';
 const String kSent = 'Sent';
-
+const String kCreateNotification = 'Create Notification';
+const String kNotificationName = 'Notification Name:';
+const String kPharmacyStaff = "Pharmacy Staff:";
+const String kSelectPharStaff = 'Select Pharmacy Staff';
+const String kMessage = 'Message';
 
 ///Create Patient Screen
 const String kSelectTitle = "Select Title";
@@ -150,17 +154,15 @@ const String kExistingNote = "Existing Note";
 const String kUpdateStatus = "Update Status";
 
 
-<<<<<<< HEAD
+
 ///Pharmacy HomeScreen
 const String kDeliveries = "Deliveries";
 const String kTrackOrder = "Track Order";
 const String kScanAndBook = "Scan & Book";
 const String kNursHomeBoxBook = "Nursing Home Box Booking";
-=======
-<<<<<<< HEAD
+
 ///pharmacy track order screen
 const String kRoute = "Route";
-=======
 /// TextField Validation
 const String kEnterEmail = "Enter email";
 const String kEnterPassword = "Enter password";
@@ -360,5 +362,10 @@ const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
 const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
 
->>>>>>> 1c0f1c33bf3e8af5356018177210152fd33cfeff
->>>>>>> fd865b7b0787a56bd9b3ec9fcd07ab56ccf1685a
+///Pharmacy Delivery List Screen
+const String kDeliveryList = "Delivery List";
+const String kToday = 'Today';
+const String kTomorrow = 'Tomorrow';
+const String kSelect = "Select";
+
+

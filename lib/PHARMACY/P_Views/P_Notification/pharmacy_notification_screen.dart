@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
+import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
@@ -127,7 +127,21 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                             }),
                       ),
               ),   
-              Container()         
+              Scaffold(
+                floatingActionButton: Transform.translate(
+                  offset: const Offset(-10, -15),
+                  child: Tooltip(
+                    message: kCreateNotification,
+                    child: FloatingActionButton(                                        
+                      backgroundColor: AppColors.colorOrange,
+                      child: const Icon(Icons.add),
+                      onPressed: (){
+                        Get.toNamed(pharmacyCreateNotificationScreeenRoute);
+                      },
+                      ),
+                  ),
+                ),
+              )        
             ],
           ),
               ),

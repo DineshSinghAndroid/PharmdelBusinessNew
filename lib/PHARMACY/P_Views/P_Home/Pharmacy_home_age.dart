@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/PharmacyHomeCardWidget/p_homecard_widgte.dart';
 import '../P_Drawer/pharmacy_drawer_screen.dart';
@@ -16,8 +17,6 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
   String? userId, token, userName, email, mobile;
   String? versionCode;
 
-  dynamic notification_count = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +26,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
         elevation: 0.5,
         iconTheme: IconThemeData(color: AppColors.blackColor),
         centerTitle: true,
-        title: BuildText.buildText(text: 'Home', style: Regular18Style),
+        title: BuildText.buildText(text: kHome, style: Regular18Style),
         backgroundColor: AppColors.whiteColor,
         flexibleSpace: Align(
           alignment: Alignment.centerRight,
@@ -36,36 +35,37 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
               // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen())).then((value) => updateApi(token));
             },
             child: Container(
-              padding: const EdgeInsets.only(left: 0, right: 13, top: 30),
+              padding: const EdgeInsets.only(left: 0, right: 0, top: 30),
               child: Stack(
                 children: [
                   InkWell(
                     onTap: () {
                       Get.toNamed(pharmacyNotificationScreenRoute);
                     },
-                    child: Icon(
-                      Icons.notifications,
-                      size: 30,
-                      color: AppColors.blackColor,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Icon(
+                        Icons.notifications,
+                        size: 30,
+                        color: AppColors.blackColor,
+                      ),
                     ),
                   ),
-                  if (notification_count != null && notification_count > 0)
+                  // if (notification_count != null && notification_count > 0)
                     Positioned(
-                      right: 5,
-                      top: 2,
-                      child: SizedBox(
-                        height: 12,
-                        width: 12,
-                        child: CircleAvatar(
-                          backgroundColor: AppColors.redColor,
-                          child: BuildText.buildText(
-                            text: notification_count != null
-                                ? notification_count > 99
-                                    ? "+99"
-                                    : notification_count.toString()
-                                : "",
-                            style: TextStyle6White,
-                          ),
+                      left: 15,                                           
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 18,
+                        width: 18,                        
+                        decoration: BoxDecoration(
+                          color: AppColors.redColor,
+                          shape: BoxShape.circle
+                        ),
+                        child: BuildText.buildText(
+                          text: '0',
+                          size: 12,
+                          color: AppColors.whiteColor,                            
                         ),
                       ),
                     ),
@@ -85,24 +85,36 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                 title: kDeliveries,
                 image: strIMG_DelTruck2,
                 backgroundColor: AppColors.blueColor,
+                onTap: (){
+                  print('Tap');
+                  Get.toNamed(pharmacyDeliveryListScreenRoute);
+                },
               ),
 
               PharmacyHomeCardWidget(
                 title: kTrackOrder,
                 image: strIMG_Location,
                 backgroundColor: AppColors.greenAccentColor,
+                onTap: (){
+                  Get.toNamed(pharmacyTrackOrderScreen);
+                },
               ),
 
               PharmacyHomeCardWidget(
                 title: kScanAndBook,
                 image: strIMG_QrCode,
                 backgroundColor: AppColors.colorOrange,
+                onTap: ()async{
+                  Get.toNamed(searchPatientScreenRoute);
+                  DefaultFuntions.barcodeScanning();
+                },
               ),
 
               PharmacyHomeCardWidget(
                 title: kNursHomeBoxBook,
                 image: strIMG_QrCode,
                 backgroundColor: AppColors.blueColorLight,
+                onTap: (){},
               ),
             ],
           ),

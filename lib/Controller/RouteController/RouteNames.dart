@@ -23,4 +23,6 @@ const String pharmacyHomePage = "pharmacyHomeScreen";
 const String scanPrescriptionScreenRoute = "scanPrescription_screen";
 const String searchPatientScreenRoute = "searchPatient_screen";
 const String pharmacyNotificationScreenRoute = "pharmacyNotification_screen";
-const String trackOrderScreen = "track_order_screen";
+const String pharmacyTrackOrderScreen = "track_order_screen";
+const String pharmacyDeliveryListScreenRoute = "delivery_list_screen";
+const String pharmacyCreateNotificationScreeenRoute = "create_notification_screen";

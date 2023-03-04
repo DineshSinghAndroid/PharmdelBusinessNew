@@ -144,8 +144,7 @@ void initState() {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
-                        ), // height: 200,
-
+                        ),
                         child: Column(
                           children: [
                             Row(
@@ -193,19 +192,7 @@ void initState() {
                           ],
                         ),
                       ),
-                    ],
-                    onExpansionChanged: (value) {
-                      // if (value) {
-                      //   Future.delayed(const Duration(milliseconds: 500),
-                      //           () {
-                      //         for (var i = 0; i < cardKeyList.length; i++) {
-                      //           if (cardKeyList == i) {
-                      //             cardKeyList[i].currentState?.collapse();
-                      //           }
-                      //         }
-                      //       });
-                      // }
-                    },
+                    ],                   
                   ),
                   DrawerListTiles(text: kChangePin, ontap: () {}),
                   const Divider(),
@@ -219,17 +206,17 @@ void initState() {
                   const Divider(),
                   DrawerListTiles(text: kTermsOfService, ontap: () {}),
                   const Divider(),
-                  // DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
+                  DrawerListTiles(text: klogout, ontap:(){}),
                 ],
               ),
             ),
-            const Spacer(), 
+            const Spacer(),
             Align(
               alignment: FractionalOffset.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: BuildText.buildText(
-                  text: "VERSION V.${widget.versionCode} ",
+                  text: "VERSION V.${widget.versionCode}",
                   color: AppColors.blackColor,
                   size: 12,
                   weight: FontWeight.w400,),
