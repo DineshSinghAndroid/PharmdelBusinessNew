@@ -1,9 +1,9 @@
 class GetDriverListModelResponsePharmacy {
-  int? driverId;
+  String? driverId;
   String? firstName;
   String? middleNmae;
   String? lastName;
-  Null? mobileNumber;
+  String? mobileNumber;
   String? emailId;
   String? routeId;
   String? route;
@@ -19,18 +19,18 @@ class GetDriverListModelResponsePharmacy {
         this.route});
 
   GetDriverListModelResponsePharmacy.fromJson(Map<String, dynamic> json) {
-    driverId = json['driverId'];
-    firstName = json['firstName'];
-    middleNmae = json['middleNmae'];
-    lastName = json['lastName'];
-    mobileNumber = json['mobileNumber'];
-    emailId = json['emailId'];
-    routeId = json['routeId'];
-    route = json['route'];
+    driverId =  json['driverId'] != null ? json['driverId'].toString() :null;
+    firstName = json['firstName'] != null ? json['firstName'].toString() : null ;
+    middleNmae =   json['middleNmae'] != null ? json['middleNmae'].toString() : null;
+    lastName =   json['lastName'] != null ? json['lastName'].toString() : null;
+    mobileNumber =  json['mobileNumber'] != null ? json['mobileNumber'].toString() : null;
+    emailId =  json['emailId'] != null ? json['emailId'].toString() : null;
+    routeId =   json['routeId'] != null ? json['routeId'].toString() : null;
+    route =   json['route'] != null ? json['route'].toString() : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['driverId'] = this.driverId;
     data['firstName'] = this.firstName;
     data['middleNmae'] = this.middleNmae;
