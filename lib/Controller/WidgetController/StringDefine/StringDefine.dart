@@ -26,6 +26,9 @@ const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
 const String strIMG_location = "assets/images/location_top.png";
 const String strIMG_Map = "assets/images/google-maps-icon.png";
+const String strIMG_DelTruck2 = "assets/images/delivery_icon.png";
+const String strIMG_Location = "assets/images/location_icon.png";
+const String strIMG_QrCode = "assets/images/qr_code.png";
 
 
 ///GIF
@@ -147,7 +150,19 @@ const String kExistingNote = "Existing Note";
 const String kUpdateStatus = "Update Status";
 
 
+<<<<<<< HEAD
  ///pharmacy track order screen
+=======
+<<<<<<< HEAD
+///Pharmacy HomeScreen
+const String kDeliveries = "Deliveries";
+const String kTrackOrder = "Track Order";
+const String kScanAndBook = "Scan & Book";
+const String kNursHomeBoxBook = "Nursing Home Box Booking";
+=======
+<<<<<<< HEAD
+///pharmacy track order screen
+>>>>>>> d16a1baea10661352308e553a214b91a77866127
 const String kRoute = "Route";
  const String kSelectDriver = "Select Driver";
  /// TextField Validation
@@ -349,3 +364,8 @@ const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
 const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
 
+<<<<<<< HEAD
+=======
+>>>>>>> 1c0f1c33bf3e8af5356018177210152fd33cfeff
+>>>>>>> fd865b7b0787a56bd9b3ec9fcd07ab56ccf1685a
+>>>>>>> d16a1baea10661352308e553a214b91a77866127
