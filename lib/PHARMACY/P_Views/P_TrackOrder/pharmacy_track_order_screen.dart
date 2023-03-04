@@ -7,7 +7,7 @@ import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.d
 import '../../../Controller/PharmacyControllers/P_DriverListController/get_driver_list_controller.dart';
 import '../../../Controller/PharmacyControllers/P_RouteListController/P_get_route_list_controller.dart';
 import '../../../Controller/PharmacyControllers/P_TrackOrderController/pharmacy_track_order_controller.dart';
- import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_pharmacy.dart';
+ import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 
 class TrackOrderScreenPharmacy extends StatefulWidget {
   const TrackOrderScreenPharmacy({Key? key}) : super(key: key);
@@ -28,6 +28,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
 
   Future<void> init()async{
     _controller.callGetRoutesApi(context: context);
+    _controller.callGetDriverListApi(context: context);
   }
 
   @override
@@ -72,7 +73,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                         value: _controller.getRouteListController.selectedRouteValue,
                         onChanged: (value) {
                           setState(() {
-                            _controller.selectedRouteValue = value.toString();
+                            _controller.getRouteListController.selectedRouteValue = value.toString();
                           });
                         },
                         buttonStyleData: ButtonStyleData(
@@ -87,39 +88,39 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                       ),
                     ),
                     buildSizeBox(20.0, 0.0),
-                    // DropdownButtonHideUnderline(
-                    //   child: DropdownButton2(
-                    //     hint: Text(
-                    //       'Select Route*',
-                    //       style: TextStyle(
-                    //         fontSize: 18,
-                    //         color: Theme.of(context).hintColor,
-                    //       ),
-                    //     ),
-                    //     items: [
-                    //       for (RouteList route in _controller.getRouteListController.routeList)
-                    //         DropdownMenuItem(
-                    //           value: _controller.getRouteListController.routeList.indexOf(route),
-                    //           child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
-                    //         ),
-                    //     ],
-                    //     value: _controller.getRouteListController.selectedRouteValue,
-                    //     onChanged: (value) {
-                    //       setState(() {
-                    //         _controller.getRouteListController.selectedRouteValue = value as String;
-                    //       });
-                    //     },
-                    //     buttonStyleData: ButtonStyleData(
-                    //         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    //         height: 40,
-                    //         width: Get.width,
-                    //         decoration: const BoxDecoration(
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.all(Radius.circular(5)),
-                    //         )),
-                    //     menuItemStyleData: const MenuItemStyleData(),
-                    //   ),
-                    // ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        hint: Text(
+                          'Select Route*',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: [
+                          for (RouteList route in controller.getRouteListController.routeList)
+                            DropdownMenuItem(
+                              value: _controller.getRouteListController.routeList.indexOf(route).toString(),
+                              child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
+                            ),
+                        ],
+                        value: _controller.getRouteListController.selectedRouteValue,
+                        onChanged: (value) {
+                          setState(() {
+                            _controller.getRouteListController.selectedRouteValue = value.toString();
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            height: 40,
+                            width: Get.width,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                            )),
+                        menuItemStyleData: const MenuItemStyleData(),
+                      ),
+                    ),
                     Spacer(),
                     MaterialButton(
                       onPressed: () {
