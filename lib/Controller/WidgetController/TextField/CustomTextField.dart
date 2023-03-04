@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import '../../Helper/TextController/BuildText/BuildText.dart';
 import '../../Helper/TextController/FontFamily/FontFamily.dart';
+import '../../Helper/TextController/FontStyle/FontStyle.dart';
 
 class CustomTextField extends StatelessWidget{
 
@@ -102,6 +104,148 @@ class CustomTextField extends StatelessWidget{
   }
 
 }
+
+class TextFieldCustom extends StatefulWidget {
+  TextEditingController? controller = TextEditingController();
+  FocusNode? focusNode = FocusNode();
+  TextInputType? keyboardType;
+  List<TextInputFormatter>? inputFormatters;
+  ValueChanged? onChanged;
+  int? maxLength;
+  bool? obscureText;
+  String? hintText;
+  String? textFieldHeading;
+  Widget? suffixIcon;
+  Widget? prefixIcon;
+  bool? enabled;
+  String? errorText;
+  TextAlign? textAlign;
+  bool? readOnly;
+  bool? isCheckOut;
+  bool? isAutoFocus;
+  final String? Function(String?)? validator;
+
+  TextFieldCustom(
+      {Key? key,
+        this.focusNode,
+        this.textAlign,
+        this.suffixIcon,
+        this.textFieldHeading,
+        this.prefixIcon,
+        this.obscureText,
+        this.hintText,
+        this.controller,
+        this.keyboardType,
+        this.onChanged,
+        this.maxLength,
+        this.errorText,
+        this.inputFormatters,
+        this.enabled,
+        this.readOnly,
+        this.isAutoFocus,
+        this.isCheckOut,
+        this.validator})
+      : super(key: key);
+
+  @override
+  State<TextFieldCustom> createState() => _TextFieldCustomState();
+}
+
+class _TextFieldCustomState extends State<TextFieldCustom> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: widget.textFieldHeading != null && widget.textFieldHeading != "" ? 23.0:0.0,
+          width: Get.width,
+          child: BuildText.buildText(
+              text: widget.textFieldHeading ?? "",
+              style: TextStyleCustom.normalStyle(),
+              textAlign: TextAlign.left
+          ),
+        ),
+
+        SizedBox(
+          height: 55,
+          child: TextFormField(
+            autofocus: widget.isAutoFocus ?? false,
+            readOnly: widget.readOnly ?? false,
+            cursorColor: AppColors.blackColor,
+            focusNode: widget.focusNode,
+            controller: widget.controller,
+            keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
+            enabled: widget.enabled,
+            // cursorHeight: 2.0,
+            validator: widget.validator,
+            obscureText: widget.obscureText != null ? widget.obscureText! : false,
+            maxLength: widget.maxLength,
+            textAlign: widget.textAlign != null ? widget.textAlign! : TextAlign.start,
+            textInputAction: TextInputAction.next,
+            onChanged: widget.onChanged,
+            style: widget.readOnly == true ? TextStyleCustom.normalStyle() : TextStyleCustom.normalStyle(color: AppColors.greyColorDark),
+            // style: TextStyle(color: widget.readOnly == true ? CustomColors.greyLightColor:CustomColors.blackColor),
+            decoration: InputDecoration(
+              hintStyle: TextStyle(
+                color: AppColors.greyColorDark,
+                fontSize: 14,
+              ),
+              counterText: "",
+              hintText: widget.hintText,
+              suffixIcon: widget.suffixIcon,
+              suffixIconColor: AppColors.blackColor,
+              prefixIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10, left: 10),
+                  child: widget.prefixIcon
+              ),
+              prefixIconConstraints: const BoxConstraints(),
+              prefixStyle: const TextStyle(height: 16,),
+              filled: true,
+              fillColor: widget.isCheckOut == true ? Colors.transparent:AppColors.textFieldBorderColor.withOpacity(0.1),
+              border: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: AppColors.textFieldActiveBorderColor,width: 1
+                ),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(
+                    color: widget.errorText != null && widget.errorText != "" ? AppColors.textFieldErrorBorderColor:AppColors.textFieldBorderColor,width: 1
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(
+                    color: AppColors.textFieldErrorBorderColor,width: 1
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        Visibility(
+            visible: widget.errorText != null && widget.errorText != "",
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10,top: 10),
+              child: BuildText.buildText(
+                  text: widget.errorText ?? "",
+                  style: TextStyleCustom.normalStyle(color: AppColors.textFieldErrorBorderColor),
+                  textAlign: TextAlign.center
+              ),
+            )
+        )
+      ],
+    );
+  }
+}
+
 
 typedef OnTextChanged = void Function(String value);
 

@@ -5,7 +5,6 @@ import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.da
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
-import '../../../Controller/Helper/StringDefine/StringDefine.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
