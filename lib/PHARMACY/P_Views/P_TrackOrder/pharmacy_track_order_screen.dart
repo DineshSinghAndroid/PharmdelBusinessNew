@@ -28,7 +28,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
 
   Future<void> init()async{
     _controller.callGetRoutesApi(context: context);
-    _controller.callGetDriverListApi(context: context);
+    // _controller.callGetDriverListApi(context: context);
   }
 
   @override
@@ -43,7 +43,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                 Get.back();
               },
               centerTitle: true,
-              title: "Route"),
+              title: kRoute),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Container(

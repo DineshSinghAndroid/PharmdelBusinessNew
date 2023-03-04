@@ -145,3 +145,7 @@ const String kDOB = "Date of Birth : ";
 const String kPatientDetails = "Patient Details";
 const String kExistingNote = "Existing Note";
 const String kUpdateStatus = "Update Status";
+
+
+///pharmacy track order screen
+const String kRoute = "Route";
