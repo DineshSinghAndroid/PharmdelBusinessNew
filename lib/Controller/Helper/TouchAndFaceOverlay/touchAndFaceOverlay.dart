@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../StringDefine/StringDefine.dart';
+import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../TextController/BuildText/BuildText.dart';
 
 class TouchAndFaceIdOverlay extends StatefulWidget {

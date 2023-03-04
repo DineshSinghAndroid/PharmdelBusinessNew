@@ -38,6 +38,7 @@ class BuildText{
         maxLines: maxLines,
     );
   }
+
   
 }
 

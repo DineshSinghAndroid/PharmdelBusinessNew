@@ -4,7 +4,6 @@ import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
-import '../../Controller/Helper/StringDefine/StringDefine.dart';
 import '../../Controller/ProjectController/NotificationController/notificationController.dart';
 import '../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';

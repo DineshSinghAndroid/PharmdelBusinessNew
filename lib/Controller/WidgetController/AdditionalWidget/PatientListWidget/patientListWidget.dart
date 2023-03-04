@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../Helper/Colors/custom_color.dart';
-import '../../../Helper/StringDefine/StringDefine.dart';
 import '../../../Helper/TextController/BuildText/BuildText.dart';
 import '../../StringDefine/StringDefine.dart';
 

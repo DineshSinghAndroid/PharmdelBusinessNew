@@ -10,7 +10,6 @@ import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.d
 import 'package:pharmdel/Controller/WidgetController/TextField/CustomTextField.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Controller/Helper/FormFieldValidator/formFieldValidator.dart';
-import '../../../Controller/Helper/StringDefine/StringDefine.dart';
 import '../../../Controller/WidgetController/Loader/LoadingScreen.dart';
 import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
 import '../Login/login_screen.dart';

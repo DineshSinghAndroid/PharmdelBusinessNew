@@ -6,18 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
-import '../../Helper/StringDefine/StringDefine.dart';
+import '../../WidgetController/StringDefine/StringDefine.dart';
 
 class SplashController extends GetxController {
   String userId = "";
-  bool dialogShowing = false;
-
   String userType = "";
   String userPin = "";
 
   @override
   void onInit() {
-    dialogShowing = false;
     checkLogin();
     super.onInit();
   }
@@ -34,12 +31,9 @@ class SplashController extends GetxController {
 
   runSplash() {
     Future.delayed(const Duration(seconds: 3), () {
-
-
       if(userPin != '' ){
-        Get.offAndToNamed(securePinScreenRoute);
-      }
-      else {
+        Get.offAndToNamed(loginScreenRoute);
+      } else {
         Get.offAndToNamed(loginScreenRoute);
       }
     });
@@ -50,4 +44,5 @@ class SplashController extends GetxController {
     DateTime now = DateTime.now();
     prefs.setInt(kUserLastTime, now.millisecondsSinceEpoch);
   }
+
 }

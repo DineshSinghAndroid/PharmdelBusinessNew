@@ -67,6 +67,5 @@ export '../../WidgetController/Toast/ToastCustom.dart';
 
 
 /// Asset's
-export '../../Helper/StringDefine/StringDefine.dart';
 export '../../Helper/Colors/custom_color.dart';
 
