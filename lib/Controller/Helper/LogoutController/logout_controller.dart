@@ -18,44 +18,6 @@ class LogoutController extends GetxController{
 
   ApiController apiCtrl = ApiController();
 
-<<<<<<< HEAD
-=======
-  validateAndLogout(context) {
-    showDialog<ConfirmAction>(
-      context: context,
-      barrierDismissible: false, // user must tap button for close dialog!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(klogout),
-          content: const Text("Are you sure you want to logout"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'CANCEL',
-                style: TextStyle(color: Colors.black),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                //  Navigator.pop(_ctx);
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'YES',
-                style: TextStyle(color: Colors.black),
-              ),
-              onPressed: () async {
-                // AppSharedPreferences.clearSharedPref();
-                await logoutApi(context);
-              },
-            )
-          ],
-        );
-      },
-    );
-    // Navigator.pop(context, true);
-  }
->>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 
   Future logoutApi(context) async {
     CustomLoading().show(context, true);
@@ -66,7 +28,6 @@ class LogoutController extends GetxController{
 
     String url = WebApiConstant.Logout;
 
-<<<<<<< HEAD
   await apiCtrl.getLogoutApi(context: context, url: url,dictParameter: dictParm, token: authToken).then((result) async {
     if (result != null) {
       if (result.error != true) {
@@ -80,21 +41,6 @@ class LogoutController extends GetxController{
             },);
           } else {
             CustomLoading().show(context, false);
-=======
-    await apiCtrl.getLogoutApi(context: context, url: url,dictParameter: dictParm, token: authToken).then((result) async {
-      if (result != null) {
-        if (result.error != true) {
-          PrintLog.printLog("Logout Success");
-          ToastCustom.showToast(msg: result ?? "");
-          try {
-            if (result.error == false) {
-              ToastCustom.showToast(msg: result ?? "");
-              CustomLoading().show(context, false).then((value) {
-                Get.offAndToNamed(loginScreenRoute);
-              },);
-            } else {
-              CustomLoading().show(context, false);
->>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 
               PrintLog.printLog(result);
               ToastCustom.showToast(msg: result ?? "");
@@ -110,12 +56,9 @@ class LogoutController extends GetxController{
           ToastCustom.showToast(msg: result ?? "");
         }
       }
-<<<<<<< HEAD
-    }
   });
-}
-
- validateAndLogout(context) {
+    }
+    validateAndLogout(context) {
   showDialog<ConfirmAction>(
     context: context,
     barrierDismissible: false, // user must tap button for close dialog!
@@ -132,9 +75,7 @@ class LogoutController extends GetxController{
   );
   // Navigator.pop(context, true);
 }
-=======
-    });
   }
 
-}
->>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
+
+ 

@@ -15,7 +15,8 @@ class _EmptyDataScreenState extends State<EmptyDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
+      body:
+      SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -25,7 +26,7 @@ class _EmptyDataScreenState extends State<EmptyDataScreen> {
             alignment: Alignment.topCenter,
             child: Container(margin: const EdgeInsets.only(top: 60), height: 250, child: Image.asset("assets/images/img_no_data.png")),
           ),
-          const SizedBox(),     
+          const SizedBox(),
         ],
       ),
     )

@@ -45,17 +45,22 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
         flexibleSpace: Align(
           alignment: Alignment.centerRight,
           child: InkWell(
-            onTap: () {
+            onTap: () {              
               // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen())).then((value) => updateApi(token));
             },
             child: Container(
               padding: const EdgeInsets.only(left: 0, right: 13, top: 30),
               child: Stack(
                 children: [
-                  const Icon(
-                    Icons.notifications,
-                    size: 30,
-                    color: Colors.black,
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed(pharmacyNotificationScreenRoute);
+                    },
+                    child: const Icon(
+                      Icons.notifications,
+                      size: 30,
+                      color: Colors.black,
+                    ),
                   ),
                   if (notification_count != null && notification_count > 0)
                     Positioned(

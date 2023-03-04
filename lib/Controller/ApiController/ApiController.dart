@@ -6,15 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
-<<<<<<< HEAD
 import '../../Model/DriverList/driverListResponse.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
-=======
- import '../../Model/DriverList/driverListResponse.dart';
- import '../../Model/CreatePatientModel/create_patient_model.dart';
- import '../../Model/DriverProfile/profileDriverResponse.dart';
->>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 import '../../Model/DriverRoutes/driverRoutesResponse.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../Model/GetPatient/getPatientApiResponse.dart';
@@ -25,15 +19,9 @@ import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_pharmacy.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
-<<<<<<< HEAD
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
 import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
 import '../../Model/VehicleList/vehicleListResponse.dart';
-=======
- import '../../Model/UpdateProfile/updateProfileResponse.dart';
- import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
- import '../../Model/VehicleList/vehicleListResponse.dart';
->>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../Helper/PrintLog/PrintLog.dart';

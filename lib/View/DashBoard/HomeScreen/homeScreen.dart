@@ -4,11 +4,8 @@ import 'package:pharmdel/Controller/ProjectController/MainController/import_cont
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/View/MapScreen/map_screen.dart';
 import '../../../Controller/ProjectController/DriverDashboardController.dart/driverDashboardController.dart';
-<<<<<<< HEAD
 import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/DeliveryCardCustom/deliveryCardCustom.dart';
-=======
->>>>>>> 1bdaa13e2be5d10aa8a2db1fb257a1c9ae1ad1c8
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
