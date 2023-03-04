@@ -156,6 +156,10 @@ const String kUpdateStatus = "Update Status";
 
 
  ///pharmacy track order screen
+<<<<<<< HEAD
+=======
+
+>>>>>>> 241529878b78f3a5b20fd4f803bd59664e46e086
 ///Pharmacy HomeScreen
 const String kDeliveries = "Deliveries";
 const String kTrackOrder = "Track Order";
@@ -163,11 +167,20 @@ const String kScanAndBook = "Scan & Book";
 const String kNursHomeBoxBook = "Nursing Home Box Booking";
 
 ///pharmacy track order screen
+<<<<<<< HEAD
  const String kRoute = "Route";
  /// TextField Validation
   const String kSelectDriver = "Select Driver";
  /// TextField Validation
  const String kEnterEmail = "Enter email";
+=======
+
+const String kRoute = "Route";
+/// TextField Validation
+ const String kSelectDriver = "Select Driver";
+ /// TextField Validation
+const String kEnterEmail = "Enter email";
+>>>>>>> 241529878b78f3a5b20fd4f803bd59664e46e086
 const String kEnterPassword = "Enter password";
 const String kEnterYourEmailID = "Enter your mail id";
 const String kSubmit = "Submit";
@@ -365,11 +378,18 @@ const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
 const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
 
+<<<<<<< HEAD
  ///Pharmacy Delivery List Screen
+=======
+///Pharmacy Delivery List Screen
+>>>>>>> 241529878b78f3a5b20fd4f803bd59664e46e086
 const String kDeliveryList = "Delivery List";
 const String kToday = 'Today';
 const String kTomorrow = 'Tomorrow';
 const String kSelect = "Select";
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 241529878b78f3a5b20fd4f803bd59664e46e086

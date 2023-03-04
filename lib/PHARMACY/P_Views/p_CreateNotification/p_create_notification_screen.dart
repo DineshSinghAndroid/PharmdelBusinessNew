@@ -13,10 +13,9 @@ class CreateNotificationScreen extends StatefulWidget {
 class _CreateNotificationScreenState extends State<CreateNotificationScreen> {
 
 TextEditingController notificationNameController = TextEditingController();
+TextEditingController notificationMessageController = TextEditingController();
 
 FocusNode focusNotificationName = FocusNode();
-
-List<String> items = ['Item 1, Item 2'];
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +41,20 @@ List<String> items = ['Item 1, Item 2'];
               weight: FontWeight.w500
             ),
             buildSizeBox(10.0, 0.0),
-            CustomTextField(
-              hintText: 'Name',
-              readOnly: false,
-                validator: (val) {
-                  
-                },
-                controller: notificationNameController,
-                onChanged: (v) {
-                  FocusScope.of(context).requestFocus(focusNotificationName);
-                },
-                ////initialValue: "rc2.cust20200101@gmail.com",
-                inputAction: TextInputAction.done,
-                keyboardType: TextInputType.emailAddress,                                    
-              ),
+            TextFormField(
+                  decoration: InputDecoration(
+                    hintText: kName,
+                    hintStyle: TextStyle(color: AppColors.greyColor),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: AppColors.greyColor)
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: AppColors.greyColor)
+                    ),
+                  ),
+                ),
               buildSizeBox(20.0, 0.0),
               BuildText.buildText(
                 text: kPharmacyStaff,
@@ -87,9 +86,38 @@ List<String> items = ['Item 1, Item 2'];
                 weight: FontWeight.w500                
               ),
               buildSizeBox(10.0, 0.0),
-              CustomTextField(readOnly: false)
+              SizedBox(
+                height: 160,
+                width: Get.width,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: kMessage,
+                    hintStyle: TextStyle(color: AppColors.greyColor),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: AppColors.greyColor)
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: AppColors.greyColor)
+                    ),
+                  ),
+                  maxLength: 500,     
+                  maxLines: 100,           
+                ),
+              ),
+              const Spacer(),              
           ],
         ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ButtonCustom(
+                onPress: (){}, 
+                text: kSubmit, 
+                buttonWidth: Get.width, 
+                buttonHeight: 50,
+                backgroundColor: AppColors.blueColor,),
       ),
     );
   }
