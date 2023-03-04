@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
-import '../../../Controller/Helper/StringDefine/StringDefine.dart';
 import '../../../Controller/Helper/TextController/BuildText/BuildText.dart';
 import '../../../Controller/ProjectController/Splash/splash_controller.dart';
+import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

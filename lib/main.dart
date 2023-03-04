@@ -26,8 +26,8 @@ double addHeight = Dimensions.screenHeight;
 double addWidth = Dimensions.screenWidth;
 
 // int remainingTIme;
-IO.Socket socket = IO.io(WebApiConstant.SOCKET_URL, OptionBuilder().setTransports(['websocket']).build());
-StreamSocket streamSocket = StreamSocket();
+// IO.Socket socket = IO.io(WebApiConstant.SOCKET_URL, OptionBuilder().setTransports(['websocket']).build());
+// StreamSocket streamSocket = StreamSocket();
 
 
 Future<void> main() async {

@@ -29,7 +29,14 @@ class AppSharedPreferences {
 
   static String routeID = "route_id";
   static String isRouteStart = "is_route_start";
-  static String deviceID = "device_id";
+  static String companyID = "device_id";
+
+  static String userEmail = "user_email";
+  static String userMobile = "user_mobile";
+  static String userStatus = "user_status";
+  static String isStartRoute = "is_start_route";
+  static String deliveryType = "delivery_type";
+
 
 
 

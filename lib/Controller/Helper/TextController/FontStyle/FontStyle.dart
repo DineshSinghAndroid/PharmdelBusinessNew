@@ -4,6 +4,37 @@ import 'package:flutter/material.dart';
  import '../../Colors/custom_color.dart';
 import '../FontFamily/FontFamily.dart';
 
+class TextStyleCustom{
+  TextStyleCustom._privateConstructor();
+  static final TextStyleCustom instance = TextStyleCustom._privateConstructor();
+
+  static TextStyle normalStyle({double? fontSize,Color? color,String? fontFamily,double? height}){
+    return TextStyle(
+      fontSize: fontSize ?? 14.0,
+      color: color ?? AppColors.blackColor,
+      fontFamily: fontFamily ?? FontFamily.NexaRegular,
+        height: height ?? 0,
+    );
+  }
+  static TextStyle underLineStyle(){
+    return const TextStyle(
+      fontSize: 22.0,
+      shadows: [
+        Shadow(
+          color: Colors.red,
+          offset: Offset(0, -5),
+        )
+      ],
+      color: Colors.transparent,
+      fontWeight: FontWeight.w900,
+      decoration: TextDecoration.underline,
+      decorationColor: Colors.red,
+      decorationThickness: 1,
+    );
+  }
+
+}
+
 
 final TextStyle Bold20Style = TextStyle(
   fontSize: 20.0,

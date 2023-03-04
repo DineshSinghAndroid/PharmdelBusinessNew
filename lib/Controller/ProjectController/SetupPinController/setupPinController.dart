@@ -10,7 +10,6 @@ import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
 import '../../../Model/SetupPin/setupPin_model.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
-import '../../Helper/StringDefine/StringDefine.dart';
 
 class SetupMPinController extends GetxController {
   String existingPin = "";

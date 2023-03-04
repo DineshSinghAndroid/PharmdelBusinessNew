@@ -18,7 +18,7 @@ class PharmacyGetRouteListController extends GetxController{
 
   @override
   void onInit() {
-    PrintLog.printLog("PharmacyGetRouteListController is initlized::::::::");
+    PrintLog.printLog("PharmacyGetRouteListController is initialized::::::::");
     super.onInit();
   }
 
@@ -32,27 +32,27 @@ class PharmacyGetRouteListController extends GetxController{
     };
     String url = WebApiConstant.GET_ROUTE_URL_PHARMACY;
     await _apiCtrl.getRouteListApiPharmacy(context: context, url: url,
-        dictParameter: dictparm, token: authToken).then((_result) {
-      if (_result != null) {
+        dictParameter: dictparm, token: authToken).then((result) {
+      if (result != null) {
         try {
 
-          print("HELLOssss ${_result.routeList![0].routeName}");
-          routeList.addAll(_result.routeList!);
+          print("HELLO ssss ${result.routeList![0].routeName}");
+          routeList.addAll(result.routeList!);
 
-          print("HELLOssss2 ${routeList[0].routeName}");
+          print("HELLO ssss2 ${routeList[0].routeName}");
 
         } catch (_) {
           CustomLoading().show(context, false);
 
           PrintLog.printLog("Exception : $_");
-          ToastCustom.showToast(msg: _result.message ?? "");
+          ToastCustom.showToast(msg: result.message ?? "");
         }
       }
       else {
         CustomLoading().show(context, false);
 
-        PrintLog.printLog(_result?.message);
-        ToastCustom.showToast(msg: _result?.message ?? "");
+        PrintLog.printLog(result?.message);
+        ToastCustom.showToast(msg: result?.message ?? "");
         update();
       }
     }

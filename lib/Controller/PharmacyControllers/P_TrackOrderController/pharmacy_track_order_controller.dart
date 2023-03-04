@@ -52,13 +52,13 @@ class PharmacyTrackOrderController extends GetxController {
     });
   }
 
-  Future<void> callGetDriverListApi({required BuildContext context})async{
-    await driverListController.getDriverList(context: context).then((value) {
-      PrintLog.printLog("Test print......${driverListController.driverList[0].toString()}");
-      update();
-    });
-
-  }
+  // Future<void> callGetDriverListApi({required BuildContext context})async{
+  //   await driverListController.getDriverList(context: context).then((value) {
+  //     PrintLog.printLog("Test print......${driverListController.driverList[0].toString()}");
+  //     update();
+  //   });
+  //
+  // }
 
 
 

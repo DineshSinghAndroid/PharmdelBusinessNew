@@ -28,6 +28,12 @@ class AppColors {
   static Color blueColor = Colors.blue;
   static Color yetToStartColor = const Color(0xFFF8A340);
   static Color primaryTextColor = const Color(0xFF1A1316);
+  static Color textFieldActiveBorderColor = const Color(0xffff8600);
+  static Color textFieldBorderColor = const Color(0xFF8B8B8B);
+  static Color textFieldErrorBorderColor = Colors.red;
+  static Color textFieldBGColor = textFieldBorderColor.withOpacity(0.2);
+
+
   static MaterialColor materialAppThemeColor = const MaterialColor(
   0xFFfffcfc,
   <int, Color>{

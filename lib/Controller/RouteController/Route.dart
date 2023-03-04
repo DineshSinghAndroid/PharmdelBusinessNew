@@ -26,7 +26,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case splashScreenRoute:
       return MaterialPageRoute(builder: (context) => const SplashScreen());
     case loginScreenRoute:
-      return MaterialPageRoute(builder: (context) => const LoginScreen());
+      return MaterialPageRoute(builder: (context) => LoginScreen());
 
     case securePinScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: SecurePin());

@@ -26,8 +26,8 @@ import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../Helper/PrintLog/PrintLog.dart';
-import '../Helper/StringDefine/StringDefine.dart';
 import '../WidgetController/Popup/PopupCustom.dart';
+import '../WidgetController/StringDefine/StringDefine.dart';
 import '../WidgetController/Toast/ToastCustom.dart';
 import 'WebConstant.dart';
 
@@ -35,30 +35,21 @@ class ApiController {
   final Dio _dio = Dio();
 
 
-
   /// Login Api
-
-
   Future<LoginModel?> getLoginApi({context, required String url, dictParameter, String? token}) async {
     LoginModel? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
-        print(response?.statusCode.toString());
-        print(response.toString());
         if (response?.data != null && response!.statusCode == 200) {
           result = LoginModel.fromJson(response.data);
-          print("THIS IS API RESULT FOR LOGIN API $result");
           return result;
         } else {
           ToastCustom.showToast(msg: response?.statusMessage.toString()??"");
         }
       } catch (e) {
-
         PrintLog.printLog("Exception_main1s: $e");
-
         return result;
-
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);
