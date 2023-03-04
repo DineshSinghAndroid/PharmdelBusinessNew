@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ApiController/ApiController.dart';
 
@@ -9,15 +11,21 @@ import '../../WidgetController/Loader/LoadingScreen.dart';
 
 class GetDriverListController extends GetxController
 {
-   final ApiController _apiCtrl = ApiController();
-  List   driverList = [];
 
-   String? selectedDriverName = GetDriverListModelResponsePharmacy().firstName??"Hello";
+  List<GetDriverListModelResponsePharmacy> driverModelFromJson(String str) => List<GetDriverListModelResponsePharmacy>.from(json.decode(str).map((x) => GetDriverListModelResponsePharmacy.fromJson(x)));
+  String driverModelToJson(List<GetDriverListModelResponsePharmacy> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+
+  final ApiController _apiCtrl = ApiController();
+  List  driverList = [];
+   String? selectedDriverName = GetDriverListModelResponsePharmacy().firstName;
+
 
    @override
    void onInit() {
      PrintLog.printLog("GetDriverListController is initialized::::::::");
      super.onInit();
+     print(driverList.length);
    }
 
   Future< GetDriverListModelResponsePharmacy?> getDriverList({context}) async{
@@ -29,16 +37,19 @@ class GetDriverListController extends GetxController
 
     };
     String url = WebApiConstant.Get_PHARMACY_DriverList_ByRoute;
-    await _apiCtrl.getDriverListPharmacy(context: context, url: url,
-        dictParameter: dictparm, token: authToken).then((_result) {
-      if (_result != null) {
+    await _apiCtrl.requestGetForDriverListApi(context: context, url: url,
+        dictParameter: dictparm, token: authToken).then((result) {
+      if (result != null) {
         try {
-          driverList.addAll(driverList);
+          PrintLog.printLog("Response: $result");
 
-          print("Driver ID Response ${driverList.toString()}");
-          // driverList.addAll(_result.!);
+             driverList.addAll(List<GetDriverListModelResponsePharmacy>.from(json.decode(result.data).map((x) => GetDriverListModelResponsePharmacy.fromJson(x))));
 
-          // print("HELLOssss2 ${routeList[0].routeName}");
+
+
+
+          // PrintLog.printLog("Driver ID Response ${driverList[0].firstName.toString()}");
+
 
         } catch (_) {
           CustomLoading().show(context, false);

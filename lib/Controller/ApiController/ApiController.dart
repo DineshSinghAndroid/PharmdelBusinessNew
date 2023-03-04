@@ -301,20 +301,18 @@ class ApiController {
     return null;
   }
 ///Pharmacy Driver List Get Api
-  Future< GetDriverListModelResponsePharmacy?> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
-    GetDriverListModelResponsePharmacy? result;
+  Future<dynamic> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = GetDriverListModelResponsePharmacy.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
+        // if (response?.data != null && response?.statusCode == 200) {
+          return null;
+        // } else {
+        //   return null;
+        // }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
-        return result;
+        return null;
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);
@@ -681,6 +679,47 @@ class ApiController {
       return null;
     }
   }
+
+
+  Future<dynamic?> requestGetForDriverListApi(
+      {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        // "Authkey": WebApiConstant.AUTH_KEY,
+        "Authorization": "Bearer $token",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000",
+        // "x-localization":"en",
+      };
+
+      //  final prefs = await SharedPreferences.getInstance();
+      // String userId = prefs.getString(AppSharedPreferences.userId) ?? "";
+      //  String sessionId = prefs.getString(AppSharedPreferences.sessionId) ?? "";
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $token");
+      PrintLog.printLog("DictParameter: $dictParameter");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
+          headers: headers,
+          validateStatus: (_) => true
+      );
+
+      _dio.options = options;
+      Response response = await _dio.get(url!, queryParameters: dictParameter);
+      return response;
+
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
 
 
 }

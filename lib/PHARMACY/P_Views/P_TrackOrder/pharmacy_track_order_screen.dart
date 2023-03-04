@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-
-import '../../../Controller/PharmacyControllers/P_DriverListController/get_driver_list_controller.dart';
-import '../../../Controller/PharmacyControllers/P_RouteListController/P_get_route_list_controller.dart';
+import 'package:pharmdel/Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../../Controller/PharmacyControllers/P_TrackOrderController/pharmacy_track_order_controller.dart';
- import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 
 class TrackOrderScreenPharmacy extends StatefulWidget {
   const TrackOrderScreenPharmacy({Key? key}) : super(key: key);
@@ -19,16 +17,15 @@ class TrackOrderScreenPharmacy extends StatefulWidget {
 class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
   final PharmacyTrackOrderController _controller = Get.put(PharmacyTrackOrderController());
 
-
   @override
   void initState() {
     init();
     super.initState();
   }
 
-  Future<void> init()async{
+  Future<void> init() async {
     _controller.callGetRoutesApi(context: context);
-    // _controller.callGetDriverListApi(context: context);
+    _controller.callGetDriverListApi(context: context);
   }
 
   @override
@@ -53,88 +50,104 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                 child: Column(
                   children: [
                     buildSizeBox(20.0, 0.0),
+                    InkWell(
+                      onTap: () async {
+                        final DateTime? picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
+                        setState(() {
+                          _controller.selectedDate = _controller.formatter.format(picked!);
+                          _controller.showDatedDate = _controller.formatterShow.format(picked);
 
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        hint: Text(
-                          'Select Route*',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Theme.of(context).hintColor,
-                          ),
+                          if (_controller.selectedDriverPosition! > 0 && _controller.selectedRoutePosition > 0) {}
+                        });
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.only(left: 10.0, top: 10, bottom: 10, right: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0), color: Colors.white,
+                          //border: Border.all(color: Colors.grey[400]),
                         ),
-                        items: [
-                          for (RouteList route in controller.getRouteListController.routeList)
-                            DropdownMenuItem(
-                              value: _controller.getRouteListController.routeList.indexOf(route).toString(),
-                              child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
-                            ),
-                        ],
-                        value: _controller.getRouteListController.selectedRouteValue,
-                        onChanged: (value) {
-                          setState(() {
-                            _controller.getRouteListController.selectedRouteValue = value.toString();
-                          });
-                        },
-                        buttonStyleData: ButtonStyleData(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            height: 40,
-                            width: Get.width,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                            )),
-                        menuItemStyleData: const MenuItemStyleData(),
+                        child: Row(
+                          children: [
+                            Text(_controller.showDatedDate),
+                            const Spacer(),
+                            const Icon(Icons.calendar_today_sharp),
+                          ],
+                        ),
                       ),
                     ),
                     buildSizeBox(20.0, 0.0),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        hint: Text(
-                          'Select Route*',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Theme.of(context).hintColor,
-                          ),
-                        ),
-                        items: [
-                          for (RouteList route in controller.getRouteListController.routeList)
-                            DropdownMenuItem(
-                              value: _controller.getRouteListController.routeList.indexOf(route).toString(),
-                              child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
+                    if (_controller.getRouteListController.routeList.isNotEmpty)
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          hint: Text(
+                            kSelectRoute,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).hintColor,
                             ),
-                        ],
-                        value: _controller.getRouteListController.selectedRouteValue,
-                        onChanged: (value) {
-                          setState(() {
-                            _controller.getRouteListController.selectedRouteValue = value.toString();
-                          });
-                        },
-                        buttonStyleData: ButtonStyleData(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            height: 40,
-                            width: Get.width,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                            )),
-                        menuItemStyleData: const MenuItemStyleData(),
+                          ),
+                          items: [
+                            for (RouteList route in controller.getRouteListController.routeList)
+                              DropdownMenuItem(
+                                value: _controller.getRouteListController.routeList.indexOf(route).toString(),
+                                child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
+                              ),
+                          ],
+                          value: _controller.getRouteListController.selectedRouteValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _controller.getRouteListController.selectedRouteValue = value.toString();
+                            });
+                          },
+                          buttonStyleData: ButtonStyleData(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              height: 40,
+                              width: Get.width,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                              )),
+                          menuItemStyleData: const MenuItemStyleData(),
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    MaterialButton(
-                      onPressed: () {
-                        GetDriverListController().getDriverList(context: context);
-                      },
-                      child: const Text("get driver list"),
-                    ),
                     buildSizeBox(20.0, 0.0),
-                    MaterialButton(
-                      onPressed: () {
-                        PharmacyGetRouteListController().getRoutes(context: context);
-                      },
-                      child: const Text("get route  list"),
-                    ),
+                    if (_controller.driverListController.driverList.isNotEmpty)
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          hint: Text(
+                            kSelectDriver,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          items: [
+                            for (GetDriverListModelResponsePharmacy driver in controller.driverListController.driverList)
+                              DropdownMenuItem(
+                                value: _controller.driverListController.driverList.indexOf(driver).toString(),
+                                child: Text("${driver.firstName}", style: const TextStyle(color: Colors.black87)),
+                              ),
+                          ],
+                          value: _controller.driverListController.selectedDriverName,
+                          onChanged: (value) {
+                            setState(() {
+                              _controller.driverListController.selectedDriverName = value.toString();
+                            });
+                          },
+                          buttonStyleData: ButtonStyleData(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              height: 40,
+                              width: Get.width,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                              )),
+                          menuItemStyleData: const MenuItemStyleData(),
+                        ),
+                      ),
+                    
+                    MaterialButton(onPressed: (){_controller.callGetDriverListApi(context: context);},child: Text("FDFSDF"),)
                   ],
                 ),
               ),

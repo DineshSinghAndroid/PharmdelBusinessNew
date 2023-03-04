@@ -147,11 +147,10 @@ const String kExistingNote = "Existing Note";
 const String kUpdateStatus = "Update Status";
 
 
-<<<<<<< HEAD
-///pharmacy track order screen
+ ///pharmacy track order screen
 const String kRoute = "Route";
-=======
-/// TextField Validation
+ const String kSelectDriver = "Select Driver";
+ /// TextField Validation
 const String kEnterEmail = "Enter email";
 const String kEnterPassword = "Enter password";
 const String kEnterYourEmailID = "Enter your mail id";
@@ -350,4 +349,3 @@ const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
 const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
 
->>>>>>> 1c0f1c33bf3e8af5356018177210152fd33cfeff
