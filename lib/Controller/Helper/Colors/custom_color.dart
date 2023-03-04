@@ -21,8 +21,8 @@ class AppColors {
   static Color purpleColor = const Color(0xFF6A56EA);
   static Color purpleColorLight = const Color(0xFF9796FF);
   static Color greenColorLight = const Color(0xFFEEFFE5);
-  static Color greenColor = Colors.green;
-  static Color greenAccentColor = Colors.greenAccent;
+  static Color greenColor = Colors.green.shade400;
+  static Color greenAccentColor = Colors.greenAccent.shade700;
   static Color pinkColorLight = const Color(0xFFFEDEFB);
   static Color blueColorLight = Colors.lightBlue;
   static Color blueColor = Colors.blue;

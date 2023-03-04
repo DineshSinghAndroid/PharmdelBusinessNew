@@ -26,6 +26,9 @@ const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
 const String strIMG_location = "assets/images/location_top.png";
 const String strIMG_Map = "assets/images/google-maps-icon.png";
+const String strIMG_DelTruck2 = "assets/images/delivery_icon.png";
+const String strIMG_Location = "assets/images/location_icon.png";
+const String strIMG_QrCode = "assets/images/qr_code.png";
 
 
 ///GIF
@@ -145,3 +148,10 @@ const String kDOB = "Date of Birth : ";
 const String kPatientDetails = "Patient Details";
 const String kExistingNote = "Existing Note";
 const String kUpdateStatus = "Update Status";
+
+
+///Pharmacy HomeScreen
+const String kDeliveries = "Deliveries";
+const String kTrackOrder = "Track Order";
+const String kScanAndBook = "Scan & Book";
+const String kNursHomeBoxBook = "Nursing Home Box Booking";
