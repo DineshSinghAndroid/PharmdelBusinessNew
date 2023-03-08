@@ -27,13 +27,10 @@ const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
 const String strIMG_location = "assets/images/location_top.png";
 const String strIMG_Map = "assets/images/google-maps-icon.png";
-<<<<<<< HEAD
 const String strImgRightClick = "assets/images/tick.png";
-=======
 const String strIMG_DelTruck2 = "assets/images/delivery_icon.png";
 const String strIMG_Location = "assets/images/location_icon.png";
 const String strIMG_QrCode = "assets/images/qr_code.png";
->>>>>>> 842073349012a8b7e3a9836d682e92569da611e1
 
 
 ///GIF
