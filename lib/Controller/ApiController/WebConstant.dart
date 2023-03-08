@@ -44,6 +44,11 @@ class WebApiConstant {
   static const String GET_PHARMACY_NOTIFICATION              =  "${BASE_URL_PHARMACY}GetNotifications";
   static const String GET_ROUTE_URL_PHARMACY                 =  "${BASE_URL_PHARMACY}GetRoutes";
   static const String GET_PHARMACY_PROFILE_URL               =  "${BASE_URL_PHARMACY}GetProfile";
+  static const String GET_PHARMACY_CREATE_NOTIFICATION       =  "${BASE_URL_PHARMACY}CreateNotification";
+  static const String GET_PHARMACY_SAVE_NOTIFICATION         =  "${BASE_URL_PHARMACY}SaveNotification";
+  static const String GET_PHARMACY_UPDATE_NURSING_ORDER      =  "${BASE_URL_PHARMACY}UPDATE_NURSING_ORDER";
+  static const String GET_PHARMACY_DELETE_NURSING_ORDER      =  "${BASE_URL_PHARMACY}deleteOrderByOrderId";
+  static const String GET_PHARMACY_DELIVERY_LIST             =  "${BASE_URL_PHARMACY}Delivery";
 
 
 }

@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:pharmdel/Controller/Helper/LogoutController/logout_controller.dart';
-
-import '../../../Controller/Helper/Shared Preferences/SharedPreferences.dart';
-import '../../../Controller/Helper/TextController/BuildText/BuildText.dart';
-import '../../../Controller/RouteController/RouteNames.dart';
-import '../../../Controller/WidgetController/AdditionalWidget/ExpansionTileCard/expansionTileCardWidget.dart';
-import '../../../Controller/WidgetController/Loader/LoadingScreen.dart';
-import '../../../Controller/WidgetController/Popup/CustomDialogBox.dart';
-import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../../../main.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
+import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Controller/PharmacyControllers/p_ProfileController/p_profile_controller.dart';
 
 class PharmacyDrawerScreen extends StatefulWidget {
-  String userName = '';
-  String address1 = '';
-  var email;
-  var mobile;
-  var versionCode;
+  String? versionCode;
 
   PharmacyDrawerScreen({
     super.key,
-    required this.userName,
-    required this.email,
-    required this.mobile,
     required this.versionCode,
   });
 
@@ -32,18 +18,41 @@ class PharmacyDrawerScreen extends StatefulWidget {
 }
 
 class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
+
+PharmacyProfileController phrProfCtrl = Get.put(PharmacyProfileController());
+
+@override
+void initState() {    
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
+    phrProfCtrl.isNetworkError = false;
+    phrProfCtrl.isEmpty = false;
+    if (await ConnectionValidator().check()) {
+      await phrProfCtrl.pharmacyProfileApi(context: context);
+    } else {
+      phrProfCtrl.isNetworkError = true;
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return GetBuilder<PharmacyProfileController>(
+      init: phrProfCtrl,
+      builder: (controller) {
+        return SafeArea(
       child: Container(
-        color: Colors.white,
+        color: AppColors.whiteColor,
         height: Get.height,
         width: Get.width * 0.8,
         child: Column(
           children: [
             Container(
               height: 130,
-              color: const Color(0xFFF8A340),
+              color: AppColors.colorOrange,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Column(
@@ -56,9 +65,9 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: const Icon(
+                          child:  Icon(
                             Icons.close,
-                            color: Colors.white,
+                            color: AppColors.whiteColor,
                           ),
                         ),
                       ],
@@ -77,15 +86,16 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
                                 height: 65,
                                 width: 65,
                                 decoration: BoxDecoration(
-                                    boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 8, spreadRadius: 1, offset: Offset(0, 0))],
-                                    color: Colors.white,
+                                    boxShadow: [BoxShadow(color: AppColors.greyColor, blurRadius: 8, spreadRadius: 1, offset: const Offset(0, 0))],
+                                    color: AppColors.whiteColor,
                                     borderRadius: BorderRadius.circular(50)),
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(50.0),
                                     child: Center(
-                                        child: Text(
-                                      widget.userName = "",
-                                      style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
+                                        child: BuildText.buildText(
+                                      text: controller.driverProfileData?.firstName?[0].toString().toUpperCase() ?? "",
+                                      size: 20,
+                                      weight: FontWeight.w400,                                      
                                     )))),
                             Flexible(
                               child: Padding(
@@ -93,26 +103,19 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 2.0),
-                                      child: Text(
-                                        widget.userName ?? "",
-                                        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                                      ),
+                                    BuildText.buildText(
+                                      text:controller.driverProfileData?.firstName ?? "",
+                                      color: AppColors.whiteColor,
+                                      size: 18,
+                                      weight: FontWeight.bold,                                        
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 2.0),
-                                      child: Text(
-                                        widget.email ?? "",
-                                        style: const TextStyle(color: Colors.white),
-                                      ),
+                                    BuildText.buildText(
+                                      text:controller.driverProfileData?.emailId ?? "",
+                                      color: AppColors.whiteColor,                                        
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 2.0),
-                                      child: Text(
-                                        widget.mobile ?? "",
-                                        style: const TextStyle(color: Colors.white),
-                                      ),
+                                    BuildText.buildText(
+                                      text: controller.driverProfileData?.mobileNumber ?? "",
+                                      color: AppColors.whiteColor                                        
                                     ),
                                   ],
                                 ),
@@ -132,7 +135,7 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
                 children: [
                   ExpansionTileCard(
                     animateTrailing: true,
-                    title: const Text('Personal Info'),
+                    title:  BuildText.buildText(text: kPersonalInfo),
                     leading: const Icon(
                       Icons.person,
                       size: 20,
@@ -141,128 +144,113 @@ class _PharmacyDrawerScreenState extends State<PharmacyDrawerScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
-                        ), // height: 200,
-
+                        ),
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                const Icon(
+                                 Icon(
                                   Icons.mobile_friendly_sharp,
-                                  color: Colors.black,
+                                  color: AppColors.blackColor,
                                   size: 12,
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  widget.mobile ?? "Not Found",
+                                buildSizeBox(0.0, 10.0),
+                                BuildText.buildText(
+                                  text: controller.driverProfileData?.mobileNumber ?? "",
                                 )
                               ],
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
+                            buildSizeBox(5.0, 0.0),
                             Row(
                               children: [
-                                const Icon(
+                                 Icon(
                                   Icons.email,
-                                  color: Colors.grey,
+                                  color: AppColors.greyColor,
                                   size: 12,
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  widget.email ?? "Not Found",
+                                buildSizeBox(0.0, 10.0),
+                                BuildText.buildText(
+                                  text: controller.driverProfileData?.emailId ?? "",
                                 )
                               ],
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
+                            buildSizeBox(5.0, 0.0),
                             Row(
                               children: [
-                                const Icon(
+                                 Icon(
                                   Icons.location_city_outlined,
-                                  color: Colors.grey,
+                                  color: AppColors.greyColor,
                                   size: 12,
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  widget.address1 ?? "Not Found",
+                                buildSizeBox(0.0, 10.0),
+                                BuildText.buildText(
+                                  text: controller.driverProfileData?.pharmacyName ?? "",
                                 )
                               ],
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            buildSizeBox(10.0, 0.0)
                           ],
                         ),
                       ),
-                    ],
-                    onExpansionChanged: (value) {
-                      // if (value) {
-                      //   Future.delayed(const Duration(milliseconds: 500),
-                      //           () {
-                      //         for (var i = 0; i < cardKeyList.length; i++) {
-                      //           if (cardKeyList == i) {
-                      //             cardKeyList[i].currentState?.collapse();
-                      //           }
-                      //         }
-                      //       });
-                      // }
-                    },
+                    ],                   
                   ),
-                  DrawerListTiles(text: 'Change Pin', ontap: () {}),
+                  DrawerListTiles(text: kChangePin, ontap: () {}),
                   const Divider(),
-                  DrawerListTiles(text: 'Create Patient', ontap: () {}),
+                  DrawerListTiles(text: kCreatePatient, ontap: () {}),
                   const Divider(),
-                  DrawerListTiles(text: 'My Notification', ontap: () {
+                  DrawerListTiles(text: kMyNotifiaction, ontap: () {
                     Get.toNamed(pharmacyNotificationScreenRoute);
                   }),
                   const Divider(),
-                  DrawerListTiles(text: 'Privacy Policy', ontap: () {}),
+                  DrawerListTiles(text: kPrivacyPolicy, ontap: () {
+                     DefaultFuntions.redirectToBrowser(WebApiConstant.PRIVACY_URL);
+                  }),
                   const Divider(),
-                  DrawerListTiles(text: 'Terms of user', ontap: () {}),
+                  DrawerListTiles(text: kTermsOfService, ontap: () {
+                    DefaultFuntions.redirectToBrowser(WebApiConstant.TERMS_URL);
+                  }),
                   const Divider(),
-                  // DrawerListTiles(text: 'Logout', ontap:validateAndLogout(context)),
+                  DrawerListTiles(text: klogout, ontap:()async{
+                    
+                  }),
                 ],
               ),
             ),
             const Spacer(),
             Align(
               alignment: FractionalOffset.bottomCenter,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("VERSION V.${widget.versionCode} ", style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400)),
-                ),
-              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: BuildText.buildText(
+                  text: "VERSION V.${widget.versionCode}",
+                  color: AppColors.blackColor,
+                  size: 12,
+                  weight: FontWeight.w400,),
+                  ),
             ),
           ],
         ),
       ),
     );
+      },
+    );
   }
 
-  InkWell DrawerListTiles({required String text, ontap,}) {
+  Widget DrawerListTiles({required String text,required VoidCallback ontap,}) {
     return InkWell(
       onTap: ontap,
       child: Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              text,
-              style: TextStyle(fontSize: 17, color: Colors.black),
+            BuildText.buildText(
+              text: text,
+              size: 17,
+              color: AppColors.blackColor,              
             ),
-            Icon(
+            const Icon(
               Icons.arrow_forward_ios_sharp,
               size: 17,
             ),

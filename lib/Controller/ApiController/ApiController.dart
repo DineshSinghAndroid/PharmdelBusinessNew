@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
+import '../../Model/CreateNotification/createNotificationResponse.dart';
 import '../../Model/DriverList/driverListResponse.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
@@ -18,6 +19,8 @@ import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
+import '../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
 import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
@@ -296,20 +299,18 @@ class ApiController {
     return null;
   }
 ///Pharmacy Driver List Get Api
-  Future< GetDriverListModelResponsePharmacy?> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
-    GetDriverListModelResponsePharmacy? result;
+  Future<dynamic> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = GetDriverListModelResponsePharmacy.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
+        // if (response?.data != null && response?.statusCode == 200) {
+          return null;
+        // } else {
+        //   return null;
+        // }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
-        return result;
+        return null;
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);
@@ -431,6 +432,29 @@ class ApiController {
     return null;
   }
 
+
+  ///Get Pharmacy Profile Api
+  Future<PharmacyProfileApiResponse?> getPharmacyProfileApi({context, required String url, dictParameter, String? token}) async {
+    PharmacyProfileApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = PharmacyProfileApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
    ///Get Driver List Api
   Future<DriverListApiResponse?> getDriverListApi({context, required String url, dictParameter, String? token}) async {
     DriverListApiResponse? result;
@@ -439,6 +463,28 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = DriverListApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Create Notification Api     
+  Future<CreateNotificationApiResponse?> getCreateNotificationApi({context, required String url, dictParameter, String? token}) async {
+    CreateNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = CreateNotificationApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -490,6 +536,32 @@ class ApiController {
           return result;
         } else {
           print("THIS IS API RESULT FOR UPDATE PROFILE $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Save Notification Api
+  Future<SaveNotificationApiResponse?> getSaveNotificationApi({context, required String url, dictParameter, String? token}) async {
+  SaveNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = SaveNotificationApiResponse.fromJson(response?.data);
+          PrintLog.printLog(result.message);
+          return result;
+        } else {
+          PrintLog.printLog(result!.message);
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
@@ -676,6 +748,47 @@ class ApiController {
       return null;
     }
   }
+
+
+  Future<dynamic?> requestGetForDriverListApi(
+      {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        // "Authkey": WebApiConstant.AUTH_KEY,
+        "Authorization": "Bearer $token",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000",
+        // "x-localization":"en",
+      };
+
+      //  final prefs = await SharedPreferences.getInstance();
+      // String userId = prefs.getString(AppSharedPreferences.userId) ?? "";
+      //  String sessionId = prefs.getString(AppSharedPreferences.sessionId) ?? "";
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $token");
+      PrintLog.printLog("DictParameter: $dictParameter");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
+          headers: headers,
+          validateStatus: (_) => true
+      );
+
+      _dio.options = options;
+      Response response = await _dio.get(url!, queryParameters: dictParameter);
+      return response;
+
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
 
 
 }

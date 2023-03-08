@@ -7,11 +7,12 @@ const String kNoInternet = "NoInternet";
 const String kForgotPassword = 'Forgot Password';
 const String kHowToGuide= "How to guide";
 const String kByContOur = "By continuing, you agree to our ";
-const String kTermsOfService = 'Terms of Service';
+const String kTermsOfService = 'Terms of Use';
 const String kPrivacyPolicy = 'Privacy Policy';
 const String kCustomerList = 'Customer List';
 const String kAddNewCustomer = 'Add New Customer';
 const String kMapView = "Map View";
+const String kCloseTote = "Close Tote";
 
 
 /// Logo
@@ -26,7 +27,13 @@ const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
 const String strIMG_location = "assets/images/location_top.png";
 const String strIMG_Map = "assets/images/google-maps-icon.png";
+<<<<<<< HEAD
 const String strImgRightClick = "assets/images/tick.png";
+=======
+const String strIMG_DelTruck2 = "assets/images/delivery_icon.png";
+const String strIMG_Location = "assets/images/location_icon.png";
+const String strIMG_QrCode = "assets/images/qr_code.png";
+>>>>>>> 842073349012a8b7e3a9836d682e92569da611e1
 
 
 ///GIF
@@ -80,7 +87,11 @@ const String klogout = 'Logout';
 const String kMyNotifiaction = 'My Notification';
 const String kReceived = 'Received';
 const String kSent = 'Sent';
-
+const String kCreateNotification = 'Create Notification';
+const String kNotificationName = 'Notification Name:';
+const String kPharmacyStaff = "Pharmacy Staff:";
+const String kSelectPharStaff = 'Select Pharmacy Staff';
+const String kMessage = 'Message';
 
 ///Create Patient Screen
 const String kSelectTitle = "Select Title";
@@ -148,8 +159,21 @@ const String kExistingNote = "Existing Note";
 const String kUpdateStatus = "Update Status";
 
 
-/// TextField Validation
-const String kEnterEmail = "Enter email";
+
+ ///pharmacy track order screen
+
+///Pharmacy HomeScreen
+const String kDeliveries = "Deliveries";
+const String kTrackOrder = "Track Order";
+const String kScanAndBook = "Scan & Book";
+const String kNursHomeBoxBook = "Nursing Home Box Booking";
+
+///pharmacy track order screen
+ const String kRoute = "Route";
+ /// TextField Validation
+  const String kSelectDriver = "Select Driver";
+ /// TextField Validation
+ const String kEnterEmail = "Enter email";
 const String kEnterPassword = "Enter password";
 const String kEnterYourEmailID = "Enter your mail id";
 const String kSubmit = "Submit";
@@ -362,4 +386,20 @@ const String kEnterValidConfirmMPin = "Enter 4 digit confirm pin";
 const String kConfirmMPin = "Confirm Secure Pin";
 const String kEnterConfirmMPin = "Enter Confirm Secure Pin";
 const String kConfirmMPinNotMatched = "Confirm Secure pin dosn't matched";
+
+ ///Pharmacy Delivery List Screen
+///Pharmacy Delivery List Screen
+const String kDeliveryList = "Delivery List";
+const String kToday = 'Today';
+const String kTomorrow = 'Tomorrow';
+const String kSelect = "Select";
+
+
+
+///Pharmacy Nursing Home Screen
+const String kSelectNursHome = "Select Nursing Home";
+
+
+
+
 
