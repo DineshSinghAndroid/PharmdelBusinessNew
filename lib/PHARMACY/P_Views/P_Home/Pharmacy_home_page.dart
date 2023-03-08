@@ -114,7 +114,9 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                 title: kNursHomeBoxBook,
                 image: strIMG_QrCode,
                 backgroundColor: AppColors.blueColorLight,
-                onTap: (){},
+                onTap: (){
+                  Get.toNamed(nursingHomeScreenRoute);
+                },
               ),
             ],
           ),

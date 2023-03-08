@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
+import '../../../Model/CreateNotification/createNotificationResponse.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../../main.dart';
 
 
@@ -13,6 +15,8 @@ class PharmacyNotificationController extends GetxController{
 
   ApiController apiCtrl = ApiController();
   List<NotificationData>? notificationData;
+  CreateNotificationData? createNotificationData;
+  SaveNotificationApiResponse? saveNotification;
 
   bool isLoading = false;
   bool isError = false;
@@ -20,6 +24,8 @@ class PharmacyNotificationController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
+
+  ///Recieve Notification Controller
   Future<NotificationApiResponse?> notificationApi({required BuildContext context,}) async {
 
     changeEmptyValue(false);
@@ -42,6 +48,125 @@ class PharmacyNotificationController extends GetxController{
             if (result.status == true) {              
               notificationData = result.data;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+             
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+
+    ///Create Notification Controller
+    Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+    "":""
+    };
+
+    String url = WebApiConstant.GET_PHARMACY_CREATE_NOTIFICATION;
+
+    await apiCtrl.getCreateNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.status != false) {          
+          try {            
+            if (result.status == true) {              
+              createNotificationData = result.data;
+              result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+             
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+
+  ///Save Notification Controller
+    Future<SaveNotificationApiResponse?> saveNotificationApi({
+      required BuildContext context,
+      required String name,
+      required String userList,
+      required String message,
+      required String role,
+      }) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+    "name":name,
+    "user_list":userList,
+    "message":message,
+    "role":role,
+    };
+
+    String url = WebApiConstant.GET_PHARMACY_SAVE_NOTIFICATION;
+
+    await apiCtrl.getSaveNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.status != false) {          
+          try {            
+            if (result.status == true) {              
+              saveNotification = result;
+              result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
              

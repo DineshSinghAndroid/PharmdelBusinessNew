@@ -35,6 +35,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
     phrNotfCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
       await phrNotfCtrl.notificationApi(context: context);
+      await phrNotfCtrl.createNotificationApi(context: context);
     } else {
       phrNotfCtrl.isNetworkError = true;
       setState(() {});
@@ -73,7 +74,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
             title: BuildText.buildText(
               text: kMyNotifiaction,
               color: AppColors.blackColor,  
-              size: 16        
+              size: 18        
             ),
             centerTitle: true,
             backgroundColor: AppColors.whiteColor,        
@@ -111,22 +112,26 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
           body: TabBarView(                    
             physics: const NeverScrollableScrollPhysics(),
             children: [
+
+              ///Recieve Notification
               SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 90),
+                        margin: const EdgeInsets.all(8),
                         child: ListView.builder(                          
                             shrinkWrap: true,
                             itemCount: controller.notificationData?.length ?? 0,
-                            itemBuilder: (context, i) {
+                            itemBuilder: (context, index) {
                               return NotificationCardWidget(
-                                name: controller.notificationData?[i].name ?? "",
-                                messsage: controller.notificationData?[i].message ?? "",
-                                time:controller.notificationData?[i].created ?? "",
+                                name: controller.notificationData?[index].name ?? "",
+                                messsage: controller.notificationData?[index].message ?? "",
+                                time:controller.notificationData?[index].created ?? "",
                               );
                             }),
                       ),
-              ),   
+              ), 
+
+              ///Sent Notification  
               Scaffold(
                 floatingActionButton: Transform.translate(
                   offset: const Offset(-10, -15),
@@ -141,7 +146,20 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                       ),
                   ),
                 ),
-              )        
+                body: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: controller.createNotificationData?.staffManagerInfo?.length ?? 0,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return NotificationCardWidget(
+                        time: '12:00', 
+                        messsage: controller.createNotificationData?.staffManagerInfo?[index].role ?? "", 
+                        name: controller.createNotificationData?.staffManagerInfo?[index].name ?? "");
+                    },
+                  ),
+                ),
+              )
             ],
           ),
               ),

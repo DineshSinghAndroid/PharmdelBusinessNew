@@ -10,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../DB_Controller/MyDatabase.dart';
-import '../../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
+import '../../../PHARMACY/P_Views/P_Home/Pharmacy_home_page.dart';
 import '../../RouteController/Route.dart'as router;
 import '../../StopWatchController/stop_watch_controller.dart';
 

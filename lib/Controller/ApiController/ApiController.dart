@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
+import '../../Model/CreateNotification/createNotificationResponse.dart';
 import '../../Model/DriverList/driverListResponse.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
 import '../../Model/DriverProfile/profileDriverResponse.dart';
@@ -19,6 +20,7 @@ import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
+import '../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
 import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
@@ -480,6 +482,28 @@ class ApiController {
     return null;
   }
 
+  ///Create Notification Api     
+  Future<CreateNotificationApiResponse?> getCreateNotificationApi({context, required String url, dictParameter, String? token}) async {
+    CreateNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = CreateNotificationApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
   ///Lunch Break Api
   Future<LunchBreakApiResponse?> getLunchBreakApi({context, required String url, dictParameter, String? token}) async {
     LunchBreakApiResponse? result;
@@ -517,6 +541,32 @@ class ApiController {
           return result;
         } else {
           print("THIS IS API RESULT FOR UPDATE PROFILE $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Save Notification Api
+  Future<SaveNotificationApiResponse?> getSaveNotificationApi({context, required String url, dictParameter, String? token}) async {
+  SaveNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = SaveNotificationApiResponse.fromJson(response?.data);
+          PrintLog.printLog(result.message);
+          return result;
+        } else {
+          PrintLog.printLog(result!.message);
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");

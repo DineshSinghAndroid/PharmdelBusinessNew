@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-
 import '../../../Controller/PharmacyControllers/p_ProfileController/p_profile_controller.dart';
 
 class PharmacyDrawerScreen extends StatefulWidget {
@@ -202,11 +202,17 @@ void initState() {
                     Get.toNamed(pharmacyNotificationScreenRoute);
                   }),
                   const Divider(),
-                  DrawerListTiles(text: kPrivacyPolicy, ontap: () {}),
+                  DrawerListTiles(text: kPrivacyPolicy, ontap: () {
+                     DefaultFuntions.redirectToBrowser(WebApiConstant.PRIVACY_URL);
+                  }),
                   const Divider(),
-                  DrawerListTiles(text: kTermsOfService, ontap: () {}),
+                  DrawerListTiles(text: kTermsOfService, ontap: () {
+                    DefaultFuntions.redirectToBrowser(WebApiConstant.TERMS_URL);
+                  }),
                   const Divider(),
-                  DrawerListTiles(text: klogout, ontap:(){}),
+                  DrawerListTiles(text: klogout, ontap:()async{
+                    
+                  }),
                 ],
               ),
             ),

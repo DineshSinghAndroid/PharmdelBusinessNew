@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_Notification/pharmacy_notification_screen.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_NursingHome/p_nursing_home_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/p_CreateNotification/p_create_notification_screen.dart';
 import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
@@ -12,7 +13,7 @@ import 'package:pharmdel/View/ScanPrescription/scan_prescription.dart';
 import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 
-import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart';
+import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_page.dart';
 import '../../PHARMACY/P_Views/P_TrackOrder/pharmacy_track_order_screen.dart';
 import '../../PHARMACY/P_Views/p_DeliveryList/p_deliverylist_screen.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
@@ -107,7 +108,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const CreateNotificationScreen());    
 
 
-  
+
+  case nursingHomeScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const NursingHomeScreen());
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());
