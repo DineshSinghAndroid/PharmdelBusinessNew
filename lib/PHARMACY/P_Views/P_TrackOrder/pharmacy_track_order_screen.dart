@@ -18,15 +18,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
   final PharmacyTrackOrderController _controller = Get.put(PharmacyTrackOrderController());
 
   @override
-  void initState() {
-    init();
-    super.initState();
-  }
 
-  Future<void> init() async {
-    _controller.callGetRoutesApi(context: context);
-    _controller.callGetDriverListApi(context: context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,8 +139,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                         ),
                       ),
                     
-                    MaterialButton(onPressed: (){_controller.callGetDriverListApi(context: context);},child: Text("FDFSDF"),)
-                  ],
+                   ],
                 ),
               ),
             ),

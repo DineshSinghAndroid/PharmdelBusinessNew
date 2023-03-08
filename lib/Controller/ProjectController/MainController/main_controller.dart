@@ -438,8 +438,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       builder: (context, orientation, deviceType) {
         return const OverlaySupport.global(
             child: GetMaterialApp(
-            // initialRoute: splashScreenRoute,
-              home: PharmacyHomeScreen(),
+            initialRoute: splashScreenRoute,
+              // home: PharmacyHomeScreen(),
             debugShowCheckedModeBanner: false,
             onGenerateRoute: router.generateRoute,
              title: "Pharmdel Business",
