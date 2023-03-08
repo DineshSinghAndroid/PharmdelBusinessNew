@@ -16,6 +16,16 @@ class TextStyleCustom{
         height: height ?? 0,
     );
   }
+
+  static TextStyle textFieldStyle({double? fontSize,Color? color,String? fontFamily,double? height}){
+    return TextStyle(
+      fontSize: fontSize ?? 14.0,
+      color: color ?? AppColors.blackColor,
+      fontFamily: fontFamily ?? FontFamily.NexaRegular,
+      height: height ?? 0,
+    );
+  }
+
   static TextStyle underLineStyle(){
     return const TextStyle(
       fontSize: 22.0,

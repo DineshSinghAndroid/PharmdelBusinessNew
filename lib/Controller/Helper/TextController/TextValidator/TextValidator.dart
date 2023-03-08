@@ -32,6 +32,13 @@ class TxtValidation{
     return false;
   }
 
+  static validateMPinTextField(TextEditingController controller){
+    if(controller.text.toString().trim().isNotEmpty && controller.text.toString().trim().length < 4) {
+      return true;
+    }
+    return false;
+  }
+
   static validatePinTextField(TextEditingController controller){
     if(controller.text.toString().trim().isNotEmpty && controller.text.toString().trim().length < 4) {
       return true;

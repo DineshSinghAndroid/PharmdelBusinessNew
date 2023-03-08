@@ -63,12 +63,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
     case setupPinScreenRoute:
-      final args = settings.arguments;
-      print(settings.arguments.toString());
-      return MaterialPageRoute(
-          builder: (context) => SetupPinScreen(
-                isChangePin: args.toString(),
-              ));
+      final args = settings.arguments as SetupPinScreen;
+      return MaterialPageRoute( builder: (context) => SetupPinScreen( isChangePin: args.isChangePin));
 
       case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const LunchBreakScreen());

@@ -16,8 +16,8 @@ class WebApiConstant {
   static const String API_URL_INTRO                          =  "${BASE_URL}intro";
   static const String SETPIV_DRIVER                          =  "${BASE_URL}setPin";
   static const String LOGINURL_DRIVER                        =  "${BASE_URL}Login";
-  static const String TERMS_URL                              =  "${BASE_URL}terms-condition-app";
-  static const String PRIVACY_URL                            =  "${BASE_URL}privacy-policy-app";
+  static const String TERMS_URL                              =  "$BASE_URL_DOMAIN/terms-condition-app";
+  static const String PRIVACY_URL                            =  "$BASE_URL_DOMAIN/privacy-policy-app";
   static const String NOTIFICATION_URL                       =  "${BASE_URL}GetNotifications";
   static const String GET_DRIVER_PROFILE_URL                 =  "${BASE_URL}GetDriverProfile";
   static const String GET_NOTIFICATION_COUNT                 =  "${BASE_URL}GetNotificationCount";

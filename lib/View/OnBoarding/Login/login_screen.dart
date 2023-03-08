@@ -24,116 +24,18 @@ class LoginScreen extends StatelessWidget {
       builder: (controller) {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: Scaffold(
-            body: LoadScreen(
-              widget: SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        buildSizeBox(Get.height / 15, 0.0),
-                        Center(
-                          child: SizedBox(
-                            height: 120,
-                            width: 120,
-                            child: FittedBox(
-                              child: Image.asset(strimg_logo),
-                            ),
-                          ),
-                        ),
-
-                        buildSizeBox(Get.height / 20, 0.0),
-                        BuildText.buildText(text: kLogin,size: 32,weight: FontWeight.w600,),
-                        buildSizeBox(Get.height / 16, 0.0),
-
-                        /// Email
-                        TextFieldCustom(
-                            controller: controller.emailCT,
-                            keyboardType: TextInputType.emailAddress,
-                            maxLength: 50,
-                            isCheckOut: false,
-                            hintText: kEmail,
-                            errorText: controller.isEmail
-                                ? kEnterEmail
-                                : null,
-                          onChanged:(value){
-                            if(value == " "){
-                              controller.emailCT.clear();
-                            }
-                          },
-                        ),
-                        buildSizeBox(Get.height / 50, 0.0),
-
-                        /// Password
-                        TextFieldCustom(
-                          controller: controller.passCT,
-                          keyboardType: TextInputType.emailAddress,
-                          maxLength: 50,
-                          isCheckOut: false,
-                          obscureText: controller.eyeHide,
-                          hintText: kPassword,
-                          suffixIcon: InkWell(
-                              onTap: controller.onTapEye,
-                              child: Icon(controller.eyeHide == false ? Icons.remove_red_eye_outlined:Icons.visibility_off_outlined,color: AppColors.greyColor,)
-                          ),
-                          errorText: controller.isPassword
-                              ? kEnterPassword
-                              : null,
-                          onChanged:(value){
-                            if(value == " "){
-                              controller.passCT.clear();
-                            }
-                          },
-                        ),
-
-                        buildSizeBox(Get.height / 70, 0.0),
-                        Row(
-                          children: [
-                            Checkbox(
-                              visualDensity: const VisualDensity(vertical: -4.0),
-                              activeColor: AppColors.colorAccent,
-                              value: controller.savePassword,
-                              onChanged: (bool? value) {
-                                  controller.onChangedCheckBoxValue(value: value ?? false);
-                              },
-                            ),
-                            BuildText.buildText(text: kRememberMe,)
-                          ],
-                        ),
-
-                        buildSizeBox(20.0, 0.0),
-                        ButtonCustom(
-                          onPress: () => controller.onTapLogin(context: context),
-                          text: kContinue,
-                          buttonWidth: Get.width,
-                          buttonHeight: 50,
-                          backgroundColor: AppColors.colorAccent,
-                        ),
-
-                        buildSizeBox(15.0, 0.0),
-                        TextButton(
-                            onPressed:() => controller.showForgotPassword(context: context),
-                            child: BuildText.buildText(text: kForgotPassword, size: 16, weight: FontWeight.bold)
-                        ),
-
-                        buildSizeBox(Get.height / 15, 0.0),
-
-                        BuildText.buildText(
-                            text: kHowToGuide,
-                          style: TextStyleCustom.underLineStyle()
-                        ),
-
-                        buildSizeBox(20.0, 0.0),
-
-                        /// Terms or Privacy policy
-                        Text.rich(
-                            TextSpan(
-                                text: kByContOur,
-                                style: const TextStyle(fontSize: 15, color: Colors.black),
-                                children: <TextSpan>[
+          child: LoadScreen(
+            widget: Scaffold(
+              bottomNavigationBar:
+              /// Terms or Privacy policy
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30,left: 15,right: 15),
+                child: Text.rich(
+                    textAlign: TextAlign.center,
+                    TextSpan(
+                        text: kByContOur,
+                        style: const TextStyle(fontSize: 15, color: Colors.black),
+                        children: <TextSpan>[
                           TextSpan(
                               text: kTermsOfService,
                               style: const TextStyle(
@@ -153,16 +55,113 @@ class LoginScreen extends StatelessWidget {
                                   ..onTap = () {
                                     DefaultFuntions.redirectToBrowser(WebApiConstant.PRIVACY_URL);
                                   }
-                                  )
+                            )
                           ])
                         ])),
+              ),
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+
+                        buildSizeBox(Get.height / 15, 0.0),
+                        Center(
+                          child: SizedBox(
+                            height: 120,
+                            width: 120,
+                            child: FittedBox(
+                              child: Image.asset(strimg_logo),
+                            ),
+                          ),
+                        ),
+
+                        buildSizeBox(Get.height / 20, 0.0),
+                        BuildText.buildText(text: kLogin,size: 32,weight: FontWeight.w600,),
+                        buildSizeBox(Get.height / 16, 0.0),
+
+                        /// Email
+                        TextFieldCustom(
+                          controller: controller.emailCT,
+                          keyboardType: TextInputType.emailAddress,
+                          maxLength: 50,
+                          isCheckOut: false,
+                          hintText: kEmail,
+                          errorText: controller.isEmail
+                              ? kEnterEmail
+                              : null,
+                          onChanged:(value){
+                            if(value == " "){
+                              controller.emailCT.clear();
+                            }
+                          },
+                        ),
+                        buildSizeBox(Get.height / 50, 0.0),
+
+                        /// Password
+                        TextFieldCustom(
+                          controller: controller.passCT,
+                          keyboardType: TextInputType.emailAddress,
+                          maxLength: 50,
+                          isCheckOut: false,
+                          // obscureText: controller.eyeHide,
+                          obscureText: true,
+                          hintText: kPassword,
+                          // suffixIcon: InkWell(
+                          //     onTap: controller.onTapEye,
+                          //     child: Icon(controller.eyeHide == false ? Icons.remove_red_eye_outlined:Icons.visibility_off_outlined,color: AppColors.greyColor,)
+                          // ),
+                          errorText: controller.isPassword
+                              ? kEnterPassword
+                              : null,
+                          onChanged:(value){
+                            if(value == " "){
+                              controller.passCT.clear();
+                            }
+                          },
+                        ),
+
+                        buildSizeBox(Get.height / 70, 0.0),
+                        Row(
+                          children: [
+                            Checkbox(
+                              visualDensity: const VisualDensity(vertical: -4.0),
+                              activeColor: AppColors.colorAccent,
+                              value: controller.savePassword,
+                              onChanged: (bool? value) {
+                                controller.onChangedCheckBoxValue(value: value ?? false);
+                              },
+                            ),
+                            BuildText.buildText(text: kRememberMe,)
+                          ],
+                        ),
+
+                        buildSizeBox(20.0, 0.0),
+                        ButtonCustom(
+                          onPress: () => controller.onTapLogin(context: context),
+                          // onPress: () => controller.autoFillUser(),
+                          text: kContinue,
+                          buttonWidth: Get.width,
+                          buttonHeight: 50,
+                          backgroundColor: AppColors.colorAccent,
+                        ),
+
+                        buildSizeBox(15.0, 0.0),
+                        TextButton(
+                            onPressed:() => controller.showForgotPassword(context: context,ctrl: controller),
+                            child: BuildText.buildText(text: kForgotPassword, size: 16, weight: FontWeight.bold)
+                        ),
+
                       ],
                     ),
                   ),
                 ),
               ),
-              isLoading: controller.isLoading,
             ),
+            isLoading: controller.isLoading,
           ),
         );
       },

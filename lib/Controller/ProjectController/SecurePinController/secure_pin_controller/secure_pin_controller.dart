@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ApiController/ApiController.dart';
+import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Helper/PrintLog/PrintLog.dart';
 import '../../../Helper/Shared Preferences/SharedPreferences.dart';
@@ -9,6 +10,7 @@ import '../../../WidgetController/Toast/ToastCustom.dart';
 
 class SecurePinController extends GetxController {
   ApiController apiCtrl = ApiController();
+  String ? userName;
 
   String ? userType;
   String? userPin;
@@ -23,11 +25,14 @@ class SecurePinController extends GetxController {
   FocusNode pin3focusNode = FocusNode();
   FocusNode pin4focusNode = FocusNode();
 
+  List numbers = ["1","2","3","4","5","6","7", "8", "9",];
+
 
 
   @override
   void onInit() {
-    super.onInit();getSharePrefsValue();
+    super.onInit();
+    getSharePrefsValue();
 
   }
 
@@ -45,15 +50,16 @@ class SecurePinController extends GetxController {
         controller2.text.toString().trim().isNotEmpty &&
         controller3.text.toString().trim().isNotEmpty &&
         controller4.text.toString().trim().isNotEmpty) {
-      String enteredPin = "${controller1.text.toString().trim()}${controller2.text.toString().trim()}${controller3.text.toString().trim()}${controller4.text.toString().trim()}";
-      print("userPin is ::::$userPin");
-      print("Entered Pin is ::::$enteredPin");
-      if(enteredPin == userPin){
 
+      String enteredPin = "${controller1.text.toString().trim()}${controller2.text.toString().trim()}${controller3.text.toString().trim()}${controller4.text.toString().trim()}";
+      PrintLog.printLog("userPin is ::::$userPin");
+      PrintLog.printLog("Entered Pin is ::::$enteredPin");
+      if(enteredPin == userPin){
         openHomeScreen();
        }
       else{
-        ToastCustom.showToast(msg: "Wrong Pin");
+        clearPin();
+        ToastCustom.showToast(msg: kPinDoesNotMatched);
       }
      }
     update();
@@ -90,9 +96,9 @@ class SecurePinController extends GetxController {
   Future<void> openHomeScreen() async {
 
      if (userType == "Driver") {
-      Get.offAndToNamed(homeScreenRoute);
+      Get.offAllNamed(homeScreenRoute);
     } else if (userType == "Pharmacy Staff") {
-      Get.offAndToNamed(pharmacyHomePage);
+      Get.offAllNamed(pharmacyHomePage);
     } else {
       ToastCustom.showToast(msg: "something went wrong");
     }
@@ -107,9 +113,11 @@ class SecurePinController extends GetxController {
 
 
   Future<void> getSharePrefsValue() async {
-    final prefs = await SharedPreferences.getInstance();
-    userType = prefs.getString(AppSharedPreferences.userType);
-    userPin = prefs.getString(AppSharedPreferences.userPin);
+    await SharedPreferences.getInstance().then((value) {
+      userType = value.getString(AppSharedPreferences.userType) ?? "";
+      userPin = value.getString(AppSharedPreferences.userPin) ?? "";
+      userName = value.getString(AppSharedPreferences.userName) ?? "";
+    });
     update();
   }
 }

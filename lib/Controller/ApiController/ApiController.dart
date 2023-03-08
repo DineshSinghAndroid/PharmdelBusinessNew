@@ -111,20 +111,15 @@ class ApiController {
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
-         print(response.toString());
         if (response?.data != null && response!.statusCode == 200) {
           _result = SetUpPinModel.fromJson(response.data);
-          print("THIS IS API RESULT FOR SETUP PIN API::::::::::::>>>>>>>>>>> $_result");
           return _result;
         } else {
           ToastCustom.showToast(msg: response?.statusMessage.toString()??"");
         }
       } catch (e) {
-
         PrintLog.printLog("Exception_main1s: $e");
-
         return _result;
-
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);

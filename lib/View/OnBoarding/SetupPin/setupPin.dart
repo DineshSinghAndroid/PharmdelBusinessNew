@@ -1,180 +1,188 @@
-// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
- import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/ProjectController/SetupPinController/setupPinController.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:pharmdel/Controller/WidgetController/TextField/CustomTextField.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../Controller/Helper/FormFieldValidator/formFieldValidator.dart';
-import '../../../Controller/WidgetController/Loader/LoadingScreen.dart';
-import '../../../Controller/WidgetController/Toast/ToastCustom.dart';
-import '../Login/login_screen.dart';
+import '../../../Controller/WidgetController/AppBar/app_bar.dart';
 
-class SetupPinScreen extends StatefulWidget {
-  SetupPinScreen({
-    Key? key,
-    this.isChangePin,
-  }) : super(key: key);
-  String? isChangePin;
 
-  @override
-  State<SetupPinScreen> createState() => _SetupPinScreenState();
-}
+class SetupPinScreen extends StatelessWidget {
+  SetupPinScreen({Key? key,this.isChangePin, }) : super(key: key);
+  bool? isChangePin;
 
-class _SetupPinScreenState extends State<SetupPinScreen> {
-  SetupMPinController setupMpinCtrl = Get.put(SetupMPinController());
+  SetupMPinController setupMPinCtrl = Get.put(SetupMPinController());
 
   @override
   Widget build(BuildContext context) {
-    var screenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Container(
-          height: Get.height,
-          padding: EdgeInsets.only(left: 0.05 * screenWidth, top: 0.01 * screenHeight, right: 0.05 * screenWidth, bottom: 0.01 * screenHeight),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                buildSizeBox(100.0, 0.0),
-                Container(
-                    padding: EdgeInsets.only(bottom: .22 * screenWidth, top: 10.0),
-                    child: Image.asset(
-                      kSplashLogo,
-                      height: 100,
-                    )),
-                Container(child: widget.isChangePin == "true" ? BuildText.buildText(text: "Change Quick Access Pin") : BuildText.buildText(text: "Setup Quick Access Pin", size: 18)),
-                const SizedBox(
-                  height: 40,
-                ),
 
-                Container(
-                  child: widget.isChangePin == "true"
-                      ? CustomTextField(
-                          maxLines: 1,
-                          readOnly: false,
-                          controller: setupMpinCtrl.txtOldPin,
-                          focus: setupMpinCtrl.focusOldPin,
-                          errorText: !setupMpinCtrl.isNew
-                              ? setupMpinCtrl.newPin1.text != setupMpinCtrl.newPin2.text && setupMpinCtrl.newPin1.text.length == 4
-                                  ? "Secure Pin doesn\'t match"
-                                  : "Secure pin can\'t be empty or less than four digits"
-                              : null,
-                          maxLength: 4,
-                          hintText: 'Enter Old Pin',
-                          obscureText: true,
-                          inputAction: TextInputAction.next,
+    return GetBuilder<SetupMPinController>(
+      init: setupMPinCtrl,
+      builder: (controller) {
+        return LoadScreen(
+          widget: Scaffold(
+            backgroundColor: AppColors.whiteColor,
+            extendBodyBehindAppBar: true,
+            appBar: AppBarCustom.appBarStyle1(
+                onTap: ()=> controller.onTapCancel(),
+            ),
+
+            body: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: SafeArea(
+                child: Container(
+                  height: Get.height,
+                  padding: const EdgeInsets.all(15),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+
+                        /// Logo
+                        Image.asset(strimg_logo, height: getHeightRatio(value: 15)),
+                        buildSizeBox(getHeightRatio(value: 1), 0.0),
+
+                        Container(child: isChangePin == true ?
+                        BuildText.buildText(text: kChangeQuickAccessPin) :
+                        BuildText.buildText(text: kSetupQuickAccessPin, size: 18)),
+                        buildSizeBox(getHeightRatio(value: 5), 0.0),
+
+
+                        /// Old MPin
+                        Visibility(
+                          visible: isChangePin == true,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+
+                              TextFieldCustomForMPin(
+                                controller: controller.oldMPinCTRL,
+                                keyboardType: TextInputType.number,
+                                maxLength: 4,
+                                // obscuringCharacter: 'X',
+                                isCheckOut: true,
+                                hintText: kEnterOldMPin,
+                                obscureText: controller.eyeHideOld,
+                                errorText: controller.isOldMPin
+                                    ? kEnterOldMPin
+                                    : controller.isValidOldMPin
+                                    ? kEnterValidOldMPin
+                                    : null,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                suffixIcon: InkWell(
+                                    onTap: controller.onTapEyeOld,
+                                    child: Icon(controller.eyeHideOld == false ? Icons.remove_red_eye_outlined:Icons.visibility_off_outlined,color: AppColors.greyColor,)
+                                ),
+                                onChanged: (value){
+                                  controller.changeLoadingValue(false);
+                                },
+                              ),
+
+                              buildSizeBoxRatio(height: 2, width: 0),
+                            ],
+                          ),
+                        ),
+
+                        /// New MPin
+                        TextFieldCustomForMPin(
+                          controller: controller.newMPinCTRL,
                           keyboardType: TextInputType.number,
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: kEnterMobileNo),
-                            MinLengthValidator(10, errorText: kEnterDigPin),
-                            // PatternValidator(// r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,16}$",//     errorText: 'Password is not valid')
-                          ]),
-                          // onFieldSubmitted: (v) {
-                          //   FocusScope.of(context).requestFocus(setupMpinCtrl.focusConfirmPin);
-                          // },
-                        )
-                      : const SizedBox.shrink(),
-                ),
+                          maxLength: 4,
+                          // obscuringCharacter: 'X',
+                          isCheckOut: true,
+                          hintText: isChangePin  == true ? kEnterNewMPin:kEnterMPin,
+                          obscureText: controller.eyeHideNew,
+                          errorText: controller.isNewMPin
+                              ? isChangePin == true  ? kEnterNewMPin:kEnterMPin
+                              : controller.isValidNewMPin
+                              ? isChangePin == true  ? kEnterValidNewMPin:kEnterValidMPin
+                              : null,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          suffixIcon: InkWell(
+                              onTap: controller.onTapEyeNew,
+                              child: Icon(controller.eyeHideNew == false ? Icons.remove_red_eye_outlined:Icons.visibility_off_outlined,color: AppColors.greyColor,)
+                          ),
+                          onChanged: (value){
+                            controller.changeLoadingValue(false);
+                          },
+                        ),
+                        buildSizeBoxRatio(height: 2, width: 0),
 
-                CustomTextField(
-                  maxLines: 1,
-                  readOnly: false,
-                  controller: setupMpinCtrl.newPin1,
-                  focus: setupMpinCtrl.focusPin,
-                  errorText: !setupMpinCtrl.isNew
-                      ? setupMpinCtrl.newPin1.text != setupMpinCtrl.newPin2.text && setupMpinCtrl.newPin1.text.length == 4
-                          ? "Secure Pin doesn\'t match"
-                          : "Secure pin can\'t be empty or less than four digits"
-                      : null,
-                  maxLength: 4,
-                  hintText: widget.isChangePin == "true" ? 'Enter New Pin' : "Enter Secure Pin",
-                  obscureText: true,
-                  inputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: kEnterMobileNo),
-                    MinLengthValidator(10, errorText: kEnterDigPin),
-                    // PatternValidator(// r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,16}$",//     errorText: 'Password is not valid')
-                  ]),
-                  // onFieldSubmitted: (v) {
-                  //   FocusScope.of(context).requestFocus(setupMpinCtrl.focusConfirmPin);
-                  // },
-                ),
-                buildSizeBox(15.0, 0.0),
-                CustomTextField(
-                  maxLines: 1,
-                  readOnly: false,
-                  controller: setupMpinCtrl.newPin2,
-                  focus: setupMpinCtrl.focusConfirmPin,
-                  errorText: !setupMpinCtrl.isConfirm
-                      ? setupMpinCtrl.newPin1.text != setupMpinCtrl.newPin2.text && setupMpinCtrl.newPin2.text.length == 4
-                          ? "Secure Pin doesn\'t match"
-                          : "Confirm secure  pin can\'t be empty or less than four digits"
-                      : null,
-                  maxLength: 4,
-                  hintText: widget.isChangePin == "true" ? 'Confirm New Pin' : "Confirm Secure Pin",
-                  obscureText: true,
-                  keyboardType: TextInputType.number,
-                  inputAction: TextInputAction.done,
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: kEnterMobileNo),
-                    MinLengthValidator(10, errorText: kEnterValidPin),
-                    // PatternValidator(// r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,16}$",//     errorText: 'Password is not valid')
-                  ]),
-                ),
-                buildSizeBox(40.0, 0.0),
-                Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  elevation: 10,
-                  margin: EdgeInsets.zero,
-                  child: ButtonCustom(
-                      buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
-                      text: kDone,
-                      backgroundColor: AppColors.colorAccent,
-                      onPress: widget.isChangePin == "true" ? setupMpinCtrl.changePin : setupMpinCtrl.setPin),
-                ),
+                        /// Confirm MPin
+                        TextFieldCustomForMPin(
+                          controller: controller.confirmMPinCTRL,
+                          keyboardType: TextInputType.number,
+                          maxLength: 4,
+                          // obscuringCharacter: 'X',
+                          isCheckOut: true,
+                          hintText: kEnterConfirmMPin,
+                          obscureText: controller.eyeHideConfirm,
+                          errorText: controller.isConfirmMPin
+                              ? kEnterConfirmMPin
+                              : controller.isValidConfirmMPin
+                              ? kEnterValidConfirmMPin
+                              : controller.isCorrectConfirmMPinNotMatched ?
+                          kConfirmPinNotMatch:null,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          suffixIcon: InkWell(
+                              onTap: controller.onTapEyeConfirm,
+                              child: Icon(controller.eyeHideConfirm == false ? Icons.remove_red_eye_outlined:Icons.visibility_off_outlined,color:AppColors.greyColor,)
+                          ),
+                          onChanged: (value){
+                            controller.changeLoadingValue(false);
+                          },
+                        ),
+                        buildSizeBoxRatio(height: 4, width: 0),
 
-                Visibility(
-                  // visible: widget.isChangePassword,
-                  child: InkWell(
-                    onTap: () async {
-                      // openSignInScreen(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 0),
-                      child: BuildText.buildText(text: kCancel, color: AppColors.colorAccent),
+
+                        Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          elevation: 10,
+                          margin: EdgeInsets.zero,
+                          child: ButtonCustom(
+                              buttonHeight: 50,
+                              buttonWidth: MediaQuery.of(context).size.width,
+                              text: isChangePin == true ? kChangePin: kDone,
+                              backgroundColor: AppColors.colorAccent,
+                              onPress: (){
+                                controller.onTapSubmit(context: context,isChangeMPin: isChangePin ?? false);
+                              },
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: isChangePin == false,
+                          child: InkWell(
+                            onTap: () => controller.onTapCancel(),
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 0),
+                              child: BuildText.buildText(text: kCancel, color: AppColors.colorAccent),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+          isLoading: controller.isLoading,
+        );
+      },
     );
+
+
   }
 }

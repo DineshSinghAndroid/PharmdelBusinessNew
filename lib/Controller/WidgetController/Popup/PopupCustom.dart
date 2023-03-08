@@ -7,9 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
- import '../../Helper/ImagePicker/ImagePicker.dart';
-import '../../Helper/LogoutController/logout_controller.dart';
-import '../../Helper/PrintLog/PrintLog.dart';
+import '../../Helper/ImagePicker/ImagePicker.dart';
 import '../StringDefine/StringDefine.dart';
 
 

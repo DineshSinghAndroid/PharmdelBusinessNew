@@ -26,6 +26,7 @@ const String strIMG_DelTruck = "assets/images/delivery_truck.png";
 const String strIMG_Sad = "assets/images/sad.png";
 const String strIMG_location = "assets/images/location_top.png";
 const String strIMG_Map = "assets/images/google-maps-icon.png";
+const String strImgRightClick = "assets/images/tick.png";
 
 
 ///GIF
@@ -66,7 +67,7 @@ const String kPersonalInfo = 'Personal Info';
 const String kContactNumber = 'Contact Number';
 const String kemail = "Email";
 const String kaddress = 'Address';
-const String kChnagePin = 'Change Pin';
+const String kChangePin = 'Change Pin';
 const String kCreatePatient = 'Create patient';
 const String kAppVersion = 'App Version:';
 const String kHowToOperate = 'How to operate';
@@ -207,7 +208,6 @@ const String kMyQrCode  = "My Qr Code";
 const String kOk  = "OK";
 const String kYes  = "Yes";
 const String kDone  = "Done";
-const String kChangePin  = 'Change Pin';
 const String kConfirm  = "Confirm";
 const String kNotAuthenticated  = "Not Authenticated";
 const String kAuthenticatedDes  = "Someone trying to login in another device so you logout form here!";
@@ -331,6 +331,7 @@ const String errorText = "Something went wrong";
 
 
 // Toast string
+const String kSetupPinNotMatchToastString = "Old secure pin did not matched, Please enter correct old secure pin";
 const String kQueryToastString = "Please mention your query";
 const String kFilterToastString = "Please select any option";
 const String kReviewToastString = "Please enter your comment";
@@ -345,4 +346,20 @@ const String kOldPinNotMatch = "'Old pin not correct'";
 const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
 const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
+const String kPinDoesNotMatched = "Pin did not match";
+const String kChangeQuickAccessPin = "Change Quick Access Pin";
+const String kSetupQuickAccessPin = "Setup Quick Access Pin";
+
+const String kEnterValidMPin = "Enter 4 digit pin";
+const String kConfirmPinNotMatch = "Confirm pin not matched";
+const String kEnterOldMPin = "Enter Old Pin";
+const String kEnterCorrectOldMPin = "Enter correct old pin";
+const String kEnterMPin = "Enter Secure Pin";
+const String kEnterNewMPin = "Enter New Secure Pin";
+const String kEnterValidOldMPin = "Enter 4 digit pin";
+const String kEnterValidNewMPin = "Enter 4 digit new pin";
+const String kEnterValidConfirmMPin = "Enter 4 digit confirm pin";
+const String kConfirmMPin = "Confirm Secure Pin";
+const String kEnterConfirmMPin = "Enter Confirm Secure Pin";
+const String kConfirmMPinNotMatched = "Confirm Secure pin dosn't matched";
 

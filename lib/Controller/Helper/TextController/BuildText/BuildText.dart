@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
  import '../../Colors/custom_color.dart';
 import '../FontFamily/FontFamily.dart';
 
@@ -44,4 +45,18 @@ class BuildText{
 
 Widget buildSizeBox(height,width){
   return SizedBox(height: height, width: width,);
+}
+
+Widget buildSizeBoxRatio({required double height,required double width}) {
+  return SizedBox(
+    height: Get.height * height.toDouble()/100,
+    width:Get.width * width.toDouble()/100,
+  );
+}
+double getHeightRatio({required double value}) {
+  return Get.height * value.toDouble()/100;
+}
+
+double getWidthRatio({required double value}) {
+  return Get.width * value.toDouble()/100;
 }

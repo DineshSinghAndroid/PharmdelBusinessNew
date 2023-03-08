@@ -36,6 +36,8 @@ class AppSharedPreferences {
   static String userStatus = "user_status";
   static String isStartRoute = "is_start_route";
   static String deliveryType = "delivery_type";
+  static String forgotMPin = "forgot_mpin";
+
 
 
 

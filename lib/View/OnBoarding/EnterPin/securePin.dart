@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Shared%20Preferences/SharedPreferences.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/Helper/TextController/FontFamily/FontFamily.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
@@ -11,9 +12,7 @@ import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../../Controller/WidgetController/TextField/CustomTextField.dart';
 
 class SecurePin extends StatefulWidget {
-  bool isDialog = false;
-
-  SecurePin({super.key});
+  const SecurePin({Key? key,}) : super(key: key);
 
   @override
   SecurePinState createState() => SecurePinState();
@@ -25,9 +24,7 @@ class AlwaysDisabledFocusNode extends FocusNode {
 }
 
 class SecurePinState extends State<SecurePin> {
-  double? ScreenHeight;
 
-  FocusNode? myFocusNode;
 
   final SecurePinController _controller = Get.put(SecurePinController());
 
@@ -38,28 +35,15 @@ class SecurePinState extends State<SecurePin> {
     _controller.pin1focusNode.requestFocus();
   }
 
-  List numbers = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-  ];
+
 
   @override
   void dispose() {
-    myFocusNode?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
     return GetBuilder<SecurePinController>(
       init: _controller,
       builder: (controller) {
@@ -67,41 +51,51 @@ class SecurePinState extends State<SecurePin> {
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                buildSizeBox(50.0, 0.0),
-                Image.asset(strimg_logo, height: 100),
-                buildSizeBox(20.0, 0.0),
+                buildSizeBox(getHeightRatio(value: 10), 0.0),
+
+                /// Logo
+                Image.asset(strimg_logo, height: getHeightRatio(value: 15)),
+                buildSizeBox(getHeightRatio(value: 1), 0.0),
+
+                /// User Name
+                BuildText.buildText(text: controller.userName ?? "", size: 18, fontFamily: FontFamily.NexaHeavy),
+                buildSizeBox(getHeightRatio(value: 5), 0.0),
+
+                /// Enter Secure Pin
                 BuildText.buildText(text: kEnterSecurePin, size: 16, fontFamily: FontFamily.NexaBold),
+                buildSizeBox(getHeightRatio(value: 3), 0.0),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SecurePinTextField.pinBox(
 
-                        screenWidth: screenWidth,
+                        screenWidth: Get.width,
                         controllers: controller.controller1,
                         focus: controller.pin1focusNode,
                         onChanged: (value) {
                           controller.nextField(value, controller.pin2focusNode);
                         }),
                     SecurePinTextField.pinBox(
-                        screenWidth: screenWidth,
+                        screenWidth: Get.width,
                         controllers: controller.controller2,
                         focus: controller.pin2focusNode,
                         onChanged: (value) {
                           controller.nextField(value, controller.pin3focusNode, controller.pin1focusNode);
                         }),
                     SecurePinTextField.pinBox(
-                        screenWidth: screenWidth,
+                        screenWidth: Get.width,
                         controllers: controller.controller3,
                         focus: controller.pin3focusNode,
                         onChanged: (value) {
                           controller.nextField(value, controller.pin4focusNode, controller.pin2focusNode);
                         }),
                     SecurePinTextField.pinBox(
-                        screenWidth: screenWidth,
+                        screenWidth: Get.width,
                         controllers: controller.controller4,
                         focus: controller.pin4focusNode,
                         onChanged: (value) {
@@ -109,80 +103,105 @@ class SecurePinState extends State<SecurePin> {
                         }),
                   ],
                 ),
+                buildSizeBox(getHeightRatio(value: 4), 0.0),
+
                 GridView.builder(
-                  itemCount: numbers.length,
+                  itemCount: controller.numbers.length,
                   shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 2 / 1, crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                  padding: EdgeInsets.zero,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 2 / 1,
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 15
+                  ),
                   itemBuilder: (context, index) {
                     return Container(
-                      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(5)), border: Border.all(color: Colors.orange)),
+                      decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.circular(5),
+                          border: Border.all(color: AppColors.deepOrangeColor,width:2)
+                      ),
                       child: MaterialButton(
                         onPressed: () {
                           controller.assignValueInField(value: (index + 1).toString());
                         },
-                        child: Text(numbers[index].toString()),
+                        child: BuildText.buildText(text: controller.numbers[index].toString(),fontFamily: FontFamily.nexabold,size: 18)
                       ),
                     );
                   },
                 ),
+                buildSizeBox(15.0, 0.0),
                 Row(
                   children: [
                     Flexible(
+                      flex: 1,
                       child: Container(
-                         width: screenWidth / 3,
-                        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(5)), border: Border.all(color: Colors.orange)),
+                         width: Get.width,
+                        decoration: BoxDecoration(
+                            borderRadius:  BorderRadius.circular(5),
+                            border: Border.all(color: AppColors.deepOrangeColor,width:2)
+                        ),
                         child: MaterialButton(
                           onPressed: () {
                             controller.assignValueInField(value: '0');
                           },
-                          child: Text("0"),
+                          child:BuildText.buildText(text: "0",fontFamily: FontFamily.nexabold,size: 18)
                         ),
                       ),
                     ),
-                    buildSizeBox(0.0, screenWidth / 20),
-                    Container(
-                      width: screenWidth / 2,
-                      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(5)), border: Border.all(color: Colors.orange)),
-                      child: MaterialButton(
-                        onPressed: () {
-                          _controller.clearPin();
-                        },
-                        child: Text("Del"),
+                    buildSizeBox(0.0, 20.0),
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                            borderRadius:  BorderRadius.circular(5),
+                            border: Border.all(color: AppColors.deepOrangeColor,width:2)
+                        ),
+                        child: MaterialButton(
+                          onPressed: () {
+                            controller.clearPin();
+                          },
+                            child:BuildText.buildText(text: "Del",fontFamily: FontFamily.nexabold,size: 18)
+                        ),
                       ),
                     )
                   ],
                 ),
+
                 Container(
                   alignment: Alignment.centerRight,
-                  padding: EdgeInsets.only(
-                    top: 0.02 * ScreenHeight!,
-                  ),
+                  padding: const EdgeInsets.only( top:10,),
                   child: Align(
                       alignment: Alignment.centerRight,
                       child: InkWell(
-                        onTap: () {
-                          _controller.clearPin();
-                          Get.toNamed(setupPinScreenRoute);
+                        onTap: () async {
+                          await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.forgotMPin, variableValue: "forgot");
+                          Get.offAllNamed(loginScreenRoute);
                         },
-                        child: Text(
-                          kForgotMPIN,
-                          textAlign: TextAlign.end,
-                          style: Regular16Style.copyWith(color: AppColors.colorAccent),
+                        child:BuildText.buildText(
+                          text: kForgotMPIN,
+                          fontFamily: FontFamily.NexaRegular,
+                          size: 16,
+                          color: AppColors.colorAccent,
                         ),
                       )),
                 ),
+                buildSizeBox(15.0, 0.0),
+
                 InkWell(
                   onTap: () {
-                    Navigator.pop(context, true);
+                    Get.back();
                   },
                   child: Container(
                     padding: EdgeInsets.only(
-                      top: 0.03 * ScreenHeight!,
+                      top: Get.height*0.02,
                     ),
-                    child: Text(
-                      kusediffAcc,
-                      textAlign: TextAlign.center,
-                      style: Regular16Style.copyWith(color: AppColors.colorAccent),
+                    child: BuildText.buildText(
+                      text: kusediffAcc,
+                      fontFamily: FontFamily.NexaRegular,
+                      size: 16,
+                      color: AppColors.colorAccent,
                     ),
                   ),
                 ),

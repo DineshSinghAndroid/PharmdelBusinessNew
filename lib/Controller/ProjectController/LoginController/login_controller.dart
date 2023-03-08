@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'package:pharmdel/Controller/WidgetController/Popup/popup.dart';
+import 'package:pharmdel/View/OnBoarding/SetupPin/setupPin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../../Model/Login/login_model.dart';
 import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
+import '../../Firebase/FirebaseMessaging/FirebaseMessaging.dart';
+import '../../Helper/DeviceInfo/DeviceInfo.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../Helper/SecureStorage/secure_storage.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../Helper/TextController/TextValidator/TextValidator.dart';
 import '../../RouteController/RouteNames.dart';
@@ -25,10 +31,7 @@ class LoginController extends GetxController {
   bool isEmail = false;
   bool isPassword = false;
   bool eyeHide = true;
-
-
-
-  bool isCheck = false;
+  bool isForgotEmail = false;
   bool savePassword = true;
 
   ApiController apiCtrl = ApiController();
@@ -39,9 +42,30 @@ class LoginController extends GetxController {
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  LoginModel? loginModel;
-  ForgotPasswordApiResponse? forgotPassData;
 
+  @override
+  void onInit() {
+    autoFillUser();
+    // emailCT.text = "ddk@gmail.com";
+    // passCT.text = "Admin@1234";
+    super.onInit();
+  }
+
+  Future<void> autoFillUser() async {
+    // FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+    // secureStorage.write(key: "NAME", value: "one");
+    // // await SecureStorageCustom.save(key: "name",value: "one");
+    // String tes = await SecureStorageCustom.getValue(key: "NAME",) ?? "";
+    // print("tesx.....");
+    // print("tesx.....${tes}..");
+    // if(await SecureStorageCustom.getValue(key: "name") != "") {
+    //   emailCT.text = SecureStorageCustom.getValue(key: "name").toString();
+    //   passCT.text = SecureStorageCustom.getValue(key: "password").toString();
+    //   update();
+    // }
+    update();
+
+  }
 
   void textFieldDispose() {
     passCT.dispose();
@@ -66,74 +90,76 @@ class LoginController extends GetxController {
 
     if(!isEmail && !isPassword){
       await loginApi(context: context, userMail: emailCT.text.toString().trim(), userPass: passCT.text.toString().trim()).then((value) {
-
+        if(savePassword){
+          SecureStorageCustom.save(key: "name",value: emailCT.text.toString().trim());
+          SecureStorageCustom.save(key: "password",value: passCT.text.toString().trim());
+        }
       });
     }
 
     update();
   }
 
-  void showForgotPassword({required BuildContext context}){
-    showDialog(
-        context: context,
-        builder: (context) => CustomDialogBox(
-          title: kForgotPassword,
-          textField: TextFormField(
-            decoration: InputDecoration(
-                border: const OutlineInputBorder()
-                ,hintText: kEnterEmail
-            ),
-            controller: forgotEmailCT,
-          ),
-          descriptions: kEnterYourEmailID,
-          button1: MaterialButton(
-            onPressed: () async {
-              if(forgotEmailCT.text !='') {
-                await forgotPasswordApi(context: context, customerEmail: forgotEmailCT.text.toString().trim());
-                Navigator.pop(context);
-              }
-              else{
-                ToastCustom.showToast(msg: kEnterYourEmailID);
-              }
-            },
-            child: const Text(kSubmit),
-          ),
-          button2: MaterialButton(
-            onPressed: () {Navigator.pop(context);
-            Navigator.pop(context);
-            },
-            child: Text("Cancel"),
-          ),
-        )
-    );
+  Future<void> onTapForgotPasswordSubmit({required BuildContext context}) async {
+    FocusScope.of(context).unfocus();
+    isForgotEmail = TxtValidation.normalTextField(forgotEmailCT);
 
+    if(!isForgotEmail){
+      await forgotPasswordApi(context: context, customerEmail: forgotEmailCT.text.toString().trim()).then((value) {
+
+      });
+    }
+    update();
+  }
+
+  Future<void> showForgotPassword({required BuildContext context,required LoginController ctrl}) async {
+    forgotEmailCT.text = await SecureStorageCustom.getValue(key: "name");
+    isForgotEmail = false;
+    PopupCustom.forgotPasswordPopUP(
+        onValue: (value){
+
+        },
+        context: context,
+        ctrl: ctrl
+    );
   }
 
   Future<LoginModel?> loginApi({ required BuildContext context, required String userMail, required String userPass}) async {
+
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
     changeErrorValue(false);
     changeSuccessValue(false);
 
+    String? deviceType = await DeviceInfoCustom.getPlatForm();
+    String fcmToken = await FirebaseMessagingCustom.getToken() ?? "";
+
     Map<String, dynamic> dictparm = {
       "email": userMail,
       "password": userPass,
-      "device_name": 'android',
-      "fcm_token": authToken,
+      "device_name": deviceType,
+      "fcm_token": fcmToken,
     };
 
     String url = WebApiConstant.LOGINURL_DRIVER;
 
     await apiCtrl.getLoginApi(context: context, url: url, dictParameter: dictparm, token: '').then((result) async {
       if (result != null) {
-        if (result.error != true) {
-
           try {
             if (result.error == false) {
               await saveUserData(userData: result);
-              loginModel = result;
-              _loginCheck();
+              if (result.pin.toString() != "") {
+                if (AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString() != "") {
+                  Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
+                }else if (result.userType.toString().toLowerCase() == "driver") {
+                  Get.toNamed(securePinScreenRoute);
+                } else if (result.userType.toString().toLowerCase() == "pharmacy staff") {
+                  Get.toNamed(securePinScreenRoute);
+                }
+              } else if (result.pin.toString() == "") {
+                Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
+              }
               ToastCustom.showToast(msg: result.message ?? "");
               changeLoadingValue(false);
               changeSuccessValue(true);
@@ -150,15 +176,6 @@ class LoginController extends GetxController {
             changeLoadingValue(false);
             changeErrorValue(true);
           }
-        } else {
-          // LoadScreen
-          // CustomLoading().show(context, false);
-          PrintLog.printLog(result.message);
-          ToastCustom.showToast(msg: result.message ?? "");
-          changeSuccessValue(false);
-          changeLoadingValue(false);
-          changeErrorValue(true);
-        }
       }else{
         changeSuccessValue(false);
         changeLoadingValue(false);
@@ -168,10 +185,7 @@ class LoginController extends GetxController {
     update();
   }
 
-  Future<ForgotPasswordApiResponse?> forgotPasswordApi({
-    required BuildContext context,
-    required String customerEmail,
-  }) async {
+  Future<ForgotPasswordApiResponse?> forgotPasswordApi({required BuildContext context,required String customerEmail,}) async {
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -186,13 +200,18 @@ class LoginController extends GetxController {
 
     await apiCtrl.getForgotPasswordApi(context: context, url: url, dictParameter: dictparm, token: '').then((result) async {
       if (result != null) {
-        if (result.error != true) {
           try {
             if (result.error == false) {
-              forgotPassData = result;
               changeLoadingValue(false);
               changeSuccessValue(true);
-              ToastCustom.showToast(msg: result.message ?? "");
+              Get.back();
+
+              PopupCustom.emailSentPopUP(
+                  context: context,msg: result.message ?? "",
+                  onValue: (value){
+
+                    }
+              );
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
@@ -204,14 +223,9 @@ class LoginController extends GetxController {
             changeLoadingValue(false);
             changeErrorValue(true);
             PrintLog.printLog("Exception : $_");
+            ToastCustom.showToast(msg: result.message ?? "");
           }
-        } else {
-          changeSuccessValue(false);
-          changeLoadingValue(false);
-          changeErrorValue(true);
-          PrintLog.printLog(result.message);
-          ToastCustom.showToast(msg: result.message ?? "");
-        }
+
       } else {
         changeSuccessValue(false);
         changeLoadingValue(false);
@@ -222,29 +236,10 @@ class LoginController extends GetxController {
   }
 
 
-  Future<void> _loginCheck() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(AppSharedPreferences.userPin, loginModel!.pin.toString());
-    prefs.setString(AppSharedPreferences.userType, loginModel!.userType.toString() );
-    prefs.setString(AppSharedPreferences.userId, loginModel!.userId.toString()  );
-
-    if (loginModel!.pin != "") {
-      if (loginModel!.userType == "Driver") {
-        Get.toNamed(securePinScreenRoute);
-      } else if (loginModel!.userType == "Pharmacy Staff") {
-        Get.toNamed(securePinScreenRoute);
-      }
-    } else if (loginModel!.pin == "") {
-      Get.toNamed(setupPinScreenRoute,arguments: 'false');
-    } else {
-      ToastCustom.showToast(msg: loginModel!.message ?? '');
-    }
-  }
-
   Future<void> saveUserData({LoginModel? userData}) async {
 
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userId, variableValue: userData?.userId.toString() ?? "");
-    await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.driverType, variableValue: userData?.userType.toString() ?? "");
+    await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userType, variableValue: userData?.userType.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.customerID, variableValue: userData?.customerId.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userName, variableValue: userData?.name.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.pharmacyID, variableValue: userData?.pharmacyId.toString() ?? "");

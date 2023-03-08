@@ -158,11 +158,11 @@ class LoginModel {
     pharmacyId = json['pharmacy_id'] != null ? json['pharmacy_id'].toString():null;
     changePassword = json['changePassword'] != null ? json['changePassword'].toString():null;
     routeId = json['routeId'] != null ? json['routeId'].toString():null;
-    isStartRoute = json['isStartRoute'];
+    isStartRoute = json['isStartRoute'] != null && json['isStartRoute'].toString() != "" ? json['isStartRoute'] : null;
     driverType =  json['driver_type'] != null ? json['driver_type'].toString():null;
-    status =  json['status'];
+    status =  json['status'] != null && json['status'].toString() != "" ? json['status'] : null;
     message = json['message'] != null ? json['message'].toString():null;
-    isOrderAvailable = json['isOrderAvailable'];
+    isOrderAvailable = json['isOrderAvailable'] != null && json['isOrderAvailable'].toString() != "" ? json['isOrderAvailable'] : null;
     token = json['token'] != null ? json['token'].toString():null;
     pin = json['pin'] != null ? json['pin'].toString():null;
     isAddressUpdated = json['isAddressUpdated'];

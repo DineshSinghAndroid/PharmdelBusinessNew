@@ -112,6 +112,7 @@ class TextFieldCustom extends StatefulWidget {
   List<TextInputFormatter>? inputFormatters;
   ValueChanged? onChanged;
   int? maxLength;
+  double? radiusField;
   bool? obscureText;
   String? hintText;
   String? textFieldHeading;
@@ -131,6 +132,7 @@ class TextFieldCustom extends StatefulWidget {
         this.textAlign,
         this.suffixIcon,
         this.textFieldHeading,
+        this.radiusField,
         this.prefixIcon,
         this.obscureText,
         this.hintText,
@@ -187,7 +189,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
             textAlign: widget.textAlign != null ? widget.textAlign! : TextAlign.start,
             textInputAction: TextInputAction.next,
             onChanged: widget.onChanged,
-            style: widget.readOnly == true ? TextStyleCustom.normalStyle() : TextStyleCustom.normalStyle(color: AppColors.greyColorDark),
+            style: widget.readOnly == true ? TextStyleCustom.normalStyle(color: AppColors.greyColorDark):TextStyleCustom.normalStyle(),
             // style: TextStyle(color: widget.readOnly == true ? CustomColors.greyLightColor:CustomColors.blackColor),
             decoration: InputDecoration(
               hintStyle: TextStyle(
@@ -212,16 +214,16 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
                 borderSide: BorderSide(
                     color: AppColors.textFieldActiveBorderColor,width: 1
                 ),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(widget.radiusField ?? 30),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(widget.radiusField ?? 30),
                 borderSide: BorderSide(
                     color: widget.errorText != null && widget.errorText != "" ? AppColors.textFieldErrorBorderColor:AppColors.textFieldBorderColor,width: 1
                 ),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(widget.radiusField ?? 30),
                 borderSide: BorderSide(
                     color: AppColors.textFieldErrorBorderColor,width: 1
                 ),
@@ -245,6 +247,160 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
     );
   }
 }
+
+class TextFieldCustomForMPin extends StatefulWidget {
+  TextEditingController? controller = TextEditingController();
+  FocusNode? focusNode = FocusNode();
+  TextInputType? keyboardType;
+  List<TextInputFormatter>? inputFormatters;
+  ValueChanged? onChanged;
+  int? maxLength;
+  bool? obscureText;
+  String? hintText;
+  Color? labelColor;
+  String? textFieldHeading;
+  String? obscuringCharacter;
+  Widget? suffixIcon;
+  Widget? prefixIcon;
+  bool? enabled;
+  double? radiusField;
+  String? errorText;
+  TextAlign? textAlign;
+  bool? readOnly;
+  bool? isCheckOut;
+  bool? isAutoFocus;
+  final String? Function(String?)? validator;
+
+  TextFieldCustomForMPin(
+      {Key? key,
+        this.radiusField,
+        this.focusNode,
+        this.textAlign,
+        this.suffixIcon,
+        this.textFieldHeading,
+        this.prefixIcon,
+        this.obscureText,
+        this.hintText,
+        this.labelColor,
+        this.controller,
+        this.obscuringCharacter,
+        this.keyboardType,
+        this.onChanged,
+        this.maxLength,
+        this.errorText,
+        this.inputFormatters,
+        this.enabled,
+        this.readOnly,
+        this.isAutoFocus,
+        this.isCheckOut,
+        this.validator})
+      : super(key: key);
+  @override
+  State<TextFieldCustomForMPin> createState() => _TextFieldCustomForMPinState();
+}
+
+class _TextFieldCustomForMPinState extends State<TextFieldCustomForMPin> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: widget.textFieldHeading != null && widget.textFieldHeading != "" ? 23.0:0.0,
+          width: Get.width,
+          child: BuildText.buildText(
+              text: widget.textFieldHeading ?? "",
+              style: TextStyleCustom.textFieldStyle(),
+              textAlign: TextAlign.left
+          ),
+        ),
+
+        TextFormField(
+          autofocus: widget.isAutoFocus ?? false,
+          readOnly: widget.readOnly ?? false,
+          cursorColor: AppColors.greyColorLight,
+          focusNode: widget.focusNode,
+          controller: widget.controller,
+          keyboardType: widget.keyboardType,
+          inputFormatters: widget.inputFormatters,
+          enabled: widget.enabled,
+          validator: widget.validator,
+          // obscuringCharacter: widget.obscuringCharacter ?? ".",
+          obscureText: widget.obscureText != null ? widget.obscureText! : false,
+          maxLength: widget.maxLength ?? null,
+          textAlign: widget.textAlign != null ? widget.textAlign! : TextAlign.start,
+          textInputAction: TextInputAction.next,
+          onChanged: widget.onChanged,
+          style: widget.readOnly == true ? TextStyleCustom.textFieldStyle(color: AppColors.greyColorLight):TextStyleCustom.textFieldStyle(),
+          // style: TextStyle(color: widget.readOnly == true ? CustomColors.greyLightColor:CustomColors.blackColor),
+          decoration: InputDecoration(
+            hintStyle: TextStyle(color: AppColors.greyColor,fontSize: 14,),
+            counterText: "",
+            label: Text(widget.hintText ?? "",),
+            labelStyle: TextStyle(fontSize: 15.0,color: widget.labelColor ?? AppColors.greyColor,fontFamily: FontFamily.NexaRegular,),
+            // hintText: widget.hintText,
+            suffixIcon: widget.suffixIcon,
+            suffixIconColor: AppColors.blackColor,
+            prefixIcon: Padding(
+                padding: const EdgeInsets.only(right: 10, left: 10),
+                child: widget.prefixIcon
+            ),
+            prefixIconConstraints: const BoxConstraints(),
+            prefixStyle: const TextStyle(height: 16,),
+            filled: true,
+            fillColor: widget.isCheckOut == true ? Colors.transparent:AppColors.greyColorLight,
+            border: InputBorder.none,
+            errorBorder: InputBorder.none,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: AppColors.textFieldActiveBorderColor,width: 1
+              ),
+              borderRadius: BorderRadius.circular(widget.radiusField ?? 8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.radiusField ?? 8),
+              borderSide: BorderSide(
+                  color: AppColors.textFieldBorderColor,width: 1
+              ),
+            ),
+          ),
+        ),
+
+        Visibility(
+            // visible: widget.errorText != null && widget.errorText != "",
+            visible: true,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 2,top: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+
+                  BuildText.buildText(
+                      text: widget.errorText ?? "",
+                      style: TextStyleCustom.textFieldStyle(
+                          color:  widget.errorText != null && widget.errorText != "" ? AppColors.redColor:Colors.transparent
+                      ),
+                      textAlign: TextAlign.center
+                  ),
+
+                  BuildText.buildText(
+                      text: "${widget.controller?.text.length.toString() ?? ""}/${widget.maxLength.toString() ?? ""}",
+                      style: TextStyleCustom.textFieldStyle(color: AppColors.greyColorDark),
+                      textAlign: TextAlign.center
+                  ),
+
+                ],
+              ),
+            )
+        )
+      ],
+    );
+  }
+}
+
 
 
 typedef OnTextChanged = void Function(String value);

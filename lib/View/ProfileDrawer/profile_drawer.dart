@@ -8,6 +8,7 @@ import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 import '../../Controller/Helper/LogoutController/logout_controller.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../OnBoarding/SetupPin/setupPin.dart';
 
 
 class DrawerDriver extends StatefulWidget {
@@ -290,7 +291,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                       ),
                       buildSizeBox(5.0, 0.0),
                       ListTile(
-                        onTap: () {Get.toNamed(setupPinScreenRoute,arguments: 'true');},
+                        onTap: () {Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: true,));},
                         leading: const Icon(Icons.lock, size: 20),
                         title: BuildText.buildText(text: kChangePin)
                       ),

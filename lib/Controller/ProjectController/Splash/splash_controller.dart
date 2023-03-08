@@ -1,9 +1,6 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
@@ -32,7 +29,7 @@ class SplashController extends GetxController {
   runSplash() {
     Future.delayed(const Duration(seconds: 3), () {
       if(userPin != '' ){
-        Get.offAndToNamed(loginScreenRoute);
+        Get.offAndToNamed(securePinScreenRoute);
       } else {
         Get.offAndToNamed(loginScreenRoute);
       }

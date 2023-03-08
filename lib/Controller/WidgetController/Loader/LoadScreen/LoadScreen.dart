@@ -21,13 +21,13 @@ class _LoadScreenState extends State<LoadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.transparent,
       body: LoadingOverlay(
-          child: widget.widget!,
           isLoading: widget.isLoading!,
           opacity: 1.0,
           color: Colors.black45,
-          progressIndicator: LoadingWidget()
-
+          progressIndicator: LoadingWidget(),
+          child: widget.widget!
       ),
     );
   }
