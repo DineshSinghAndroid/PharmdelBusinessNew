@@ -125,7 +125,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                       },
                     ),
 
-<<<<<<< HEAD:lib/PHARMACY/P_Views/P_Home/Pharmacy_home_page.dart
+
               PharmacyHomeCardWidget(
                 title: kNursHomeBoxBook,
                 image: strIMG_QrCode,
@@ -139,19 +139,8 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
         )),
       ),
     );
-=======
-                    PharmacyHomeCardWidget(
-                      title: kNursHomeBoxBook,
-                      image: strIMG_QrCode,
-                      backgroundColor: AppColors.blueColorLight,
-                      onTap: (){},
-                    ),
-                  ],
-                ),
-              )),
-        ),
-      );
-    },);
->>>>>>> 47016b27616b89a66ac6ff70e9d664bb25bcc2ef:lib/PHARMACY/P_Views/P_Home/Pharmacy_home_age.dart
+
   }
+    );
+      }
 }
