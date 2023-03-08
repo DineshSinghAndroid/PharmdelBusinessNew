@@ -100,8 +100,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                       title: kDeliveries,
                       image: strIMG_DelTruck2,
                       backgroundColor: AppColors.blueColor,
-                      onTap: (){
-                        print('Tap');
+                      onTap: (){                       
                         Get.toNamed(pharmacyDeliveryListScreenRoute);
                       },
                     ),
@@ -139,8 +138,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
         )),
       ),
     );
-
   }
-    );
-      }
+  );
+  }
 }
