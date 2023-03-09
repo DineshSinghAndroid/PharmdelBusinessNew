@@ -219,7 +219,7 @@ void initState() {
                   }),
                   const Divider(),
                   PharmacyDrawerTile(text: klogout, ontap:()async{
-                    await LogoutController().validateAndLogout(context);
+                    await LogoutController().validateAndLogout(context:context,userType: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType) ?? "");
                   }),
                 ],
               ),
