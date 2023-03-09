@@ -26,8 +26,8 @@ class PDashboardScreenController extends GetxController{
     });
   }
 
-  Future<void> callGetDriverListApi({required BuildContext context})async{
-    await getDriverListController.getDriverList(context: context).then((value) {
+  Future callGetDriverListApi({required BuildContext context})async{
+    await getDriverListController.getDriverList( context).then((value) {
       // PrintLog.printLog("Test print......${driverListController.driverList[0].toString()}");
       update();
     });

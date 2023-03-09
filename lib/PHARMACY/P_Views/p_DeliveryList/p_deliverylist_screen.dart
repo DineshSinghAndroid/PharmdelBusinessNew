@@ -57,8 +57,8 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
               ],
             ),
             body: Container(
-              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(strIMG_HomeBg))),
-              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(strIMG_HomeBg),fit: BoxFit.fitHeight)),
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
               height: Get.height,
               width: Get.width,
               child: Column(
@@ -101,7 +101,8 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                           menuItemStyleData: const MenuItemStyleData(),
                         ),
                       ),
-                      Spacer(),
+                        Spacer(),
+
                       DropdownButtonHideUnderline(
                         child: DropdownButton2(
                           hint: Text(
@@ -111,19 +112,24 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                               color: Theme.of(context).hintColor,
                             ),
                           ),
-                          items: [
-                            for (GetDriverListModelResponsePharmacy driver in controller.getDriverListController.driverList)
-                              DropdownMenuItem(
-                                value: controller.getDriverListController.driverList.indexOf(driver).toString(),
-                                child: Text("${driver.firstName}", style: const TextStyle(color: Colors.black87)),
-                              ),
-                          ],
-                          value: controller.getDriverListController.selectedDriverName,
-                          onChanged: (value) {
+                          onChanged: ( DriverModel? newValue) {
                             setState(() {
-                              controller.getDriverListController.selectedDriverName = value.toString();
+                              controller.getDriverListController.selectedDriver = newValue;
                             });
                           },
+
+                          items: controller.getDriverListController.driverList.map<DropdownMenuItem<DriverModel>>((DriverModel value) {
+                            return DropdownMenuItem<DriverModel>(
+                              value: value,
+                              child: Text(
+                                value.firstName??"No Driver",style: const TextStyle(fontSize: 12),
+                               ),
+                            );
+                          }).toList(),
+
+
+                          value: controller.getDriverListController.selectedDriver,
+
                           buttonStyleData: ButtonStyleData(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                               height: 40,
