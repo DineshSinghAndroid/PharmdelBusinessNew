@@ -15,8 +15,9 @@ class NursingHomeScreen extends StatefulWidget {
 class _NursingHomeScreenState extends State<NursingHomeScreen> {
   String selectedDate = "";
   String showDatedDate = "";
-  String? _chosenValue;
-  int selectedNursingPosition = 0;
+  String? selectRoute;
+  String? selectDriver;
+  String? selectNursingHome;
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
@@ -43,6 +44,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
           children: [
             Row(
               children: [
+
+                ///Select Route
                 Flexible(
                   flex: 1,
                   child: Container(
@@ -54,7 +57,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         borderRadius: BorderRadius.circular(5)),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        value: _chosenValue,
+                        value: selectRoute,
                         items: <String>[
                           'Android',
                           'IOS',
@@ -63,10 +66,10 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                           'Java',
                           'Python',
                           'PHP',
-                        ].map<DropdownMenuItem<String>>((String value) {
+                        ].map<DropdownMenuItem<String>>((String? value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: BuildText.buildText(text: value!),
                           );
                         }).toList(),
                         hint: BuildText.buildText(
@@ -76,7 +79,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         ),
                         onChanged: (String? value) {
                           setState(() {
-                            _chosenValue = value;
+                            selectRoute = value;
                           });
                         },
                       ),
@@ -84,6 +87,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   ),
                 ),
                 buildSizeBox(0.0, 10.0),
+
+               ///Select Driver
                Flexible(
                   flex: 1,
                   child: Container(
@@ -95,19 +100,19 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         borderRadius: BorderRadius.circular(5)),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        value: _chosenValue,
+                        value: selectDriver,
                         items: <String>[
-                          'Android',
+                          'PHP',
                           'IOS',
-                          'Flutter',
+                          'Java',
                           'Node',
                           'Java',
-                          'Python',
-                          'PHP',
-                        ].map<DropdownMenuItem<String>>((String value) {
+                          'Android',
+                          'Node',
+                        ].map<DropdownMenuItem<String>>((String? value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: BuildText.buildText(text: value!),
                           );
                         }).toList(),
                         hint: BuildText.buildText(
@@ -117,7 +122,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         ),
                         onChanged: (String? value) {
                           setState(() {
-                            _chosenValue = value;
+                            selectDriver = value;
                           });
                         },
                       ),
@@ -129,6 +134,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
             buildSizeBox(10.0, 0.0),
             Row(
               children: [
+
+                ///Select Date And Time
                 Flexible(
                   flex: 1,
                   child: InkWell(
@@ -157,7 +164,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(showDatedDate),
+                          BuildText.buildText(text: showDatedDate),
                           const Spacer(),
                           const Icon(Icons.calendar_today_sharp)
                         ],
@@ -166,6 +173,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   ),
                 ),
                 buildSizeBox(0.0, 10.0),
+
+                ///Select Nursing Home
                 Flexible(
                   flex: 1,
                   child: Container(
@@ -177,19 +186,19 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         borderRadius: BorderRadius.circular(5)),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        value: _chosenValue,
+                        value: selectNursingHome,
                         items: <String>[
-                          'Android',
-                          'IOS',
+                          'PHP',
+                          'Python',
                           'Flutter',
                           'Node',
                           'Java',
                           'Python',
-                          'PHP',
-                        ].map<DropdownMenuItem<String>>((String value) {
+                          'FlutterPHP',
+                        ].map<DropdownMenuItem<String>>((String? value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: BuildText.buildText(text: value!),
                           );
                         }).toList(),
                         hint: BuildText.buildText(
@@ -199,7 +208,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         ),
                         onChanged: (String? value) {
                           setState(() {
-                            _chosenValue = value;
+                            selectNursingHome = value;
                           });
                         },
                       ),

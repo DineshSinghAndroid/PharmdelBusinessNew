@@ -38,6 +38,7 @@ StaffList? staffValue;
             FocusScope.of(context).requestFocus(FocusNode());
           },
           child: Scaffold(
+            backgroundColor: AppColors.whiteColor,
             resizeToAvoidBottomInset: false,
               appBar: AppBar(
           backgroundColor: AppColors.whiteColor,
@@ -82,26 +83,18 @@ StaffList? staffValue;
                     size: 18,
                     weight: FontWeight.w500                
                   ),
-                  buildSizeBox(10.0, 0.0),              
-                 Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45.0,
-                      decoration: BoxDecoration(border: Border.all(color: AppColors.greyColor), borderRadius: BorderRadius.circular(5.0)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 5.0, top: 5.0),
-                        child: DropdownButton<StaffList>(
-                          value: staffValue,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          iconSize: 24,
-                          elevation: 2,                          
-                          isExpanded: true,
-                          underline: const SizedBox(),
-                          onChanged: (StaffList? newValue) {
-                            setState(() {
-                              staffValue = newValue;                              
-                            });
-                          },
-                          items: staffList != null && staffList!.isNotEmpty
+                  buildSizeBox(10.0, 0.0),     
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.all(5),
+                    height: 50,
+                    decoration: BoxDecoration(                        
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.greyColor)),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<StaffList>(
+                        value: staffValue,
+                        items: staffList != null && staffList!.isNotEmpty
                               ? staffList!.map((StaffList? value) {
                                   return DropdownMenuItem<StaffList>(
                                     value: value,
@@ -111,13 +104,54 @@ StaffList? staffValue;
                                   );
                                 }).toList()
                               : null,
-                          hint: BuildText.buildText(
-                            text: kSelectPharStaff,
-                            color: AppColors.greyColor,                           
-                          ),
+                        hint: BuildText.buildText(
+                          text: kSelectDriver,
+                          color: AppColors.greyColor,
+                          size: 14,
                         ),
+                        onChanged: (StaffList? value) {
+                          setState(() {
+                            staffValue = value;
+                          });
+                        },
                       ),
                     ),
+                  ),         
+                //  Container(
+                //       width: MediaQuery.of(context).size.width,
+                //       height: 45.0,
+                //       decoration: BoxDecoration(border: Border.all(color: AppColors.greyColor), borderRadius: BorderRadius.circular(5.0)),
+                //       child: Padding(
+                //         padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 5.0, top: 5.0),
+                //         child: DropdownButton<StaffList>(
+                //           value: staffValue,
+                //           icon: const Icon(Icons.arrow_drop_down),
+                //           iconSize: 24,
+                //           elevation: 2,                          
+                //           isExpanded: true,
+                //           underline: const SizedBox(),
+                //           onChanged: (StaffList? newValue) {
+                //             setState(() {
+                //               staffValue = newValue;                              
+                //             });
+                //           },
+                //           items: staffList != null && staffList!.isNotEmpty
+                //               ? staffList!.map((StaffList? value) {
+                //                   return DropdownMenuItem<StaffList>(
+                //                     value: value,
+                //                     child: BuildText.buildText(
+                //                       text: value!.name ?? "",                                      
+                //                     ),
+                //                   );
+                //                 }).toList()
+                //               : null,
+                //           hint: BuildText.buildText(
+                //             text: kSelectPharStaff,
+                //             color: AppColors.greyColor,                           
+                //           ),
+                //         ),
+                //       ),
+                //     ),
                   buildSizeBox(20.0, 0.0),
                   BuildText.buildText(
                     text: kMessage,

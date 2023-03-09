@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Controller/Helper/LogoutController/logout_controller.dart';
 import '../../../Controller/PharmacyControllers/p_ProfileController/p_profile_controller.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/PharmacyDrawerTile/pharmacyDrawerTile.dart';
+import '../../../View/OnBoarding/SetupPin/setupPin.dart';
 
 class PharmacyDrawerScreen extends StatefulWidget {
   String? versionCode;
@@ -95,7 +98,8 @@ void initState() {
                                         child: BuildText.buildText(
                                       text: controller.driverProfileData?.firstName?[0].toString().toUpperCase() ?? "",
                                       size: 20,
-                                      weight: FontWeight.w400,                                      
+                                      weight: FontWeight.w400,  
+                                      color: AppColors.colorOrange                                    
                                     )))),
                             Flexible(
                               child: Padding(
@@ -194,24 +198,28 @@ void initState() {
                       ),
                     ],                   
                   ),
-                  DrawerListTiles(text: kChangePin, ontap: () {}),
+                  PharmacyDrawerTile(text: kChangePin, ontap: () {
+                    Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: true,));
+                  }),
                   const Divider(),
-                  DrawerListTiles(text: kCreatePatient, ontap: () {}),
+                  PharmacyDrawerTile(text: kCreatePatient, ontap: () {
+                    Get.toNamed(createPatientScreenRoute);
+                  }),
                   const Divider(),
-                  DrawerListTiles(text: kMyNotifiaction, ontap: () {
+                  PharmacyDrawerTile(text: kMyNotifiaction, ontap: () {
                     Get.toNamed(pharmacyNotificationScreenRoute);
                   }),
                   const Divider(),
-                  DrawerListTiles(text: kPrivacyPolicy, ontap: () {
+                  PharmacyDrawerTile(text: kPrivacyPolicy, ontap: () {
                      DefaultFuntions.redirectToBrowser(WebApiConstant.PRIVACY_URL);
                   }),
                   const Divider(),
-                  DrawerListTiles(text: kTermsOfService, ontap: () {
+                  PharmacyDrawerTile(text: kTermsOfService, ontap: () {
                     DefaultFuntions.redirectToBrowser(WebApiConstant.TERMS_URL);
                   }),
                   const Divider(),
-                  DrawerListTiles(text: klogout, ontap:()async{
-                    
+                  PharmacyDrawerTile(text: klogout, ontap:()async{
+                    await LogoutController().validateAndLogout(context);
                   }),
                 ],
               ),
@@ -234,31 +242,6 @@ void initState() {
     );
       },
     );
-  }
-
-  Widget DrawerListTiles({required String text,required VoidCallback ontap,}) {
-    return InkWell(
-      onTap: ontap,
-      child: Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            BuildText.buildText(
-              text: text,
-              size: 17,
-              color: AppColors.blackColor,              
-            ),
-            const Icon(
-              Icons.arrow_forward_ios_sharp,
-              size: 17,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  }}
 
 
-}
