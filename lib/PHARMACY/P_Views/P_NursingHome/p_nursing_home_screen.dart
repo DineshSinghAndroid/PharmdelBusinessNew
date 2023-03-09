@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 
 class NursingHomeScreen extends StatefulWidget {
   const NursingHomeScreen({super.key});
@@ -13,6 +15,9 @@ class NursingHomeScreen extends StatefulWidget {
 }
 
 class _NursingHomeScreenState extends State<NursingHomeScreen> {
+
+  NursingHomeController nurHmCtrl = Get.put(NursingHomeController());
+
   String selectedDate = "";
   String showDatedDate = "";
   String? selectRoute;
@@ -22,17 +27,27 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
 
+
   @override
-  void initState() {
+  void initState() {    
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
     final DateTime now = DateTime.now();
     selectedDate = formatter.format(now);
     showDatedDate = formatterShow.format(now);
-    super.initState();
+    nurHmCtrl.isEmpty = false;
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GetBuilder<NursingHomeController>(
+      init: nurHmCtrl,
+      builder: (controller) {
+        return Scaffold(
       appBar: AppBar(
         title: BuildText.buildText(text: kBulkScan, size: 18),
         backgroundColor: AppColors.whiteColor,
@@ -55,34 +70,34 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                     decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(5)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selectRoute,
-                        items: <String>[
-                          'Android',
-                          'IOS',
-                          'Flutter',
-                          'Node',
-                          'Java',
-                          'Python',
-                          'PHP',
-                        ].map<DropdownMenuItem<String>>((String? value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: BuildText.buildText(text: value!),
-                          );
-                        }).toList(),
-                        hint: BuildText.buildText(
-                          text: kSelectRoute,
-                          color: AppColors.blackColor,
-                          size: 14,
-                        ),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectRoute = value;
-                          });
-                        },
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: selectRoute,
+                      items: <String>[
+                        'Android',
+                        'IOS',
+                        'Flutter',
+                        'Node',
+                        'Java',
+                        'Python',
+                        'PHP',
+                      ].map<DropdownMenuItem<String>>((String? value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: BuildText.buildText(text: value!),
+                        );
+                      }).toList(),
+                      hint: BuildText.buildText(
+                        text: kSelectRoute,
+                        color: AppColors.blackColor,
+                        size: 14,
                       ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectRoute = value;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -98,34 +113,34 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                     decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(5)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selectDriver,
-                        items: <String>[
-                          'PHP',
-                          'IOS',
-                          'Java',
-                          'Node',
-                          'Java',
-                          'Android',
-                          'Node',
-                        ].map<DropdownMenuItem<String>>((String? value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: BuildText.buildText(text: value!),
-                          );
-                        }).toList(),
-                        hint: BuildText.buildText(
-                          text: kSelectDriver,
-                          color: AppColors.blackColor,
-                          size: 14,
-                        ),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectDriver = value;
-                          });
-                        },
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: selectDriver,
+                      items: <String>[
+                        'PHP',
+                        'IOS',
+                        'Java',
+                        'Node',
+                        'Java',
+                        'Android',
+                        'Node',
+                      ].map<DropdownMenuItem<String>>((String? value) {
+                        return DropdownMenuItem<String>(                          
+                          value: value,
+                          child: BuildText.buildText(text: value!),
+                        );
+                      }).toList(),
+                      hint: BuildText.buildText(
+                        text: kSelectDriver,
+                        color: AppColors.blackColor,
+                        size: 14,
                       ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectDriver = value;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -184,34 +199,34 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                     decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(5)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selectNursingHome,
-                        items: <String>[
-                          'PHP',
-                          'Python',
-                          'Flutter',
-                          'Node',
-                          'Java',
-                          'Python',
-                          'FlutterPHP',
-                        ].map<DropdownMenuItem<String>>((String? value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: BuildText.buildText(text: value!),
-                          );
-                        }).toList(),
-                        hint: BuildText.buildText(
-                          text: kSelectNursHome,
-                          color: AppColors.blackColor,
-                          size: 14,
-                        ),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectNursingHome = value;
-                          });
-                        },
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: selectNursingHome,
+                      items: <String>[
+                        'PHP',
+                        'Python',
+                        'Flutter',
+                        'Node',
+                        'Java',
+                        'Python',
+                        'FlutterPHP',
+                      ].map<DropdownMenuItem<String>>((String? value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: BuildText.buildText(text: value!),
+                        );
+                      }).toList(),
+                      hint: BuildText.buildText(
+                        text: kSelectNursHome,
+                        color: AppColors.blackColor,
+                        size: 14,
                       ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectNursingHome = value;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -247,6 +262,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
           ],
         ),
       ),
+    );
+      },
     );
   }
 }
