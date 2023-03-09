@@ -6,7 +6,7 @@ class DriverProfileApiResponse {
   DriverProfileApiResponse({this.status, this.data, this.userManual});
 
   DriverProfileApiResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    status = json['status'] != null ? json['status'].toString():null;
     data = json['driverProfile'] != null
         ? DriverProfileData.fromJson(json['driverProfile'])
         : null;

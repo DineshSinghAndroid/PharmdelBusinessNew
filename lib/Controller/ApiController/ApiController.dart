@@ -61,15 +61,12 @@ class ApiController {
 
 
 
-  // Logout Api
+  /// Logout Api
   Future getLogoutApi({context, required String url, dictParameter, String? token}) async {
      if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter, token: authToken);
-
          if (response?.data != null && response!.statusCode == 200) {
-          print(response.statusMessage);
-          print(response.statusCode);
          return response;
         }
       } catch (e) {

@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,11 +7,11 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Shared%20Preferences/SharedPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/DriverProfile/profileDriverResponse.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../../main.dart';
+import '../../ApiController/WebConstant.dart';
 import '../../Helper/Camera/CameraScreen.dart';
 import '../../WidgetController/Loader/LoadingScreen.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
@@ -24,14 +22,37 @@ class DriverProfileController extends GetxController{
 
 
   ApiController apiCtrl = ApiController();
-  DriverProfileApiResponse? driverProfileData;
 
   bool isLoading = false;
   bool isError = false;
   bool isEmpty = false;
   bool isNetworkError = false;
   bool isSuccess = false;
-  Future<File> ? imageFile;
+
+  bool isLoadApi = false;
+
+  String driverType = "";
+  String versionCode = "";
+  bool onBreak = false;
+
+
+
+  DriverProfileApiResponse? driverProfileData;
+
+
+
+  @override
+  void onInit() {
+    getData();
+    super.onInit();
+  }
+
+  Future<void> getData()async{
+    driverType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.driverType) ?? "";
+    versionCode = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.appVersion) ?? "";
+    update();
+  }
+
 
   double lat = 0.0;
   double lng = 0.0;
@@ -57,10 +78,10 @@ class DriverProfileController extends GetxController{
           try {
             if (result.status == "true") {
               driverProfileData = result;
-              result == null ? changeEmptyValue(true):changeEmptyValue(false);
+              isLoadApi = true;
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
+
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
@@ -71,7 +92,7 @@ class DriverProfileController extends GetxController{
             changeSuccessValue(false);
             changeLoadingValue(false);
             changeErrorValue(true);
-            PrintLog.printLog("Exception : $_");          
+            PrintLog.printLog("Exception : $_");
           }
         }else{
           changeSuccessValue(false);
@@ -89,26 +110,8 @@ class DriverProfileController extends GetxController{
   }
 
 
-  void changeSuccessValue(bool value){
-    isSuccess = value;
-    update();
-  }
-  void changeLoadingValue(bool value){
-    isLoading = value;
-    update();
-  }
-  void changeEmptyValue(bool value){
-    isEmpty = value;
-    update();
-  }
-  void changeNetworkValue(bool value){
-    isNetworkError = value;
-    update();
-  }
-  void changeErrorValue(bool value){
-    isError = value;
-    update();
-  }
+
+
   void showStartMilesDialog(context) async {
     bool checkStartMiles = false;
     TextEditingController startMilesController = TextEditingController();
@@ -387,8 +390,8 @@ class DriverProfileController extends GetxController{
           });
         });
   }
-  Future<void> updateStartMiles(
-      BuildContext context1, Map<String, dynamic> prams) async {
+
+  Future<void> updateStartMiles( BuildContext context1, Map<String, dynamic> prams) async {
     // PrintLog.printLog(prams['start_miles']);
 
     // await ProgressDialog(context, isDismissible: false).show();
@@ -396,6 +399,33 @@ class DriverProfileController extends GetxController{
     PrintLog.printLog(AppSharedPreferences.updateMiles);
     PrintLog.printLog(prams);
 
+  }
+
+  void onTapBreak({required bool value}){
+    onBreak = value;
+    update();
+  }
+
+
+  void changeSuccessValue(bool value){
+    isSuccess = value;
+    update();
+  }
+  void changeLoadingValue(bool value){
+    isLoading = value;
+    update();
+  }
+  void changeEmptyValue(bool value){
+    isEmpty = value;
+    update();
+  }
+  void changeNetworkValue(bool value){
+    isNetworkError = value;
+    update();
+  }
+  void changeErrorValue(bool value){
+    isError = value;
+    update();
   }
 }
 

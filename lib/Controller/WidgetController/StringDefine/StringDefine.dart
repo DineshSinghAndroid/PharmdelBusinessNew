@@ -334,6 +334,7 @@ const String kMore = "More...";
 
 // Schedule screen
 const String kAddress = "Address";
+const String kNotFound = "Not Found";
 const String kSchedule = "Schedule";
 const String kProceedToBookNow = "Proceed to Book Now";
 

@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 import '../../Controller/Helper/LogoutController/logout_controller.dart';
+import '../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../OnBoarding/SetupPin/setupPin.dart';
 
@@ -23,92 +23,29 @@ class DrawerDriverState extends State<DrawerDriver> {
 
   DriverProfileController drProfCtrl = Get.put(DriverProfileController());
 
+
    @override
   void initState() {
-    init();
+     init();
     super.initState();
   }
 
-  Future<void> init() async {
-    drProfCtrl.isNetworkError = false;
-    drProfCtrl.isEmpty = false;
-    if (await ConnectionValidator().check()) {
+  Future<void> init()async{
+    if(drProfCtrl.isLoadApi == false || drProfCtrl.driverProfileData?.userManual == null){
       await drProfCtrl.driverProfileApi(context: context);
-    } else {
-      drProfCtrl.isNetworkError = true;
-      setState(() {});
     }
   }
-
-  Future<File>? imageFile;
-  double opacity = 0.0;
-  bool status = false;
-  var yetToStartColor = const Color(0xFFF8A340);
-
-  // final lunchStoppingTime = CurrentRemainingTimeIS;
-
-  bool isLoading = true;
-  bool showPopUp = false;
-  final formKey = new GlobalKey<FormState>();
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
-  String? username,
-      password,
-      token,
-      userType,
-      endMile,
-      startMile,
-      vehicleId = "";
-  String? driverType = "";
-  String? routeId, routeS;
-
-  // ProgressDialog progressDialog;
-  bool smsPermission = false;
-  Timer? timer1;
-
-  bool isDialogShowing = false;
-
-  Map<String, Object>? profiledata;
-  String? userId;
-  String versionCode = "";
-
-  String? fName,
-      middleName,
-      howToOperateUrl,
-      lastName,
-      contactNumber,
-      nhsNumber,
-      email,
-      address1,
-      address2,
-      route,
-      postCode,
-      townName;
-  String name = "";
-  String virPop = "";
-  int value = 0;
-
-  // bool positive = false;
-  bool loading = false;
-  String? fullAddress;
-  double lat = 0.0;
-  double lng = 0.0;
-  bool isTap = false;
-  bool onBreak = false;
-  bool showIncreaseTime = false;
 
 
   @override
   Widget build(BuildContext context) {
-    // logger.w('#DRIVER TYPE : $driverType');
-    // logger.w('#DRIVER TYPE : $virPop');
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return GetBuilder<DriverProfileController>(
       init: drProfCtrl,
       builder: (controller) {
         return Drawer(
       child: Scaffold(
           backgroundColor: Colors.white,
-          key: scaffoldKey,
           body: SafeArea(
             child: CustomScrollView(
               slivers: [
@@ -123,9 +60,9 @@ class DrawerDriverState extends State<DrawerDriver> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            height: 15,
-                          ),
+
+                         buildSizeBox(15.0, 0.0),
+
                           Row(
                             children: [
                               Container(
@@ -137,22 +74,27 @@ class DrawerDriverState extends State<DrawerDriver> {
                                             color: AppColors.greyColor,
                                             blurRadius: 8,
                                             spreadRadius: 1,
-                                            offset: const Offset(0, 0))
+                                            offset: const Offset(0, 0)
+                                        )
                                       ],
                                       color: Colors.orangeAccent,
                                       borderRadius: BorderRadius.circular(50)),
                                   child: Center(
                                     child: BuildText.buildText(
-                                       text: controller.driverProfileData?.data?.firstName?[0].toUpperCase() ?? "",
+                                        text: controller.driverProfileData?.data?.firstName != null && controller.driverProfileData!.data!.firstName!.isNotEmpty ?
+                                        controller.driverProfileData!.data!.firstName![0].toString().toUpperCase()
+                                            : "",
                                       color: AppColors.whiteColor,
                                       size: 30
                                     ),
                                   )),
                             buildSizeBox(0.0, 20.0),
-                              BuildText.buildText(
-                                text:  controller.driverProfileData?.data?.firstName ?? "",
-                                style: const TextStyle(
-                                    fontSize: 18, color: Colors.black),
+                              Expanded(
+                                child: BuildText.buildText(
+                                  text:  controller.driverProfileData?.data?.firstName ?? "",
+                                  style: const TextStyle(
+                                      fontSize: 18, color: Colors.black)
+                                ),
                               ),
                             buildSizeBox(10.0, 0.0),
                             ],
@@ -201,15 +143,13 @@ class DrawerDriverState extends State<DrawerDriver> {
                                         fit: BoxFit.fill,
                                         child: Switch(                                         
                                           onChanged: (bool value) {                                            
-                                            setState(() {
-                                              onBreak = value;
-                                            });
+                                            controller.onTapBreak(value: value);
                                             Future.delayed(
                                               const Duration(seconds: 1),
                                               () => Get.toNamed(lunchBreakScreenRoute),
                                             );
                                           },
-                                          value: onBreak,
+                                          value: controller.onBreak,
                                           activeColor: AppColors.colorOrange,
                                           activeTrackColor: AppColors.colorOrange,
                                           inactiveThumbColor: AppColors.greyColor,
@@ -230,56 +170,34 @@ class DrawerDriverState extends State<DrawerDriver> {
                           ),
                         ),
                         buildSizeBox(10.0, 0.0),
+
                       ExpansionTileCard(
                         animateTrailing: true,
-                        title: BuildText.buildText(text: kPersonalInfo,color: Colors.blue,textAlign: TextAlign.start),
-                        leading: const Icon(
+                        title: BuildText.buildText(text: kPersonalInfo,color:AppColors.colorAccent,textAlign: TextAlign.start),
+                        leading: Icon(
                           Icons.person,
-                          size: 20,
+                          size: 20,color: AppColors.colorAccent,
                         ),
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ), // height: 200,
 
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, ),
                             child: Column(
                               children: [
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.mobile_friendly_sharp,
-                                      color: Colors.black,
-                                      size: 12,
-                                    ),
-                                   buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: controller.driverProfileData?.data?.mobileNumber.toString() ?? "",color: AppColors.blackColor)
-                                  ],
+                                WidgetCustom.drawerPersonalInfoWidget(
+                                  title: controller.driverProfileData?.data?.mobileNumber,
+                                  icon: Icons.mobile_friendly_sharp,
                                 ),
-                                buildSizeBox(5.0, 0.0),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.email,
-                                      color: Colors.grey,
-                                      size: 12,
-                                    ),
-                                   buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: controller.driverProfileData?.data?.emailId.toString() ?? "")
-                                  ],
+                                WidgetCustom.drawerPersonalInfoWidget(
+                                  title: controller.driverProfileData?.data?.emailId,
+                                  icon: Icons.email,
                                 ),
-                             buildSizeBox(5.0, 0.0),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.location_city_outlined,
-                                      color: Colors.grey,
-                                      size: 12,
-                                    ),
-                                 buildSizeBox(0.0, 10.0),
-                                    BuildText.buildText(text: controller.driverProfileData?.data?.addressLine1.toString() ?? "")
-                                  ],
+
+                                WidgetCustom.drawerPersonalInfoWidget(
+                                  title: controller.driverProfileData?.data?.addressLine1,
+                                  icon: Icons.location_city_outlined,
                                 ),
+
                                 buildSizeBox(10.0, 0.0),
                               ],
                             ),
@@ -290,64 +208,74 @@ class DrawerDriverState extends State<DrawerDriver> {
                         },
                       ),
                       buildSizeBox(5.0, 0.0),
-                      ListTile(
-                        onTap: () {Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: true,));},
-                        leading: const Icon(Icons.lock, size: 20),
-                        title: BuildText.buildText(text: kChangePin)
+
+                      /// Change Pin
+                      WidgetCustom.drawerBtn(
+                          onTap: (){
+                            Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: true,));
+                          },
+                          title: kChangePin,
+                          icon: Icons.lock
                       ),
 
+
                       /// create patient widget
-                      if (driverType != "Shared")
-                        ListTile(
-                          onTap: () {
-                            Get.toNamed(createPatientScreenRoute);
-                          },
-                          leading: const Icon(Icons.local_hospital,size: 20),
-                          title:BuildText.buildText(text: kCreatePatient)
+                      if (controller.driverType.toString().toLowerCase() != "shared")
+                        WidgetCustom.drawerBtn(
+                            onTap: (){
+                              Get.toNamed(createPatientScreenRoute);
+                            },
+                            title: kCreatePatient,
+                            icon: Icons.local_hospital
                         ),
 
-                        ListTile(
-                          onTap: () {
+                      /// How to operate
+                      WidgetCustom.drawerBtn(
+                          onTap: (){
                             Get.toNamed(pdfViewScreenRoute,
-                            arguments: PdfViewScreen(
-                              pdfUrl: controller.driverProfileData?.userManual ?? "",
-                            ));
+                                arguments: PdfViewScreen(
+                                  pdfUrl: controller.driverProfileData?.userManual ?? "",
+                                ));
                           },
-                          leading: const Icon(Icons.question_mark,size: 20),
-                          title:BuildText.buildText(text: kHowToOperate)
-                        ),
+                          title: kHowToOperate,
+                          icon: Icons.question_mark
+                      ),
 
-                        ListTile(
+                      /// Enter Miles
+                      WidgetCustom.drawerBtn(
                           onTap: (){
                             return controller.showStartMilesDialog(context);
                           },
-                          leading: const Icon(Icons.edit,size: 20),
-                          title:BuildText.buildText(text: kEnterMiles)
-                        ),
+                          title: kEnterMiles,
+                          icon: Icons.edit
+                      ),
 
-                        ListTile(
-                          onTap: () {
+                      /// Update Address
+                      WidgetCustom.drawerBtn(
+                          onTap: (){
                             Get.toNamed(updateAddressScreenRoute,
-                            arguments: UpdateAddressScreen(
-                              address1: controller.driverProfileData?.data?.addressLine1 ?? "", 
-                              address2: controller.driverProfileData?.data?.addressLine2 ?? "", 
-                              postCode: controller.driverProfileData?.data?.postCode ?? "", 
-                              townName: controller.driverProfileData?.data?.townName ?? ""),);
-                          },
-                          leading: const Icon(Icons.home,size: 20),
-                          title:BuildText.buildText(text: kUpdateAddress)
-                        ),
-                 
-                      ListTile(
-                          onTap: ()async{
+                              arguments: UpdateAddressScreen(
+                                  address1: controller.driverProfileData?.data?.addressLine1 ?? "",
+                                  address2: controller.driverProfileData?.data?.addressLine2 ?? "",
+                                  postCode: controller.driverProfileData?.data?.postCode ?? "",
+                                  townName: controller.driverProfileData?.data?.townName ?? ""
+                              ),);                          },
+                          title: kUpdateAddress,
+                          icon: Icons.home
+                      ),
+
+                      /// Logout
+                      WidgetCustom.drawerBtn(
+                          onTap: () async {
                             await LogoutController().validateAndLogout(context);
                           },
-                          leading: const Icon(Icons.logout,size: 20),
-                          title:BuildText.buildText(text: klogout)
-                        ),
+                          title: klogout,
+                          icon: Icons.logout
+                      ),
+
                       const Spacer(),
                       BuildText.buildText(
-                        text: kAppVersion + versionCode ?? ""),
+                        text: kAppVersion + controller.versionCode ?? ""),
                       buildSizeBox(20.0, 0.0),
                     ]),
                   ),
