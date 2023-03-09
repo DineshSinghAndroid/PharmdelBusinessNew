@@ -39,6 +39,7 @@ class SecurePinState extends State<SecurePin> {
 
   @override
   void dispose() {
+    Get.delete<SecurePinController>();
     super.dispose();
   }
 

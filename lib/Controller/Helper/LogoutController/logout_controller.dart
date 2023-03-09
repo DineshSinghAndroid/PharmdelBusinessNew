@@ -1,81 +1,46 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/Shared%20Preferences/SharedPreferences.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../Model/Enum/enum.dart';
 import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
-import '../../WidgetController/Loader/LoadingScreen.dart';
 import '../../WidgetController/Popup/PopupCustom.dart';
-import '../../WidgetController/StringDefine/StringDefine.dart';
-import '../../WidgetController/Toast/ToastCustom.dart';
-
 import '../PrintLog/PrintLog.dart';
 class LogoutController extends GetxController{
 
   ApiController apiCtrl = ApiController();
 
 
-  Future logoutApi(context) async {
-    CustomLoading().show(context, true);
+  Future logoutApi({required BuildContext context,required String userType}) async {
 
-    Map<String, dynamic> dictParm = {
-      "":""
-    };
+    String url = userType.toString().toLowerCase() == "pharmacy" && userType.toString().toLowerCase() == "pharmacy staff" ?
+    WebApiConstant.LOGOUT_URL_PHARMACY : WebApiConstant.Logout_URL;
+    PrintLog.printLog("User Type: $userType \nurl: $url \nToken: $authToken");
 
-    String url = WebApiConstant.Logout;
+      await apiCtrl.logOutApi(context: context,url: url).then((value) {
 
-  await apiCtrl.getLogoutApi(context: context, url: url,dictParameter: dictParm, token: authToken).then((result) async {
-    if (result != null) {
-      if (result.error != true) {
-        PrintLog.printLog("Logout Success");
-        ToastCustom.showToast(msg: result ?? "");
-        try {
-          if (result.error == false) {
-            ToastCustom.showToast(msg: result ?? "");
-            CustomLoading().show(context, false).then((value) {
-              Get.offAndToNamed(loginScreenRoute);
-            },);
-          } else {
-            CustomLoading().show(context, false);
-
-              PrintLog.printLog(result);
-              ToastCustom.showToast(msg: result ?? "");
-            }
-          } catch (_) {
-            PrintLog.printLog("Exception : $_");
-            ToastCustom.showToast(msg: result ?? "");
-          }
-        } else {
-          CustomLoading().show(context, false);
-
-          PrintLog.printLog(result);
-          ToastCustom.showToast(msg: result ?? "");
-        }
-      }
-  });
+      });
     }
-    validateAndLogout(context) {
-  showDialog<ConfirmAction>(
-    context: context,
-    barrierDismissible: false, // user must tap button for close dialog!
-    builder: (BuildContext context) {
-      return  LogoutPopUP(
-        onTapCancel: () {
-          Get.back();
-        },
-        onTapOK: () async {
-          await logoutApi(context);
-        },
-      );
-    },
-  );
-  // Navigator.pop(context, true);
+
+  validateAndLogout({required BuildContext context,required String userType}) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return  DelayedDisplay(
+                child: LogoutPopUP(
+                  onTapCancel: () {
+                    Get.back();
+                  },
+                  onTapOK: () async {
+                    await logoutApi(context:context,userType: userType);
+                  },
+                ),
+              );
+            },
+          );
+    }
 }
-  }
 
 
  

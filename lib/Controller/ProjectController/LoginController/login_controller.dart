@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pharmdel/Controller/WidgetController/Popup/popup.dart';
 import 'package:pharmdel/View/OnBoarding/SetupPin/setupPin.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../../Model/Login/login_model.dart';
 import '../../../main.dart';
@@ -17,9 +15,6 @@ import '../../Helper/SecureStorage/secure_storage.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../Helper/TextController/TextValidator/TextValidator.dart';
 import '../../RouteController/RouteNames.dart';
-import '../../WidgetController/Loader/LoadingScreen.dart';
-import '../../WidgetController/Popup/CustomDialogBox.dart';
-import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../../WidgetController/Toast/ToastCustom.dart';
 
 class LoginController extends GetxController {
@@ -46,8 +41,8 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     autoFillUser();
-    // emailCT.text = "ddk@gmail.com";
-    // passCT.text = "Admin@1234";
+    emailCT.text = "ddk@gmail.com";
+    passCT.text = "Admin@1234";
     super.onInit();
   }
 
@@ -63,6 +58,14 @@ class LoginController extends GetxController {
     //   passCT.text = SecureStorageCustom.getValue(key: "password").toString();
     //   update();
     // }
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
+      String version = packageInfo.version;
+      String buildNumber = packageInfo.buildNumber;
+      PrintLog.printLog("App version: $version");
+      PrintLog.printLog("BuildNumber: $buildNumber");
+      await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.appVersion, variableValue: version);
+    });
     update();
 
   }
@@ -148,18 +151,21 @@ class LoginController extends GetxController {
       if (result != null) {
           try {
             if (result.error == false) {
-              await saveUserData(userData: result);
-              if (result.pin.toString() != "") {
-                if (AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString() != "") {
+              await saveUserData(userData: result).then((value){
+                String checkIsForgot = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString();
+                if (result.pin.toString() != "") {
+                  if (checkIsForgot != "" && checkIsForgot != "null") {
+                    Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
+                  }else if (result.userType.toString().toLowerCase() == "driver") {
+                    Get.toNamed(securePinScreenRoute);
+                  } else if (result.userType.toString().toLowerCase() == "pharmacy staff") {
+                    Get.toNamed(securePinScreenRoute);
+                  }
+                } else if (result.pin.toString() == "") {
                   Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
-                }else if (result.userType.toString().toLowerCase() == "driver") {
-                  Get.toNamed(securePinScreenRoute);
-                } else if (result.userType.toString().toLowerCase() == "pharmacy staff") {
-                  Get.toNamed(securePinScreenRoute);
                 }
-              } else if (result.pin.toString() == "") {
-                Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
-              }
+              });
+
               ToastCustom.showToast(msg: result.message ?? "");
               changeLoadingValue(false);
               changeSuccessValue(true);
@@ -237,7 +243,6 @@ class LoginController extends GetxController {
 
 
   Future<void> saveUserData({LoginModel? userData}) async {
-
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userId, variableValue: userData?.userId.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userType, variableValue: userData?.userType.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.customerID, variableValue: userData?.customerId.toString() ?? "");

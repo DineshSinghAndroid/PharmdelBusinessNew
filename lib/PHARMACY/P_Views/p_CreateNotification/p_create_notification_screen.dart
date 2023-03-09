@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Model/CreateNotification/createNotificationResponse.dart';
 
@@ -25,14 +24,14 @@ FocusNode focusNotificationName = FocusNode();
 
 bool isSelectPharm = false;
 bool isSelectPharmName = false;
-List<StaffList>? staffList;
-StaffList? staffValue;
+
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PharmacyNotificationController>(
       init: phrNotfCtrl,
       builder: (controller) {
+        PrintLog.printLog("staff value is : ${controller.staffList}");
         return GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(FocusNode());
@@ -91,30 +90,31 @@ StaffList? staffValue;
                     decoration: BoxDecoration(                        
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.greyColor)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<StaffList>(
-                        value: staffValue,
-                        items: staffList != null && staffList!.isNotEmpty
-                              ? staffList!.map((StaffList? value) {
-                                  return DropdownMenuItem<StaffList>(
-                                    value: value,
-                                    child: BuildText.buildText(
-                                      text: value!.name ?? "",                                      
-                                    ),
-                                  );
-                                }).toList()
-                              : null,
-                        hint: BuildText.buildText(
-                          text: kSelectDriver,
-                          color: AppColors.greyColor,
-                          size: 14,
-                        ),
-                        onChanged: (StaffList? value) {
-                          setState(() {
-                            staffValue = value;
-                          });
-                        },
+                    child: DropdownButton<StaffList>(                      
+                      value: controller.staffValue,
+                      iconSize: 24,
+                      elevation: 2,
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      items: 
+                      controller.staffList != null && controller.staffList!.isNotEmpty ? 
+                            controller.staffList!.map((StaffList? value) {
+                                return DropdownMenuItem<StaffList>(
+                                  value: value,
+                                  child: BuildText.buildText(
+                                    text: value!.name ?? "",                                      
+                                  ),
+                                );
+                              }).toList()
+                            : null,
+                      hint: BuildText.buildText(
+                        text: kSelectDriver,
+                        color: AppColors.greyColor,
+                        size: 14,
                       ),
+                      onChanged: (StaffList? newvalue) {
+                        controller.updateStaffValue(newvalue);
+                      },
                     ),
                   ),         
                 //  Container(
@@ -224,10 +224,12 @@ StaffList? staffValue;
                   onPress: ()async{
                     await phrNotfCtrl.saveNotificationApi(
                       context: context, 
-                      name: notificationNameController.text.toString().trim() ?? "", 
-                      userList: '380208', 
-                      message: notificationMessageController.text.toString().trim() ?? "", 
-                      role: 'Pharmacy Staff');
+                      name: notificationNameController.text.toString().trim(), 
+                      userList: controller.staffValue?.userId ?? "", 
+                      message: notificationMessageController.text.toString().trim(), 
+                      role: controller.staffValue?.role ?? "").then((value)async{
+                        await phrNotfCtrl.createNotificationApi(context: context);
+                      });
                   }, 
                   text: kSubmit, 
                   buttonWidth: Get.width, 

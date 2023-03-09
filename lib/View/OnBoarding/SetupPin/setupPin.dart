@@ -163,14 +163,23 @@ class SetupPinScreen extends StatelessWidget {
 
                         Visibility(
                           visible: isChangePin == false,
-                          child: InkWell(
-                            onTap: () => controller.onTapCancel(),
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 0),
-                              child: BuildText.buildText(text: kCancel, color: AppColors.colorAccent),
-                            ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Card(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                elevation: 10,
+                                margin: EdgeInsets.zero,
+                                child: ButtonCustom(
+                                  buttonHeight: 50,
+                                  buttonWidth: MediaQuery.of(context).size.width,
+                                  text: kCancel,textColor: AppColors.colorAccent,
+                                  backgroundColor: AppColors.whiteColor,
+                                  onPress: () => controller.onTapCancel(),
+                                ),
+                              ),
                           ),
                         ),
+
                       ],
                     ),
                   ),
