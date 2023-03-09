@@ -91,6 +91,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                             setState(() {
                               _controller.getRouteListController.selectedRouteValue = value.toString();
                             });
+                            // ),
                           },
                           buttonStyleData: ButtonStyleData(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -114,19 +115,24 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                               color: Theme.of(context).hintColor,
                             ),
                           ),
-                          items: [
-                            for (GetDriverListModelResponsePharmacy driver in controller.driverListController.driverList)
-                              DropdownMenuItem(
-                                value: _controller.driverListController.driverList.indexOf(driver).toString(),
-                                child: Text("${driver.firstName}", style: const TextStyle(color: Colors.black87)),
-                              ),
-                          ],
-                          value: _controller.driverListController.selectedDriverName,
-                          onChanged: (value) {
+                          onChanged: ( DriverModel? newValue) {
                             setState(() {
-                              _controller.driverListController.selectedDriverName = value.toString();
+                              controller.driverListController.selectedDriver = newValue;
                             });
                           },
+
+                          items: controller.driverListController.driverList.map<DropdownMenuItem<DriverModel>>((DriverModel value) {
+                            return DropdownMenuItem<DriverModel>(
+                              value: value,
+                              child: Text(
+                                value.firstName??"No Driver",style: const TextStyle(fontSize: 12),
+                              ),
+                            );
+                          }).toList(),
+
+
+                          value: controller.driverListController.selectedDriver,
+
                           buttonStyleData: ButtonStyleData(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                               height: 40,
@@ -138,7 +144,8 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                           menuItemStyleData: const MenuItemStyleData(),
                         ),
                       ),
-                    
+
+
                    ],
                 ),
               ),

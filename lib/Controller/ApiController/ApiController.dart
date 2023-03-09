@@ -1,5 +1,6 @@
 
 
+import 'dart:convert';
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
@@ -750,7 +751,7 @@ class ApiController {
   }
 
 
-  Future<dynamic?> requestGetForDriverListApi(
+  Future<dynamic> requestGetForDriverListApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
       Map<String, String> headers = {
@@ -773,7 +774,7 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
           connectTimeout: Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
@@ -784,7 +785,7 @@ class ApiController {
       return response;
 
     } catch (error) {
-      PrintLog.printLog("Exception_Main: $error");
+      PrintLog.printLog("Exception_Main in get driver list: $error");
       return null;
     }
   }
