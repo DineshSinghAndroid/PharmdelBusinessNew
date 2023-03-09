@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/RouteController/RouteNames.dart';
@@ -11,6 +12,7 @@ import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart'
 import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
+import '../../../Controller/WidgetController/RefresherIndicator/RefreshIndicatorCustom.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
@@ -23,6 +25,7 @@ class PharmacyNotificationScreen extends StatefulWidget {
 class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen> {
 
   PharmacyNotificationController phrNotfCtrl = Get.put(PharmacyNotificationController());
+  RefreshController refreshController = RefreshController();
 
   @override
   void initState() {    
@@ -112,25 +115,32 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
           body: TabBarView(                    
             physics: const NeverScrollableScrollPhysics(),
             children: [
-
+          
               ///Recieve Notification
-              SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ListView.builder(                          
-                            shrinkWrap: true,
-                            itemCount: controller.notificationData?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              return NotificationCardWidget(
-                                name: controller.notificationData?[index].name ?? "",
-                                messsage: controller.notificationData?[index].message ?? "",
-                                time:controller.notificationData?[index].created ?? "",
-                              );
-                            }),
-                      ),
+              RefreshIndicatorCustom(
+              refreshController: refreshController,
+              onRefresh: (){
+                refreshController.refreshCompleted();
+                init();
+              },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Container(
+                          margin: const EdgeInsets.all(8),
+                          child: ListView.builder(                          
+                              shrinkWrap: true,
+                              itemCount: controller.notificationData?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                return NotificationCardWidget(
+                                  name: controller.notificationData?[index].name ?? "",
+                                  messsage: controller.notificationData?[index].message ?? "",
+                                  time:controller.notificationData?[index].created ?? "",
+                                );
+                              }),
+                        ),
+                ),
               ), 
-
+          
               ///Sent Notification  
               Scaffold(
                 floatingActionButton: Transform.translate(
