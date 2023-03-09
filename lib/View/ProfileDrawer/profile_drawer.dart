@@ -267,7 +267,7 @@ class DrawerDriverState extends State<DrawerDriver> {
                       /// Logout
                       WidgetCustom.drawerBtn(
                           onTap: () async {
-                            await LogoutController().validateAndLogout(context);
+                            await LogoutController().validateAndLogout(context:context,userType: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType) ?? "");
                           },
                           title: klogout,
                           icon: Icons.logout

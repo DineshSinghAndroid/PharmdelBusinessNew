@@ -3,6 +3,7 @@
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' as G;
 import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
@@ -28,6 +29,9 @@ import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../Helper/PrintLog/PrintLog.dart';
+import '../Helper/Shared Preferences/SharedPreferences.dart';
+import '../RouteController/RouteNames.dart';
+import '../WidgetController/Loader/LoadingScreen.dart';
 import '../WidgetController/Popup/PopupCustom.dart';
 import '../WidgetController/StringDefine/StringDefine.dart';
 import '../WidgetController/Toast/ToastCustom.dart';
@@ -786,6 +790,48 @@ class ApiController {
     }
   }
 
+
+  Future<Response?> logOutApi({required context,String? url}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000",
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      CustomLoading().show(context, true);
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers,
+          validateStatus: (_) => true
+      );
+
+      _dio.options = options;
+      Response response = await _dio.get(url!, queryParameters: {"":""});
+      PrintLog.printLog("Response_headers: ${response.headers}");
+      PrintLog.printLog("Response_data: ${response.data}");
+
+      if(response.data.toString().toLowerCase() == "success"){
+        AppSharedPreferences.clearSharedPref().then((value) {
+          G.Get.offAllNamed(loginScreenRoute);
+        });
+      }else{
+        CustomLoading().show(context, false);
+      }
+      return response;
+
+    } catch (error) {
+      CustomLoading().show(context, false);
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
 
 
 }
