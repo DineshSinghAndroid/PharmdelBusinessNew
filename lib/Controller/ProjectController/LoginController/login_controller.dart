@@ -151,19 +151,21 @@ class LoginController extends GetxController {
       if (result != null) {
           try {
             if (result.error == false) {
-              await saveUserData(userData: result);
-              String checkIsForgot = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString();
-              if (result.pin.toString() != "") {
-                if (checkIsForgot != "" && checkIsForgot != "null") {
+              await saveUserData(userData: result).then((value){
+                String checkIsForgot = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString();
+                if (result.pin.toString() != "") {
+                  if (checkIsForgot != "" && checkIsForgot != "null") {
+                    Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
+                  }else if (result.userType.toString().toLowerCase() == "driver") {
+                    Get.toNamed(securePinScreenRoute);
+                  } else if (result.userType.toString().toLowerCase() == "pharmacy staff") {
+                    Get.toNamed(securePinScreenRoute);
+                  }
+                } else if (result.pin.toString() == "") {
                   Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
-                }else if (result.userType.toString().toLowerCase() == "driver") {
-                  Get.toNamed(securePinScreenRoute);
-                } else if (result.userType.toString().toLowerCase() == "pharmacy staff") {
-                  Get.toNamed(securePinScreenRoute);
                 }
-              } else if (result.pin.toString() == "") {
-                Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
-              }
+              });
+
               ToastCustom.showToast(msg: result.message ?? "");
               changeLoadingValue(false);
               changeSuccessValue(true);
@@ -241,7 +243,6 @@ class LoginController extends GetxController {
 
 
   Future<void> saveUserData({LoginModel? userData}) async {
-
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userId, variableValue: userData?.userId.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userType, variableValue: userData?.userType.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.customerID, variableValue: userData?.customerId.toString() ?? "");

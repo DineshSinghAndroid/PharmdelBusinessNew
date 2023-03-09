@@ -113,11 +113,9 @@ class SecurePinController extends GetxController {
 
 
   Future<void> getSharePrefsValue() async {
-    await SharedPreferences.getInstance().then((value) {
-      userType = value.getString(AppSharedPreferences.userType) ?? "";
-      userPin = value.getString(AppSharedPreferences.userPin) ?? "";
-      userName = value.getString(AppSharedPreferences.userName) ?? "";
-    });
+      userType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType);
+      userPin = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userPin);
+      userName = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userName);
     update();
   }
 }
