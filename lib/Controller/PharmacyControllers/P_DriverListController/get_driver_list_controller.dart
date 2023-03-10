@@ -14,6 +14,7 @@ class GetDriverListController extends GetxController {
 
   List<DriverModel> driverList = [];
   DriverModel? selectedDriver;
+  int  selectedDriverPosition = 0;
 
   @override
   void onInit() {
@@ -22,10 +23,10 @@ class GetDriverListController extends GetxController {
     print(driverList.length);
   }
 
-  Future<bool?> getDriverList(context) async {
-    await CustomLoading().show(context, true);
+  Future<bool?> getDriverList({context, routeId}) async {
+    PrintLog.printLog("GET DRIVER LIST INITIALIZED " );
 
-    Map<String, dynamic> dictparm = {"routeId": 23};
+    Map<String, dynamic> dictparm = {"routeId": routeId};
     driverList.clear();
     DriverModel driverModel = DriverModel();
     driverModel.driverId = 0;
@@ -37,11 +38,8 @@ class GetDriverListController extends GetxController {
       if (result != null) {
         try {
           driverList.clear();
-          PrintLog.printLog("result.....${result.data[0]}");
-          // // driverList = result;
-          // for (var data in result) {
-          //   print("data $data");
-          // }
+          PrintLog.printLog("result.....${result.data[0].toString()}");
+
           List data = result.data;
           data.forEach((element) {
             DriverModel model = DriverModel();
@@ -56,10 +54,9 @@ class GetDriverListController extends GetxController {
             driverList.add(model);
           });
 
-          print(driverList);
+          PrintLog.printLog("This is driver List first name " +driverList[0].firstName);
 
-          PrintLog.printLog("Response of get driver list is :::::::>>>>>: $result");
-        } catch (_) {
+         } catch (_) {
           CustomLoading().show(context, false);
 
           PrintLog.printLog("Exception : $_");

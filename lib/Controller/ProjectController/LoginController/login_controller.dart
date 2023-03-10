@@ -41,7 +41,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     autoFillUser();
-    emailCT.text = "ddk@gmail.com";
+    emailCT.text = "sdk@gmail.com";
     passCT.text = "Admin@1234";
     super.onInit();
   }

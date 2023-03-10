@@ -19,7 +19,7 @@ class PharmacyTrackOrderController extends GetxController {
   PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRouteListController());
 
 
-    int selectedRoutePosition = 0;
+    int selectedRouteID = 0;
    int? selectedDriverPosition = 0;
    String? accessToken, userType;
 
