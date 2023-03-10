@@ -14,21 +14,16 @@ class SecureStorageCustom{
       AndroidOptions getAndroidOptions() => const AndroidOptions(encryptedSharedPreferences: true,);
       secureStorage = FlutterSecureStorage(aOptions: getAndroidOptions());
     }
-
-
   }
 
-
-
-
   static Future<void> save({required String key,required String value})async{
-    await getInstance();
+    // await getInstance();
     await secureStorage.write(key: key, value: value);
   }
 
-  static Future<String> getValue({required String key})async{
-    await getInstance();
-    return await secureStorage.read(key: key) ?? "";
+  static Future<String> getValue({required String key}) async {
+    // await getInstance();
+    return  await secureStorage.read(key: key) ?? "";
   }
 
 }

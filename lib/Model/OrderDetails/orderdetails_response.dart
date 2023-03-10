@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-OrderDetailApiResponse orderModalFromJson(String str) => OrderDetailApiResponse.fromJson(json.decode(str));
+OrderModal orderModalFromJson(String str) => OrderModal.fromJson(json.decode(str));
 
-String orderModalToJson(OrderDetailApiResponse data) => json.encode(data.toJson());
+String orderModalToJson(OrderModal data) => json.encode(data.toJson());
 
-class OrderDetailApiResponse {
-  OrderDetailApiResponse({
+class OrderModal {
+  OrderModal({
     this.orderId,
     this.related_order_count,
     this.alt_address,
@@ -37,7 +37,7 @@ class OrderDetailApiResponse {
     this.title,
     this.address,
     this.pharmacyId,
-    this.relatedOrders,
+    this.related_orders,
     this.paymentStatus,
     this.isPresCharge,
     this.isDelCharge,
@@ -75,6 +75,7 @@ class OrderDetailApiResponse {
   String? parcelBoxName;
   dynamic deliveryTo;
   dynamic parcelName;
+  Customer? customer;
   String? alt_address;
   dynamic routeId;
   dynamic deliveryRemarks;
@@ -83,94 +84,94 @@ class OrderDetailApiResponse {
   dynamic lastName;
   dynamic title;
   Address? address;
-  List<ReletedOrders>? relatedOrders;
-  List<ExemptionsList>? exemptions;
-  Customer? customer;
+  List<ReletedOrders>? related_orders = [];
+
+  List<ExemptionsList>? exemptions = [];
   String? message;
 
-  factory OrderDetailApiResponse.fromJson(Map<String, dynamic> json) => OrderDetailApiResponse(
-        related_order_count: json["related_order_count"],
-        orderId: json["orderId"],
-        exemption: json["exemption"],
-        pharmacyId: json["pharmacy_id"],
-        isDelCharge: json["is_del_charge"],
-        isPresCharge: json["is_pres_charge"],
-        nursing_home_id: json["nursing_home_id"],
-        totalStorageFridge: json["totalStorageFridge"],
-        totalControlledDrugs: json["totalControlledDrugs"],
-        delCharge: json['del_charge'],
-        bagSize: json["bagSize"],
-        rxCharge: json["rx_charge"],
-        rxInvoice: json["rx_invoice"],
-        // delCharge: json["del_charge"],
-        paymentStatus: json["paymentStatus"],
-        alt_address: json["alt_address"],
-        pmr_type: json["pmr_type"],
-        pr_id: json["pr_id"],
-        customerId: json["customerId"],
-        parcelBoxName: json["parcel_box_name"],
-        pickupTypeId: json["pickupTypeId"],
-        deliveryNote: json["deliveryNote"] ?? "",
-        exitingNote: json["exitingNote"] ?? "",
-        isStorageFridge: json["isStorageFridge"],
-        isControlledDrugs: json["isControlledDrugs"],
-        deliveryId: json["deliveryId"],
-        deliveryStatusDesc: json["deliveryStatusDesc"],
-        deliveryTo: json["deliveryTo"],
-        customer: Customer.fromJson(json["customer"]),
-        relatedOrders: List<ReletedOrders>.from(json["related_orders"].map((x) => ReletedOrders.fromJson(x))),
-        routeId: json["routeId"],
-        deliveryRemarks: json["deliveryRemarks"],
-        firstName: json["firstName"],
-        middleName: json["middleName"],
-        lastName: json["lastName"],
-        title: json["title"],
-        address: Address.fromJson(json["address"]),
-        // exemptions: List<ExemptionsList>.from(json["exemptions"].map((x) => ExemptionsList.fromJson(x))),
-        message: json["message"],
-      );
+  factory OrderModal.fromJson(Map<String, dynamic> json) => OrderModal(
+    related_order_count: json["related_order_count"],
+    orderId: json["orderId"],
+    exemption: json["exemption"],
+    pharmacyId: json["pharmacy_id"],
+    isDelCharge: json["is_del_charge"],
+    isPresCharge: json["is_pres_charge"],
+    nursing_home_id: json["nursing_home_id"],
+    totalStorageFridge: json["totalStorageFridge"],
+    totalControlledDrugs: json["totalControlledDrugs"],
+    delCharge: json['del_charge'],
+    bagSize: json["bagSize"],
+    rxCharge: json["rx_charge"],
+    rxInvoice: json["rx_invoice"],
+    // delCharge: json["del_charge"],
+    paymentStatus: json["paymentStatus"],
+    alt_address: json["alt_address"],
+    pmr_type: json["pmr_type"],
+    pr_id: json["pr_id"],
+    customerId: json["customerId"],
+    parcelBoxName: json["parcel_box_name"],
+    pickupTypeId: json["pickupTypeId"],
+    deliveryNote: json["deliveryNote"] ?? "",
+    exitingNote: json["exitingNote"] ?? "",
+    isStorageFridge: json["isStorageFridge"],
+    isControlledDrugs: json["isControlledDrugs"],
+    deliveryId: json["deliveryId"],
+    deliveryStatusDesc: json["deliveryStatusDesc"],
+    deliveryTo: json["deliveryTo"],
+    customer: Customer.fromJson(json["customer"]),
+    related_orders: List<ReletedOrders>.from(json["related_orders"].map((x) => ReletedOrders.fromJson(x))),
+    routeId: json["routeId"],
+    deliveryRemarks: json["deliveryRemarks"],
+    firstName: json["firstName"],
+    middleName: json["middleName"],
+    lastName: json["lastName"],
+    title: json["title"],
+    address: Address.fromJson(json["address"]),
+    // exemptions: List<ExemptionsList>.from(json["exemptions"].map((x) => ExemptionsList.fromJson(x))),
+    message: json["message"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "related_order_count ": related_order_count,
-        "orderId ": orderId,
-        "paymentStatus": paymentStatus,
-        "pharmacy_id": pharmacyId,
-        "bagSize": bagSize,
-        "del_charge": delCharge,
-        "totalControlledDrugs": totalControlledDrugs,
-        "totalStorageFridge": totalStorageFridge,
-        "nursing_home_id": nursing_home_id,
-        "rx_charge": rxCharge,
-        "rx_invoice": rxInvoice,
-        // "del_charge": delCharge ,
-        "is_pres_charge": isPresCharge,
-        "is_del_charge": isDelCharge,
-        "exemption": exemption,
-        "pmr_type ": pmr_type,
-        "pr_id ": pr_id,
-        "orderId": orderId,
-        "alt_address": alt_address,
-        "customerId": customerId,
-        "parcel_box_name": parcelBoxName,
-        "pickupTypeId": pickupTypeId,
-        "exitingNote": exitingNote,
-        "isStorageFridge": isStorageFridge,
-        "isControlledDrugs": isControlledDrugs,
-        "deliveryId": deliveryId,
-        "deliveryStatusDesc": deliveryStatusDesc,
-        "deliveryTo": deliveryTo,
-        "customer": customer!.toJson(),
-        "routeId": routeId,
-        "deliveryRemarks": deliveryRemarks,
-        "firstName": firstName,
-        "middleName": middleName,
-        "lastName": lastName,
-        "title": title,
-        "address": address!.toJson(),
-        "related_orders": List<dynamic>.from(relatedOrders!.map((x) => x.toJson())),
-        // "exemptions": List<dynamic>.from(exemptions.map((x) => x.toJson())),
-        "message": message,
-      };
+    "related_order_count ": related_order_count,
+    "orderId ": orderId,
+    "paymentStatus": paymentStatus,
+    "pharmacy_id": pharmacyId,
+    "bagSize": bagSize,
+    "del_charge": delCharge,
+    "totalControlledDrugs": totalControlledDrugs,
+    "totalStorageFridge": totalStorageFridge,
+    "nursing_home_id": nursing_home_id,
+    "rx_charge": rxCharge,
+    "rx_invoice": rxInvoice,
+    // "del_charge": delCharge ,
+    "is_pres_charge": isPresCharge,
+    "is_del_charge": isDelCharge,
+    "exemption": exemption,
+    "pmr_type ": pmr_type,
+    "pr_id ": pr_id,
+    "orderId": orderId,
+    "alt_address": alt_address,
+    "customerId": customerId,
+    "parcel_box_name": parcelBoxName,
+    "pickupTypeId": pickupTypeId,
+    "exitingNote": exitingNote,
+    "isStorageFridge": isStorageFridge,
+    "isControlledDrugs": isControlledDrugs,
+    "deliveryId": deliveryId,
+    "deliveryStatusDesc": deliveryStatusDesc,
+    "deliveryTo": deliveryTo,
+    "customer": customer?.toJson(),
+    "routeId": routeId,
+    "deliveryRemarks": deliveryRemarks,
+    "firstName": firstName,
+    "middleName": middleName,
+    "lastName": lastName,
+    "title": title,
+    "address": address?.toJson(),
+    "related_orders": List<dynamic>.from(related_orders!.map((x) => x.toJson())),
+    // "exemptions": List<dynamic>.from(exemptions.map((x) => x.toJson())),
+    "message": message,
+  };
 }
 
 class Address {
@@ -193,24 +194,24 @@ class Address {
   dynamic duration;
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-        address1: json["address1"],
-        address2: json["address2"],
-        alt_address: json["alt_address"],
-        postCode: json["postCode"],
-        longitude: json["longitude"],
-        latitude: json["latitude"],
-        duration: json["duration"],
-      );
+    address1: json["address1"],
+    address2: json["address2"],
+    alt_address: json["alt_address"],
+    postCode: json["postCode"],
+    longitude: json["longitude"],
+    latitude: json["latitude"],
+    duration: json["duration"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "address1": address1,
-        "address2": address2,
-        "alt_address": alt_address,
-        "postCode": postCode,
-        "longitude": longitude,
-        "latitude": latitude,
-        "duration": duration,
-      };
+    "address1": address1,
+    "address2": address2,
+    "alt_address": alt_address,
+    "postCode": postCode,
+    "longitude": longitude,
+    "latitude": latitude,
+    "duration": duration,
+  };
 }
 
 class ReletedOrders {
@@ -271,50 +272,50 @@ class ReletedOrders {
   String? mobileNo;
   String? alt_address;
   String? pharmacyName;
-  bool? isSelected = false;
+  bool isSelected = false;
   dynamic pr_id;
 
   factory ReletedOrders.fromJson(Map<String, dynamic> json) => ReletedOrders(
-        existing_delivery_notes: json["existing_delivery_notes"],
-        rxCharge: json["rx_charge"],
-        rxInvoice: json["rx_invoice"],
-        delCharge: json["del_charge"],
-        subsId: json["subs_id"],
-        orderId: json["orderId"],
-        pr_id: json["pr_id"],
-        isControlledDrugs: json["isControlledDrugs"],
-        parcelBoxName: json["parcel_box_name"],
-        pmr_type: json["pmr_type"],
-        isCronCreated: json["isCronCreated"],
-        isStorageFridge: json["isStorageFridge"],
-        deliveryNotes: json["deliveryNotes"],
-        fullName: json["fullName"],
-        userId: json["userId"],
-        fullAddress: json["fullAddress"],
-        alt_address: json["alt_address"],
-        pharmacyName: json["pharmacy_name"],
-      );
+    existing_delivery_notes: json["existing_delivery_notes"],
+    rxCharge: json["rx_charge"],
+    rxInvoice: json["rx_invoice"],
+    delCharge: json["del_charge"],
+    subsId: json["subs_id"],
+    orderId: json["orderId"],
+    pr_id: json["pr_id"],
+    isControlledDrugs: json["isControlledDrugs"],
+    parcelBoxName: json["parcel_box_name"],
+    pmr_type: json["pmr_type"],
+    isCronCreated: json["isCronCreated"],
+    isStorageFridge: json["isStorageFridge"],
+    deliveryNotes: json["deliveryNotes"],
+    fullName: json["fullName"],
+    userId: json["userId"],
+    fullAddress: json["fullAddress"],
+    alt_address: json["alt_address"],
+    pharmacyName: json["pharmacy_name"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "pr_id": pr_id,
-        "existing_delivery_notes": existing_delivery_notes,
-        "rx_invoice": rxInvoice,
-        "rx_charge": rxCharge,
-        "del_charge": delCharge,
-        "subs_id": subsId,
-        "orderId": orderId,
-        "isControlledDrugs": isControlledDrugs,
-        "parcel_box_name": parcelBoxName,
-        "userId": userId,
-        "pmr_type": pmr_type,
-        "isStorageFridge": isStorageFridge,
-        "deliveryNotes": deliveryNotes,
-        "isCronCreated": isCronCreated,
-        "fullName": fullName,
-        "fullAddress": fullAddress,
-        "alt_address": alt_address,
-        "pharmacy_name": pharmacyName,
-      };
+    "pr_id": pr_id,
+    "existing_delivery_notes": existing_delivery_notes,
+    "rx_invoice": rxInvoice,
+    "rx_charge": rxCharge,
+    "del_charge": delCharge,
+    "subs_id": subsId,
+    "orderId": orderId,
+    "isControlledDrugs": isControlledDrugs,
+    "parcel_box_name": parcelBoxName,
+    "userId": userId,
+    "pmr_type": pmr_type,
+    "isStorageFridge": isStorageFridge,
+    "deliveryNotes": deliveryNotes,
+    "isCronCreated": isCronCreated,
+    "fullName": fullName,
+    "fullAddress": fullAddress,
+    "alt_address": alt_address,
+    "pharmacy_name": pharmacyName,
+  };
 }
 
 class ExemptionsList {
@@ -363,42 +364,43 @@ class Customer {
   dynamic latitude;
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-        customerId: json["customerId"],
-        alt_address: json["alt_address"],
-        surgeryName: json["surgeryName"],
-        fullName: json["fullName"],
-        fullAddress: json["fullAddress"],
-        customerAddress: Address.fromJson(json["customerAddress"]),
-        customerNote: json["customerNote"],
-        fridgeNote: json["fridgeNote"],
-        controlNote: json["controlNote"],
-        firstName: json["firstName"],
-        middleName: json["middleName"],
-        lastName: json["lastName"],
-        mobile: json["mobile"],
-        title: json["title"],
-        address: Address.fromJson(json["address"]),
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-      );
+    customerId: json["customerId"],
+    alt_address: json["alt_address"],
+    surgeryName: json["surgeryName"],
+    fullName: json["fullName"],
+    fullAddress: json["fullAddress"],
+    customerAddress: Address.fromJson(json["customerAddress"]),
+    customerNote: json["customerNote"],
+    fridgeNote: json["fridgeNote"],
+    controlNote: json["controlNote"],
+    firstName: json["firstName"],
+    middleName: json["middleName"],
+    lastName: json["lastName"],
+    mobile: json["mobile"],
+    title: json["title"],
+    address: Address.fromJson(json["address"]),
+    latitude: json["latitude"],
+    longitude: json["longitude"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "customerId": customerId,
-        "alt_address": alt_address,
-        "surgeryName": surgeryName,
-        "fullName": fullName,
-        "fullAddress": fullAddress,
-        "customerAddress": customerAddress!.toJson(),
-        "customerNote": customerNote,
-        "fridgeNote": fridgeNote,
-        "controlNote": controlNote,
-        "firstName": firstName,
-        "middleName": middleName,
-        "lastName": lastName,
-        "mobile": mobile,
-        "title": title,
-        "address": address!.toJson(),
-        "latitude": latitude,
-        "longitude": longitude,
-      };
+    "customerId": customerId,
+    "alt_address": alt_address,
+    "surgeryName": surgeryName,
+    "fullName": fullName,
+    "fullAddress": fullAddress,
+    "customerAddress": customerAddress?.toJson(),
+    "customerNote": customerNote,
+    "fridgeNote": fridgeNote,
+    "controlNote": controlNote,
+    "firstName": firstName,
+    "middleName": middleName,
+    "lastName": lastName,
+    "mobile": mobile,
+    "title": title,
+    "address": address?.toJson(),
+    "latitude": latitude,
+    "longitude": longitude,
+  };
 }
+

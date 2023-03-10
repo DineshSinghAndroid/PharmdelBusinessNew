@@ -41,17 +41,17 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     autoFillUser();
-    emailCT.text = "ddk@gmail.com";
-    passCT.text = "Admin@1234";
+    // emailCT.text = "ddk@gmail.com";
+    // passCT.text = "Admin@1234";
     super.onInit();
   }
 
   Future<void> autoFillUser() async {
     // FlutterSecureStorage secureStorage = const FlutterSecureStorage();
     // secureStorage.write(key: "NAME", value: "one");
-    // // await SecureStorageCustom.save(key: "name",value: "one");
-    // String tes = await SecureStorageCustom.getValue(key: "NAME",) ?? "";
-    // print("tesx.....");
+    // await SecureStorageCustom.save(key: "name",value: "one");
+    // String tes = await SecureStorageCustom.getValue(key: "name",) ?? "";
+    // // print("tesx.....");
     // print("tesx.....${tes}..");
     // if(await SecureStorageCustom.getValue(key: "name") != "") {
     //   emailCT.text = SecureStorageCustom.getValue(key: "name").toString();

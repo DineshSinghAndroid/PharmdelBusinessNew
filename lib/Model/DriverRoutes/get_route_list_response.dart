@@ -1,4 +1,4 @@
-class DriverRoutesApiResposne {
+class GetRouteListResponse {
   List<RouteList>? routeList;
   List<AllRouteList>? allRouteList;
   List<PharmacyList>? pharmacyList;
@@ -9,20 +9,18 @@ class DriverRoutesApiResposne {
   String? vehicleInspection;
   String? vehicleId;
 
-  DriverRoutesApiResposne(
+  GetRouteListResponse(
+      {this.routeList,
+        this.allRouteList,
+        this.pharmacyList,
+        this.nHomeList,
+        this.status,
+        this.message,
+        this.isOrderAvailable,
+        this.vehicleInspection,
+        this.vehicleId});
 
-      {
-      this.routeList,
-      this.allRouteList,
-      this.pharmacyList,
-      this.nHomeList,
-      this.status,
-      this.message,
-      this.isOrderAvailable,
-      this.vehicleInspection,
-      this.vehicleId});
-
-  DriverRoutesApiResposne.fromJson(Map<String, dynamic> json) {
+  GetRouteListResponse.fromJson(Map<String, dynamic> json) {
     if (json['routeList'] != null) {
       routeList = <RouteList>[];
       json['routeList'].forEach((v) {
@@ -78,25 +76,25 @@ class DriverRoutesApiResposne {
 }
 
 class RouteList {
-  int? routeId;
+  String? routeId;
   String? routeName;
-  int? isActive;
-  int? companyId;
-  int? branchId;
+  String? isActive;
+  String? companyId;
+  String? branchId;
 
   RouteList(
       {this.routeId,
-      this.routeName,
-      this.isActive,
-      this.companyId,
-      this.branchId});
+        this.routeName,
+        this.isActive,
+        this.companyId,
+        this.branchId});
 
   RouteList.fromJson(Map<String, dynamic> json) {
-    routeId = json['routeId'];
-    routeName = json['routeName'];
-    isActive = json['isActive'];
-    companyId = json['companyId'];
-    branchId = json['branchId'];
+    routeId = json['routeId'] != null ? json['routeId'].toString():null;
+    routeName = json['routeName'] != null ? json['routeName'].toString():null;
+    isActive = json['isActive'] != null ? json['isActive'].toString():null;
+    companyId = json['companyId'] != null ? json['companyId'].toString():null;
+    branchId =  json['branchId'] != null ? json['branchId'].toString():null;
   }
 
   Map<String, dynamic> toJson() {
@@ -111,25 +109,25 @@ class RouteList {
 }
 
 class AllRouteList {
-  int? routeId;
+  String? routeId;
   String? routeName;
-  int? isActive;
-  int? companyId;
-  int? branchId;
+  String? isActive;
+  String? companyId;
+  String? branchId;
 
   AllRouteList(
       {this.routeId,
-      this.routeName,
-      this.isActive,
-      this.companyId,
-      this.branchId});
+        this.routeName,
+        this.isActive,
+        this.companyId,
+        this.branchId});
 
   AllRouteList.fromJson(Map<String, dynamic> json) {
-    routeId = json['routeId'];
-    routeName = json['routeName'];
-    isActive = json['isActive'];
-    companyId = json['companyId'];
-    branchId = json['branchId'];
+    routeId = json['routeId'] != null ? json['routeId'].toString():null;
+    routeName = json['routeName'] != null ? json['routeName'].toString():null;
+    isActive = json['isActive'] != null ? json['isActive'].toString():null;
+    companyId = json['companyId'] != null ? json['companyId'].toString():null;
+    branchId =  json['branchId'] != null ? json['branchId'].toString():null;
   }
 
   Map<String, dynamic> toJson() {
@@ -144,34 +142,34 @@ class AllRouteList {
 }
 
 class PharmacyList {
-  int? pharmacyId;
+  String? pharmacyId;
   String? pharmacyName;
   String? address;
   String? postCode;
   String? lat;
   String? lng;
-  int? isPresCharge;
-  int? isDelCharge;
+  String? isPresCharge;
+  String? isDelCharge;
 
   PharmacyList(
       {this.pharmacyId,
-      this.pharmacyName,
-      this.address,
-      this.postCode,
-      this.lat,
-      this.lng,
-      this.isPresCharge,
-      this.isDelCharge});
+        this.pharmacyName,
+        this.address,
+        this.postCode,
+        this.lat,
+        this.lng,
+        this.isPresCharge,
+        this.isDelCharge});
 
   PharmacyList.fromJson(Map<String, dynamic> json) {
-    pharmacyId = json['pharmacyId'];
-    pharmacyName = json['pharmacyName'];
-    address = json['address'];
-    postCode = json['post_code'];
-    lat = json['lat'];
-    lng = json['lng'];
-    isPresCharge = json['is_pres_charge'];
-    isDelCharge = json['is_del_charge'];
+    pharmacyId = json['pharmacyId'] != null ? json['pharmacyId'].toString():null;
+    pharmacyName = json['pharmacyName'] != null ? json['pharmacyName'].toString():null;
+    address = json['address'] != null ? json['address'].toString():null;
+    postCode = json['post_code'] != null ? json['post_code'].toString():null;
+    lat = json['lat'] != null ? json['lat'].toString():null;
+    lng = json['lng'] != null ? json['lng'].toString():null;
+    isPresCharge = json['is_pres_charge'] != null ? json['is_pres_charge'].toString():null;
+    isDelCharge = json['is_del_charge'] != null ? json['is_del_charge'].toString():null;
   }
 
   Map<String, dynamic> toJson() {
@@ -189,14 +187,14 @@ class PharmacyList {
 }
 
 class NHomeList {
-  int? id;
+  String? id;
   String? nursingHomeName;
 
   NHomeList({this.id, this.nursingHomeName});
 
   NHomeList.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    nursingHomeName = json['nursing_home_name'];
+    id = json['id'] != null ? json['id'].toString():null;
+    nursingHomeName = json['nursing_home_name'] != null ? json['nursing_home_name'].toString():null;
   }
 
   Map<String, dynamic> toJson() {

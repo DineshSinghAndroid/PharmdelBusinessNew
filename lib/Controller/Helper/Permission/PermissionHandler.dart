@@ -411,3 +411,7 @@ class CheckPermission {
   }
 
 }
+
+// abstract class PermissionCheckListner {
+//   void permissionCheck(bool isGranted);
+// }

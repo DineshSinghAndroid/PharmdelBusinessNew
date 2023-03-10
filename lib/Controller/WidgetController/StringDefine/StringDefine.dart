@@ -372,6 +372,10 @@ const String kPinDoesNotMatched = "Pin did not match";
 const String kChangeQuickAccessPin = "Change Quick Access Pin";
 const String kSetupQuickAccessPin = "Setup Quick Access Pin";
 
+const String kChooseNursingHome = "Choose nursing home";
+const String kChooseRouteFirst = "Choose route first";
+
+
 const String kEnterValidMPin = "Enter 4 digit pin";
 const String kConfirmPinNotMatch = "Confirm pin not matched";
 const String kEnterOldMPin = "Enter Old Pin";
@@ -398,6 +402,7 @@ const String kSelect = "Select";
 const String kSelectNursHome = "Select Nursing Home";
 
 
-
+/// Imp
+const String kOutForDelivery = "outfordelivery";
 
 

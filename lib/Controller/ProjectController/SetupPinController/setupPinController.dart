@@ -138,7 +138,7 @@ class SetupMPinController extends GetxController {
             PrintLog.printLog("Driver Type:::${userType.toString().toLowerCase()}");
             await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userPin, variableValue: pin.toString());
             if (userType.toString().toLowerCase() == "driver") {
-              Get.offAllNamed(homeScreenRoute);
+              Get.offAllNamed(driverDashboardScreenRoute);
             } else if (userType.toString().toLowerCase() == "pharmacy staff") {
               Get.offAllNamed(pharmacyHomePage);
             }

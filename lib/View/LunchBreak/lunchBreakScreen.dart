@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
@@ -9,7 +7,6 @@ import 'package:pharmdel/Controller/ProjectController/LunchBreakController.dart/
 import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 class LunchBreakScreen extends StatefulWidget {
@@ -74,7 +71,7 @@ class _LunchBreakScreenState extends State<LunchBreakScreen> {
                     prefs.setBool("UserOnBreak", false);
                     Future.delayed(
                   const Duration(seconds: 1,),
-                  () => Get.toNamed(homeScreenRoute),
+                  () => Get.toNamed(driverDashboardScreenRoute),
                 );
                   },);
                 // }                
