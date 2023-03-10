@@ -34,7 +34,10 @@ void isSelected(bool isSelect) {
 
   Future<void> init() async {
   // await drDashCtrl.driverDashboardApi(context: context,routeID: "1");
-      await drDashCtrl.driverRoutesApi(context: context);
+      await drDashCtrl.driverRoutesApi(context: context).then((value) async {
+        await drDashCtrl.getParcelBoxApi(context: context);
+      });
+
   }
 
   @override
@@ -224,7 +227,7 @@ void isSelected(bool isSelect) {
                                           label: kTotal,
                                           selectedTopBtnName: controller.selectedTopBtnName,
                                           counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "0",
-                                          onTap: () => controller.onTapTotalTopBtn(context:context),
+                                          onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 1),
                                       )
                               ),
 
@@ -237,8 +240,8 @@ void isSelected(bool isSelect) {
                                       bgColor: AppColors.yetToStartColor,
                                       label: kOnTheWay,
                                       selectedTopBtnName: controller.selectedTopBtnName,
-                                      counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "0",
-                                      onTap: () => controller.onTapOnTheWayTopBtn(context:context),
+                                      counter: controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 4),
                                       )) :
                               Flexible(
                                   flex: 1,
@@ -248,7 +251,7 @@ void isSelected(bool isSelect) {
                                       label: kPickedUp,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.pickedupOrders ?? "0",
-                                      onTap: () => controller.onTapPickedUpTopBtn(context:context),
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 8),
                                       )),
 
                               /// Delivered
@@ -260,7 +263,7 @@ void isSelected(bool isSelect) {
                                       label: kDelivered,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.deliveredOrders ?? "0",
-                                      onTap: () => controller.onTapDeliveredTopBtn(context:context),
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 5),
                                       )),
 
                               /// Failed
@@ -272,7 +275,7 @@ void isSelected(bool isSelect) {
                                       label: kFailed,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.faildOrders ?? "0",
-                                      onTap: () => controller.onTapFailedTopBtn(context:context),
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 6),
                                       )),
                             ],
                           ),

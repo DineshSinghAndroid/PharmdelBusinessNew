@@ -7,9 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:xml2json/xml2json.dart';
-
 import '../../../Model/DriverDashboard/driver_dashboard_response.dart';
-import '../../../Model/DriverProfile/profile_driver_response.dart';
 import '../../../Model/DriverRoutes/get_route_list_response.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../../Model/NotificationCount/notificationCountResponse.dart';
@@ -63,6 +61,9 @@ class DriverDashboardCTRL extends GetxController{
   /// Selected top btn
   String selectedTopBtnName = "";
   int orderListType = 1;
+
+  /// Vehicle list
+  List<VehicleListData>? vehicleListData;
 
   void isBulkScanSwitchedValue(bool value){
     isBulkScanSwitched = value;
@@ -132,33 +133,23 @@ class DriverDashboardCTRL extends GetxController{
     }
   }
 
-  void onTapTotalTopBtn({required BuildContext context}){
-    PrintLog.printLog("Clicked on Total");
-    driverDashboardApi(context: context);
-
+  Future<void> onTapMaTopDeliveryListBtn({required BuildContext context,required int btnType}) async {
+    orderListType = btnType;
+    PrintLog.printLog("Clicked on Btn Type: $btnType..Order_list_type: $orderListType");
+    if(selectedRoute?.routeId != null && selectedRoute?.routeId.toString() != "" && selectedRoute?.routeId.toString() != "null") {
+      await driverDashboardApi(context: context);
+    }else{
+      ToastCustom.showToast(msg: kFirstSelectRoute);
+    }
   }
-  void onTapPickedUpTopBtn({required BuildContext context}){
-    PrintLog.printLog("Clicked on Picked UP");
 
-  }
-  void onTapOnTheWayTopBtn({required BuildContext context}){
-    PrintLog.printLog("Clicked on On The Way");
-
-  }
-  void onTapDeliveredTopBtn({required BuildContext context}){
-    PrintLog.printLog("Clicked on Delivered");
-
-  }
-  void onTapFailedTopBtn({required BuildContext context}){
-    PrintLog.printLog("Clicked on Failed");
-
-  }
 
 
 
   Future<void> onTapAppBarRefresh({required BuildContext context})async {
     // await driverRoutesApi(context: context);
-    await getParcelBoxApi(context: context,driverID: userID);
+    // await getParcelBoxApi(context: context,driverID: userID);
+    // vehicleListApi(context: context);
     update();
   }
 
@@ -217,8 +208,8 @@ class DriverDashboardCTRL extends GetxController{
     update();
   }
 
-  /// Parcel box list api
-  Future<GetRouteListResponse?> getParcelBoxApi({required BuildContext context,required String driverID}) async {
+  /// Get delivery list api
+  Future<GetDeliveryApiResponse?> driverDashboardApi({required BuildContext context, }) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -227,7 +218,63 @@ class DriverDashboardCTRL extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-      "driverId":driverID
+      "routeId":selectedRoute?.routeId,
+      "page":"1",
+      "PageSize":"30",
+      "Status":orderListType
+    };
+
+    String url = WebApiConstant.GET_DELIVERY_LIST;
+
+    await apiCtrl.getDriverDashboardApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.status != false) {
+          try {
+            if (result.status == true) {
+              driverDashboardData = result;
+              result == null ? changeEmptyValue(true):changeEmptyValue(false);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+  /// Parcel box list api
+  Future<GetRouteListResponse?> getParcelBoxApi({required BuildContext context}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "driverId":userID
     };
 
     String url = WebApiConstant.GET_PHARMACY_PARCEL_BOX_URL;
@@ -263,7 +310,59 @@ class DriverDashboardCTRL extends GetxController{
     update();
   }
 
+  ///Vehicle List Controller
+  Future<VehicleListApiResponse?> vehicleListApi({required BuildContext context,}) async {
 
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "":""
+    };
+
+    String url = WebApiConstant.GET_VEHICLE_LIST_URL;
+
+    await apiCtrl.getVehicleListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.status != false) {
+          try {
+            if (result.status == true) {
+              vehicleListData = result.list;
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog("Status : ${result.status}");
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.status);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+///---------///--------///---------///--------///---------///--------///---------///--------///---------///--------
 
   Future<void> scanBarcodeNormal(
       {required BuildContext context,required bool isOutForDelivery,required  int customerId,required int orderId}) async {
@@ -452,67 +551,11 @@ class DriverDashboardCTRL extends GetxController{
     }
   }
 
-  /// Get delivery list api
-  Future<GetDeliveryApiResponse?> driverDashboardApi({required BuildContext context, }) async {
-
-    changeEmptyValue(false);
-    changeLoadingValue(true);
-    changeNetworkValue(false);
-    changeErrorValue(false);
-    changeSuccessValue(false);
-
-    Map<String, dynamic> dictparm = {
-      "routeId":selectedRoute?.routeId,
-      "page":"1",
-      "PageSize":"30",
-      "Status":orderListType
-    };
-
-    String url = WebApiConstant.GET_DELIVERY_LIST;
-
-    await apiCtrl.getDriverDashboardApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {
-      if(result != null){
-        if (result.status != false) {
-          try {
-            if (result.status == true) {
-              driverDashboardData = result;
-              result == null ? changeEmptyValue(true):changeEmptyValue(false);
-              changeLoadingValue(false);
-              changeSuccessValue(true);
-
-            } else {
-              changeLoadingValue(false);
-              changeSuccessValue(false);
-              PrintLog.printLog(result.message);
-            }
-
-          } catch (_) {
-            changeSuccessValue(false);
-            changeLoadingValue(false);
-            changeErrorValue(true);
-            PrintLog.printLog("Exception : $_");
-          }
-        }else{
-          changeSuccessValue(false);
-          changeLoadingValue(false);
-          changeErrorValue(true);
-          PrintLog.printLog(result.message);
-        }
-      }else{
-        changeSuccessValue(false);
-        changeLoadingValue(false);
-        changeErrorValue(true);
-      }
-    });
-    update();
-  }
 
 
 
   GetDeliveryApiResponse? driverDashboardData;
   NotificationCountApiResponse? notificationCountData;
-  VehicleListApiResponse? vehicleListData;
 
 
 
@@ -578,58 +621,6 @@ class DriverDashboardCTRL extends GetxController{
 
 
 
-  ///Vehicle List Controller
-  Future<DriverProfileApiResponse?> vehicleListApi({required BuildContext context,}) async {
-
-    changeEmptyValue(false);
-    changeLoadingValue(true);
-    changeNetworkValue(false);
-    changeErrorValue(false);
-    changeSuccessValue(false);
-
-    Map<String, dynamic> dictparm = {
-      "":""
-    };
-
-    String url = WebApiConstant.GET_VEHICLE_LIST_URL;
-
-    await apiCtrl.getVehicleListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {
-      if(result != null){
-        if (result.status != "false") {
-          try {
-            if (result.status == "true") {
-              vehicleListData = result;
-              result == null ? changeEmptyValue(true):changeEmptyValue(false);
-              changeLoadingValue(false);
-              changeSuccessValue(true);
-
-            } else {
-              changeLoadingValue(false);
-              changeSuccessValue(false);
-              PrintLog.printLog("Status : ${result.status}");
-            }
-
-          } catch (_) {
-            changeSuccessValue(false);
-            changeLoadingValue(false);
-            changeErrorValue(true);
-            PrintLog.printLog("Exception : $_");
-          }
-        }else{
-          changeSuccessValue(false);
-          changeLoadingValue(false);
-          changeErrorValue(true);
-          PrintLog.printLog(result.status);
-        }
-      }else{
-        changeSuccessValue(false);
-        changeLoadingValue(false);
-        changeErrorValue(true);
-      }
-    });
-    update();
-  }
 
 
   void changeSuccessValue(bool value){

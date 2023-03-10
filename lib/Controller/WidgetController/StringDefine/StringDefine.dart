@@ -389,6 +389,7 @@ const String kEnterValidConfirmMPin = "Enter 4 digit confirm pin";
 const String kConfirmMPin = "Confirm Secure Pin";
 const String kEnterConfirmMPin = "Enter Confirm Secure Pin";
 const String kConfirmMPinNotMatched = "Confirm Secure pin dosn't matched";
+const String kFirstSelectRoute = "First Select Route";
 
  ///Pharmacy Delivery List Screen
 ///Pharmacy Delivery List Screen
