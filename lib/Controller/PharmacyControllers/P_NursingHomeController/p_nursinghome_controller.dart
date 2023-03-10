@@ -17,7 +17,7 @@ class NursingHomeController extends GetxController{
   ApiController apiCtrl = ApiController();
   List<NursingOrdersData>? nursingOrdersData;
   List<NursingHome> nursingHomeList = [];
-  String? selectedRouteValue = NursingHome().nursingHomeName;
+  String? selectedNursingValue = NursingHome().nursingHomeName;
 
   bool isLoading = false;
   bool isError = false;

@@ -50,7 +50,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
   Widget build(BuildContext context) {
     return GetBuilder<NursingHomeController>(
       init: nurHmCtrl,
-      builder: (controller) {        
+      builder: (controller) {     
+        print("Nursing Home List is : ${controller.nursingHomeList}");
         return Scaffold(
       appBar: AppBar(
         title: BuildText.buildText(text: kBulkScan, size: 18),
@@ -220,6 +221,43 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                 ),
               ],
             ),
+
+            ///Get Tote Boxes
+            Flexible(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(5),
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: selectNursingHome,
+                      items: <String>[
+                        'Item 1',
+                        'Item 2',
+                        ].map<DropdownMenuItem<String>>((String? value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: BuildText.buildText(text: value!),
+                        );
+                      }).toList(),
+                      hint: BuildText.buildText(
+                        text: 'Select Box',
+                        color: AppColors.blackColor,
+                        size: 14,
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectNursingHome = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
             buildSizeBox(20.0, 0.0),
             ListView.builder(
               itemCount: 2,
