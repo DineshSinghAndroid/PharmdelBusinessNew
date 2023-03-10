@@ -49,7 +49,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                           _controller.selectedDate = _controller.formatter.format(picked!);
                           _controller.showDatedDate = _controller.formatterShow.format(picked);
 
-                          if (_controller.selectedDriverPosition! > 0 && _controller.selectedRoutePosition > 0) {}
+                          if (_controller.selectedDriverPosition! > 0 && _controller.selectedRouteID > 0) {}
                         });
                       },
                       child: Container(
@@ -86,10 +86,10 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                                 child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
                               ),
                           ],
-                          value: _controller.getRouteListController.selectedRouteValue,
+                          value: _controller.getRouteListController.selectedRouteName,
                           onChanged: (value) {
                             setState(() {
-                              _controller.getRouteListController.selectedRouteValue = value.toString();
+                              _controller.getRouteListController.selectedRouteName = value.toString();
                             });
                             // ),
                           },

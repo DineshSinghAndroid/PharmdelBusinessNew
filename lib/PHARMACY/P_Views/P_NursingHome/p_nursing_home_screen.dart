@@ -88,10 +88,10 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                             child: BuildText.buildText(text: "${route.routeName}",color: AppColors.blackColor,size: 14),
                           ),
                       ],
-                      value: controller.getRouteListController.selectedRouteValue,
+                      value: controller.getRouteListController.selectedRouteName,
                       onChanged: (value) {
                         setState(() {
-                          controller.getRouteListController.selectedRouteValue = value.toString();
+                          controller.getRouteListController.selectedRouteName = value.toString();
                         });
                       },                                                  
                     ),

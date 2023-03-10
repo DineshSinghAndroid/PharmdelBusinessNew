@@ -821,7 +821,7 @@ class ApiController {
     }
   }
 
-
+///driver list api for pharmacy
   Future<dynamic> requestGetForDriverListApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
@@ -860,6 +860,32 @@ class ApiController {
       return null;
     }
   }
+
+
+
+
+  ///delivery  list api for pharmacy
+  Future getPharmacyDeliveryListApi({context, required String url, dictParameter, String? token}) async {
+    PharmacyProfileApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = PharmacyProfileApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
 
 
   Future<Response?> logOutApi({required context,String? url}) async {

@@ -1,11 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 
- import '../../../Controller/PharmacyControllers/P_DeliveriesScreenController/P_deliverieslist_screen_controller.dart';
+import '../../../Controller/PharmacyControllers/P_DeliveriesScreenController/P_deliverieslist_screen_controller.dart';
 import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 
@@ -57,8 +56,8 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
               ],
             ),
             body: Container(
-              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(strIMG_HomeBg),fit: BoxFit.fitHeight)),
-              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(strIMG_HomeBg), fit: BoxFit.fitHeight)),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               height: Get.height,
               width: Get.width,
               child: Column(
@@ -67,7 +66,6 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                 children: [
                   Row(
                     children: [
-
                       DropdownButtonHideUnderline(
                         child: DropdownButton2(
                           hint: Text(
@@ -84,11 +82,10 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                                 child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
                               ),
                           ],
-                          value: controller.getRouteListController.selectedRouteValue,
+                          value: controller.getRouteListController.selectedRouteName,
                           onChanged: (value) {
-                            setState(() {
-                              controller.getRouteListController.selectedRouteValue = value.toString();
-                            });
+                            // print(controller.getRouteListController.routeList[int.parse(value!)].routeId.toString());
+                            controller.onRouteChange(value);
                           },
                           buttonStyleData: ButtonStyleData(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -101,8 +98,8 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                           menuItemStyleData: const MenuItemStyleData(),
                         ),
                       ),
-                        Spacer(),
-
+                      const Spacer(),
+                      if(controller.getDriverListController.driverList.isNotEmpty)
                       DropdownButtonHideUnderline(
                         child: DropdownButton2(
                           hint: Text(
@@ -112,24 +109,30 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                               color: Theme.of(context).hintColor,
                             ),
                           ),
-                          onChanged: ( DriverModel? newValue) {
-                            setState(() {
-                              controller.getDriverListController.selectedDriver = newValue;
-                            });
+
+                          items: [
+                            if (controller.getDriverListController.driverList.isNotEmpty)
+                              for (DriverModel route in controller.getDriverListController.driverList)
+                                DropdownMenuItem(
+                                  child: Text("${route.firstName}"??"",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.black87,fontSize: 12)),
+                                  value: controller.getDriverListController.driverList.indexOf(route),
+                                ),
+                          ],
+                          onChanged: (   value) {
+                            controller.onDriverChange(value);
                           },
-
-                          items: controller.getDriverListController.driverList.map<DropdownMenuItem<DriverModel>>((DriverModel value) {
-                            return DropdownMenuItem<DriverModel>(
-                              value: value,
-                              child: Text(
-                                value.firstName??"No Driver",style: const TextStyle(fontSize: 12),
-                               ),
-                            );
-                          }).toList(),
-
-
-                          value: controller.getDriverListController.selectedDriver,
-
+                          // items: controller.getDriverListController.driverList.map<DropdownMenuItem<DriverModel>>((DriverModel value) {
+                          //   return DropdownMenuItem<DriverModel>(
+                          //     value: value,
+                          //     child: Text(
+                          //       value.firstName ?? "No Driver",
+                          //       style: const TextStyle(fontSize: 12),
+                          //     ),
+                          //   );
+                          // }).toList(),
+                          value: controller.getDriverListController.selectedDriverPosition,
                           buttonStyleData: ButtonStyleData(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                               height: 40,
@@ -141,14 +144,13 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                           menuItemStyleData: const MenuItemStyleData(),
                         ),
                       ),
-
                     ],
                   ),
                   buildSizeBox(10.0, 0.0),
                   Row(
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: (){controller.onTodayTap();},
                         child: Chip(
                           label: BuildText.buildText(text: kToday, color: AppColors.whiteColor),
                           backgroundColor: AppColors.blueColor,
@@ -223,5 +225,4 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
       },
     );
   }
-
 }
