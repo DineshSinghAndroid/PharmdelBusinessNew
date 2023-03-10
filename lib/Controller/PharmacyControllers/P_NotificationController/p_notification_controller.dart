@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
@@ -17,12 +18,20 @@ class PharmacyNotificationController extends GetxController{
   List<NotificationData>? notificationData;
   CreateNotificationData? createNotificationData;
   SaveNotificationApiResponse? saveNotification;
+  List<StaffList>? staffList;
+  StaffList? staffValue;
 
   bool isLoading = false;
   bool isError = false;
   bool isEmpty = false;
   bool isNetworkError = false;
   bool isSuccess = false;
+
+
+  void updateStaffValue(value){
+    staffValue = value;
+    update();
+  }
 
 
   ///Recieve Notification Controller
@@ -102,6 +111,7 @@ class PharmacyNotificationController extends GetxController{
           try {            
             if (result.status == true) {              
               createNotificationData = result.data;
+              staffList = result.data?.staffList;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
@@ -167,6 +177,7 @@ class PharmacyNotificationController extends GetxController{
             if (result.status == true) {              
               saveNotification = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
+              ToastCustom.showToast(msg: "Notification Sent Successfully");
               changeLoadingValue(false);
               changeSuccessValue(true);
              

@@ -31,6 +31,7 @@ const String strImgRightClick = "assets/images/tick.png";
 const String strIMG_DelTruck2 = "assets/images/delivery_icon.png";
 const String strIMG_Location = "assets/images/location_icon.png";
 const String strIMG_QrCode = "assets/images/qr_code.png";
+const String strIMG_Fridge = "assets/images/fridge.png";
 
 
 ///GIF

@@ -1,5 +1,6 @@
 
 
+import 'dart:convert';
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
@@ -21,6 +22,8 @@ import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
+import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
 import '../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
@@ -502,6 +505,28 @@ class ApiController {
     return null;
   }
 
+  ///Pharmacy Get Nursing Home
+  Future<NursingHomeApiResponse?> getNursingHome({context, required String url, dictParameter, String? token}) async {
+    NursingHomeApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = NursingHomeApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
   ///Create Notification Api     
   Future<CreateNotificationApiResponse?> getCreateNotificationApi({context, required String url, dictParameter, String? token}) async {
     CreateNotificationApiResponse? result;
@@ -510,6 +535,28 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = CreateNotificationApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+   ///Get Nursing Home Orders    
+  Future<NursingOrderApiResponse?> getNursingHomeOrderApi({context, required String url, dictParameter, String? token}) async {
+    NursingOrderApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = NursingOrderApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -775,7 +822,7 @@ class ApiController {
   }
 
 
-  Future<dynamic?> requestGetForDriverListApi(
+  Future<dynamic> requestGetForDriverListApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
       Map<String, String> headers = {
@@ -798,7 +845,7 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
           connectTimeout: Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
@@ -809,7 +856,7 @@ class ApiController {
       return response;
 
     } catch (error) {
-      PrintLog.printLog("Exception_Main: $error");
+      PrintLog.printLog("Exception_Main in get driver list: $error");
       return null;
     }
   }
