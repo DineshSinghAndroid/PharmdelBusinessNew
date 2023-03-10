@@ -70,9 +70,7 @@ dependencies:
   local_auth: ^2.1.5
   url_launcher: ^6.1.10
   syncfusion_flutter_pdfviewer: ^20.4.51
-  flutter_barcode_scanner: ^2.0.0
   barcode_scan2: ^4.2.3
-  flutter_beep: ^1.0.0
   lottie: ^2.2.0
   location_permissions: ^4.0.1
   google_maps_flutter: ^2.2.4
@@ -86,6 +84,10 @@ dependencies:
 
   #flutter_secure_storage
   flutter_secure_storage: ^8.0.0
+
+  xml2json: ^5.3.6
+  flutter_barcode_scanner: ^2.0.0
+  flutter_beep: ^1.0.0
 
 dev_dependencies:
   flutter_test:

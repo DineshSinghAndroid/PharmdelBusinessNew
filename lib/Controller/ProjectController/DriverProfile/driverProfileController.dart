@@ -8,7 +8,7 @@ import 'package:pharmdel/Controller/Helper/Shared%20Preferences/SharedPreference
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
-import '../../../Model/DriverProfile/profileDriverResponse.dart';
+import '../../../Model/DriverProfile/profile_driver_response.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';

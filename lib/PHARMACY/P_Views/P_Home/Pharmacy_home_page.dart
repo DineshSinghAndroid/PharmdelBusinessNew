@@ -89,7 +89,12 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
               ),
             ),
             body: SafeArea(
-              child: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(strIMG_HomeBg)),
+                  SingleChildScrollView(
                   child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -131,6 +136,8 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                   ],
                 ),
               )),
+                ],
+              )
             ),
           );
         });

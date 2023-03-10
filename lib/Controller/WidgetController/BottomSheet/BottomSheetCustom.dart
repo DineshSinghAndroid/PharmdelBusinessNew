@@ -1,8 +1,11 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import 'package:pharmdel/Controller/WidgetController/BottomSheet/select_route_bottomsheet.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
 
 class BottomSheetCustom{
 
@@ -12,7 +15,27 @@ class BottomSheetCustom{
       subject: "Apna Slot",
     );
   }
-  /// Use for share App
+
+
+  static showSelectAddressBottomSheet({required DriverDashboardCTRL controller,required Function(dynamic) onValue,required BuildContext context,required String listType,String? selectedID}) async {
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(0.0),
+              topLeft: Radius.circular(0.0),
+            )
+        ),
+        context: context,
+        backgroundColor: AppColors.transparentColor,
+        builder: (builder){
+          return SelectRouteBottomSheet(controller: controller,listType: listType,selectedID: selectedID,);
+        }
+    ).then(onValue);
+  }
+
+/// Use for share App
   // static showSharePopup({required context,required String shareLink}) async {
   //   return showModalBottomSheet(
   //       isScrollControlled: true,

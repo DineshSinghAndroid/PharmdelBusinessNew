@@ -96,7 +96,7 @@ class SecurePinController extends GetxController {
   Future<void> openHomeScreen() async {
 
      if (userType == "Driver") {
-      Get.offAllNamed(homeScreenRoute);
+      Get.offAllNamed(driverDashboardScreenRoute);
     } else if (userType == "Pharmacy Staff") {
       Get.offAllNamed(pharmacyHomePage);
     } else {

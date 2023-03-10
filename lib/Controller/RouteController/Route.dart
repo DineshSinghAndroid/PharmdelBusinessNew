@@ -3,7 +3,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_Notification/pharmacy_notification_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_NursingHome/p_nursing_home_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/p_CreateNotification/p_create_notification_screen.dart';
-import 'package:pharmdel/View/DashBoard/HomeScreen/homeScreen.dart';
 import 'package:pharmdel/View/HowToOperate.dart/PdfScreen.dart';
 import 'package:pharmdel/View/LunchBreak/lunchBreakScreen.dart';
 import 'package:pharmdel/View/OnBoarding/Login/login_screen.dart';
@@ -12,12 +11,12 @@ import 'package:pharmdel/View/OnBoarding/Splash/splash_screen.dart';
 import 'package:pharmdel/View/ScanPrescription/scan_prescription.dart';
 import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
-
 import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_page.dart';
 import '../../PHARMACY/P_Views/P_TrackOrder/pharmacy_track_order_screen.dart';
 import '../../PHARMACY/P_Views/p_DeliveryList/p_deliverylist_screen.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
+import '../../View/DashBoard/DriverDashboard/driver_dashboard_screen.dart';
 import '../../View/MapScreen/map_screen.dart';
 import '../../View/NotificationScreen/notificationScreen.dart';
 import '../../View/OnBoarding/EnterPin/securePin.dart';
@@ -34,8 +33,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case securePinScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: SecurePin());
 
-    case homeScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const HomeScreen());
+    case driverDashboardScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const DriverDashboardScreen());
 
     case customerListScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: CustomerListScreen());

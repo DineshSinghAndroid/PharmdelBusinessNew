@@ -18,7 +18,6 @@ class PDashboardScreenController extends GetxController{
 
 
 
-
   Future<void> callGetRoutesApi({required BuildContext context})async{
     await getRouteListController.getRoutes(context: context).then((value) {
       PrintLog.printLog("Test print......${getRouteListController.routeList[0].routeName}");
