@@ -5,20 +5,21 @@ import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as G;
-import 'package:pharmdel/Model/DriverDashboard/driverDashboardResponse.dart';
+import 'package:pharmdel/Model/DriverDashboard/driver_dashboard_response.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
 import '../../Model/CreateNotification/createNotificationResponse.dart';
-import '../../Model/DriverList/driverListResponse.dart';
+import '../../Model/DriverList/driver_list_response.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
-import '../../Model/DriverProfile/profileDriverResponse.dart';
-import '../../Model/DriverRoutes/driverRoutesResponse.dart';
+import '../../Model/DriverProfile/profile_driver_response.dart';
+import '../../Model/DriverRoutes/get_route_list_response.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../Model/Login/login_model.dart';
 import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
+import '../../Model/ParcelBox/parcel_box_response.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
@@ -239,13 +240,13 @@ class ApiController {
   }
 
   //Driver Dashboard Api
-  Future<DriverDashboardApiresponse?> getDriverDashboardApi({context, required String url, dictParameter, String? token}) async {
-    DriverDashboardApiresponse? result;
+  Future<GetDeliveryApiResponse?> getDriverDashboardApi({context, required String url, dictParameter, String? token}) async {
+    GetDeliveryApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
-          result = DriverDashboardApiresponse.fromJson(response?.data);
+          result = GetDeliveryApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -260,14 +261,14 @@ class ApiController {
     return null;
   }
 
-  //Driver Routes Api
-  Future< DriverRoutesApiResposne?> getDriverRoutesApi({context, required String url, dictParameter, String? token}) async {
-    DriverRoutesApiResposne? result;
+  /// Driver Routes Api
+  Future< GetRouteListResponse?> getDriverRoutesApi({context, required String url, dictParameter, String? token}) async {
+    GetRouteListResponse? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
-          result = DriverRoutesApiResposne.fromJson(response?.data);
+          result = GetRouteListResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -281,6 +282,29 @@ class ApiController {
     }
     return null;
   }
+
+  /// Get parcel box list Api
+  Future< GetParcelBoxApiResponse?> getParcelBoxApi({context, required String url, dictParameter, String? token}) async {
+    GetParcelBoxApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetParcelBoxApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
 ///Pharmacy RoutesList Api
   Future< GetDriverRouteListModelResponse?> getRouteListApiPharmacy({context, required String url, dictParameter, String? token}) async {
     GetDriverRouteListModelResponse? result;
@@ -369,13 +393,13 @@ class ApiController {
 
 
   ///Get Order Details Api
-    Future<OrderDetailApiResponse?> getOrderDetailApi({context, required String url, dictParameter, String? token}) async {
-    OrderDetailApiResponse? result;
+    Future<OrderModal?> getOrderDetailApi({context, required String url, dictParameter, String? token}) async {
+      OrderModal? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
-          result = OrderDetailApiResponse.fromJson(response?.data);
+          result = OrderModal.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -797,7 +821,7 @@ class ApiController {
     }
   }
 
-
+///driver list api for pharmacy
   Future<dynamic> requestGetForDriverListApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
@@ -836,6 +860,32 @@ class ApiController {
       return null;
     }
   }
+
+
+
+
+  ///delivery  list api for pharmacy
+  Future getPharmacyDeliveryListApi({context, required String url, dictParameter, String? token}) async {
+    PharmacyProfileApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = PharmacyProfileApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
 
 
   Future<Response?> logOutApi({required context,String? url}) async {

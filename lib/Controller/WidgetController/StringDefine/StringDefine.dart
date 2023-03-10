@@ -373,6 +373,10 @@ const String kPinDoesNotMatched = "Pin did not match";
 const String kChangeQuickAccessPin = "Change Quick Access Pin";
 const String kSetupQuickAccessPin = "Setup Quick Access Pin";
 
+const String kChooseNursingHome = "Choose nursing home";
+const String kChooseRouteFirst = "Choose route first";
+
+
 const String kEnterValidMPin = "Enter 4 digit pin";
 const String kConfirmPinNotMatch = "Confirm pin not matched";
 const String kEnterOldMPin = "Enter Old Pin";
@@ -385,6 +389,7 @@ const String kEnterValidConfirmMPin = "Enter 4 digit confirm pin";
 const String kConfirmMPin = "Confirm Secure Pin";
 const String kEnterConfirmMPin = "Enter Confirm Secure Pin";
 const String kConfirmMPinNotMatched = "Confirm Secure pin dosn't matched";
+const String kFirstSelectRoute = "First Select Route";
 
  ///Pharmacy Delivery List Screen
 ///Pharmacy Delivery List Screen
@@ -399,6 +404,7 @@ const String kSelect = "Select";
 const String kSelectNursHome = "Select Nursing Home";
 
 
-
+/// Imp
+const String kOutForDelivery = "outfordelivery";
 
 

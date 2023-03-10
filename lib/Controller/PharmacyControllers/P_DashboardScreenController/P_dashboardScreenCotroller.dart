@@ -26,7 +26,7 @@ class PDashboardScreenController extends GetxController{
   }
 
   Future callGetDriverListApi({required BuildContext context})async{
-    await getDriverListController.getDriverList( context).then((value) {
+    await getDriverListController.getDriverList( context: context, routeId: '').then((value) {
       // PrintLog.printLog("Test print......${driverListController.driverList[0].toString()}");
       update();
     });

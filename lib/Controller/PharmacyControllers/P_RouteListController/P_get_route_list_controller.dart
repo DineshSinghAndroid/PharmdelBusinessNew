@@ -11,16 +11,15 @@ import '../../WidgetController/Toast/ToastCustom.dart';
 class PharmacyGetRouteListController extends GetxController {
   final ApiController _apiCtrl = ApiController();
   List<RouteList> routeList = [];
-  String? selectedRouteValue = RouteList().routeName;
-
+  String? selectedRouteName = RouteList().routeName;
+  int selectedRouteID = 0;
   @override
   void onInit() {
      super.onInit();
   }
 
   Future<GetDriverRouteListModelResponse?> getRoutes({context}) async {
-    print("routeList.length.toString()${routeList.length.toString()}");
-    await CustomLoading().show(context, true);
+     await CustomLoading().show(context, true);
 
     Map<String, dynamic> dictparm = {};
     String url = WebApiConstant.GET_ROUTE_URL_PHARMACY;

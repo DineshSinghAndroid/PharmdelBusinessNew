@@ -52,8 +52,8 @@ class SecurePinController extends GetxController {
         controller4.text.toString().trim().isNotEmpty) {
 
       String enteredPin = "${controller1.text.toString().trim()}${controller2.text.toString().trim()}${controller3.text.toString().trim()}${controller4.text.toString().trim()}";
-      PrintLog.printLog("userPin is ::::$userPin");
-      PrintLog.printLog("Entered Pin is ::::$enteredPin");
+      PrintLog.printLog("userPin is ::::$userPin..");
+      PrintLog.printLog("Entered Pin is ::::$enteredPin..");
       if(enteredPin == userPin){
         openHomeScreen();
        }
@@ -95,9 +95,11 @@ class SecurePinController extends GetxController {
 
   Future<void> openHomeScreen() async {
 
-     if (userType == "Driver") {
-      Get.offAllNamed(homeScreenRoute);
-    } else if (userType == "Pharmacy Staff") {
+     if (userType.toString().toLowerCase() == "driver") {
+      Get.offAllNamed(driverDashboardScreenRoute);
+    } else if (userType.toString().toLowerCase() == "pharmacy staff") {
+      Get.offAllNamed(pharmacyHomePage);
+    } else if (userType.toString().toLowerCase() == "pharmacy") {
       Get.offAllNamed(pharmacyHomePage);
     } else {
       ToastCustom.showToast(msg: "something went wrong");

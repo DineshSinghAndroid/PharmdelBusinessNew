@@ -24,6 +24,7 @@ class AppColors {
   static Color greenColorLight = const Color(0xFFEEFFE5);
   static Color greenColor = Colors.green.shade400;
   static Color greenAccentColor = Colors.greenAccent.shade700;
+  static Color greenDarkColor = Colors.green;
   static Color pinkColorLight = const Color(0xFFFEDEFB);
   static Color blueColorLight = Colors.lightBlue;
   static Color blueColor = Colors.blue;
