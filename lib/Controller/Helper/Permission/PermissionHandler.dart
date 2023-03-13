@@ -10,9 +10,11 @@ import '../TextController/BuildText/BuildText.dart';
 
 class CheckPermission {
   static CheckPermission? _instance;
-  factory CheckPermission() => _instance  = new CheckPermission._();
 
+  factory CheckPermission() => _instance ??= CheckPermission._();
   CheckPermission._();
+
+
 
   static Future<Object> checkCameraPermission(BuildContext context) async {
     bool isCameraPermission = false;

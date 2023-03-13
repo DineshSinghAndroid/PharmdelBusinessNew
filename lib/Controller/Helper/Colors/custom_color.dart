@@ -34,6 +34,11 @@ class AppColors {
   static Color textFieldBorderColor = const Color(0xFF8B8B8B);
   static Color textFieldErrorBorderColor = Colors.red;
   static Color textFieldBGColor = textFieldBorderColor.withOpacity(0.2);
+  static var pnColor = const Color(0xFF007bff);
+
+  static var deliveredColor = const Color(0xFF4AC66E);
+  static var failedColor = const Color(0xFFE66363);
+  static var pickedUp = const Color(0xFF757574);
 
 
   static MaterialColor materialAppThemeColor = const MaterialColor(

@@ -37,6 +37,8 @@ class WebApiConstant {
   static const String LOGOUT_URL_PHARMACY                    =  "${BASE_URL_PHARMACY}Logout";
   static const String Logout_URL                             =  "${BASE_URL}Logout";
 
+  static const GET_SORTEDLIST_BY_DURATION                    = "${BASE_URL}GetDelivarieswithRouteShort";
+
 
   ///Pharmacy
   static const String GET_PATIENT_LIST_URL                   =  "${BASE_URL_PHARMACY}GetPatient";

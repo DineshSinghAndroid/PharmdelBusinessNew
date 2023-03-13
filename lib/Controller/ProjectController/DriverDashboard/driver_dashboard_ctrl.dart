@@ -6,6 +6,8 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:xml2json/xml2json.dart';
 import '../../../Model/DriverDashboard/driver_dashboard_response.dart';
 import '../../../Model/DriverRoutes/get_route_list_response.dart';
@@ -18,6 +20,8 @@ import '../../../View/MapScreen/map_screen.dart';
 import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
+import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
+import '../../Helper/ConnectionValidator/internet_check_return.dart';
 import '../../Helper/Permission/PermissionHandler.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
@@ -25,6 +29,7 @@ import '../../RouteController/RouteNames.dart';
 import '../../WidgetController/BottomSheet/BottomSheetCustom.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
 import '../../WidgetController/Popup/PopupCustom.dart';
+import '../../WidgetController/Popup/popup.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../../WidgetController/Toast/ToastCustom.dart';
 import '../MainController/main_controller.dart';
@@ -39,9 +44,12 @@ class DriverDashboardCTRL extends GetxController{
 
   bool isBulkScanSwitched = false;
   bool isRouteStart = false;
-  String selectedType = "total";
+  // String selectedType = "total";
   int receivedCount = 0;
   int? selectedRoutId;
+
+  /// isShowReSchedule
+  bool isShowReSchedule = false;
 
   /// Get rout Data
   RouteList? selectedRoute;
@@ -64,6 +72,16 @@ class DriverDashboardCTRL extends GetxController{
 
   /// Vehicle list
   List<VehicleListData>? vehicleListData;
+  VehicleListData? selectedVehicleData;
+
+  /// Get Deliver list data
+  GetDeliveryApiResponse? driverDashboardData;
+
+  /// Location Array
+  List<LocationData> locationArray = [];
+  LocationData? locationData;
+  Location? location;
+
 
   void isBulkScanSwitchedValue(bool value){
     isBulkScanSwitched = value;
@@ -143,8 +161,47 @@ class DriverDashboardCTRL extends GetxController{
     }
   }
 
+  Future<void> onTapDeliveryListItem({required BuildContext context,required int index}) async {
+    if ((driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kFailedDelivery)) {
+      if (driverType.toLowerCase() == kDedicatedDriver) {
+        driverDashboardData?.deliveryList?[index].isSelected = !driverDashboardData!.deliveryList![index].isSelected!;
 
+        /// getCheckSelected
+        var data = driverDashboardData?.deliveryList?.where((element) => element.isSelected == true);
+        if (data != null && data.isNotEmpty) {
+          isShowReSchedule = data.first.isSelected ?? false;
+        } else {
+          isShowReSchedule = false;
+        }
+        update();
+      }
+    } else if (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kOutForDelivery) {
+      orderListType = 4;
+      orderListType != 1
+          ? scanBarcodeNormal(
+          context: context,
+          isOutForDelivery: true,
+          customerId: int.parse(driverDashboardData?.deliveryList?[index].customerDetials?.customerId.toString() ?? "0"),
+          orderId: driverDashboardData?.deliveryList?[index].nursing_home_id == null || driverDashboardData?.deliveryList?[index].nursing_home_id == "" ||driverDashboardData?.deliveryList?[index].nursing_home_id == "null" || driverDashboardData?.deliveryList?[index].nursing_home_id == "0" ? int.parse(driverDashboardData?.deliveryList?[index].orderId.toString() ?? "0") : 0)
+          : null;
 
+    } else if ((driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReadyDelivery) ||
+        (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == "readyfordelivery") ||
+        driverDashboardData?.deliveryList?[index].status?.toLowerCase() == "pickedup" ||
+        (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == "received") ||
+        (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == "requested")) {
+      if (!isRouteStart) {
+        orderDetailApi(
+          context: context,
+            routeID: selectedRoute?.routeId.toString() ?? "0",
+            orderID: driverDashboardData?.deliveryList?[index].orderId ?? "",
+            isScan: false,isComplete:  false,orderIdMain:  0
+        );
+      } else if (isRouteStart) {
+        PopupCustom.showAlertRouteStartedPopUp(context: context);
+      }
+    }
+  }
 
   Future<void> onTapAppBarRefresh({required BuildContext context})async {
     // await driverRoutesApi(context: context);
@@ -310,8 +367,8 @@ class DriverDashboardCTRL extends GetxController{
     update();
   }
 
-  ///Vehicle List Controller
-  Future<VehicleListApiResponse?> vehicleListApi({required BuildContext context,}) async {
+  ///Vehicle List Api
+  Future<VehicleListApiResponse?> vehicleListApi({required BuildContext context,required bool isStartRoute}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -331,7 +388,23 @@ class DriverDashboardCTRL extends GetxController{
         if (result.status != false) {
           try {
             if (result.status == true) {
-              vehicleListData = result.list;
+
+              if(isStartRoute){
+                if (result.list != null && result.list!.isNotEmpty) {
+                  if (result.list!.length > 1) {
+                    selectedVehicleData?.id = "0";
+                    selectedVehicleData?.name = "Please Select Vehicle";
+                    selectedVehicleData?.color = "";
+                    selectedVehicleData?.vehicleType = "";
+                    selectedVehicleData?.modal = "";
+                    selectedVehicleData?.regNo = "";
+                  } else {
+                    selectedVehicleData = result.list?[0];
+                  }
+                  vehicleListData = result.list;
+                }
+              }
+
               changeLoadingValue(false);
               changeSuccessValue(true);
 
@@ -362,10 +435,8 @@ class DriverDashboardCTRL extends GetxController{
     update();
   }
 
-///---------///--------///---------///--------///---------///--------///---------///--------///---------///--------
-
-  Future<void> scanBarcodeNormal(
-      {required BuildContext context,required bool isOutForDelivery,required  int customerId,required int orderId}) async {
+  /// Scan Barcode Normal
+  Future<void> scanBarcodeNormal({required BuildContext context,required bool isOutForDelivery,required  int customerId,required int orderId}) async {
     // checkLastTime(context);
     String barcodeScanRes;
     try {
@@ -401,8 +472,10 @@ class DriverDashboardCTRL extends GetxController{
     }
   }
 
-  ///Order Details Controller
+  ///Order Details Api // model check
   Future<OrderModal?> orderDetailApi({required BuildContext context,required String orderID,required String routeID,required bool isScan,required bool isComplete, required int orderIdMain}) async {
+    await InternetCheck.check();
+
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -446,6 +519,10 @@ class DriverDashboardCTRL extends GetxController{
               PrintLog.printLog('ScanDetailPage ${result.delCharge}');
               showAlertOrderPopUp(deliveryDetails: result,context: context);
             }
+          } else if (result.message != null) {
+            ToastCustom.showToast(msg: result.message ?? "");
+          } else {
+            orderListType = 1;
           }
           changeLoadingValue(false);
           changeSuccessValue(true);
@@ -474,14 +551,13 @@ class DriverDashboardCTRL extends GetxController{
           showDialog<ConfirmAction>(
               context: context,
               barrierDismissible: false,
-              // user must tap button for close dialog!
               builder: (BuildContext context1) {
                 return CustomDialogBox(
-                  img: Image.asset("assets/delivery_truck.png"),
-                  title: "Multiple Delivery...",
-                  btnDone: "Yes",
-                  btnNo: "No",
-                  descriptions: "${deliveryDetails.related_order_count} more delivery for this address. Would you like to deliver?",
+                  img: Image.asset(strImgDelTruck),
+                  title: kMultipleDelivery,
+                  btnDone: kYes,
+                  btnNo: kNo,
+                  descriptions: "${deliveryDetails.related_order_count} $kMoreDeliveryForThisAddress",
                   onClicked: (value) {
                     // showOrderList(deliveryDetails, value);
                   },
@@ -551,10 +627,261 @@ class DriverDashboardCTRL extends GetxController{
     }
   }
 
+  /// Get Deliveries With Route Api
+  Future<VehicleListApiResponse?> getDeliveriesApi({required BuildContext context,required bool isStartRoute}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "":""
+    };
+
+    String url = WebApiConstant.GET_VEHICLE_LIST_URL;
+
+    await apiCtrl.getVehicleListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.status != false) {
+          try {
+            if (result.status == true) {
+
+              if(isStartRoute){
+                if (result.list != null && result.list!.isNotEmpty) {
+                  if (result.list!.length > 1) {
+                    selectedVehicleData?.id = "0";
+                    selectedVehicleData?.name = "Please Select Vehicle";
+                    selectedVehicleData?.color = "";
+                    selectedVehicleData?.vehicleType = "";
+                    selectedVehicleData?.modal = "";
+                    selectedVehicleData?.regNo = "";
+                  } else {
+                    selectedVehicleData = result.list?[0];
+                  }
+                  vehicleListData = result.list;
+                }
+              }
+
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog("Status : ${result.status}");
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.status);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+
+  /// BottomNavigation Bar Dashboard
+  Widget bottomNavigationBarDashboard({required BuildContext context}){
+    return orderListType != 1
+        ? orderListType == 8 && driverDashboardData != null && driverDashboardData?.deliveryList != null && driverDashboardData!.deliveryList!.isNotEmpty && !isRouteStart
+        ? ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
+          ),
+          onPressed: () async {
+            await vehicleListApi(context: context,isStartRoute: true).then((value) {
+              if (locationArray.isNotEmpty) {
+                PrintLog.printLog("Staring routeitssss ");
+                confirmationPopupForStartRoute();
+              } else {
+                PrintLog.printLog("Unable to start routeitssss ");
+                getLocationData(context: context);
+              }
+            });
+
+          },
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "START ROUTE",
+                  style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  width: 5,
+                  height: 0,
+                ),
+                //SvgPicture.asset("assets/fast_forward.svg", height: 18, width: 18, color: Colors.white,)
+              ],
+            ),
+          ),
+        )
+        : (isRouteStart && orderListType == 4)//&& !isProgressAvailable
+        ? Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (driverDashboardData != null && driverDashboardData?.deliveryList != null && driverDashboardData!.deliveryList!.isNotEmpty)
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                    ),
+                    onPressed: () async {
+                      bool checkInternet = await ConnectionValidator().check();
+                      if (!checkInternet) {
+                        PopupCustom.noInternetPopUp(context: context,msg: kInternetNotAvailable);
+                      } else
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionScreen())).then((value) {
+                          if (isRouteStart) {
+                            orderListType = 4;
+                            selectWithTypeCount(WebConstant.Status_out_for_delivery);
+                          }
+                        });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          BuildText.buildText(text: kBulkDrop.toUpperCase(),size: 16,color: AppColors.whiteColor,weight: FontWeight.w700),
+                          buildSizeBox(0.0, 5.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              if (driverDashboardData != null && driverDashboardData?.deliveryList != null && driverDashboardData!.deliveryList!.isNotEmpty)
+                buildSizeBox(0.0, 20.0),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[400],
+                  ),
+                  onPressed: () async {
+                    bool checkInternet = await ConnectionValidator().check();
+                    if (!checkInternet) {
+                      PopupCustom.noInternetPopUp(context: context,msg: kInternetNotAvailable);
+                    } else {
+                      checkOfflineDeliveryAvailable(false);
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        BuildText.buildText(text: kEndRoute.toUpperCase(),size: 16,color: AppColors.whiteColor,weight: FontWeight.w700),
+                        buildSizeBox(0.0, 5.0),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+        : (isRouteStart && orderListType == 4 && driverDashboardData != null && driverDashboardData?.deliveryList != null && driverDashboardData!.deliveryList!.isNotEmpty)//&& !isProgressAvailable
+        ?
+
+    /// Comment buk drop button
+    ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+      ),
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionScreen())).then((value) {
+          if (isRouteStart) {
+            orderListType = 4;
+            selectWithTypeCount(WebConstant.Status_out_for_delivery);
+          }
+        });
+
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            BuildText.buildText(text: kBulkDrop.toUpperCase(),size: 16,color: AppColors.whiteColor,weight: FontWeight.w700),
+            buildSizeBox(0.0, 5.0),
+          ],
+        ),
+      ),
+    )
+        : const SizedBox.shrink()
+        : const SizedBox.shrink();
+  }
+
+  void selectWithTypeCount({required BuildContext context,required int orderListType}) async {
+    isDelivery = false;
+    if (selectedRoute?.routeId != null && selectedRoute?.routeId != "" && selectedRoute!.routeId!.isNotEmpty) {
+
+        if (orderListType == 4) {
+          orderListType = 4;
+          getParcelList(0);
+        } else {
+          fetchDeliveryList(0);
+        }
+
+    update();
+    } else {
+      ToastUtils.showCustomToast(context, kSelectRouteAgain);
+    }
+  }
 
 
 
-  GetDeliveryApiResponse? driverDashboardData;
+  /// Get Location
+  Future getLocationData({required BuildContext context}) async {
+    CheckPermission.checkLocationPermission(context).then((value) async {
+      if (value == true) {
+        locationData = await location?.getLocation();
+        location?.changeSettings(distanceFilter: 10, accuracy: LocationAccuracy.high);
+        location?.enableBackgroundMode(enable: true);
+        location?.onLocationChanged.listen((LocationData currentLocation) {
+        locationArray.add(currentLocation);
+        if (locationArray.length > 5) locationArray.removeAt(0);
+        });
+      }else{
+        await location?.requestPermission();
+      }
+    });
+  }
+
+  ///---------///--------///---------///--------///---------///--------///---------///--------///---------///--------
+
+
+
+
+
+
+
   NotificationCountApiResponse? notificationCountData;
 
 
@@ -723,20 +1050,7 @@ class DriverDashboardCTRL extends GetxController{
   }
 
 
-  void noInternetPopUp(String msg,context) {
-    showDialog<ConfirmAction>(
-        context: context,
-        barrierDismissible: false, // user must tap button for close dialog!
-        builder: (BuildContext context) {
-          return CustomDialogBox(
-            img: Image.asset(strIMG_Sad),
-            title: kAlert,
-            btnDone: kOkay,
-            btnNo: "",
-            descriptions: msg,
-          );
-        });
-  }
+
 
 
   void endRoutePopup(context) {
