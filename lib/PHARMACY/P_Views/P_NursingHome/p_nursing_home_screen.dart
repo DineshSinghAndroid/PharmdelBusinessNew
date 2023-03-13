@@ -47,14 +47,14 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
     await nurHmCtrl.getDriverListController.getDriverList(context: context,routeId: '29');
     await nurHmCtrl.nursingHomeApi(context: context);        
     await nurHmCtrl.boxesApi(context: context,nursingId: '87134');
-    await nurHmCtrl.nursingHomeOrderApi(
-      context: context,
-      dateTime: selectedDate,
-      nursingHomeId: '10',
-      driverId: '10',
-      routeId: '29',
-      toteBoxId: '12',
-      );
+    // await nurHmCtrl.nursingHomeOrderApi(
+    //   context: context,
+    //   dateTime: selectedDate,
+    //   nursingHomeId: '10',
+    //   driverId: '10',
+    //   routeId: '29',
+    //   toteBoxId: '12',
+    //   );
   }
 
   @override
@@ -306,8 +306,16 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                         size: 14,
                       ),
                       onChanged: (value) {
-                        setState(() {
+                        setState(()async {
                           controller.selectedBoxValue = value.toString();
+                          await nurHmCtrl.nursingHomeOrderApi(
+                          context: context,
+                          dateTime: selectedDate,
+                          nursingHomeId: '10',
+                          driverId: '10',
+                          routeId: '29',
+                          toteBoxId: '12',
+                          );
                         });
                       },
                     ),
@@ -320,10 +328,10 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               itemBuilder: (context, index) {
                 return NursingHomeCardWidget(
                   customerName: 'Customer Name',
-                  leadingText: 'M',                  
+                  leadingText: 'M',
                 );
               },
-            )
+            ) 
           ],
         ),
       ),
