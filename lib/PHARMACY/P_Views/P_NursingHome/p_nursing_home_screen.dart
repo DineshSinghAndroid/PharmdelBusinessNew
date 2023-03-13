@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,8 +9,10 @@ import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/NursingHomeWidget/nursing_home_cardwidget.dart';
+import '../../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
 
 class NursingHomeScreen extends StatefulWidget {
   const NursingHomeScreen({super.key});
@@ -23,9 +27,6 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
 
   String selectedDate = "";
   String showDatedDate = "";
-  String? selectRoute;
-  String? selectDriver;
-  String? selectNursingHome;
   bool? isCheckedCD = false;
   bool? isCheckedFridge = false;
 
@@ -42,15 +43,25 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
   Future<void> init() async {
     final DateTime now = DateTime.now();
     selectedDate = formatter.format(now);
-    showDatedDate = formatterShow.format(now);
-    await nurHmCtrl.nursingHomeOrderApi(context: context);
+    showDatedDate = formatterShow.format(now);        
+    await nurHmCtrl.getDriverListController.getDriverList(context: context,routeId: '29');
+    await nurHmCtrl.nursingHomeApi(context: context);        
+    await nurHmCtrl.boxesApi(context: context,nursingId: '87134');
+    await nurHmCtrl.nursingHomeOrderApi(
+      context: context,
+      dateTime: selectedDate,
+      nursingHomeId: '10',
+      driverId: '10',
+      routeId: '29',
+      toteBoxId: '12',
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NursingHomeController>(
       init: nurHmCtrl,
-      builder: (controller) {        
+      builder: (controller) {                 
         return Scaffold(
       appBar: AppBar(
         title: BuildText.buildText(text: kBulkScan, size: 18),
@@ -149,6 +160,17 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   child: InkWell(
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                            primary: AppColors.colorOrange, 
+                            onPrimary: AppColors.whiteColor, 
+                            onSurface: AppColors.blackColor, 
+                          )),
+                          child: child!,
+                            );
+                          },
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(DateTime.now().year,
@@ -195,31 +217,102 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       underline: const SizedBox(),
-                      value: selectNursingHome,
-                      items: <String>[
-                        'Item 1',
-                        'Item 2',
-                        ].map<DropdownMenuItem<String>>((String? value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: BuildText.buildText(text: value!),
-                        );
-                      }).toList(),
+                      value: controller.selectedNursingValue,
+                      items: [
+                      for (NursingHome nursing in controller.nursingHomeList)
+                      DropdownMenuItem(
+                          value: controller.nursingHomeList.indexOf(nursing).toString(),
+                          child: BuildText.buildText(text: "${nursing.nursingHomeName}",color: AppColors.blackColor,size: 14),
+                        )],
                       hint: BuildText.buildText(
                         text: kSelectNursHome,
                         color: AppColors.blackColor,
                         size: 14,
                       ),
-                      onChanged: (String? value) {
+                      onChanged: (value) {
                         setState(() {
-                          selectNursingHome = value;
+                          controller.selectedNursingValue = value.toString();
                         });
                       },
                     ),
                   ),
                 ),
+                // Flexible(
+                //   flex: 1,
+                //   child: Container(
+                //     alignment: Alignment.center,
+                //     padding: const EdgeInsets.all(5),
+                //     height: 50,
+                //     decoration: BoxDecoration(
+                //         color: AppColors.whiteColor,
+                //         borderRadius: BorderRadius.circular(5)),
+                //     child: DropdownButton<NursingHome>(                      
+                //       value: controller.nursingHomeValue,
+                //       iconSize: 24,
+                //       elevation: 2,
+                //       isExpanded: true,
+                //       underline: const SizedBox(),
+                //       items: 
+                //       controller.nursingHomeList != null && controller.nursingHomeList!.isNotEmpty ? 
+                //             controller.nursingHomeList!.map((NursingHome? value) {
+                //                 return DropdownMenuItem<NursingHome>(
+                //                   value: value,
+                //                   child: BuildText.buildText(
+                //                     text: value!.nursingHomeName ?? "",                                      
+                //                   ),
+                //                 );
+                //               }).toList()
+                //             : null,
+                //       hint: BuildText.buildText(
+                //         text: kSelectNursHome,
+                //         color: AppColors.blackColor,
+                //         size: 14,
+                //       ),
+                //       onChanged: (NursingHome? newvalue) {
+                //         setState(() {
+                //           controller.nursingHomeValue = newvalue;
+                //         });
+                //       },
+                //     ),
+                //   ),
+                // ),
+                
               ],
             ),
+
+            ///Get Boxes List
+            Flexible(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(5),
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: controller.selectedBoxValue,
+                      items: [
+                      for (BoxesData boxes in controller.boxesListData)
+                      DropdownMenuItem(
+                          value: controller.boxesListData.indexOf(boxes).toString(),
+                          child: BuildText.buildText(text: "${boxes.boxName}",color: AppColors.blackColor,size: 14),
+                        )],
+                      hint: BuildText.buildText(
+                        text: 'Select Box',
+                        color: AppColors.blackColor,
+                        size: 14,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          controller.selectedBoxValue = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                ),
             buildSizeBox(20.0, 0.0),
             ListView.builder(
               itemCount: 2,
@@ -240,6 +333,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FloatingActionButton.extended(
+              heroTag: 'btn1',
                 backgroundColor: AppColors.colorOrange,
                 onPressed: () {
                   DefaultFuntions.barcodeScanning();
@@ -255,6 +349,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   ],
                 )),
             FloatingActionButton.extended(
+              heroTag: 'btn2',
                 onPressed: () {},
                 label: BuildText.buildText(
                     text: kCloseTote, color: AppColors.whiteColor)),

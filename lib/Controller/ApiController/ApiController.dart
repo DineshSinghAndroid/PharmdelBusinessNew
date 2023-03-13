@@ -20,10 +20,12 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
+import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
+import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
 import '../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
@@ -506,7 +508,7 @@ class ApiController {
   }
 
   ///Pharmacy Get Nursing Home
-  Future<NursingHomeApiResponse?> getNursingHome({context, required String url, dictParameter, String? token}) async {
+  Future<NursingHomeApiResponse?> getNursingHomeApi({context, required String url, dictParameter, String? token}) async {
     NursingHomeApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
@@ -520,6 +522,53 @@ class ApiController {
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
         return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Get Boxes Api
+  Future<GetBoxesApiResponse?> getBoxesApi({context, required String url, dictParameter, String? token}) async {
+    GetBoxesApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetBoxesApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Update Nursing Order Api
+  Future<UpdateNursingOrderApiResposne?> updateNursingOrderApi({context, required String url, dictParameter, String? token}) async {
+    UpdateNursingOrderApiResposne? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = UpdateNursingOrderApiResposne.fromJson(response?.data);
+          print("THIS IS API RESULT FOR LOGIN API $result");
+          return result;
+        } else {
+          print("THIS IS API RESULT FOR LOGIN API $result");
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);

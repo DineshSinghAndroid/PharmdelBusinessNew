@@ -3,7 +3,7 @@ class NursingOrderApiResponse {
   String? status;
   String? message;
   bool? isRouteStarted;
-  bool? isOrderAvailable;
+  String? isOrderAvailable;
 
   NursingOrderApiResponse({this.nursingOrderData, this.status, this.message, this.isRouteStarted, this.isOrderAvailable});
 

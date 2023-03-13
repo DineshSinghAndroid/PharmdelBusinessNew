@@ -54,7 +54,7 @@ class WebApiConstant {
   static const String GET_PHARMACY_DELETE_NURSING_ORDER      =  "${BASE_URL_PHARMACY}deleteOrderByOrderId";
   static const String GET_PHARMACY_DELIVERY_LIST             =  "${BASE_URL_PHARMACY}Delivery";
   static const String GET_PHARMACY_NURSING_HOME              =  "${BASE_URL_PHARMACY}getNursingHomes";
-  // static final GET_TOTE                                 = BASE_URL_PHARMACY + "getBoxesByNursingHome?nursing_id=";
+  static const String GET_PHARMACY_BOXES                     =  "${BASE_URL_PHARMACY}getBoxesByNursingHome";
 
 
 }
