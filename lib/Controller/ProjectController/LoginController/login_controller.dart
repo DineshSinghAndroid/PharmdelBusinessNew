@@ -44,7 +44,7 @@ class LoginController extends GetxController {
 
     //  emailCT.text = "sdk@gmail.com";
     // passCT.text = "Admin@1234";
-     // emailCT.text = "ddk@gmail.com";
+    //  emailCT.text = "ddk@gmail.com";
     // passCT.text = "Admin@1234";
      super.onInit();
   }
@@ -268,6 +268,7 @@ class LoginController extends GetxController {
 
     authToken = userData?.token.toString() ?? "";
     userID = userData?.userId.toString() ?? "";
+    driverType = userData?.driverType.toString() ?? "";
   }
 
 
