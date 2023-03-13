@@ -14,7 +14,7 @@ class GetDriverListController extends GetxController {
 
   List<DriverModel> driverList = [];
   DriverModel? selectedDriver;
-  int  selectedDriverPosition = 0;
+  int selectedDriverPosition = 0;
 
   @override
   void onInit() {
@@ -36,7 +36,7 @@ class GetDriverListController extends GetxController {
     String url = WebApiConstant.Get_PHARMACY_DriverList_ByRoute;
     await _apiCtrl.requestGetForDriverListApi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) {
       if (result != null) {
-        try {
+        try {          
           driverList.clear();
           PrintLog.printLog("result.....${result.data[0].toString()}");
 

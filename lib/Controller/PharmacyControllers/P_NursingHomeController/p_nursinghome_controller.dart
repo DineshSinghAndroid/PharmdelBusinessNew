@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Controller/ApiController/ApiController.dart';
+import '../../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
+import '../../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
@@ -16,7 +18,9 @@ class NursingHomeController extends GetxController{
 
   ApiController apiCtrl = ApiController();
   List<NursingOrdersData>? nursingOrdersData;
-  List<NursingHome> nursingHomeList = [];
+  List<BoxesData> boxesListData = [];
+  String? selectedBoxValue = BoxesData().boxName;
+  List<NursingHome> nursingHomeList = [];  
   String? selectedNursingValue = NursingHome().nursingHomeName;
 
   bool isLoading = false;
@@ -25,19 +29,22 @@ class NursingHomeController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-
+ ///Get Driver List Controller
  GetDriverListController getDriverListController = Get.put(GetDriverListController());
 
+ ///Get Route List Controller
  PharmacyGetRouteListController getRouteListController = Get.put(PharmacyGetRouteListController());
+ 
 
 
-Future<NursingHomeApiResponse?> nursingHome({context}) async {
-    print("routeList.length.toString()${nursingHomeList.length.toString()}");
+///Nursing Home Controller
+Future<NursingHomeApiResponse?> nursingHomeApi({context}) async {
+  nursingHomeList.clear();
     await CustomLoading().show(context, true);
 
     Map<String, dynamic> dictparm = {};
     String url = WebApiConstant.GET_PHARMACY_NURSING_HOME;
-    await apiCtrl.getNursingHome(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) {
+    await apiCtrl.getNursingHomeApi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) {
       if (result != null) {
         try {
            nursingHomeList.addAll(result.nursingHomeData!);
@@ -61,10 +68,104 @@ Future<NursingHomeApiResponse?> nursingHome({context}) async {
   }
 
 
+  ///Get Boxes Controller
+  Future<GetBoxesApiResponse?> boxesApi({required BuildContext context, required String nursingId}) async {    
+  boxesListData.clear();
+    await CustomLoading().show(context, true);
+
+    Map<String, dynamic> dictparm = {
+      "nursing_id":nursingId
+    };
+    String url = WebApiConstant.GET_PHARMACY_BOXES;
+    await apiCtrl.getBoxesApi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) {
+      if (result != null) {
+        try {
+           boxesListData.addAll(result.boxesdata!);
+
+         } catch (_) {
+          CustomLoading().show(context, false);
+
+          PrintLog.printLog("Exception : $_");
+          ToastCustom.showToast(msg: result.message ?? "");
+        }
+      } else {
+        CustomLoading().show(context, false);
+
+        PrintLog.printLog(result?.message);
+        ToastCustom.showToast(msg: result?.message ?? "");
+        update();
+      }
+    });
+    update();
+    CustomLoading().show(context, false);
+  }
+
+
+///Update Nursing Order Controller
+Future<UpdateNursingOrderApiResposne?> getUpdateNursingOrderApi({
+  required BuildContext context,
+  required String? orderId,
+  required String? storageTypeCD,
+  required String? storageTypeFR,
+
+  }) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+    "orderId":orderId,
+    "storage_type_cd":storageTypeCD,
+    "storage_type_fr":storageTypeFR,  
+    };
+
+    String url = WebApiConstant.GET_PHARMACY_UPDATE_NURSING_ORDER;
+
+    await apiCtrl.updateNursingOrderApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.error != true) {          
+          try {            
+            if (result.error == false) {                                                    
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+             
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+///Get Nursing Order List Controller
 Future<NursingOrderApiResponse?> nursingHomeOrderApi({
   required BuildContext context,
-   String? routeId,
-   String? dateTime,
+  required String? routeId,
+  required String? dateTime,
    String? driverId,
    String? nursingHomeId,
    String? toteBoxId,
