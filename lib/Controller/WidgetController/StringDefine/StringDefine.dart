@@ -50,6 +50,11 @@ const String strGIF_LOADING = "assets/images/loading.gif";
 const String kStoragePermissionToast = "msg...";
 const String kChangeRouteMsg = "You are already on a route, you can't change before completed.";
 const String kDontHaveroute = "You don't have any route. Try again after and refresh now.";
+const String kPlsSlctRoute = 'Please select route';
+const String kPlsSlctDriver = 'Please select driver';
+const String kPlsSlctNurHome = 'Please select nursing home';
+const String kPlsSlctTote = 'Please select tote';
+const String kPunchSomeDel = 'Punch some deliveries';
 
 
 ///DashBoard Screen
@@ -413,6 +418,7 @@ const String kSelect = "Select";
 
 ///Pharmacy Nursing Home Screen
 const String kSelectNursHome = "Select Nursing Home";
+const String kSelectTote = 'Select Tote';
 
 
 /// Imp

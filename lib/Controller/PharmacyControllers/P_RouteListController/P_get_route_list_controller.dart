@@ -11,8 +11,9 @@ import '../../WidgetController/Toast/ToastCustom.dart';
 class PharmacyGetRouteListController extends GetxController {
   final ApiController _apiCtrl = ApiController();
   List<RouteList> routeList = [];
+  RouteList? selectedroute;
   String? selectedRouteName = RouteList().routeName;
-  int selectedRouteID = 0;
+  String selectedRouteID = "";
   @override
   void onInit() {
      super.onInit();

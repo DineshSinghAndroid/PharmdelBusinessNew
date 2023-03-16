@@ -1,11 +1,14 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/WidgetController/BottomSheet/select_route_bottomsheet.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
+import 'p_select_route_bottomsheet.dart';
 
 class BottomSheetCustom{
 
@@ -31,6 +34,29 @@ class BottomSheetCustom{
         backgroundColor: AppColors.transparentColor,
         builder: (builder){
           return SelectRouteBottomSheet(controller: controller,listType: listType,selectedID: selectedID,);
+        }
+    ).then(onValue);
+  }
+
+
+    static pShowSelectAddressBottomSheet({required NursingHomeController controller,required Function(dynamic) onValue,required BuildContext context,required String listType,String? selectedID}) async {
+    return showModalBottomSheet(      
+      isDismissible: true,
+        isScrollControlled: true,
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(20.0),
+            )
+        ),
+        context: context,
+        backgroundColor: AppColors.whiteColor,
+        builder: (builder){
+          return SizedBox(
+            height: 400,
+            width: Get.width,
+            child: PhramacySelectRouteBottomSheet(controller: controller,listType: listType,selectedID: selectedID,));
         }
     ).then(onValue);
   }

@@ -14,7 +14,7 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
      height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return SizedBox(
+    return Container(      
       height: height,
       width: width,
       child: Column(
@@ -25,7 +25,7 @@ class LoadingWidget extends StatelessWidget {
               height: 150.00,
               width: 200.00,          
               child: Center(
-                  child: SizedBox(
+                  child: SizedBox(                   
                       height: 150.0,
                       width: 300.0,
                       child: Image.asset(strGIF_LOADING),

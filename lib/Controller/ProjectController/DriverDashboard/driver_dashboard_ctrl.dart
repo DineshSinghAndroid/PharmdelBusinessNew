@@ -705,15 +705,15 @@ class DriverDashboardCTRL extends GetxController{
             backgroundColor: Colors.blueAccent,
           ),
           onPressed: () async {
-            await vehicleListApi(context: context,isStartRoute: true).then((value) {
-              if (locationArray.isNotEmpty) {
-                PrintLog.printLog("Staring routeitssss ");
-                confirmationPopupForStartRoute();
-              } else {
-                PrintLog.printLog("Unable to start routeitssss ");
-                getLocationData(context: context);
-              }
-            });
+            // await vehicleListApi(context: context,isStartRoute: true).then((value) {
+            //   if (locationArray.isNotEmpty) {
+            //     PrintLog.printLog("Staring routeitssss ");
+            //     confirmationPopupForStartRoute();
+            //   } else {
+            //     PrintLog.printLog("Unable to start routeitssss ");
+            //     getLocationData(context: context);
+            //   }
+            // });
 
           },
           child: Container(
@@ -748,16 +748,16 @@ class DriverDashboardCTRL extends GetxController{
                       backgroundColor: Colors.blueAccent,
                     ),
                     onPressed: () async {
-                      bool checkInternet = await ConnectionValidator().check();
-                      if (!checkInternet) {
-                        PopupCustom.noInternetPopUp(context: context,msg: kInternetNotAvailable);
-                      } else
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionScreen())).then((value) {
-                          if (isRouteStart) {
-                            orderListType = 4;
-                            selectWithTypeCount(WebConstant.Status_out_for_delivery);
-                          }
-                        });
+                      // bool checkInternet = await ConnectionValidator().check();
+                      // if (!checkInternet) {
+                      //   PopupCustom.noInternetPopUp(context: context,msg: kInternetNotAvailable);
+                      // } else
+                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionScreen())).then((value) {
+                      //     if (isRouteStart) {
+                      //       orderListType = 4;
+                      //       selectWithTypeCount(WebConstant.Status_out_for_delivery);
+                      //     }
+                      //   });
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -784,7 +784,7 @@ class DriverDashboardCTRL extends GetxController{
                     if (!checkInternet) {
                       PopupCustom.noInternetPopUp(context: context,msg: kInternetNotAvailable);
                     } else {
-                      checkOfflineDeliveryAvailable(false);
+                      // checkOfflineDeliveryAvailable(false);
                     }
                   },
                   child: Container(
@@ -814,12 +814,12 @@ class DriverDashboardCTRL extends GetxController{
         backgroundColor: Colors.blueAccent,
       ),
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionScreen())).then((value) {
-          if (isRouteStart) {
-            orderListType = 4;
-            selectWithTypeCount(WebConstant.Status_out_for_delivery);
-          }
-        });
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionScreen())).then((value) {
+        //   if (isRouteStart) {
+        //     orderListType = 4;
+        //     selectWithTypeCount(WebConstant.Status_out_for_delivery);
+        //   }
+        // });
 
       },
       child: Container(
@@ -838,22 +838,22 @@ class DriverDashboardCTRL extends GetxController{
         : const SizedBox.shrink();
   }
 
-  void selectWithTypeCount({required BuildContext context,required int orderListType}) async {
-    isDelivery = false;
-    if (selectedRoute?.routeId != null && selectedRoute?.routeId != "" && selectedRoute!.routeId!.isNotEmpty) {
+  // void selectWithTypeCount({required BuildContext context,required int orderListType}) async {
+  //   isDelivery = false;
+  //   if (selectedRoute?.routeId != null && selectedRoute?.routeId != "" && selectedRoute!.routeId!.isNotEmpty) {
 
-        if (orderListType == 4) {
-          orderListType = 4;
-          getParcelList(0);
-        } else {
-          fetchDeliveryList(0);
-        }
+  //       if (orderListType == 4) {
+  //         orderListType = 4;
+  //         getParcelList(0);
+  //       } else {
+  //         fetchDeliveryList(0);
+  //       }
 
-    update();
-    } else {
-      ToastUtils.showCustomToast(context, kSelectRouteAgain);
-    }
-  }
+  //   update();
+  //   } else {
+  //     ToastUtils.showCustomToast(context, kSelectRouteAgain);
+  //   }
+  // }
 
 
 
@@ -971,37 +971,37 @@ class DriverDashboardCTRL extends GetxController{
     update();
   }
 
-  Future getLocationData({required BuildContext context}) async {
-    CheckPermission.checkLocationPermission(context).then((value) async {
-      Location? location;
-      LocationData? locationData;
-      PermissionStatus? permissionGranted;
-      List<LocationData> locationArray = [];
-      if (value == true) {
-        if (location == null) location = Location();
-        locationData = await location.getLocation();
-        if (locationData != null) {
-          locationArray.add(locationData);
-        }
-        if (permissionGranted == PermissionStatus.denied) {
-          permissionGranted = await location.requestPermission();
-          if (permissionGranted != PermissionStatus.granted) {
-            return;
-          }
-        }
-        if (permissionGranted == PermissionStatus.granted) {
-          locationData = await location.getLocation();
-          location.changeSettings(
-              distanceFilter: 10, accuracy: LocationAccuracy.high);
-          location.enableBackgroundMode(enable: true);
-          location.onLocationChanged.listen((LocationData currentLocation) {
-            locationArray.add(currentLocation);
-            if (locationArray.length > 5) locationArray.removeAt(0);
-          });
-        }
-      }
-    });
-  }
+  // Future getLocationData({required BuildContext context}) async {
+  //   CheckPermission.checkLocationPermission(context).then((value) async {
+  //     Location? location;
+  //     LocationData? locationData;
+  //     PermissionStatus? permissionGranted;
+  //     List<LocationData> locationArray = [];
+  //     if (value == true) {
+  //       if (location == null) location = Location();
+  //       locationData = await location.getLocation();
+  //       if (locationData != null) {
+  //         locationArray.add(locationData);
+  //       }
+  //       if (permissionGranted == PermissionStatus.denied) {
+  //         permissionGranted = await location.requestPermission();
+  //         if (permissionGranted != PermissionStatus.granted) {
+  //           return;
+  //         }
+  //       }
+  //       if (permissionGranted == PermissionStatus.granted) {
+  //         locationData = await location.getLocation();
+  //         location.changeSettings(
+  //             distanceFilter: 10, accuracy: LocationAccuracy.high);
+  //         location.enableBackgroundMode(enable: true);
+  //         location.onLocationChanged.listen((LocationData currentLocation) {
+  //           locationArray.add(currentLocation);
+  //           if (locationArray.length > 5) locationArray.removeAt(0);
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
 
   _toRadians(double degree) {
     return degree * pi / 180;

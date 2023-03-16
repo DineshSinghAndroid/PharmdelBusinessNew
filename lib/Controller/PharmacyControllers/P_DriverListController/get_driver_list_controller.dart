@@ -29,32 +29,30 @@ class GetDriverListController extends GetxController {
     Map<String, dynamic> dictparm = {"routeId": routeId};
     driverList.clear();
     DriverModel driverModel = DriverModel();
-    driverModel.driverId = 0;
+    driverModel.driverId = '0';
     driverModel.firstName = "Select Driver";
     driverList.add(driverModel);
 
     String url = WebApiConstant.Get_PHARMACY_DriverList_ByRoute;
     await _apiCtrl.requestGetForDriverListApi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) {
-      if (result != null) {
-        try {          
-          driverList.clear();
-          PrintLog.printLog("result.....${result.data[0].toString()}");
-
+      if (result != null) {        
+        try {                    
+          driverList.clear();               
           List data = result.data;
           data.forEach((element) {
             DriverModel model = DriverModel();
-            model.driverId = element["driverId"];
-            model.firstName = element["firstName"];
-            model.middleNmae = element["middleNmae"];
-            model.lastName = element["lastName"];
-            model.mobileNumber = element["mobileNumber"];
-            model.emailId = element["emailId"];
-            model.routeId = element["routeId"];
-            model.route = element["route"];
+            model.driverId = element["driverId"].toString();
+            model.firstName = element["firstName"].toString();
+            model.middleNmae = element["middleNmae"].toString();
+            model.lastName = element["lastName"].toString();
+            model.mobileNumber = element["mobileNumber"].toString();
+            model.emailId = element["emailId"].toString();
+            model.routeId = element["routeId"].toString();
+            model.route = element["route"].toString();
             driverList.add(model);
           });
 
-          PrintLog.printLog("This is driver List first name " +driverList[0].firstName);
+          PrintLog.printLog("Response_data: ${result}");
 
          } catch (_) {
           CustomLoading().show(context, false);

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
@@ -25,11 +26,12 @@ class PharmacyNotificationScreen extends StatefulWidget {
 class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen> {
 
   PharmacyNotificationController phrNotfCtrl = Get.put(PharmacyNotificationController());
-  RefreshController refreshController = RefreshController();
+  RefreshController refreshController = RefreshController();  
 
   @override
   void initState() {    
     init();
+    
     super.initState();
   }
 
@@ -38,7 +40,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
     phrNotfCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
       await phrNotfCtrl.notificationApi(context: context);
-      await phrNotfCtrl.createNotificationApi(context: context);
+      await phrNotfCtrl.sentNotificationApi(context: context, pageNo: '1');
     } else {
       phrNotfCtrl.isNetworkError = true;
       setState(() {});
@@ -91,6 +93,9 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
               ),
             ),
             bottom: TabBar(
+              onTap: (value) {
+                init();
+              },
               indicatorColor: AppColors.colorOrange,
               tabs: [
                 Padding(
@@ -112,10 +117,10 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
               ],
             ),
           ),
-          body: TabBarView(                    
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-          
+          body: TabBarView(
+            physics: const AlwaysScrollableScrollPhysics(),                         
+            dragStartBehavior: DragStartBehavior.start,
+            children: [          
               ///Recieve Notification
               RefreshIndicatorCustom(
               refreshController: refreshController,
@@ -123,21 +128,19 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                 refreshController.refreshCompleted();
                 init();
               },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Container(
-                          margin: const EdgeInsets.all(8),
-                          child: ListView.builder(                          
-                              shrinkWrap: true,
-                              itemCount: controller.notificationData?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                return NotificationCardWidget(
-                                  name: controller.notificationData?[index].name ?? "",
-                                  messsage: controller.notificationData?[index].message ?? "",
-                                  time:controller.notificationData?[index].created ?? "",
-                                );
-                              }),
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8,),
+                  child: ListView.builder(                          
+                      shrinkWrap: true,   
+                      physics: const AlwaysScrollableScrollPhysics(),                                               
+                      itemCount: controller.notificationData?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return NotificationCardWidget(
+                          name: controller.notificationData?[index].name ?? "",
+                          messsage: controller.notificationData?[index].message ?? "",
+                          time:controller.notificationData?[index].created ?? "",
+                        );
+                      }),
                 ),
               ), 
           
@@ -147,7 +150,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                   offset: const Offset(-10, -15),
                   child: Tooltip(
                     message: kCreateNotification,
-                    child: FloatingActionButton(                                        
+                    child: FloatingActionButton(
                       backgroundColor: AppColors.colorOrange,
                       child: const Icon(Icons.add),
                       onPressed: (){
@@ -157,15 +160,16 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                   ),
                 ),
                 body: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(top: 8),
                   child: ListView.builder(
-                    itemCount: controller.createNotificationData?.staffManagerInfo?.length ?? 0,
+                    itemCount: controller.sentNotificationData?.length ?? 0,
+                    physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return NotificationCardWidget(
-                        time: '12:00', 
-                        messsage: controller.createNotificationData?.staffManagerInfo?[index].role ?? "", 
-                        name: controller.createNotificationData?.staffManagerInfo?[index].name ?? "");
+                        time: controller.sentNotificationData?[index].dateAdded ?? "", 
+                        messsage: controller.sentNotificationData?[index].message ?? "", 
+                        name: controller.sentNotificationData?[index].name ?? "");
                     },
                   ),
                 ),

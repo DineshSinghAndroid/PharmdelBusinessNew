@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart' as G;
 import 'package:pharmdel/Model/DriverDashboard/driver_dashboard_response.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
@@ -25,6 +26,7 @@ import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dar
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
+import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
 import '../../Model/SaveNotification/saveNotificationResponse.dart';
@@ -330,14 +332,16 @@ class ApiController {
   }
 ///Pharmacy Driver List Get Api
   Future<dynamic> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
+    DriverModel? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        // if (response?.data != null && response?.statusCode == 200) {
-          return null;
-        // } else {
-        //   return null;
-        // }
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverModel.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
         return null;
@@ -552,17 +556,16 @@ class ApiController {
   }
 
   ///Update Nursing Order Api
-  Future<UpdateNursingOrderApiResposne?> updateNursingOrderApi({context, required String url, dictParameter, String? token}) async {
+  Future<UpdateNursingOrderApiResposne?> updateNursingOrderApi({required BuildContext context, required String url, dictParameter, String? token}) async {
     UpdateNursingOrderApiResposne? result;
     if (await ConnectionValidator().check()) {
       try {
-        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
-        if (response?.data != null && response?.statusCode == 200) {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ?? '',);
+        if (response?.data != null && response?.statusCode == 200) {          
           result = UpdateNursingOrderApiResposne.fromJson(response?.data);
-          print("THIS IS API RESULT FOR LOGIN API $result");
           return result;
-        } else {
-          print("THIS IS API RESULT FOR LOGIN API $result");
+        } else {          
+          return result;
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
@@ -584,6 +587,28 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = CreateNotificationApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Sent Notification Api
+  Future<SentNotificationApiResponse?> getSentNotificationApi({context, required String url, dictParameter, String? token}) async {
+    SentNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = SentNotificationApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -769,9 +794,9 @@ class ApiController {
               followRedirects: false,
               validateStatus: (status) => true,
               headers: headers));
-      if(response.data["authenticated"] == false){
-        // PopupCustom.logoutPopUP(context: context);
-      }
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }
       PrintLog.printLog("Response: $response");
       PrintLog.printLog("Response_headers: ${response.headers}");
       PrintLog.printLog("Response_realuri: ${response.realUri}");

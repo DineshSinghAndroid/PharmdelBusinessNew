@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
 
@@ -16,10 +17,12 @@ class _SearchPatientScreenState extends State<SearchPatientScreen> {
 
 
 GetPatientContoller patCtrl = Get.put(GetPatientContoller());
+NursingHomeController nurHmCtrl = Get.put(NursingHomeController());
 TextEditingController searchTextCtrl = TextEditingController();
 
 bool? noData = false;
 bool? isLoading = false;
+ 
 
 @override
  void initState() {
@@ -65,14 +68,14 @@ Widget build(BuildContext context,) {
                     child: TextFormField(
                       textAlign: TextAlign.start,
                       controller: searchTextCtrl,
-                      decoration: const InputDecoration(
-                          focusColor: Colors.white,
+                      decoration: InputDecoration(
+                          focusColor: AppColors.whiteColor,
                           contentPadding:
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                              const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                           filled: true,
                           fillColor: Colors.transparent,
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.black38),
+                          hintStyle: const TextStyle(color: Colors.black38),
                           hintText: kSearchPat),
                           onChanged: (value) async {
                               if(value.toString().trim().isNotEmpty && value.length > 3){
@@ -91,28 +94,32 @@ Widget build(BuildContext context,) {
                   child: Stack(children: [
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: SizedBox(                
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Image.asset(
                       strIMG_HomeBg,
                       fit: BoxFit.fill,
                     ),
-                  ),                
+                  ),
                 ),
+
+                ///Patient List
                 controller.patientData != null && controller.patientData!.isNotEmpty && searchTextCtrl.text.toString().trim().length > 2 ?
-                ListView.builder(                  
+                ListView.builder(
                       itemCount: controller.patientData?.length ?? 0,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return  PateintListWidget( 
-                        onTap: (){},                                           
+                        return  PateintListWidget(
                         context: context,
                         firstName: controller.patientData?[index].firstName ?? "",
                         middleName: controller.patientData?[index].middleName ?? "",
                         lastName:  controller.patientData?[index].lastName ?? "",
                         address:  controller.patientData?[index].address1 ?? "",
                         dob: controller.patientData?[index].dob ?? "",
+                        onTap: (){
+                          Navigator.of(context).pop(controller.patientData?[index]);
+                        },
                       );  
                       }
                        ) : const SizedBox.shrink()
