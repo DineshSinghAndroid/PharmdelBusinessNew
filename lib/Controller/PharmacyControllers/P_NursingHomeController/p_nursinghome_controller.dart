@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,7 @@ import '../../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursi
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../ProjectController/MainController/main_controller.dart';
 import '../../RouteController/RouteNames.dart';
 import '../../WidgetController/BottomSheet/BottomSheetCustom.dart';
 import '../../WidgetController/Loader/LoadingScreen.dart';
@@ -51,12 +53,12 @@ class NursingHomeController extends GetxController {
       orderId: nursingOrdersData?[index].orderId ?? "", 
       storageTypeCD: nursingOrdersData?[index].isControlledDrugs, 
       storageTypeFR:nursingOrdersData?[index].isStorageFridge
-    ); 
+    );
   }
 
-  /// On Tap Fridge 
+  /// On Tap Fridge
   void onTapWidgetFridge({required int index,required BuildContext context})async{
-    PrintLog.printLog("onTapWidgetFridge.....$index");
+    PrintLog.printLog("onTapWidgetFridge.....$index");    
   
   nursingOrdersData?[index].isStorageFridge = nursingOrdersData?[index].isStorageFridge?.toLowerCase() == "t" ? "f":"t";
   update();
@@ -69,19 +71,17 @@ class NursingHomeController extends GetxController {
     ); 
   }
 
-
 /// On Tap Cancel Button
-  void onTapWidgetCancel({required int index,required BuildContext context}){ 
+  void onTapWidgetCancel({required int index,required BuildContext context, required String selectDate})async{ 
     PrintLog.printLog("onTapWidgetCancel.....$index");
-
+    await deleteNursingOrderApi(context: context,orderId: nursingOrdersData?[index].orderId ?? "",index: index).then((value) {
+      Get.back();            
+      Future.delayed(
+        const Duration(seconds: 2)        
+      );
+      ToastCustom.showToast(msg: 'Order cancelled successfully');
+    });
   }
-
-
-  ///Get Driver List Controller
-  GetDriverListController getDriverListController = Get.put(GetDriverListController());
-
-  ///Get Route List Controller
-  PharmacyGetRouteListController getRouteListController = Get.put(PharmacyGetRouteListController());
 
   ///Select Route
   void onTapSelectedRoute(
@@ -96,7 +96,7 @@ class NursingHomeController extends GetxController {
         if (value != null) {
           getRouteListController.selectedroute = value;
           await getDriverListController.getDriverList(
-              context: context, routeId: '23');
+              context: context, routeId: getRouteListController.selectedroute?.routeId);
           update();
           PrintLog.printLog("Selected Route: ${getRouteListController.selectedroute?.routeName}");
         }
@@ -107,8 +107,7 @@ class NursingHomeController extends GetxController {
   ///Select Driver
   void onTapSelectedDriver(
       {required BuildContext context,
-      required controller,
-      required String driverId}) {
+      required controller}) {
     PrintLog.printLog("Clicked on Select driver");
     BottomSheetCustom.pShowSelectAddressBottomSheet(
       controller: controller,
@@ -119,10 +118,10 @@ class NursingHomeController extends GetxController {
         if (value != null) {
           getDriverListController.selectedDriver = value;
           await getDriverListController
-              .getDriverList(context: context, routeId: driverId)
-              .then((value) {
+              .getDriverList(context: context, routeId: getRouteListController.selectedroute?.routeId)
+              .then((value) {                
             update();
-          });
+          }); 
           PrintLog.printLog("Selected Driver: ${getDriverListController.selectedDriver?.firstName}");
         }
       },
@@ -140,11 +139,10 @@ class NursingHomeController extends GetxController {
       listType: "nursing home",
       onValue: (value) async {
         if (value != null) {
-          selectedNursingHome = value;
-          await nursingHomeApi(context: context).then((value) async {
-            await boxesApi(context: context, nursingId: '87134');
+          selectedNursingHome = value;          
+            await boxesApi(context: context, nursingId: selectedNursingHome?.id ?? "");
             update();
-          });
+          
           PrintLog.printLog("Selected Nursing Home: ${selectedNursingHome?.nursingHomeName}");
         }
       },
@@ -200,9 +198,13 @@ class NursingHomeController extends GetxController {
 
   void onTapSelectCloseTote() {
     if (nursingOrdersData != null && nursingOrdersData!.isNotEmpty) {
-      Get.back();
+      Get.back();      
+      getDriverListController.driverList.clear();
+      nursingHomeList.clear();
+      boxesListData.clear();      
+      nursingOrdersData?.clear();
     } else {
-      ToastCustom.showToast(msg: kPunchSomeDel);
+      ToastCustom.showToast(msg: kPunchSomeDel);      
     }
   }
 
@@ -237,6 +239,12 @@ class NursingHomeController extends GetxController {
   //     },
   //     showDate: showDatedDate);
   // }
+
+  ///Get Driver List Controller
+  GetDriverListController getDriverListController = Get.put(GetDriverListController());
+
+  ///Get Route List Controller
+  PharmacyGetRouteListController getRouteListController = Get.put(PharmacyGetRouteListController());
 
   ///Nursing Home Controller
   Future<NursingHomeApiResponse?> nursingHomeApi({context}) async {
@@ -352,6 +360,55 @@ class NursingHomeController extends GetxController {
         changeErrorValue(true);
       }
     });
+    update();
+  }
+
+  /// Delete Nursing Order Api
+  Future<void> deleteNursingOrderApi({required BuildContext context, required String orderId, required int index}) async {
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    String url =  WebApiConstant.GET_PHARMACY_DELETE_NURSING_ORDER;
+
+      Map<String, dynamic> dictparm = {
+        "OrderId":orderId,
+      };    
+
+      apiCtrl.deleteNursingOrderApi(context: context,url: url,formData: dictparm).then((response) async {
+
+        try {
+          if (response != null) {
+            if (response.data.toString().toLowerCase() == "Success") {
+              PrintLog.printLog(response.data);
+              nursingOrdersData?.removeAt(index);
+              changeLoadingValue(false);
+              changeSuccessValue(true);              
+            }else{
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+            }
+          }else{
+            changeLoadingValue(false);
+            changeSuccessValue(false);
+          }
+        } catch (e, stackTrace) {
+          changeLoadingValue(false);
+          changeSuccessValue(false);
+          changeErrorValue(true);
+          SentryExemption.sentryExemption(e, stackTrace);
+          String jsonUser = jsonEncode(e);
+          ToastCustom.showToast(msg: jsonUser);
+        }
+      }).catchError((onError) async {
+        changeLoadingValue(false);
+        changeSuccessValue(false);
+        changeErrorValue(true);
+        String jsonUser = jsonEncode(onError);
+        ToastCustom.showToast(msg: jsonUser);
+      });
+   
     update();
   }
 

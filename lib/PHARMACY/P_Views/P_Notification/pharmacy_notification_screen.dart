@@ -13,6 +13,7 @@ import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart'
 import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
+import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
 import '../../../Controller/WidgetController/RefresherIndicator/RefreshIndicatorCustom.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
@@ -167,6 +168,20 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return NotificationCardWidget(
+                        onTap: (){
+                          showDialog(
+                          barrierDismissible: true,
+                          context: context, 
+                          builder: (context) {
+                            return NotificationInfo(
+                              notificationName: controller.sentNotificationData?[index].name ?? "",
+                              type: controller.sentNotificationData?[index].type ?? "",
+                              userName: controller.sentNotificationData?[index].user ?? "",
+                              message: controller.sentNotificationData?[index].message ?? "",
+                              dateAdded: controller.sentNotificationData?[index].dateAdded ?? "",
+                            );
+                          },);
+                        },
                         time: controller.sentNotificationData?[index].dateAdded ?? "", 
                         messsage: controller.sentNotificationData?[index].message ?? "", 
                         name: controller.sentNotificationData?[index].name ?? "");

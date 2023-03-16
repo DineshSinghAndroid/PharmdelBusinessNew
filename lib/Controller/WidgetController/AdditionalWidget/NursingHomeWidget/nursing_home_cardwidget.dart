@@ -10,6 +10,7 @@ class NursingHomeCardWidget extends StatefulWidget {
   String? customerName;
   String? leadingText;
   String? address;
+  String? selectDate;
   bool? isShowFridge;
   bool? isShowCD;
   bool? isCheckedCD;
@@ -26,7 +27,8 @@ class NursingHomeCardWidget extends StatefulWidget {
     required this.isShowCD,
     required this.isCheckedFridge,
     required this.isCheckedCD,
-    required this.orderId
+    required this.orderId,
+    required this.selectDate
    });
 
   @override
@@ -78,7 +80,7 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                               size: 10,
                             ),
                             backgroundColor: AppColors.colorOrange,
-                            radius: 8.0,
+                            radius: 10.0,
                           ),
                           buildSizeBox(0.0, 5.0),
                           Expanded(
@@ -153,7 +155,7 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
                                                         Checkbox(
-                                                          activeColor: AppColors.blackColor,
+                                                          activeColor: AppColors.colorOrange,
                                                           visualDensity: const VisualDensity(horizontal: -4,vertical: -4),
                                                           value: widget.isCheckedCD,
                                                           onChanged: (newValue) {
@@ -188,7 +190,7 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
                                                         Checkbox(
-                                                          activeColor: AppColors.blackColor,
+                                                          activeColor: AppColors.colorOrange,
                                                           visualDensity: const VisualDensity( horizontal: -4,vertical: -4),
                                                           value: widget.isCheckedFridge,
                                                           onChanged: (newValue) {
@@ -220,17 +222,14 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                                           color: Colors.black)),
                                                 ),
                                                 InkWell(
-                                                  onTap: () => controller.onTapWidgetCancel(index:widget.index,context: context),
+                                                  onTap: () => controller.onTapWidgetCancel(index:widget.index,context: context,selectDate: widget.selectDate ?? ""),
                                                   child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
+                                                    mainAxisSize:MainAxisSize.min,
                                                     children: [
-                                                      const Icon(
-                                                        Icons.cancel_outlined,
+                                                      const Icon(Icons.cancel_outlined,
                                                       ),
                                                       buildSizeBox(0.0, 5.0),
-                                                      BuildText.buildText(
-                                                          text: kCancel)
+                                                      BuildText.buildText(text: kCancel)
                                                     ],
                                                   ),
                                                 )

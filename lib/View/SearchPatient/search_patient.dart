@@ -109,6 +109,7 @@ Widget build(BuildContext context,) {
                       itemCount: controller.patientData?.length ?? 0,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
+                      padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
                         return  PateintListWidget(
                         context: context,

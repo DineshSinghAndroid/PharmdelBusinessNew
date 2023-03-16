@@ -40,21 +40,21 @@ class BottomSheetCustom{
 
 
     static pShowSelectAddressBottomSheet({required NursingHomeController controller,required Function(dynamic) onValue,required BuildContext context,required String listType,String? selectedID}) async {
-    return showModalBottomSheet(      
-      isDismissible: true,
+    return showModalBottomSheet(
+        isDismissible: true,
         isScrollControlled: true,
         clipBehavior: Clip.antiAlias,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20.0),
-              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(40.0),
+              topLeft: Radius.circular(40.0),
             )
         ),
         context: context,
         backgroundColor: AppColors.whiteColor,
         builder: (builder){
           return SizedBox(
-            height: 400,
+            height: Get.height - 400,
             width: Get.width,
             child: PhramacySelectRouteBottomSheet(controller: controller,listType: listType,selectedID: selectedID,));
         }

@@ -721,6 +721,52 @@ class ApiController {
     return null;
   }
 
+
+  /// Delete Nursing Order Api     
+  Future<Response?> deleteNursingOrderApi(
+      {required context, String? url, formData}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $formData");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.get(url!,
+          data: formData,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      if(response.data["authenticated"] == false){
+        // PopupCustom.logoutPopUP(context: context);
+      }else if(response.statusCode == 200){
+        return response;
+      }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
   Future<Response?> requestGetForApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {

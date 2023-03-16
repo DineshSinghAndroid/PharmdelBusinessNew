@@ -1,10 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
-import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/NursingHomeWidget/nursing_home_cardwidget.dart';
@@ -39,7 +37,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
     final DateTime now = DateTime.now();
     selectedDate = formatter.format(now);
     showDatedDate = formatterShow.format(now);        
-    await nurHmCtrl.nursingHomeApi(context: context);            
+    await nurHmCtrl.nursingHomeApi(context: context);
   }
 
   @override
@@ -48,18 +46,18 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
       init: nurHmCtrl,
       builder: (controller) {                 
         return Scaffold(          
-      appBar: AppBar(
+            appBar: AppBar(
         title: BuildText.buildText(text: kBulkScan, size: 18),
         backgroundColor: AppColors.whiteColor,
         iconTheme: IconThemeData(color: AppColors.blackColor),
-      ),
-      body: Padding(
+            ),
+            body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             Row(
               children: [
-
+        
               ///Select Route
               Flexible(
                 child: WidgetCustom.pharmacyTopSelectWidget(
@@ -69,20 +67,20 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                 },),
               ),
               buildSizeBox(0.0, 10.0),
-
+        
                ///Select Driver
                nurHmCtrl.getDriverListController.driverList != null && nurHmCtrl.getDriverListController.driverList.isNotEmpty ?            
-               Flexible(
+              Flexible(
                 child: WidgetCustom.pharmacyTopSelectWidget(
                 title: controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
-                onTap:()=> controller.onTapSelectedDriver(context:context,controller:controller,driverId: '29'),),
+                onTap:()=> controller.onTapSelectedDriver(context:context,controller:controller),),
               ) : const SizedBox.shrink(),
               ],
             ),
             buildSizeBox(10.0, 0.0),
             Row(
               children: [
-
+        
                 ///Select Date And Time
                 Flexible(
                   flex: 1,
@@ -141,7 +139,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               ),
               ],
             ),
-
+        
             // Get Boxes List
             nurHmCtrl.boxesListData != null && nurHmCtrl.boxesListData.isNotEmpty ?
             Flexible(
@@ -151,37 +149,42 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               ) : const SizedBox.shrink(),
             
             buildSizeBox(20.0, 0.0),
-
+        
             ///Nursing Order Delivery List
             nurHmCtrl.nursingOrdersData != null && nurHmCtrl.nursingOrdersData!.isNotEmpty ?
-            ListView.builder(
-              itemCount: controller.nursingOrdersData?.length ?? 0,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return NursingHomeCardWidget(
-                  index: index,
-                  customerName: controller.nursingOrdersData?[index].customerName ?? "",
-                  address: controller.nursingOrdersData?[index].address ?? "",
-                  leadingText: "${index + 1}",
-                  orderId: controller.nursingOrdersData?[index].orderId ?? "",
-                  isShowFridge: controller.nursingOrdersData?[index].isStorageFridge == 't' ? true : false,
-                  isShowCD: controller.nursingOrdersData?[index].isControlledDrugs == 't' ? true : false,
-                  isCheckedFridge: controller.nursingOrdersData?[index].isStorageFridge == 't' ? true : false,
-                  isCheckedCD: controller.nursingOrdersData?[index].isControlledDrugs == 't' ? true : false,
-                );
-              },
+            Expanded(flex: 4,
+              child: ListView.builder(
+                itemCount: controller.nursingOrdersData?.length ?? 0,
+                shrinkWrap: true,              
+                physics: const ClampingScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  return NursingHomeCardWidget(
+                    index: index,
+                    selectDate: selectedDate,
+                    customerName: controller.nursingOrdersData?[index].customerName ?? "",
+                    address: controller.nursingOrdersData?[index].address ?? "",
+                    leadingText: "${index + 1}",
+                    orderId: controller.nursingOrdersData?[index].orderId ?? "",
+                    isShowFridge: controller.nursingOrdersData?[index].isStorageFridge == 't' ? true : false,
+                    isShowCD: controller.nursingOrdersData?[index].isControlledDrugs == 't' ? true : false,
+                    isCheckedFridge: controller.nursingOrdersData?[index].isStorageFridge == 't' ? true : false,
+                    isCheckedCD: controller.nursingOrdersData?[index].isControlledDrugs == 't' ? true : false,
+                  );
+                },
+              ),
             ) : const SizedBox.shrink()
           ],
         ),
-      ),
-
-      ///Floating Action Buttons
-      floatingActionButton: Transform.translate(
-        offset: const Offset(20, 0),
+            ),
+        
+          ///Floating Action Buttons
+          floatingActionButton: Transform.translate(
+        offset: const Offset(20,0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-
+        
             ///Scan Rx
             FloatingActionButton.extended(
               heroTag: 'btn1',
@@ -191,30 +194,32 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                 },
                 label: Column(
                   children: [
-                    Icon(                                            
+                    Icon(
                       Icons.qr_code_scanner,
                       color: AppColors.whiteColor,
                     ),
-                    BuildText.buildText(
-                        text: kScanRx, 
-                        color: AppColors.whiteColor),
+                    BuildText.buildText(                      
+                      text: kScanRx, 
+                      color: AppColors.whiteColor),
                   ],
                 )),
-
-            ///Close Tote    
+        
+            ///Close Tote
             FloatingActionButton.extended(
               heroTag: 'btn2',
                 onPressed: () {
-                  nurHmCtrl.onTapSelectCloseTote();                               
-                },
+                  nurHmCtrl.onTapSelectCloseTote();
+                  nurHmCtrl.onDelete();
+                  },
                 label: BuildText.buildText(
-                  text: kCloseTote, 
+                  text: kCloseTote,
                   color: AppColors.whiteColor)),
           ],
         ),
-      ),
-    );
+            ),
+          );
       },
     );
   }
+ 
 }
