@@ -32,6 +32,13 @@ const String strIMG_DelTruck2 = "assets/images/delivery_icon.png";
 const String strIMG_Location = "assets/images/location_icon.png";
 const String strIMG_QrCode = "assets/images/qr_code.png";
 const String strIMG_Fridge = "assets/images/fridge.png";
+const String strImgFridge = "assets/images/fridge.png";
+const String strImgAutomaticIcon = "assets/images/automatic_icon.png";
+const String strImgAltAdd = "assets/images/alt-add.png";
+const String strImgSend = "assets/images/send.png";
+const String strImgDelTruck = "assets/images/delivery_truck.png";
+
+
 
 
 ///GIF
@@ -43,10 +50,18 @@ const String strGIF_LOADING = "assets/images/loading.gif";
 const String kStoragePermissionToast = "msg...";
 const String kChangeRouteMsg = "You are already on a route, you can't change before completed.";
 const String kDontHaveroute = "You don't have any route. Try again after and refresh now.";
+const String kPlsSlctRoute = 'Please select route';
+const String kPlsSlctDriver = 'Please select driver';
+const String kPlsSlctNurHome = 'Please select nursing home';
+const String kPlsSlctTote = 'Please select tote';
+const String kPunchSomeDel = 'Punch some deliveries';
 
 
 ///DashBoard Screen
 const String kBulkScan = "Bulk Scan";
+const String kDeliverNow = "Deliver now";
+const String kManual = "Manual";
+const String kRoute = "Route";
 const String kTotal = "Total";
 const String kPickedUp = "Picked Up";
 const String kDelivered = "Delivered";
@@ -55,6 +70,7 @@ const String kOnTheWay = "On the way";
 const String kStartRoute = "START ROUTE";
 const String kScanRx = "Scan Rx";
 const String kSelectRoute = "Select Route";
+const String kSelectRouteFirst = "Select Route First!!";
 const String kSelectPhar = 'Select Pharmacy';
 const String kParcelLocation = 'Parcel Location';
 const String kAddressPara = '17 Fairwood Drive port Talbot West Glamorgan SA128NS';
@@ -109,7 +125,7 @@ const String kTakeSpdMtrPic = "take speedometer picture";
 const String kPlsEntStrmiles = 'Please enter start miles';
 const String kUploadingMsg = "Please wait\nWe are updating your offline deliveries.";
 const String kuploadingMsg1 = "Please wait\nWe are updating deliveries and ending route.";
-const String kinternetNotAvailable = "Seems like you have weak or no internet.\nPlease connect to internet first!";
+const String kInternetNotAvailable = "Seems like you have weak or no internet.\nPlease connect to internet first!";
 const String kStartroute = "Are you sure, you want to start route?";
 const String kAlert = "Alert...";
 const String kOkay = "Okay";
@@ -117,8 +133,10 @@ const String kRouteEnd = "Your route has been ended";
 const String kOptimizingRouteMsg = "Pharmacy optimizing the route, please wait it might take some time";
 const String kCheckAgain = "Check Again";
 const String kEndRoute = "End Route";
+const String kBulkDrop = "Bulk Drop";
 const String kNo = "No";
 const String kEndRouteWarning = "Are you sure,you want to end Route?";
+const String kSelectRouteAgain = "Select route and try again!";
 
 
 ///Update Address
@@ -167,7 +185,6 @@ const String kScanAndBook = "Scan & Book";
 const String kNursHomeBoxBook = "Nursing Home Box Booking";
 
 ///pharmacy track order screen
- const String kRoute = "Route";
  /// TextField Validation
   const String kSelectDriver = "Select Driver";
  /// TextField Validation
@@ -368,7 +385,7 @@ const String kSecurePinNotMatch = "Secure pin does not match";
 const String kOldPinNotMatch = "'Old pin not correct'";
 const String kPlsEntDigPin = "Please enter digit Pin'";
 const String kPinDidNotMatch = "''Pin did not match''";
-const String kInternetNotAvailable = "Something went wrong, Failed connection with server.";
+const String kInternetNotAvailable2 = "Something went wrong, Failed connection with server.";
 const String kPinDoesNotMatched = "Pin did not match";
 const String kChangeQuickAccessPin = "Change Quick Access Pin";
 const String kSetupQuickAccessPin = "Setup Quick Access Pin";
@@ -389,9 +406,9 @@ const String kEnterValidConfirmMPin = "Enter 4 digit confirm pin";
 const String kConfirmMPin = "Confirm Secure Pin";
 const String kEnterConfirmMPin = "Enter Confirm Secure Pin";
 const String kConfirmMPinNotMatched = "Confirm Secure pin dosn't matched";
+const String kFirstSelectRoute = "First Select Route";
 
  ///Pharmacy Delivery List Screen
-///Pharmacy Delivery List Screen
 const String kDeliveryList = "Delivery List";
 const String kToday = 'Today';
 const String kTomorrow = 'Tomorrow';
@@ -401,9 +418,23 @@ const String kSelect = "Select";
 
 ///Pharmacy Nursing Home Screen
 const String kSelectNursHome = "Select Nursing Home";
+const String kSelectTote = 'Select Tote';
 
 
 /// Imp
 const String kOutForDelivery = "outfordelivery";
+const String kFailedDelivery = "failed";
+const String kReadyDelivery = "ready";
+const String kSharedDriver = "shared";
+const String kDedicatedDriver = "dedicated";
+
+
+/// other
+const String kSelectAll = "Select All";
+const String kOrdersList = "Orders List";
+const String kMultipleDelivery = "Multiple Delivery...";
+const String kMoreDeliveryForThisAddress = "more delivery for this address. Would you like to deliver?";
+const String kDriverAlreadyOutForDelivery = "Driver is already out for delivery. You can not change status.";
+
 
 

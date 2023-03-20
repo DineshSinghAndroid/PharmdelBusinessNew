@@ -37,6 +37,8 @@ class WebApiConstant {
   static const String LOGOUT_URL_PHARMACY                    =  "${BASE_URL_PHARMACY}Logout";
   static const String Logout_URL                             =  "${BASE_URL}Logout";
 
+  static const GET_SORTEDLIST_BY_DURATION                    = "${BASE_URL}GetDelivarieswithRouteShort";
+
 
   ///Pharmacy
   static const String GET_PATIENT_LIST_URL                   =  "${BASE_URL_PHARMACY}GetPatient";
@@ -48,11 +50,13 @@ class WebApiConstant {
   static const String GET_PHARMACY_PROFILE_URL               =  "${BASE_URL_PHARMACY}GetProfile";
   static const String GET_PHARMACY_CREATE_NOTIFICATION       =  "${BASE_URL_PHARMACY}CreateNotification";
   static const String GET_PHARMACY_SAVE_NOTIFICATION         =  "${BASE_URL_PHARMACY}SaveNotification";
-  static const String GET_PHARMACY_UPDATE_NURSING_ORDER      =  "${BASE_URL_PHARMACY}UPDATE_NURSING_ORDER";
+  static const String GET_PHARMACY_UPDATE_NURSING_ORDER      =  "${BASE_URL_PHARMACY}updateStorageByOrderId";
   static const String GET_PHARMACY_DELETE_NURSING_ORDER      =  "${BASE_URL_PHARMACY}deleteOrderByOrderId";
   static const String GET_PHARMACY_DELIVERY_LIST             =  "${BASE_URL_PHARMACY}Delivery";
   static const String GET_PHARMACY_NURSING_HOME              =  "${BASE_URL_PHARMACY}getNursingHomes";
-  // static final GET_TOTE                                 = BASE_URL_PHARMACY + "getBoxesByNursingHome?nursing_id=";
+  static const String GET_PHARMACY_BOXES                     =  "${BASE_URL_PHARMACY}getBoxesByNursingHome";
+  static const String GET_PHARMACY_SIGNATURE_UPLOAD_URL      =  "${BASE_URL_PHARMACY}Acknowledge";
+  static const String GET_SENT_NOTIFICATION_URL              =  "${BASE_URL_PHARMACY}Notifications";
 
 
 }

@@ -6,6 +6,7 @@ import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/CreateNotification/createNotificationResponse.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../../main.dart';
 
@@ -20,6 +21,8 @@ class PharmacyNotificationController extends GetxController{
   SaveNotificationApiResponse? saveNotification;
   List<StaffList>? staffList;
   StaffList? staffValue;
+  List<SentNotificationData>? sentNotificationData;
+
 
   bool isLoading = false;
   bool isError = false;
@@ -32,6 +35,7 @@ class PharmacyNotificationController extends GetxController{
     staffValue = value;
     update();
   }
+  
 
 
   ///Recieve Notification Controller
@@ -57,6 +61,60 @@ class PharmacyNotificationController extends GetxController{
             if (result.status == true) {              
               notificationData = result.data;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+             
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+  ///Sent Notification Controller
+  Future<SentNotificationApiResponse?> sentNotificationApi({required BuildContext context,required String pageNo}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+    "page":pageNo
+    };
+
+    String url = WebApiConstant.GET_SENT_NOTIFICATION_URL;
+
+    await apiCtrl.getSentNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if (result.status != false) {          
+          try {            
+            if (result.status == true) {              
+              sentNotificationData = result.sentNotificationData;
+              result.sentNotificationData == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
              

@@ -3,11 +3,7 @@ class NursingHomeApiResponse {
   String? message;
   List<NursingHome>? nursingHomeData;
 
-  NursingHomeApiResponse({
-    this.error, 
-    this.message, 
-    this.nursingHomeData
-    });
+  NursingHomeApiResponse({this.error, this.message, this.nursingHomeData});
 
   NursingHomeApiResponse.fromJson(Map<String, dynamic> json) {
     error = json['error'];

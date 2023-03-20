@@ -12,7 +12,7 @@ class VehicleListApiResponse {
         list!.add(new VehicleListData.fromJson(v));
       });
     }
-    status = json['status'];
+    status = json['status'] != null && json['status'].toString().toLowerCase() == "true" ? true:false;
     message = json['message'];
   }
 
@@ -28,7 +28,7 @@ class VehicleListApiResponse {
 }
 
 class VehicleListData {
-  int? id;
+  String? id;
   String? name;
   String? modal;
   String? color;
@@ -44,12 +44,12 @@ class VehicleListData {
       this.vehicleType});
 
   VehicleListData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    modal = json['modal'];
-    color = json['color'];
-    regNo = json['reg_no'];
-    vehicleType = json['vehicle_type'];
+    id = json['id'] != null ? json['id'].toString():null;
+    name = json['name'] != null ? json['name'].toString():null;
+    modal = json['modal'] != null ? json['modal'].toString():null;
+    color = json['color'] != null ? json['color'].toString():null;
+    regNo = json['reg_no'] != null ? json['reg_no'].toString():null;
+    vehicleType = json['vehicle_type'] != null ? json['vehicle_type'].toString():null;
   }
 
   Map<String, dynamic> toJson() {

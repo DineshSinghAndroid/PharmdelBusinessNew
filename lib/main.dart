@@ -20,6 +20,8 @@ import 'Controller/SoketController/socket_controller.dart';
 
 String authToken = "";
 String userID = "";
+String driverType = "";
+
 var isDelivery = false;
 
 StreamController<int> msgController = StreamController<int>.broadcast();
@@ -54,7 +56,8 @@ Future<void> main() async {
   await AppSharedPreferences.getInstance().then((value) => {
     authToken = value?.getString(AppSharedPreferences.authToken) ?? "",
     userID = value?.getString(AppSharedPreferences.userId) ?? "",
-    PrintLog.printLog("Auth Token is: $authToken\nUser ID is: $userID\nFcm Token is: ${value?.getString(AppSharedPreferences.fcmToken) ?? ""}"),
+    driverType = value?.getString(AppSharedPreferences.driverType) ?? "",
+    PrintLog.printLog("Auth Token is: $authToken\nUser ID is: $userID\nDriver Type is: $driverType\nFcm Token is: ${value?.getString(AppSharedPreferences.fcmToken) ?? ""}"),
   });
 }
 

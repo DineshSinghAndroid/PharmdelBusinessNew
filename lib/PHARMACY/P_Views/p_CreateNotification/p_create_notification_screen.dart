@@ -25,6 +25,16 @@ FocusNode focusNotificationName = FocusNode();
 bool isSelectPharm = false;
 bool isSelectPharmName = false;
 
+@override
+void initState() {
+    init();
+    super.initState();
+  }
+
+  void init()async{
+    await phrNotfCtrl.createNotificationApi(context: context);    
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -227,9 +237,9 @@ bool isSelectPharmName = false;
                       name: notificationNameController.text.toString().trim(), 
                       userList: controller.staffValue?.userId ?? "", 
                       message: notificationMessageController.text.toString().trim(), 
-                      role: controller.staffValue?.role ?? "").then((value)async{
-                        await phrNotfCtrl.createNotificationApi(context: context);
-                      });
+                      role: controller.staffValue?.role ?? "").then((value) async {
+                        Get.back();
+                      });                      
                   }, 
                   text: kSubmit, 
                   buttonWidth: Get.width, 

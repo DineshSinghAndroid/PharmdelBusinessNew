@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart' as G;
 import 'package:pharmdel/Model/DriverDashboard/driver_dashboard_response.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
@@ -20,11 +21,17 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
+<<<<<<< HEAD
 import '../../Model/PharmacyModels/P_GetDeliveryListModel/P_get_delivery_list_model.dart';
+=======
+import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
+>>>>>>> d80fd4600d77a10a7da955c32146d85ed60c7557
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
+import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
+import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
 import '../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
@@ -329,14 +336,16 @@ class ApiController {
   }
 ///Pharmacy Driver List Get Api
   Future<dynamic> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
+    DriverModel? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        // if (response?.data != null && response?.statusCode == 200) {
-          return null;
-        // } else {
-        //   return null;
-        // }
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverModel.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
         return null;
@@ -507,7 +516,7 @@ class ApiController {
   }
 
   ///Pharmacy Get Nursing Home
-  Future<NursingHomeApiResponse?> getNursingHome({context, required String url, dictParameter, String? token}) async {
+  Future<NursingHomeApiResponse?> getNursingHomeApi({context, required String url, dictParameter, String? token}) async {
     NursingHomeApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
@@ -528,6 +537,52 @@ class ApiController {
     return null;
   }
 
+  ///Get Boxes Api
+  Future<GetBoxesApiResponse?> getBoxesApi({context, required String url, dictParameter, String? token}) async {
+    GetBoxesApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetBoxesApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Update Nursing Order Api
+  Future<UpdateNursingOrderApiResposne?> updateNursingOrderApi({required BuildContext context, required String url, dictParameter, String? token}) async {
+    UpdateNursingOrderApiResposne? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ?? '',);
+        if (response?.data != null && response?.statusCode == 200) {          
+          result = UpdateNursingOrderApiResposne.fromJson(response?.data);
+          return result;
+        } else {          
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
   ///Create Notification Api     
   Future<CreateNotificationApiResponse?> getCreateNotificationApi({context, required String url, dictParameter, String? token}) async {
     CreateNotificationApiResponse? result;
@@ -536,6 +591,28 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = CreateNotificationApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Sent Notification Api
+  Future<SentNotificationApiResponse?> getSentNotificationApi({context, required String url, dictParameter, String? token}) async {
+    SentNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = SentNotificationApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -648,6 +725,52 @@ class ApiController {
     return null;
   }
 
+
+  /// Delete Nursing Order Api     
+  Future<Response?> deleteNursingOrderApi(
+      {required context, String? url, formData}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $formData");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.get(url!,
+          data: formData,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      if(response.data["authenticated"] == false){
+        // PopupCustom.logoutPopUP(context: context);
+      }else if(response.statusCode == 200){
+        return response;
+      }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
   Future<Response?> requestGetForApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
@@ -721,9 +844,9 @@ class ApiController {
               followRedirects: false,
               validateStatus: (status) => true,
               headers: headers));
-      if(response.data["authenticated"] == false){
-        // PopupCustom.logoutPopUP(context: context);
-      }
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }
       PrintLog.printLog("Response: $response");
       PrintLog.printLog("Response_headers: ${response.headers}");
       PrintLog.printLog("Response_realuri: ${response.realUri}");

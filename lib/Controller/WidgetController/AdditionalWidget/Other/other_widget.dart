@@ -67,4 +67,38 @@ class WidgetCustom{
       ),
     );
   }
+
+
+  static Widget pharmacyTopSelectWidget({required String title,required Function() onTap}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: AppColors.whiteColor,
+            boxShadow: [
+             
+            ]),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: BuildText.buildText(
+                text: title,
+                size: 14,
+                color: AppColors.blackColor,
+                weight: FontWeight.w400,
+              ),
+            ),
+             Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.blackColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

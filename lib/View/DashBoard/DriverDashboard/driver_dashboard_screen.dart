@@ -34,7 +34,10 @@ void isSelected(bool isSelect) {
 
   Future<void> init() async {
   // await drDashCtrl.driverDashboardApi(context: context,routeID: "1");
-      await drDashCtrl.driverRoutesApi(context: context);
+      await drDashCtrl.driverRoutesApi(context: context).then((value) async {
+        await drDashCtrl.getParcelBoxApi(context: context);
+      });
+
   }
 
   @override
@@ -49,10 +52,8 @@ void isSelected(bool isSelect) {
                 resizeToAvoidBottomInset: false,
                 backgroundColor: AppColors.whiteColor,
                 appBar: AppBar(
-                  // title: BuildText.buildText(text: kBulkScan, size: 15),
                   centerTitle: true,
                   backgroundColor: AppColors.colorOrange,
-                  // automaticallyImplyLeading: false,
                   iconTheme: IconThemeData(color: AppColors.blackColor),
                   actions: [
                     Padding(
@@ -76,10 +77,11 @@ void isSelected(bool isSelect) {
                               onTap: () => controller.onTapAppBarRefresh(context:context),
                               child: const Icon(Icons.refresh)
                           ),
+
                           buildSizeBox(0.0, 10.0),
 
                           /// Map Navigate
-                          controller.selectedType.toString().toLowerCase() == kOutForDelivery && controller.isRouteStart ?
+                          controller.orderListType == 4 && controller.isRouteStart ?
                           InkWell(
                               onTap: ()=> controller.onTapAppBarMap(context: context),
                               child: Image.asset(strIMG_location,height: 25,color: AppColors.redColor,)
@@ -210,7 +212,7 @@ void isSelected(bool isSelect) {
                         ///Top counter widgets
                         Container(
                           width: Get.width,
-                          margin: const EdgeInsets.only(left: 2.5, right: 2.5, top: 0, bottom: 10),
+                          margin: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -224,7 +226,7 @@ void isSelected(bool isSelect) {
                                           label: kTotal,
                                           selectedTopBtnName: controller.selectedTopBtnName,
                                           counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "0",
-                                          onTap: () => controller.onTapTotalTopBtn(context:context),
+                                          onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 1),
                                       )
                               ),
 
@@ -237,8 +239,8 @@ void isSelected(bool isSelect) {
                                       bgColor: AppColors.yetToStartColor,
                                       label: kOnTheWay,
                                       selectedTopBtnName: controller.selectedTopBtnName,
-                                      counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "0",
-                                      onTap: () => controller.onTapOnTheWayTopBtn(context:context),
+                                      counter: controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 4),
                                       )) :
                               Flexible(
                                   flex: 1,
@@ -248,7 +250,7 @@ void isSelected(bool isSelect) {
                                       label: kPickedUp,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.pickedupOrders ?? "0",
-                                      onTap: () => controller.onTapPickedUpTopBtn(context:context),
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 8),
                                       )),
 
                               /// Delivered
@@ -260,7 +262,7 @@ void isSelected(bool isSelect) {
                                       label: kDelivered,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.deliveredOrders ?? "0",
-                                      onTap: () => controller.onTapDeliveredTopBtn(context:context),
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 5),
                                       )),
 
                               /// Failed
@@ -272,20 +274,81 @@ void isSelected(bool isSelect) {
                                       label: kFailed,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.faildOrders ?? "0",
-                                      onTap: () => controller.onTapFailedTopBtn(context:context),
+                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 6),
                                       )),
                             ],
                           ),
                         ),
 
-                        DeliveryCardCustom(
-                          name: 'Tester',
-                          address: kAddressPara,
-                          status: kPickedUp,
-                          onTap: (){
-                            Get.toNamed(updateStatusScreenRoute);
+                        controller.driverDashboardData != null && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ?
+                        ListView.separated(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(top: 20,left: 8,right: 8),
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: controller.driverDashboardData?.deliveryList?.length ?? 0,
+                          itemBuilder: (context, i) {
+                            return
+                            DeliveryCardCustom(
+                              /// onTap
+                             onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
+
+                              /// onTap Route
+                              onTapRoute: (){
+
+                              },
+
+                              /// onTap Manual
+                              onTapManual: (){
+
+                              },
+
+                              /// onTap DeliverNow
+                              onTapDeliverNow: (){
+
+                              },
+
+                              /// Customer Detail
+                              customerName: "${controller.driverDashboardData?.deliveryList?[i].customerDetials?.title ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.firstName ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.middleName ?? ""}  ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.lastName ?? ""}",
+                              customerAddress: "${controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address1 ?? controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address2 ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.postCode ?? ""}",
+                              altAddress: controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.alt_address ?? "",
+                              driverType: driverType,
+
+                              isBulkScanSwitched: controller.isBulkScanSwitched,
+                              isSelected: controller.driverDashboardData?.deliveryList?[i].isSelected ?? false,
+                              nursingHomeId: controller.driverDashboardData?.deliveryList?[i].nursing_home_id ?? "",
+                              pharmacyName: controller.driverDashboardData?.deliveryList?[i].pharmacyName ?? "",
+
+                              /// Order Detail
+                              orderListType: controller.orderListType,
+                              orderId: controller.driverDashboardData?.deliveryList?[i].orderId ?? "",
+                              deliveryStatus: controller.driverDashboardData?.deliveryList?[i].status ?? "",
+                              isControlledDrugs: controller.driverDashboardData?.deliveryList?[i].isControlledDrugs ?? "",
+                              isCronCreated: controller.driverDashboardData?.deliveryList?[i].isCronCreated ?? "",
+                              isStorageFridge: controller.driverDashboardData?.deliveryList?[i].isStorageFridge ?? "",
+                              parcelBoxName: controller.driverDashboardData?.deliveryList?[i].parcelBoxName ?? "",
+                              serviceName: controller.driverDashboardData?.deliveryList?[i].serviceName ?? "",
+                              pmrId: controller.driverDashboardData?.deliveryList?[i].pr_id ?? "",
+                              pmrType: controller.driverDashboardData?.deliveryList?[i].pmr_type ?? "",
+                              rescheduleDate: controller.driverDashboardData?.deliveryList?[i].rescheduleDate ?? "",
+
+                              /// PopUp Menu
+                              popUpMenu: [],
+
+
+                            );
                           },
-                        ),
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Padding(
+                              padding: EdgeInsets.only(bottom: 15),
+                            ) ;
+                          },
+                        )
+                        : controller.isRouteStart == false ?
+                        SizedBox(
+                          height: getHeightRatio(value: 50),
+                            width: getWidthRatio(value: 50),
+                            child: Center(child: BuildText.buildText(text: kSelectRouteFirst))
+                        ) : const SizedBox.shrink(),
 
                         // Visibility(
                         //   visible: isVisiblePharmacyList,

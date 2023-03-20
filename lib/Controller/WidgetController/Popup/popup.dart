@@ -1,14 +1,11 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import '../../Helper/TextController/BuildText/BuildText.dart';
-import '../../ProjectController/LoginController/login_controller.dart';
 import '../Button/button.dart';
 import '../Loader/LoadScreen/LoadScreen.dart';
 import '../StringDefine/StringDefine.dart';
-import '../TextField/CustomTextField.dart';
+import 'CustomDialogBox.dart';
 
 class PopupCustom{
   PopupCustom._privateConstructor();
@@ -31,6 +28,34 @@ class PopupCustom{
       },).then(onValue);
   }
 
+  static showAlertRouteStartedPopUp({required BuildContext context}){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context1) {
+          return CustomDialogBox(
+            img: Image.asset(strImgDelTruck),
+            title: kAlert,
+            btnDone: kOk,
+            descriptions: kDriverAlreadyOutForDelivery,
+          );
+        });
+  }
+
+  static noInternetPopUp({required BuildContext context,required String msg}){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return CustomDialogBox(
+            img: Image.asset(strIMG_Sad),
+            title: kAlert,
+            btnDone: kOkay,
+            btnNo: "",
+            descriptions: msg,
+          );
+        });
+  }
 
 }
 

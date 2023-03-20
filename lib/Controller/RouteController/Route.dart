@@ -17,6 +17,7 @@ import '../../PHARMACY/P_Views/p_DeliveryList/p_deliverylist_screen.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/DashBoard/DriverDashboard/driver_dashboard_screen.dart';
+import '../../View/DashBoard/DriverDashboard/show_order_list_screen.dart';
 import '../../View/MapScreen/map_screen.dart';
 import '../../View/NotificationScreen/notificationScreen.dart';
 import '../../View/OnBoarding/EnterPin/securePin.dart';
@@ -29,6 +30,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const SplashScreen());
     case loginScreenRoute:
       return MaterialPageRoute(builder: (context) => LoginScreen());
+
 
     case securePinScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: SecurePin());
@@ -86,6 +88,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       // case introScreenRoute:
      // case introScreenRoute:
      //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
+
+    case showOrderListScreenRoute:
+      return MaterialPageRoute(builder: (context) => ShowOrderListScreen());
+
 
   ///Pharmacy
   case pharmacyHomePage:

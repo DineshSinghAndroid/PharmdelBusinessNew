@@ -41,9 +41,10 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     autoFillUser();
-     emailCT.text = "sdk@gmail.com";
-    passCT.text = "Admin@1234";
-     // emailCT.text = "ddk@gmail.com";
+
+    //  emailCT.text = "sdk@gmail.com";
+    // passCT.text = "Admin@1234";
+    //  emailCT.text = "ddk@gmail.com";
     // passCT.text = "Admin@1234";
      super.onInit();
   }
@@ -155,12 +156,13 @@ class LoginController extends GetxController {
             if (result.error == false) {
               await saveUserData(userData: result).then((value){
                 String checkIsForgot = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString();
+                print("tes....${result.userType.toString().toLowerCase()}");
                 if (result.pin.toString() != "") {
                   if (checkIsForgot != "" && checkIsForgot != "null") {
                     Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
                   }else if (result.userType.toString().toLowerCase() == "driver") {
                     Get.toNamed(securePinScreenRoute);
-                  } else if (result.userType.toString().toLowerCase() == "pharmacy staff") {
+                  } else if (result.userType.toString().toLowerCase() == "pharmacy staff" || result.userType.toString().toLowerCase() == "pharmacy") {
                     Get.toNamed(securePinScreenRoute);
                   }
                 } else if (result.pin.toString() == "") {
@@ -266,6 +268,7 @@ class LoginController extends GetxController {
 
     authToken = userData?.token.toString() ?? "";
     userID = userData?.userId.toString() ?? "";
+    driverType = userData?.driverType.toString() ?? "";
   }
 
 

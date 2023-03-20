@@ -43,7 +43,7 @@ class DefaultWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(left: 1, right: 1, top: 8.0, bottom: 5),
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 10.0, bottom: 10.0),
+        padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 12.0, bottom: 12.0),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(5)),
             color: bgColor,
