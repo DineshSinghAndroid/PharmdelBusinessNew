@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_DisplayMapRoutes/p_display_map_routes_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_Notification/pharmacy_notification_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_NursingHome/p_nursing_home_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/p_CreateNotification/p_create_notification_screen.dart';
@@ -95,14 +96,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
   ///Pharmacy
   case pharmacyHomePage:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const PharmacyHomeScreen());
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyHomeScreen());
 
 
   case pharmacyDeliveryListScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:   const PharmacyDeliveryListScreen());                  
 
   case pharmacyTrackOrderScreen:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const TrackOrderScreenPharmacy());
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  TrackOrderScreenPharmacy());
 
 
   case pharmacyCreateNotificationScreeenRoute:
@@ -112,6 +113,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
   case nursingHomeScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const NursingHomeScreen());
+
+
+  case displayMapRoutesScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const DisplayMapRoutesScreen());    
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());

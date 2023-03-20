@@ -59,11 +59,6 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
             onTap: () {
               init();
             },
-          ) : controller.isNetworkError ?
-            NoInternetConnectionScreen(
-            onTap: () {
-              init();
-            },
           ) : controller.isEmpty ?
             EmptyDataScreen(
             onTap: () {
@@ -123,26 +118,19 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
             dragStartBehavior: DragStartBehavior.start,
             children: [          
               ///Recieve Notification
-              RefreshIndicatorCustom(
-              refreshController: refreshController,
-              onRefresh: (){
-                refreshController.refreshCompleted();
-                init();
-              },
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8,),
-                  child: ListView.builder(                          
-                      shrinkWrap: true,   
-                      physics: const AlwaysScrollableScrollPhysics(),                                               
-                      itemCount: controller.notificationData?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        return NotificationCardWidget(
-                          name: controller.notificationData?[index].name ?? "",
-                          messsage: controller.notificationData?[index].message ?? "",
-                          time:controller.notificationData?[index].created ?? "",
-                        );
-                      }),
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8,),
+                child: ListView.builder(                          
+                    shrinkWrap: true,   
+                    physics: const AlwaysScrollableScrollPhysics(),                                               
+                    itemCount: controller.notificationData?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return NotificationCardWidget(
+                        name: controller.notificationData?[index].name ?? "",
+                        message: controller.notificationData?[index].message ?? "",
+                        time:controller.notificationData?[index].created ?? "",
+                      );
+                    }),
               ), 
           
               ///Sent Notification  
@@ -182,8 +170,8 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                             );
                           },);
                         },
-                        time: controller.sentNotificationData?[index].dateAdded ?? "", 
-                        messsage: controller.sentNotificationData?[index].message ?? "", 
+                        time: controller.sentNotificationData?[index].dateAdded ?? "",                         
+                        message: controller.sentNotificationData?[index].user ?? "",///UserName
                         name: controller.sentNotificationData?[index].name ?? "");
                     },
                   ),

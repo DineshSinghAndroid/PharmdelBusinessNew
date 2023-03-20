@@ -5,10 +5,10 @@ import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.da
 
 class NotificationCardWidget extends StatelessWidget {
   String? name;
-  String? messsage;
+  String? message;
   String? time;
   VoidCallback? onTap;
-NotificationCardWidget({super.key, required this.time, required this.messsage, required this.name, this.onTap});
+NotificationCardWidget({super.key, required this.time, required this.message, required this.name, this.onTap});
 
   Random math = Random();
 
@@ -55,7 +55,7 @@ NotificationCardWidget({super.key, required this.time, required this.messsage, r
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             BuildText.buildText(
-                              text: name!,
+                              text: name ?? "",
                               style: const TextStyle(
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.bold,
@@ -63,7 +63,7 @@ NotificationCardWidget({super.key, required this.time, required this.messsage, r
                             ),
                            buildSizeBox(10.0, 0.0),
                             BuildText.buildText(
-                              text:  messsage!,
+                              text:  message ?? "",
                               style: const TextStyle(
                                 fontFamily: "Montserrat",
                               ),
@@ -75,7 +75,7 @@ NotificationCardWidget({super.key, required this.time, required this.messsage, r
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [               
                           Text(
-                            time!,
+                            time ?? "",
                             style: const TextStyle(fontFamily: "Montserrat", fontSize: 10),
                           )
                         ],

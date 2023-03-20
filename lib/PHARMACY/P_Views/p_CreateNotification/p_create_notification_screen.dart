@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
-import '../../../Model/CreateNotification/createNotificationResponse.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 
 class CreateNotificationScreen extends StatefulWidget {
   const CreateNotificationScreen({super.key});
@@ -26,22 +26,15 @@ bool isSelectPharm = false;
 bool isSelectPharmName = false;
 
 @override
-void initState() {
-    init();
-    super.initState();
-  }
-
-  void init()async{
-    await phrNotfCtrl.createNotificationApi(context: context);    
-  }
-
+void initState() {     
+  super.initState();
+}
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PharmacyNotificationController>(
       init: phrNotfCtrl,
       builder: (controller) {
-        PrintLog.printLog("staff value is : ${controller.staffList}");
         return GestureDetector(
           onTap: (){
             FocusScope.of(context).requestFocus(FocusNode());
@@ -71,6 +64,8 @@ void initState() {
                   weight: FontWeight.w500
                 ),
                 buildSizeBox(10.0, 0.0),
+
+                /// Notification Name
                 TextFormField(
                   controller: notificationNameController,
                       decoration: InputDecoration(
@@ -92,76 +87,13 @@ void initState() {
                     size: 18,
                     weight: FontWeight.w500                
                   ),
-                  buildSizeBox(10.0, 0.0),     
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.all(5),
-                    height: 50,
-                    decoration: BoxDecoration(                        
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.greyColor)),
-                    child: DropdownButton<StaffList>(                      
-                      value: controller.staffValue,
-                      iconSize: 24,
-                      elevation: 2,
-                      isExpanded: true,
-                      underline: const SizedBox(),
-                      items: 
-                      controller.staffList != null && controller.staffList!.isNotEmpty ? 
-                            controller.staffList!.map((StaffList? value) {
-                                return DropdownMenuItem<StaffList>(
-                                  value: value,
-                                  child: BuildText.buildText(
-                                    text: value!.name ?? "",                                      
-                                  ),
-                                );
-                              }).toList()
-                            : null,
-                      hint: BuildText.buildText(
-                        text: kSelectDriver,
-                        color: AppColors.greyColor,
-                        size: 14,
-                      ),
-                      onChanged: (StaffList? newvalue) {
-                        controller.updateStaffValue(newvalue);
-                      },
-                    ),
-                  ),         
-                //  Container(
-                //       width: MediaQuery.of(context).size.width,
-                //       height: 45.0,
-                //       decoration: BoxDecoration(border: Border.all(color: AppColors.greyColor), borderRadius: BorderRadius.circular(5.0)),
-                //       child: Padding(
-                //         padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 5.0, top: 5.0),
-                //         child: DropdownButton<StaffList>(
-                //           value: staffValue,
-                //           icon: const Icon(Icons.arrow_drop_down),
-                //           iconSize: 24,
-                //           elevation: 2,                          
-                //           isExpanded: true,
-                //           underline: const SizedBox(),
-                //           onChanged: (StaffList? newValue) {
-                //             setState(() {
-                //               staffValue = newValue;                              
-                //             });
-                //           },
-                //           items: staffList != null && staffList!.isNotEmpty
-                //               ? staffList!.map((StaffList? value) {
-                //                   return DropdownMenuItem<StaffList>(
-                //                     value: value,
-                //                     child: BuildText.buildText(
-                //                       text: value!.name ?? "",                                      
-                //                     ),
-                //                   );
-                //                 }).toList()
-                //               : null,
-                //           hint: BuildText.buildText(
-                //             text: kSelectPharStaff,
-                //             color: AppColors.greyColor,                           
-                //           ),
-                //         ),
-                //       ),
-                //     ),
+                  buildSizeBox(10.0, 0.0),
+
+                  /// Select Pharmacy Staff     
+                  WidgetCustom.pharmacySelectStaffWidget(
+                  title: controller.selectedStaff != null ? controller.selectedStaff?.name.toString() ?? "" :kSelectPharStaff,
+                  onTap:()=> controller.onTapSelectStaff(context:context,controller:controller),),
+              
                   buildSizeBox(20.0, 0.0),
                   BuildText.buildText(
                     text: kMessage,
@@ -169,6 +101,8 @@ void initState() {
                     weight: FontWeight.w500                
                   ),
                   buildSizeBox(10.0, 0.0),
+
+                  /// Notification Message
                   SizedBox(
                     height: 160,
                     width: Get.width,
@@ -235,9 +169,9 @@ void initState() {
                     await phrNotfCtrl.saveNotificationApi(
                       context: context, 
                       name: notificationNameController.text.toString().trim(), 
-                      userList: controller.staffValue?.userId ?? "", 
+                      userList: controller.selectedStaff?.userId ?? "", 
                       message: notificationMessageController.text.toString().trim(), 
-                      role: controller.staffValue?.role ?? "").then((value) async {
+                      role: controller.selectedStaff?.role ?? "").then((value) async {
                         Get.back();
                       });                      
                   }, 
