@@ -38,11 +38,10 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
     return GetBuilder<PDashboardScreenController>(
         init: controller,
         builder: (controller) {
-          return Scaffold(
-            drawer: PharmacyDrawerScreen(versionCode: versionCode),
-            backgroundColor: AppColors.whiteColor,
+          return Scaffold(                   
+            drawer: PharmacyDrawerScreen(versionCode: versionCode),            
             appBar: AppBar(
-              elevation: 0,
+              elevation: 1.5,
               iconTheme: IconThemeData(color: AppColors.blackColor),
               centerTitle: true,
               title: BuildText.buildText(text: kHome, style: Regular18Style),

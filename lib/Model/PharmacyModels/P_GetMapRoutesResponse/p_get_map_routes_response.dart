@@ -1,6 +1,6 @@
 class GetMapRoutesApiResponse {
-  double? longitude;
-  double? latitude;
+  String? longitude;
+  String? latitude;
   String? kmtom;
   bool? isPharmacyAddress;
   String? deliveryStatus;
@@ -21,8 +21,8 @@ class GetMapRoutesApiResponse {
       this.completeTime});
 
   GetMapRoutesApiResponse.fromJson(Map<String, dynamic> json) {
-    longitude = json['longitude'];
-    latitude = json['latitude'];
+    longitude = json['longitude'] != null ? json['longitude'].toString():null;
+    latitude = json['latitude'] != null ? json['latitude'].toString():null;
     kmtom = json['kmtom'] != null ? json['kmtom'].toString():null;
     isPharmacyAddress = json['isPharmacyAddress'];
     deliveryStatus = json['deliveryStatus'] != null ? json['deliveryStatus'].toString():null;

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
@@ -20,45 +21,45 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
     return GetBuilder<PharmacyTrackOrderController>(
       init: pTrkOdrCtrl,
       builder: (controller) {
-        return Scaffold(
-          appBar: CustomAppBar.appBar(
-              backgroundColor: AppColors.transparentColor,
-              onTap: () {
-                Get.back();
-              },
-              centerTitle: true,
-              title: kRoute),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(strImg_PharmacyBg))),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                height: Get.height,
+        return SafeArea(
+          child: Scaffold(
+            appBar: CustomAppBar.appBar(
+                backgroundColor: AppColors.transparentColor,
+                onTap: () {
+                  Get.back();
+                },
+                centerTitle: true,
+                title: kRoute),
+                body: SingleChildScrollView(
+                child: Container(
+                decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(strImg_PharmacyBg),fit: BoxFit.cover)),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                height: Get.height,                
                 child: Column(
                   children: [
                     buildSizeBox(20.0, 0.0),
-
-              ///Select Route
-              Flexible(
-                child: WidgetCustom.pharmacyTopSelectWidget(
-                title: controller.getRouteListController.selectedroute != null ? controller.getRouteListController.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
-                onTap:()async{
-                  controller.onTapSelectedRoute(context:context,controller:controller.getNurHomeCtrl);
-                },),
-              ),
-               buildSizeBox(20.0, 0.0),
-
-               ///Select Driver
-               controller.getDriverListController.driverList.isNotEmpty ?
-               Flexible(
-                child: WidgetCustom.pharmacyTopSelectWidget(
-                title: controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
-                onTap:()=> controller.onTapSelectedDriver(context:context,controller:controller.getNurHomeCtrl),),
-               ) : const SizedBox.shrink(),
-
-               controller.getDriverListController.driverList.isNotEmpty ?
-               buildSizeBox(20.0, 0.0) : const SizedBox.shrink(),
-
+                
+                          ///Select Route
+                          Flexible(
+                          child: WidgetCustom.pharmacyTopSelectWidget(
+                          title: controller.getRouteListController.selectedroute != null ? controller.getRouteListController.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
+                          onTap:()async{
+                            controller.onTapSelectedRoute(context:context,controller:controller.getNurHomeCtrl);
+                          },),
+                            ),
+                          buildSizeBox(20.0, 0.0),
+                
+                           ///Select Driver
+                           controller.getDriverListController.driverList.isNotEmpty ?
+                           Flexible(
+                          child: WidgetCustom.pharmacyTopSelectWidget(
+                          title: controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
+                          onTap:()=> controller.onTapSelectedDriver(context:context,controller:controller.getNurHomeCtrl),),
+                            ) : const SizedBox.shrink(),
+                
+                           controller.getDriverListController.driverList.isNotEmpty ?
+                          buildSizeBox(20.0, 0.0) : const SizedBox.shrink(),
+                
                     /// Select Date
                     InkWell(
                       onTap: () async {

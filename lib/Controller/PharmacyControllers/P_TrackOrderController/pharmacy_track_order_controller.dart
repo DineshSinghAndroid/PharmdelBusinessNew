@@ -74,7 +74,7 @@ class PharmacyTrackOrderController extends GetxController {
   void onTapSelectedDriver(
       {required BuildContext context,
       required controller}) {
-    PrintLog.printLog("Clicked on Select driver");
+    PrintLog.printLog("Clicked on Select driver");    
     BottomSheetCustom.pShowSelectAddressBottomSheet(
       controller: controller,
       context: context,
@@ -118,7 +118,7 @@ class PharmacyTrackOrderController extends GetxController {
     await _apiCtrl.getMapRoutesApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
-          try {                
+          try {
               mapRoutesData = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);

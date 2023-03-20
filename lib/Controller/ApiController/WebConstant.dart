@@ -57,7 +57,8 @@ class WebApiConstant {
   static const String GET_PHARMACY_BOXES                     =  "${BASE_URL_PHARMACY}getBoxesByNursingHome";
   static const String GET_PHARMACY_SIGNATURE_UPLOAD_URL      =  "${BASE_URL_PHARMACY}Acknowledge";
   static const String GET_SENT_NOTIFICATION_URL              =  "${BASE_URL_PHARMACY}Notifications";
-  static const String GET_MAP_ROUTE_FOR_PHARMACY                 =  "${BASE_URL_PHARMACY}RouteFromPharmacy";
+  static const String GET_MAP_ROUTE_FOR_PHARMACY             =  "${BASE_URL_PHARMACY}RouteFromPharmacy";
+  static const String GET_PHARMACY_DRIVER_ROUTE_POINTS       =  "${BASE_URL_PHARMACY}DriverRoutePoints";
 
 
 }
