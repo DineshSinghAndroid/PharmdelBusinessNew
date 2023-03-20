@@ -21,12 +21,9 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
-<<<<<<< HEAD
-import '../../Model/PharmacyModels/P_GetDeliveryListModel/P_get_delivery_list_model.dart';
-=======
-import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
->>>>>>> d80fd4600d77a10a7da955c32146d85ed60c7557
-import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
+ import '../../Model/PharmacyModels/P_GetDeliveryListModel/P_get_delivery_list_model.dart';
+ import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
+ import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
