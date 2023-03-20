@@ -2,9 +2,8 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 
-import '../../ApiController/ApiController.dart';
-import '../../Helper/PrintLog/PrintLog.dart';
 import '../P_DriverListController/get_driver_list_controller.dart';
+import '../P_GetDeliveryListController/P_get_delivery_list_controller.dart';
 import '../P_RouteListController/P_get_route_list_controller.dart';
 
 class PDeliveriesScreenController extends GetxController {
@@ -14,6 +13,7 @@ class PDeliveriesScreenController extends GetxController {
   bool todaySelected = false;
   bool tomorrowSelected = false;
   bool otherDateSelected = false;
+
   @override
   void onInit() {
     getRouteListController.getRoutes();
@@ -21,9 +21,14 @@ class PDeliveriesScreenController extends GetxController {
     super.onInit();
   }
 
+  ///get driver list controller call
   GetDriverListController getDriverListController = Get.put(GetDriverListController());
 
+  ///get route list controller call
   PharmacyGetRouteListController getRouteListController = Get.put(PharmacyGetRouteListController());
+
+  ///get Deliveries  list controller call
+  GetDeliveryListController getDeliveryListController = Get.put(GetDeliveryListController());
 
   onRouteChange(value) async {
     getRouteListController.selectedRouteID = getRouteListController.routeList[int.parse(value)].routeId!;
@@ -40,16 +45,13 @@ class PDeliveriesScreenController extends GetxController {
     update();
   }
 
-  onTodayTap()  {
-    if(getRouteListController.selectedRouteID != 0){
+  onTodayTap() {
+    if (getRouteListController.selectedRouteID != 0) {
       todaySelected = true;
       tomorrowSelected = false;
       otherDateSelected = false;
-
-
-
-    }
-    else{
+      getDeliveryListController.getDeliveryList();
+    } else {
       ToastCustom.showToast(msg: kSelectRoute);
       print(getRouteListController.selectedRouteName.toString());
     }
