@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/NursingHomeWidget/nursing_home_cardwidget.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
@@ -17,7 +18,7 @@ class NursingHomeScreen extends StatefulWidget {
 
 class _NursingHomeScreenState extends State<NursingHomeScreen> {
 
-  NursingHomeController nurHmCtrl = Get.put(NursingHomeController());
+  NursingHomeController nurHmCtrl = Get.put(NursingHomeController());  
 
   String selectedDate = "";
   String showDatedDate = "";
@@ -37,15 +38,15 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
     final DateTime now = DateTime.now();
     selectedDate = formatter.format(now);
     showDatedDate = formatterShow.format(now);        
-    await nurHmCtrl.nursingHomeApi(context: context);
+    await nurHmCtrl.nursingHomeApi(context: context);    
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NursingHomeController>(
       init: nurHmCtrl,
-      builder: (controller) {                 
-        return Scaffold(          
+      builder: (controller) {
+        return Scaffold(
             appBar: AppBar(
         title: BuildText.buildText(text: kBulkScan, size: 18),
         backgroundColor: AppColors.whiteColor,
@@ -93,7 +94,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                             colorScheme: ColorScheme.light(
                             primary: AppColors.colorOrange, 
                             onPrimary: AppColors.whiteColor, 
-                            onSurface: AppColors.blackColor, 
+                            onSurface: AppColors.blackColor,
                           )),
                           child: child!,
                             );
@@ -130,7 +131,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   ),
                 ),
                 buildSizeBox(0.0, 10.0),
-                
+
                 ///Select Nursing Home
                 Flexible(
                 child: WidgetCustom.pharmacyTopSelectWidget(
@@ -139,7 +140,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               ),
               ],
             ),
-        
+
             // Get Boxes List
             nurHmCtrl.boxesListData != null && nurHmCtrl.boxesListData.isNotEmpty ?
             Flexible(
@@ -149,10 +150,11 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               ) : const SizedBox.shrink(),
             
             buildSizeBox(20.0, 0.0),
-        
+
             ///Nursing Order Delivery List
             nurHmCtrl.nursingOrdersData != null && nurHmCtrl.nursingOrdersData!.isNotEmpty ?
-            Expanded(flex: 4,
+            Expanded(
+              flex: 4,
               child: ListView.builder(
                 itemCount: controller.nursingOrdersData?.length ?? 0,
                 shrinkWrap: true,              
@@ -162,9 +164,9 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   return NursingHomeCardWidget(
                     index: index,
                     selectDate: selectedDate,
+                    leadingText: "${index + 1}",
                     customerName: controller.nursingOrdersData?[index].customerName ?? "",
                     address: controller.nursingOrdersData?[index].address ?? "",
-                    leadingText: "${index + 1}",
                     orderId: controller.nursingOrdersData?[index].orderId ?? "",
                     isShowFridge: controller.nursingOrdersData?[index].isStorageFridge == 't' ? true : false,
                     isShowCD: controller.nursingOrdersData?[index].isControlledDrugs == 't' ? true : false,
@@ -178,8 +180,8 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
         ),
             ),
         
-          ///Floating Action Buttons
-          floatingActionButton: Transform.translate(
+        ///Floating Action Buttons
+        floatingActionButton: Transform.translate(
         offset: const Offset(20,0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -198,18 +200,17 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                       Icons.qr_code_scanner,
                       color: AppColors.whiteColor,
                     ),
-                    BuildText.buildText(                      
-                      text: kScanRx, 
-                      color: AppColors.whiteColor),
+                    BuildText.buildText(
+                    text: kScanRx, 
+                    color: AppColors.whiteColor),
                   ],
                 )),
-        
+
             ///Close Tote
             FloatingActionButton.extended(
               heroTag: 'btn2',
                 onPressed: () {
-                  nurHmCtrl.onTapSelectCloseTote();
-                  nurHmCtrl.onDelete();
+                  nurHmCtrl.onTapSelectCloseTote();                  
                   },
                 label: BuildText.buildText(
                   text: kCloseTote,

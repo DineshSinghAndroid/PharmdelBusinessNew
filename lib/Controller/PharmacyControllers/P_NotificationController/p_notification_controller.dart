@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/CreateNotification/createNotificationResponse.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
 import '../../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../../Model/SaveNotification/saveNotificationResponse.dart';
-import '../../../main.dart';
-
 
 
 class PharmacyNotificationController extends GetxController{
@@ -19,10 +14,8 @@ class PharmacyNotificationController extends GetxController{
   List<NotificationData>? notificationData;
   CreateNotificationData? createNotificationData;
   SaveNotificationApiResponse? saveNotification;
-  List<StaffList>? staffList;
-  StaffList? staffValue;
+  StaffList? selectedStaff;
   List<SentNotificationData>? sentNotificationData;
-
 
   bool isLoading = false;
   bool isError = false;
@@ -30,13 +23,29 @@ class PharmacyNotificationController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-
   void updateStaffValue(value){
-    staffValue = value;
+    selectedStaff = value;
     update();
   }
   
-
+  ///Select Pharmacy Staff
+  void onTapSelectStaff(
+      {required BuildContext context,
+      required controller}) {
+    PrintLog.printLog("Clicked on Select staff");
+    BottomSheetCustom.pSelectPharmacyStaff(
+      controller: controller,
+      context: context,
+      selectedID: selectedStaff?.userId,
+      onValue: (value) async {
+        if (value != null) {
+          selectedStaff = value;
+          update();
+          PrintLog.printLog("Selected staff: ${selectedStaff?.name}");
+        }
+      },
+    );
+  }
 
   ///Recieve Notification Controller
   Future<NotificationApiResponse?> notificationApi({required BuildContext context,}) async {
@@ -148,8 +157,8 @@ class PharmacyNotificationController extends GetxController{
 
 
     ///Create Notification Controller
-    Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {
-
+  Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {
+    print('Test Controller');
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -164,16 +173,15 @@ class PharmacyNotificationController extends GetxController{
 
     await apiCtrl.getCreateNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
-      if(result != null){
-        if (result.status != false) {          
-          try {            
-            if (result.status == true) {              
+        print('Test Controller 2');
+        if (result != null && result.status != null && result.status != false) {
+          try {
+            if (result.status == true) {
               createNotificationData = result.data;
-              staffList = result.data?.staffList;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
+             print('Test Controller 3');
 
             } else {
               changeLoadingValue(false);
@@ -191,13 +199,9 @@ class PharmacyNotificationController extends GetxController{
           changeSuccessValue(false);
           changeLoadingValue(false);
           changeErrorValue(true);
-          PrintLog.printLog(result.message);
+          PrintLog.printLog(result?.message);
         }
-      }else{
-        changeSuccessValue(false);
-        changeLoadingValue(false);
-        changeErrorValue(true);
-      }
+
     });
     update();
   }
@@ -233,9 +237,9 @@ class PharmacyNotificationController extends GetxController{
         if (result.status != false) {          
           try {            
             if (result.status == true) {              
-              saveNotification = result;
+              saveNotification = result;              
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
-              ToastCustom.showToast(msg: "Notification Sent Successfully");
+              CustomLoading().show(context, isLoading).then((value) => ToastCustom.showToast(msg: "Notification Sent Successfully"));
               changeLoadingValue(false);
               changeSuccessValue(true);
              
