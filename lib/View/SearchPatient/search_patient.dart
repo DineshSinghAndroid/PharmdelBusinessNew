@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_DeliverySchedule/p_delivery_schedule_screen.dart';
 import '../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
@@ -119,7 +120,16 @@ Widget build(BuildContext context,) {
                         address:  controller.patientData?[index].address1 ?? "",
                         dob: controller.patientData?[index].dob ?? "",
                         onTap: (){
-                          Navigator.of(context).pop(controller.patientData?[index]);
+                          // Navigator.of(context).pop(controller.patientData?[index]);
+                          Get.toNamed(deliveryScheduleScreenRoute,
+                          arguments: PharmacyDeliverySchedule(
+                            customerName: "${controller.patientData?[index].firstName ?? ""} ${controller.patientData?[index].middleName ?? ""} ${controller.patientData?[index].lastName ?? ""}", 
+                            dob: controller.patientData?[index].dob ?? "", 
+                            nhs: controller.patientData?[index].nhsNumber ?? "", 
+                            address: controller.patientData?[index].address1 ?? "", 
+                            contact: controller.patientData?[index].contactNumber ?? "", 
+                            email: controller.patientData?[index].email ?? "")
+                          );
                         },
                       );  
                       }

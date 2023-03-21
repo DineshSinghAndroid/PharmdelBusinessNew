@@ -65,15 +65,15 @@ class CreatePatientController extends GetxController {
   bool isStartRoute = false;
 
   final List<String> selectTitle = [
-    "Mr",
-    "Miss",
-    "Mrs",
-    "Ms",
-    "Captain",
-    "Dr",
-    "Prof",
-    "Rev",
-    "Mx",
+    "M",
+    "S",
+    "F",
+    "Q",
+    "C",
+    "D",
+    "P",
+    "R",
+    "X",
   ];
   String? selectedTitleValue;
   final List<String> selectGender = [
@@ -101,7 +101,7 @@ class CreatePatientController extends GetxController {
   // String titleValue;
   // String genderValue;
 
-  btnPress(BuildContext context) {
+  btnPress(BuildContext context) async {
     if (selectedTitleValue != null &&
         selectedGenderValue != null &&
         nameCtrl.text.isNotEmpty &&
@@ -109,7 +109,7 @@ class CreatePatientController extends GetxController {
         addressLine1Ctrl.text.isNotEmpty &&
         townCtrl.text.isNotEmpty &&
         postCodeCtrl.text.isNotEmpty) {
-      createPatient(context: context);
+     await createPatient(context: context);
     } else {
       ToastCustom.showToast(msg: "Please Complete All Required Fields");
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_DeliverySchedule/p_delivery_schedule_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_DisplayMapRoutes/p_display_map_routes_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_Notification/pharmacy_notification_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_NursingHome/p_nursing_home_screen.dart';
@@ -117,6 +118,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
   case displayMapRoutesScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const DisplayMapRoutesScreen());    
+
+
+  case deliveryScheduleScreenRoute:
+  final args = settings.arguments as PharmacyDeliverySchedule;
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliverySchedule(address: args.address,contact: args.contact,customerName: args.customerName,dob: args.dob,email: args.email,nhs: args.nhs,));        
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());

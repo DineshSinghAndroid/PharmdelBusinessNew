@@ -21,16 +21,11 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
-<<<<<<< HEAD
+import '../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../Model/PharmacyModels/P_DriverRoutePointsResponse/p_driverRoutePointsResponse.dart';
 import '../../Model/PharmacyModels/P_GetDeliveryListModel/P_get_delivery_list_model.dart';
 import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
-=======
- import '../../Model/PharmacyModels/P_GetDeliveryListModel/P_get_delivery_list_model.dart';
- import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
- import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
->>>>>>> 2032080e5f21dbebf54e13b0a6f7fdb0ba2b9add
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
@@ -697,6 +692,28 @@ class ApiController {
     }
     return null;
   }  
+
+   ///Get Driver Routes Api
+  Future<DeliveryScheduleApiResponse?> getDeliveryScheduleApi({context, required String url, dictParameter, String? token}) async {
+    DeliveryScheduleApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DeliveryScheduleApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  } 
 
   ///Lunch Break Api
   Future<LunchBreakApiResponse?> getLunchBreakApi({context, required String url, dictParameter, String? token}) async {

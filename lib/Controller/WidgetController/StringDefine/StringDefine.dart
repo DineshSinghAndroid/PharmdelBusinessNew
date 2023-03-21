@@ -434,4 +434,21 @@ const String kMoreDeliveryForThisAddress = "more delivery for this address. Woul
 const String kDriverAlreadyOutForDelivery = "Driver is already out for delivery. You can not change status.";
 
 
+///Pharmacy Delivery Schedule Screen
+const String kDelSchd = "Delivery Schedule";
+const String kNHS = "NHS : ";
+const String kDateOfBirth = "DOB : ";
+const String kAdrs = "Address : ";
+const String kContact = "Contact : ";
+const String kEmailId = "Email : ";
+const String kMeds = "Meds";
+const String kRxImage = "Rx Image";
+const String kRxDetails = "Rx Details";
+const String kSelService = "Select Service";
+const String kSelDelCharge = "Select Delivery Charge";
+const String kExistingDelNote = "Existing Delivery Note";
+const String kDeliveryNote = "Delivery Note";
+const String kBookDelivery = "Book Delivery";
+
+
 

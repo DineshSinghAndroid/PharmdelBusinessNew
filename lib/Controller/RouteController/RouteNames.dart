@@ -29,3 +29,4 @@ const String pharmacyDeliveryListScreenRoute = "delivery_list_screen";
 const String pharmacyCreateNotificationScreeenRoute = "create_notification_screen";
 const String nursingHomeScreenRoute = "nursing_home_screen";
 const String displayMapRoutesScreenRoute = "display_map_routes_screen";
+const String deliveryScheduleScreenRoute = "delivery_schedule_Screen";

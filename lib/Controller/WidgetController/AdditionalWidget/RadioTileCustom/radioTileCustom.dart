@@ -51,3 +51,46 @@ class _RadioTileCusotmState extends State<RadioTileCusotm> {
     );
   }
 }
+
+
+
+class RadioTileCustom2 extends StatefulWidget {
+  String? text;
+  Color? bgColor;
+  VoidCallback? onTap;
+
+  RadioTileCustom2({super.key, this.text, required this.onTap});
+
+  @override
+  State<RadioTileCustom2> createState() => _RadioTileCustom2State();
+}
+
+class _RadioTileCustom2State extends State<RadioTileCustom2> {
+  bool? isSelect;
+  @override
+  Widget build(BuildContext context,) {
+    return Row(
+      children: [
+        Container(
+          height: 20,
+          width: 20,
+          decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyColorDark, width: 2),
+              shape: BoxShape.circle),
+          child: InkWell(
+            onTap: widget.onTap,            
+            child: Container(
+              margin: const EdgeInsets.all(2),
+              height: 15,
+              width: 15,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: isSelect == true ? AppColors.purpleColor : AppColors.whiteColor),
+            ),
+          ),
+        ),
+        buildSizeBox(0.0, 7.0),
+        BuildText.buildText(text: widget.text ?? "",size: 16)
+      ],
+    );
+  }
+}

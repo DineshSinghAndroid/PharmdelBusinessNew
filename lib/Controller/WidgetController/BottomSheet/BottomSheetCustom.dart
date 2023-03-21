@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
@@ -7,41 +5,166 @@ import 'package:pharmdel/Controller/PharmacyControllers/P_NotificationController
 import 'package:pharmdel/Controller/WidgetController/BottomSheet/select_route_bottomsheet.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../Helper/TextController/BuildText/BuildText.dart';
+import '../../PharmacyControllers/P_DeliveryScheduleController/p_deliveryScheduleController.dart';
 import '../../PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
+import '../StringDefine/StringDefine.dart';
+import 'p_delivery_schedule_bottomsheet.dart';
 import 'p_select_driver_bottomsheet.dart';
 import 'p_select_route_bottomsheet.dart';
 
-class BottomSheetCustom{
-
-  static Future<void> share({required BuildContext context,required String link}) async {
+class BottomSheetCustom {
+  static Future<void> share(
+      {required BuildContext context, required String link}) async {
     PrintLog.printLog('Share Tab');
-    await Share.share(link,
+    await Share.share(
+      link,
       subject: "Apna Slot",
     );
   }
 
-
-  static showSelectAddressBottomSheet({required DriverDashboardCTRL controller,required Function(dynamic) onValue,required BuildContext context,required String listType,String? selectedID}) async {
+  static showSelectAddressBottomSheet(
+      {required DriverDashboardCTRL controller,
+      required Function(dynamic) onValue,
+      required BuildContext context,
+      required String listType,
+      String? selectedID}) async {
     return showModalBottomSheet(
         isScrollControlled: true,
         clipBehavior: Clip.antiAlias,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(0.0),
-              topLeft: Radius.circular(0.0),
-            )
-        ),
+          topRight: Radius.circular(0.0),
+          topLeft: Radius.circular(0.0),
+        )),
         context: context,
         backgroundColor: AppColors.transparentColor,
-        builder: (builder){
-          return SelectRouteBottomSheet(controller: controller,listType: listType,selectedID: selectedID,);
-        }
-    ).then(onValue);
+        builder: (builder) {
+          return SelectRouteBottomSheet(
+            controller: controller,
+            listType: listType,
+            selectedID: selectedID,
+          );
+        }).then(onValue);
   }
 
+  static pShowSelectAddressBottomSheet(
+      {required NursingHomeController controller,
+      required Function(dynamic) onValue,
+      required BuildContext context,
+      required String listType,
+      String? selectedID}) async {
+    return showModalBottomSheet(
+        isDismissible: true,
+        isScrollControlled: true,
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topRight: Radius.circular(40.0),
+          topLeft: Radius.circular(40.0),
+        )),
+        context: context,
+        backgroundColor: AppColors.whiteColor,
+        builder: (builder) {
+          return SizedBox(
+              height: Get.height - 400,
+              width: Get.width,
+              child: PhramacySelectRouteBottomSheet(
+                controller: controller,
+                listType: listType,
+                selectedID: selectedID,
+              ));
+        }).then(onValue);
+  }
 
-    static pShowSelectAddressBottomSheet({required NursingHomeController controller,required Function(dynamic) onValue,required BuildContext context,required String listType,String? selectedID}) async {
+  static pSelectPharmacyStaff(
+      {required PharmacyNotificationController controller,
+      required Function(dynamic) onValue,
+      required BuildContext context,
+      String? selectedID}) async {
+    return showModalBottomSheet(
+        isDismissible: true,
+        isScrollControlled: true,
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topRight: Radius.circular(40.0),
+          topLeft: Radius.circular(40.0),
+        )),
+        context: context,
+        backgroundColor: AppColors.whiteColor,
+        builder: (builder) {
+          return SizedBox(
+              height: Get.height - 400,
+              width: Get.width,
+              child: PharmacyNotificationBottomSheet(
+                controller: controller,
+                selectedID: selectedID,
+              ));
+        }).then(onValue);
+  }
+
+  static selectMediaBottomsheet({required VoidCallback onTapGallery, required VoidCallback onTapCamera}) {
+    return Container(
+      height: 115,
+      width: Get.width,
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor, borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: InkWell(
+                onTap: onTapGallery,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.photo,
+                      color: AppColors.greyColor,
+                    ),
+                    buildSizeBox(0.0, 10.0),
+                    BuildText.buildText(text: kGallery, size: 15),
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              color: AppColors.greyColorDark,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: InkWell(
+                onTap: onTapCamera,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera_alt,
+                      color: AppColors.greyColor,
+                    ),
+                    buildSizeBox(0.0, 10.0),
+                    BuildText.buildText(text: kCamera, size: 15),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  static pDeliveryScheduleBottomSheet({
+    required DeliveryScheduleController controller,
+    required Function(dynamic) onValue,
+    required BuildContext context,
+    required String listType,
+    String? selectedID,
+    }) async {
     return showModalBottomSheet(
         isDismissible: true,
         isScrollControlled: true,
@@ -58,35 +181,12 @@ class BottomSheetCustom{
           return SizedBox(
             height: Get.height - 400,
             width: Get.width,
-            child: PhramacySelectRouteBottomSheet(controller: controller,listType: listType,selectedID: selectedID,));
+            child: SelectDeliveryScheduleBottomsheet(controller: controller,listType: listType,selectedID: selectedID,));
         }
     ).then(onValue);
   }
 
-
-      static pSelectPharmacyStaff({required PharmacyNotificationController controller,required Function(dynamic) onValue,required BuildContext context,String? selectedID}) async {
-    return showModalBottomSheet(
-        isDismissible: true,
-        isScrollControlled: true,
-        clipBehavior: Clip.antiAlias,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(40.0),
-              topLeft: Radius.circular(40.0),
-            )
-        ),
-        context: context,
-        backgroundColor: AppColors.whiteColor,
-        builder: (builder){
-          return SizedBox(
-            height: Get.height - 400,
-            width: Get.width,
-            child: PharmacyNotificationBottomSheet(controller: controller,selectedID: selectedID,));
-        }
-    ).then(onValue);
-  }
-
-/// Use for share App
+  /// Use for share App
   // static showSharePopup({required context,required String shareLink}) async {
   //   return showModalBottomSheet(
   //       isScrollControlled: true,

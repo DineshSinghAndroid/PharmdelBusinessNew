@@ -59,6 +59,8 @@ class WebApiConstant {
   static const String GET_SENT_NOTIFICATION_URL              =  "${BASE_URL_PHARMACY}Notifications";
   static const String GET_MAP_ROUTE_FOR_PHARMACY             =  "${BASE_URL_PHARMACY}RouteFromPharmacy";
   static const String GET_PHARMACY_DRIVER_ROUTE_POINTS       =  "${BASE_URL_PHARMACY}DriverRoutePoints";
+  static const String GET_PHARMACY_DELIVERY_MASTER_URL       =  "${BASE_URL_PHARMACY}getDeliveryMasterData";
+  static const String GET_PHARMACY_CREATE_ORDER_URL          =  "${BASE_URL_PHARMACY}createOrder";
 
 
 }
