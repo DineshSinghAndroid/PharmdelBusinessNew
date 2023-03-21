@@ -1,12 +1,10 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 
 import '../../../Controller/PharmacyControllers/P_DeliveriesScreenController/P_deliverieslist_screen_controller.dart';
-import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
-import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 
 class PharmacyDeliveryListScreen extends StatefulWidget {
   const PharmacyDeliveryListScreen({super.key});
@@ -66,91 +64,35 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                 children: [
                   Row(
                     children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          hint: Text(
-                            kSelectRoute,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).hintColor,
-                            ),
-                          ),
-                          items: [
-                            for (RouteList route in controller.getRouteListController.routeList)
-                              DropdownMenuItem(
-                                value: controller.getRouteListController.routeList.indexOf(route).toString(),
-                                child: Text("${route.routeName}", style: const TextStyle(color: Colors.black87)),
-                              ),
-                          ],
-                          value: controller.getRouteListController.selectedRouteName,
-                          onChanged: (value) {
-                            // print(controller.getRouteListController.routeList[int.parse(value!)].routeId.toString());
-                            controller.onRouteChange(value);
+                      Flexible(
+                        child: WidgetCustom.pharmacyTopSelectWidget(
+                          title: controller.getRouteListController.selectedroute != null ? controller.getRouteListController.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
+                          onTap: () async {
+                            controller.onTapSelectedRoute(context: context, controller: controller.getNurHomeCtrl);
                           },
-                          buttonStyleData: ButtonStyleData(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              height: 40,
-                              width: Get.width / 2.3,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.1),
-                                borderRadius: const BorderRadius.all(Radius.circular(5)),
-                              )),
-                          menuItemStyleData: const MenuItemStyleData(),
                         ),
                       ),
-                      const Spacer(),
-                      if(controller.getDriverListController.driverList.isNotEmpty)
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          hint: Text(
-                            kSelectDriver,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).hintColor,
-                            ),
-                          ),
+                      buildSizeBox(0.0, 10.0),
 
-                          items: [
-                            if (controller.getDriverListController.driverList.isNotEmpty)
-                              for (DriverModel route in controller.getDriverListController.driverList)
-                                DropdownMenuItem(
-                                  child: Text("${route.firstName}"??"",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.black87,fontSize: 12)),
-                                  value: controller.getDriverListController.driverList.indexOf(route),
-                                ),
-                          ],
-                          onChanged: (   value) {
-                            controller.onDriverChange(value);
-                          },
-                          // items: controller.getDriverListController.driverList.map<DropdownMenuItem<DriverModel>>((DriverModel value) {
-                          //   return DropdownMenuItem<DriverModel>(
-                          //     value: value,
-                          //     child: Text(
-                          //       value.firstName ?? "No Driver",
-                          //       style: const TextStyle(fontSize: 12),
-                          //     ),
-                          //   );
-                          // }).toList(),
-                          value: controller.getDriverListController.selectedDriverPosition,
-                          buttonStyleData: ButtonStyleData(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              height: 40,
-                              width: Get.width / 2.3,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.1),
-                                borderRadius: const BorderRadius.all(Radius.circular(5)),
-                              )),
-                          menuItemStyleData: const MenuItemStyleData(),
-                        ),
-                      ),
+                      ///Select Driver
+                      controller.getDriverListController.driverList.isNotEmpty
+                          ? Flexible(
+                              child: WidgetCustom.pharmacyTopSelectWidget(
+                                title:
+                                    controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
+                                onTap: () => controller.onTapSelectedDriver(context: context, controller: controller.getNurHomeCtrl),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                   buildSizeBox(10.0, 0.0),
                   Row(
                     children: [
                       InkWell(
-                        onTap: (){controller.onTodayTap();},
+                        onTap: () {
+                          controller.onTodayTap();
+                        },
                         child: Chip(
                           label: BuildText.buildText(text: kToday, color: AppColors.whiteColor),
                           backgroundColor: AppColors.blueColor,
@@ -195,26 +137,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.blueColor, label: kTotal, counter: '0', onTap: () {})),
-                      // Flexible(
-                      //     flex: 1,
-                      //     fit: FlexFit.tight,
-                      //     child: DefaultWidget.topCounter(
-                      //         bgColor: AppColors.yetToStartColor,
-                      //         label: kOnTheWay,
-                      //         counter: '0',
-                      //         onTap: () {
-                      //
-                      //         })),
-                      Flexible(
-                          flex: 1,
-                          fit: FlexFit.tight,
-                          child: DefaultWidget.topCounter(
-                              bgColor: AppColors.greyColorDark,
-                              label: kPickedUp,
-                              counter: '0',
-                              onTap: () {
-                                setState(() {});
-                              })),
+                      Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.greyColorDark, label: kPickedUp, counter: '0', onTap: () {})),
                       Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.greenAccentColor, label: kDelivered, counter: '0', onTap: () {})),
                       Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.redColor.withOpacity(0.9), label: kFailed, counter: '0', onTap: () {})),
                     ],
