@@ -11,13 +11,13 @@ import '../../WidgetController/Loader/LoadingScreen.dart';
 class GetDeliveryListController extends GetxController {
   final ApiController _apiCtrl = ApiController();
 
-  Future<P_GetDeliveryListModel?> getDeliveryList({context}) async {
+  Future<P_GetDeliveryListModel?> getDeliveryList({context,required routeID, required  driverId}) async {
     PrintLog.printLog("GET DELIVERY LIST INITIALIZED ");
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     Map<String, dynamic> dictparm = {
-      "routeId": 23,
+      "routeId": routeID,
       "dateTime": date,
-      "driverId": 8530,
+      "driverId": driverId,
     };
 
     String url = WebApiConstant.GET_PHARMACY_DELIVERY_LIST;
