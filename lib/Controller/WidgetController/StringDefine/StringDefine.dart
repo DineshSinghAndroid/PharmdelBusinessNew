@@ -449,6 +449,9 @@ const String kSelDelCharge = "Select Delivery Charge";
 const String kExistingDelNote = "Existing Delivery Note";
 const String kDeliveryNote = "Delivery Note";
 const String kBookDelivery = "Book Delivery";
+const String kSelectExempt = "Select Exemption";
+const String kDeliveryCharge = "Delivery Charge";
+const String kBagSize = "'Bag Size'";
 
 
 

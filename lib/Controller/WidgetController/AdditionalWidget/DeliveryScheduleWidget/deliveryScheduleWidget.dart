@@ -29,25 +29,46 @@ class DeliveryScheduleWidgets {
                     );
   }
 
-  static customCheckWidget({required Color bgColor,required String title, required bool checkBoxValue}){
-    return Container(
-                    height: 30,                    
-                    padding: const EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      color: bgColor,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          activeColor: AppColors.colorOrange,
-                          visualDensity: const VisualDensity(horizontal: -4),
-                          value: checkBoxValue, onChanged: (value) {
-                          
-                        },),
-                        BuildText.buildText(text:title,color: AppColors.whiteColor)
-                      ],
-                    ),
-                  );
+  static customWidgetwithCheckbox({required Color bgColor,required String title, required bool checkBoxValue, VoidCallback? onTap,required Function(bool?) onChanged}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 30,                    
+        padding: const EdgeInsets.only(right: 5),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10)
+        ),
+        child: Row(
+          children: [
+            Checkbox(                          
+              activeColor: AppColors.colorOrange,
+              visualDensity: const VisualDensity(horizontal: -4),
+              value: checkBoxValue, 
+              onChanged: onChanged),
+            BuildText.buildText(text:title,color: AppColors.whiteColor)
+          ],
+        ),
+      ),
+    );
+  }
+
+    static customWidgetwithoutCheckbox({required Color bgColor,required String title, VoidCallback? onTap}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 30,                    
+        padding: const EdgeInsets.only(right: 5),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10)
+        ),
+        child: Row(
+          children: [            
+            BuildText.buildText(text:title,color: AppColors.whiteColor)
+          ],
+        ),
+      ),
+    );
   }
 }

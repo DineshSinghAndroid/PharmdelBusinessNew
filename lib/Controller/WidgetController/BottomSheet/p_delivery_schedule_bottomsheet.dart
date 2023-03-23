@@ -37,7 +37,7 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
               backgroundColor: AppColors.whiteColor,
               appBar: AppBar(
                 title: BuildText.buildText(
-                  text:  widget.listType == "service" ? kSelService : widget.listType == "recieved" ? kReceived : widget.listType == "nursing home" ? kSelectNursHome : kSelDelCharge,
+                  text:  widget.listType == "service" ? kSelService : widget.listType == "recieved" ? kReceived : widget.listType == "nursing home" ? kSelectNursHome : widget.listType == "exempt" ? kSelectExempt : kSelDelCharge,
                   size: 14,
                   color: AppColors.blackColor,                    
                 ),
@@ -171,6 +171,41 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                           );
                         }
                     ) :  
+                    widget.listType == "exempt" ?
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.controller.deliveryScheduleData?.exemptions?.length ?? 0,
+                        itemBuilder: (context,i){
+                          return InkWell(
+                            onTap: (){
+                              Navigator.of(context).pop(widget.controller.deliveryScheduleData?.exemptions?[i]);
+                            },
+                            child: Container(                              
+                              width: Get.width,
+                              margin: const EdgeInsets.only(bottom: 5),
+                              padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: widget.selectedID == widget.controller.deliveryScheduleData?.exemptions?[i].id ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 1,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                        color: Colors.grey.shade300
+                                    )
+                                  ]),
+                              child: BuildText.buildText(
+                                text: widget.controller.deliveryScheduleData?.exemptions?[i].code ?? "",
+                                size: 14,
+                                color: AppColors.blueColorLight,
+                                weight: FontWeight.w400,
+                              ),
+                            ),
+                          );
+                        }
+                    ) :
                     widget.listType == kSelDelCharge ?
                     ListView.builder(
                         shrinkWrap: true,

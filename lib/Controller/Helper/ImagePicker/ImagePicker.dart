@@ -41,7 +41,7 @@ class ImagePickerController extends GetxController{
       }else{
         isLoading = false;
       }
-    }catch(_){
+    }catch(_){    
       PrintLog.printLog("Exception: $_");
       isLoading = false;
     }
