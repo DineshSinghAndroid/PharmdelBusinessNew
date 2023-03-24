@@ -62,8 +62,8 @@ class BottomSheetCustom {
         clipBehavior: Clip.antiAlias,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-          topRight: Radius.circular(40.0),
-          topLeft: Radius.circular(40.0),
+          topRight: Radius.circular(30.0),
+          topLeft: Radius.circular(30.0),
         )),
         context: context,
         backgroundColor: AppColors.whiteColor,
@@ -90,8 +90,8 @@ class BottomSheetCustom {
         clipBehavior: Clip.antiAlias,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-          topRight: Radius.circular(40.0),
-          topLeft: Radius.circular(40.0),
+          topRight: Radius.circular(30.0),
+          topLeft: Radius.circular(30.0),
         )),
         context: context,
         backgroundColor: AppColors.whiteColor,
@@ -170,18 +170,18 @@ class BottomSheetCustom {
     required Function(bool?) onChangedFridge}
     ){
     return SizedBox(
-          height: 400,
+          height: 450,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 50,
+                height: 60,
                 decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(color: AppColors.blackColor))
                 ),                                       
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -190,7 +190,7 @@ class BottomSheetCustom {
                         onTap: () => Get.back(),
                         child: Container(
                           alignment: Alignment.centerRight,
-                          width: 60,
+                          width: 50,
                           child: Icon(Icons.clear,color: AppColors.blackColor,)))
                     ],
                   ),
@@ -198,7 +198,7 @@ class BottomSheetCustom {
               ),
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
                   itemCount: 5,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
@@ -286,7 +286,7 @@ class BottomSheetCustom {
                           ],
                         ),
                         buildSizeBox(8.0, 0.0),
-                        const Divider(),                                                
+                        Divider(color: AppColors.greyColor),
                       ],
                     );
                   },),
@@ -309,8 +309,8 @@ class BottomSheetCustom {
         clipBehavior: Clip.antiAlias,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(40.0),
-              topLeft: Radius.circular(40.0),
+              topRight: Radius.circular(30.0),
+              topLeft: Radius.circular(30.0),
             )
         ),
         context: context,

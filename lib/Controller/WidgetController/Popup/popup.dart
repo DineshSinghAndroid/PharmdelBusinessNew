@@ -57,7 +57,26 @@ class PopupCustom{
         });
   }
 
+ static orderSuccess({required BuildContext context,required String msg}){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return CustomDialogBox(
+            img: Image.asset("assets/images/success.png"),
+            title: "",
+            btnDone: null,
+            btnNo: "",
+            descriptions: msg,
+          );
+        });
+  }
+
 }
+
+
+
+
 
 
 class ForgotPassword extends StatelessWidget {
