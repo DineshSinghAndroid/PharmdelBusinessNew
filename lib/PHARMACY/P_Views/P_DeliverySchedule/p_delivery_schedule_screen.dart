@@ -31,9 +31,7 @@ class PharmacyDeliverySchedule extends StatefulWidget {
 class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
 
   DeliveryScheduleController delSchdCtrl = Get.put(DeliveryScheduleController());
-  NursingHomeController nurHomeCtrl = Get.put(NursingHomeController());
-  TextEditingController existingNoteController = TextEditingController();
-  TextEditingController deliveryChargeController = TextEditingController();
+  NursingHomeController nurHomeCtrl = Get.put(NursingHomeController());  
 
   @override
   void initState() {
@@ -42,7 +40,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
   }
 
   Future<void> init() async {  
-    await delSchdCtrl.deliveryScheduleApi(context: context,pharmacyId: '0');
+    await delSchdCtrl.deliveryScheduleApi(context: context,pharmacyId: '0');    
   }
 
   @override
@@ -89,9 +87,12 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
+
                           /// Meds
                           DeliveryScheduleWidgets.customWidget(
-                            onTap: (){},
+                            onTap: (){
+                              Get.toNamed(searchMedicineScreenRoute);
+                            },
                             title: kMeds,
                             bgColor: AppColors.blueColor,
                           ),
@@ -120,11 +121,27 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                           buildSizeBox(0.0, 10.0),
                                 
                           /// Rx Details
-                          DeliveryScheduleWidgets.customWidget(
-                            onTap: (){},
+                          DeliveryScheduleWidgets.customWidget(                            
                             title: kRxDetails,
                             bgColor: AppColors.greenColor,
-                            titleColor: AppColors.whiteColor
+                            titleColor: AppColors.whiteColor,
+                            onTap: (){
+                              showModalBottomSheet(
+                                enableDrag: false,
+                                isDismissible: false,
+                                context: context, 
+                                builder: (context) {
+                                  return BottomSheetCustom.RxDetailsBottomsheetCustom(
+                                    quantityController: controller.quantityController, 
+                                    daysController: controller.daysController, 
+                                    medicineName: 'Medicine Name', 
+                                    firdgeCheckValue: false,
+                                    cdCheckValue: false,
+                                    onTapDelete: (){},
+                                    onChangedCD: (value) {}, 
+                                    onChangedFridge: (value) {});
+                                },);
+                            },
                           ),
                         ],
                       ),
@@ -245,7 +262,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime(DateTime.now().year,
-                                    DateTime.now().month, DateTime.now().day),
+                                  DateTime.now().month, DateTime.now().day),
                                 lastDate: DateTime(2101));
                             if (picked != null) {
                               setState(() {
@@ -265,7 +282,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                               color: AppColors.whiteColor,
                             ),
                             child: Row(
-                              children: [                                                   
+                              children: [
                                 Icon(Icons.calendar_month_outlined,color: AppColors.greyColor,),
                                 buildSizeBox(0.0, 15.0),
                                 BuildText.buildText(text: controller.showDatedDate),
@@ -277,7 +294,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                       buildSizeBox(0.0, 15.0),
                                
                       ///Select Route
-                      Flexible(
+                      Flexible(                      
                       child: WidgetCustom.selectDeliveryScheduleWidget(
                       title: controller.getRouteListController.selectedroute != null ? controller.getRouteListController.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
                       onTap:()async{
@@ -300,21 +317,36 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                       /// Select Status
                       Flexible(
                       child: WidgetCustom.selectDeliveryScheduleWidget(
-                      title: 'Received',
+                      title: controller.statusItems != null ? controller.statusItems[0].toString() ?? "" : kReceived,
                       onTap:()async{
-                        controller.onTapSelectedDriver(context: context, controller: controller);
+                        controller.onTapSelectStatus(context: context, controller: controller);
                       },),),
                       ],
                     ),
                     buildSizeBox(10.0, 0.0),
-                               
-                     /// Select Nursing Home
-                     Flexible(
-                      child: WidgetCustom.selectDeliveryScheduleWidget(
-                      title: controller.selectedNursingHome != null ? controller.selectedNursingHome?.nursingHomeName.toString() ?? "" : kSelectNursHome,
-                      onTap:()async{
-                        controller.onTapSelectNursingHome(context: context, controller: controller);
-                      },),),
+                                                    
+                     Row(
+                       children: [
+                        /// Select Nursing Home
+                        Flexible(
+                          child: WidgetCustom.selectDeliveryScheduleWidget(
+                          title: controller.selectedNursingHome != null ? controller.selectedNursingHome?.nursingHomeName.toString() ?? "" : kSelectNursHome,
+                          onTap:()async{
+                            controller.onTapSelectNursingHome(context: context, controller: controller);
+                          },),),
+                          controller.parcelBoxList != null && controller.parcelBoxList!.isNotEmpty && controller.selectedStatus == "PickedUp" ?
+                          buildSizeBox(0.0, 15.0) : const SizedBox.shrink(),
+ 
+                        /// Select Parcel Location  
+                        controller.parcelBoxList != null && controller.parcelBoxList!.isNotEmpty && controller.selectedStatus == "PickedUp" ?
+                        Flexible(
+                          child: WidgetCustom.selectDeliveryScheduleWidget(
+                          title: controller.selectedParcelBox != null ? controller.selectedParcelBox?.name.toString() ?? "" : kParcelLocation,
+                          onTap:()async{
+                            controller.onTapSelectParcelLocation(context: context, controller: controller);
+                          },),) : const SizedBox.shrink(),
+                       ],
+                     ),
                       buildSizeBox(10.0, 0.0),
                                
                       /// Select Delivery Charge
@@ -334,7 +366,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         Flexible(                    
                         child: TextFormField(
                           readOnly: true,
-                          controller: deliveryChargeController,
+                          controller: controller.deliveryChargeController,
                           minLines: 1,
                           maxLines: null,
                           decoration: InputDecoration(
@@ -362,7 +394,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         /// Select Fridge
                         DeliveryScheduleWidgets.customWidgetwithCheckbox(
                         bgColor: AppColors.blueColor, 
-                        title: 'C.D.', 
+                        title: Image.asset(strImgFridge,color: AppColors.whiteColor,height: 20,),
                         checkBoxValue: controller.fridgeSelected,
                         onChanged: (value) {
                           setState(() {
@@ -374,7 +406,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         /// Select C.D.
                         DeliveryScheduleWidgets.customWidgetwithCheckbox(
                         bgColor: AppColors.redColor, 
-                        title: 'C.D.', 
+                        title: BuildText.buildText(text: 'C.D.',color: AppColors.whiteColor),
                         checkBoxValue: controller.controlDrugSelected,
                         onChanged: (value) {
                           setState(() {
@@ -386,7 +418,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         /// Select Paid
                         DeliveryScheduleWidgets.customWidgetwithCheckbox(
                         bgColor: AppColors.colorOrange, 
-                        title: 'Paid',
+                        title: BuildText.buildText(text: 'Paid',color: AppColors.whiteColor),
                         checkBoxValue: false,
                         onChanged: (value) {}),
                         buildSizeBox(0.0, 5.0),
@@ -397,7 +429,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                           controller.onTapExempt(context: context, controller: controller);
                         },
                         bgColor: AppColors.greenColor, 
-                        title: 'Exempt',
+                        title: BuildText.buildText(text: 'Exempt',color: AppColors.whiteColor),
                         checkBoxValue: controller.exemptSelected,
                         onChanged: (value) {
                           
@@ -424,7 +456,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                       BuildText.buildText(text: kDeliveryNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
                       buildSizeBox(5.0, 0.0),                  
                       TextFormField(
-                        controller: existingNoteController,
+                        controller: controller.existingNoteController,
                         minLines: 1,
                         maxLines: null,
                         decoration: InputDecoration(

@@ -29,7 +29,7 @@ class DeliveryScheduleWidgets {
                     );
   }
 
-  static customWidgetwithCheckbox({required Color bgColor,required String title, required bool checkBoxValue, VoidCallback? onTap,required Function(bool?) onChanged}){
+  static customWidgetwithCheckbox({required Color bgColor, required bool checkBoxValue, VoidCallback? onTap,required Function(bool?) onChanged, required Widget title}){
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -46,7 +46,7 @@ class DeliveryScheduleWidgets {
               visualDensity: const VisualDensity(horizontal: -4),
               value: checkBoxValue, 
               onChanged: onChanged),
-            BuildText.buildText(text:title,color: AppColors.whiteColor)
+            title
           ],
         ),
       ),

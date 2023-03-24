@@ -9,6 +9,7 @@ import '../../Helper/TextController/BuildText/BuildText.dart';
 import '../../PharmacyControllers/P_DeliveryScheduleController/p_deliveryScheduleController.dart';
 import '../../PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
+import '../AdditionalWidget/DeliveryScheduleWidget/deliveryScheduleWidget.dart';
 import '../StringDefine/StringDefine.dart';
 import 'p_delivery_schedule_bottomsheet.dart';
 import 'p_select_driver_bottomsheet.dart';
@@ -156,6 +157,143 @@ class BottomSheetCustom {
         ),
       ),
     );
+  }
+
+  static RxDetailsBottomsheetCustom({
+    required TextEditingController quantityController,
+    required TextEditingController daysController, 
+    required VoidCallback onTapDelete, 
+    required bool? firdgeCheckValue, 
+    required bool? cdCheckValue, 
+    required String medicineName,
+    required Function(bool?) onChangedCD,
+    required Function(bool?) onChangedFridge}
+    ){
+    return SizedBox(
+          height: 400,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: AppColors.blackColor))
+                ),                                       
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BuildText.buildText(text: kRxDetails,size: 18),
+                      InkWell(
+                        onTap: () => Get.back(),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          width: 60,
+                          child: Icon(Icons.clear,color: AppColors.blackColor,)))
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BuildText.buildText(text: medicineName),
+                        buildSizeBox(10.0, 0.0),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: TextFormField(                                                        
+                                controller: quantityController,
+                                minLines: 1,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                  hintText: kQuantity,
+                                  hintStyle: TextStyle(color: AppColors.greyColorDark,fontSize: 14),
+                                  filled: true,
+                                  fillColor: AppColors.whiteColor,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(color: AppColors.greyColor, width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(color: AppColors.greyColor, width: 1),
+                                  ),
+                                )),
+                            ),
+                            buildSizeBox(0.0, 10.0),
+                            Flexible(
+                              child: TextFormField(                                                        
+                                controller: daysController,
+                                minLines: 1,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                  hintText: kDays,
+                                  hintStyle: TextStyle(color: AppColors.greyColorDark,fontSize: 14),
+                                  filled: true,
+                                  fillColor: AppColors.whiteColor,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(color: AppColors.greyColor, width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(color: AppColors.greyColor, width: 1),
+                                  ),
+                                )),
+                            ),
+                            buildSizeBox(0.0, 50.0),
+                            Container(
+                              margin: const EdgeInsets.only(right: 10.0),
+                              height: 40,
+                              width: 50,
+                              decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
+                              child: InkWell(
+                                onTap: onTapDelete,
+                                child: Icon(
+                                  Icons.delete,
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizeBox(10.0, 0.0),
+                        Row(
+                          children: [
+                            DeliveryScheduleWidgets.customWidgetwithCheckbox(
+                            bgColor: AppColors.blueColor, 
+                            title: Image.asset(strImgFridge,color: AppColors.whiteColor,height: 20,), 
+                            checkBoxValue: firdgeCheckValue ?? false,
+                            onChanged: onChangedFridge),
+                            buildSizeBox(0.0, 5.0),
+                              DeliveryScheduleWidgets.customWidgetwithCheckbox(
+                            bgColor: AppColors.redColor, 
+                            title: BuildText.buildText(text: 'C.D.',color: AppColors.whiteColor), 
+                            checkBoxValue: cdCheckValue ?? false,
+                            onChanged: onChangedCD),
+                          ],
+                        ),
+                        buildSizeBox(8.0, 0.0),
+                        const Divider(),                                                
+                      ],
+                    );
+                  },),
+              )
+            ],
+          )
+        );
   }
 
   static pDeliveryScheduleBottomSheet({

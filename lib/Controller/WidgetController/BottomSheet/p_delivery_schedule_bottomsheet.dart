@@ -19,12 +19,6 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
 
   DeliveryScheduleController delSchdCtrl = Get.put(DeliveryScheduleController());
 
-  List<String> statusItems = [
-    'Received',
-    'Requested',
-    'Ready',
-    'PickedUp',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +31,7 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
               backgroundColor: AppColors.whiteColor,
               appBar: AppBar(
                 title: BuildText.buildText(
-                  text:  widget.listType == "service" ? kSelService : widget.listType == "recieved" ? kReceived : widget.listType == "nursing home" ? kSelectNursHome : widget.listType == "exempt" ? kSelectExempt : kSelDelCharge,
+                  text:  widget.listType == "service" ? kSelService : widget.listType == "recieved" ? kReceived : widget.listType == "nursing home" ? kSelectNursHome : widget.listType == "parcel location" ? kParcelLocation : widget.listType == "exempt" ? kSelectExempt : kSelDelCharge,
                   size: 14,
                   color: AppColors.blackColor,                    
                 ),
@@ -101,15 +95,15 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                           );
                         }
                     ) : 
-                    widget.listType == "recieved" ?
+                    widget.listType == "received" ?
                     ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: statusItems.length,
+                        itemCount: controller.statusItems.length,
                         itemBuilder: (context,i){
                           return InkWell(
                             onTap: (){
-                             Navigator.of(context).pop(statusItems[i]);
+                             Navigator.of(context).pop(controller.statusItems[i]);
                             },
                             child: Container(
                               width: Get.width,
@@ -117,7 +111,7 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                               padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5.0),
-                                  color: widget.selectedID == statusItems[i] ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                  color: widget.selectedID == controller.statusItems[i] ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
                                   boxShadow: [
                                     BoxShadow(
                                         spreadRadius: 1,
@@ -127,7 +121,7 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                                     )
                                   ]),
                               child: BuildText.buildText(
-                                text: statusItems[i],
+                                text: controller.statusItems[i],
                                 size: 14,
                                 color: AppColors.blueColorLight,
                                 weight: FontWeight.w400,
@@ -163,6 +157,41 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                                   ]),
                               child: BuildText.buildText(
                                 text: widget.controller.deliveryScheduleData?.nursingHomes?[i].nursingHomeName ?? "",
+                                size: 14,
+                                color: AppColors.blueColorLight,
+                                weight: FontWeight.w400,
+                              ),
+                            ),
+                          );
+                        }
+                    ) : 
+                    widget.listType == "parcel location" ?
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.controller.parcelBoxList?.length ?? 0,
+                        itemBuilder: (context,i){
+                          return InkWell(
+                            onTap: (){
+                              Navigator.of(context).pop(widget.controller.parcelBoxList?[i]);
+                            },
+                            child: Container(                              
+                              width: Get.width,
+                              margin: const EdgeInsets.only(bottom: 5),
+                              padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: widget.selectedID == widget.controller.parcelBoxList?[i].id ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 1,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                        color: Colors.grey.shade300
+                                    )
+                                  ]),
+                              child: BuildText.buildText(
+                                text: widget.controller.parcelBoxList?[i].name ?? "",
                                 size: 14,
                                 color: AppColors.blueColorLight,
                                 weight: FontWeight.w400,

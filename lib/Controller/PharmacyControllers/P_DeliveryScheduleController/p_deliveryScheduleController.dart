@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/ParcelBox/parcel_box_response.dart';
 import '../../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../P_DriverListController/get_driver_list_controller.dart';
@@ -12,11 +13,20 @@ import '../P_RouteListController/P_get_route_list_controller.dart';
 class DeliveryScheduleController extends GetxController{
 
   ApiController apiCtrl = ApiController();
+
+  TextEditingController existingNoteController = TextEditingController();
+  TextEditingController deliveryChargeController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
+  TextEditingController daysController = TextEditingController();
+  TextEditingController preChargeController = TextEditingController();
+
   DeliveryScheduleApiResponse? deliveryScheduleData;
   NursingHomes? selectedNursingHome;
   PatientSubscriptions? selectedDeliveryCharge;
   Shelf? selectedService;
   Exemptions? selectedExemption;
+  List<ParcelBoxData>? parcelBoxList;
+  ParcelBoxData? selectedParcelBox;
   List<String> bagSizeList = ["S", "M", "L", "C",];
   List paidList = [
     {
@@ -50,7 +60,14 @@ class DeliveryScheduleController extends GetxController{
       "isSelected": false,
     },
   ];
-  
+  List<String> statusItems = [
+    'Received',
+    'Requested',
+    'Ready',
+    'PickedUp',
+  ];
+  String selectedStatus = "Received";
+
   int bagId = -1;
   bool fridgeSelected = false;
   bool controlDrugSelected = false;
@@ -70,7 +87,28 @@ class DeliveryScheduleController extends GetxController{
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
   
   
-  ///Select Pharmacy Staff
+  ///Select Status
+void onTapSelectStatus(
+      {required BuildContext context,
+      required controller}) {
+    PrintLog.printLog("Clicked on Select Status");
+    BottomSheetCustom.pDeliveryScheduleBottomSheet(
+      controller: controller,
+      context: context,
+      listType: 'received',
+      selectedID: '0',
+      onValue: (value) async {
+        print("test value ${value}");
+        if (value != null) {          
+          selectedStatus = value;
+          update();
+          PrintLog.printLog("Selected Nursing Home: ${statusItems}");
+        }
+      },
+    );
+  }
+
+  ///Select Nursing home
   void onTapSelectNursingHome(
       {required BuildContext context,
       required controller}) {
@@ -103,8 +141,11 @@ class DeliveryScheduleController extends GetxController{
       onValue: (value) async {
         if (value != null) {
           selectedDeliveryCharge = value;
+          if(selectedDeliveryCharge?.name == "Per Delivery"){
+           deliveryChargeController.text = selectedDeliveryCharge?.price ?? "";
+          }
           update();
-          PrintLog.printLog("Selected Nursing Home: ${selectedDeliveryCharge?.name}");
+          PrintLog.printLog("Selected Delivery Charge: ${selectedDeliveryCharge?.name}");
         }
       },
     );
@@ -144,8 +185,7 @@ class DeliveryScheduleController extends GetxController{
       onValue: (value) async {
         if (value != null) {
           getDriverListController.selectedDriver = value;
-          await getDriverListController
-              .getDriverList(context: context, routeId: getRouteListController.selectedroute?.routeId)
+          await getParcelBoxApi(context: context,driverId: getDriverListController.selectedDriver?.driverId ?? "",)
               .then((value) {                
             update();
           }); 
@@ -170,6 +210,26 @@ class DeliveryScheduleController extends GetxController{
           selectedService = value;
          update();
           PrintLog.printLog("Selected Driver: ${selectedService?.name}");
+        }
+      },
+    );
+  }
+
+  ///Select Parcel Box
+  void onTapSelectParcelLocation(
+      {required BuildContext context,
+      required controller}) {
+    PrintLog.printLog("Clicked on Select Parcel Location");
+    BottomSheetCustom.pDeliveryScheduleBottomSheet(
+      controller: controller,
+      context: context,
+      selectedID: selectedParcelBox?.id,
+      listType: "parcel location",
+      onValue: (value) async {
+        if (value != null) {
+          selectedParcelBox = value;
+         update();
+          PrintLog.printLog("Selected Parcel Location: ${selectedParcelBox?.name}");
         }
       },
     );
@@ -202,6 +262,7 @@ class DeliveryScheduleController extends GetxController{
   void onTapCamera({required BuildContext context}){
     imgPickerController.getImage("Camera", context, "documentImage");
   }
+
 
 ///Image Picker Controller
 ImagePickerController imgPickerController = Get.put(ImagePickerController());
@@ -242,6 +303,52 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
             changeErrorValue(true);
             PrintLog.printLog("Exception : $_");
           }       
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+  Future<GetParcelBoxApiResponse?> getParcelBoxApi({required BuildContext context,required String driverId}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "driverId":driverId
+    };
+
+    String url = WebApiConstant.GET_PHARMACY_PARCEL_BOX_URL;
+
+    await apiCtrl.getParcelBoxApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        try {
+          if (result.error == false) {
+            parcelBoxList = result.data;
+            result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+            changeLoadingValue(false);
+            changeSuccessValue(true);
+
+          } else {
+            changeLoadingValue(false);
+            changeSuccessValue(false);
+            PrintLog.printLog(result.message);
+          }
+
+        } catch (_) {
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog("Exception : $_");
+        }
+
       }else{
         changeSuccessValue(false);
         changeLoadingValue(false);

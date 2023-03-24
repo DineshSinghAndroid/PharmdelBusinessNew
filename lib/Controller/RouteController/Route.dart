@@ -16,6 +16,7 @@ import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart'
 import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_page.dart';
 import '../../PHARMACY/P_Views/P_TrackOrder/pharmacy_track_order_screen.dart';
 import '../../PHARMACY/P_Views/p_DeliveryList/p_deliverylist_screen.dart';
+import '../../PHARMACY/P_Views/p_SearchMedicine/p_search_medicine_screen.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/DashBoard/DriverDashboard/driver_dashboard_screen.dart';
@@ -123,6 +124,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   case deliveryScheduleScreenRoute:
   final args = settings.arguments as PharmacyDeliverySchedule;
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliverySchedule(address: args.address,contact: args.contact,customerName: args.customerName,dob: args.dob,email: args.email,nhs: args.nhs,));        
+
+
+  case searchMedicineScreenRoute:
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchMedicineScreen());            
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());

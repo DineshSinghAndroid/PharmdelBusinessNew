@@ -451,7 +451,13 @@ const String kDeliveryNote = "Delivery Note";
 const String kBookDelivery = "Book Delivery";
 const String kSelectExempt = "Select Exemption";
 const String kDeliveryCharge = "Delivery Charge";
-const String kBagSize = "'Bag Size'";
+const String kBagSize = 'Bag Size';
+
+/// Search Medicine Screen
+const String kPackSize = 'Pack Size : ';
+const String kSearchMeds = 'Search Medicine';
+const String kQuantity = 'Quantity';
+const String kDays = 'Days';
 
 
 

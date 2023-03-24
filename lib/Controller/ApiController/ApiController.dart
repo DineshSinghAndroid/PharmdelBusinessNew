@@ -28,6 +28,7 @@ import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
+import '../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
 import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
@@ -701,6 +702,28 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = DeliveryScheduleApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  } 
+
+  /// Get Medicine List Api
+  Future<MedicineListApiResponse?> getMedicineListApi({context, required String url, dictParameter, String? token}) async {
+    MedicineListApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = MedicineListApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
