@@ -129,7 +129,9 @@ Widget build(BuildContext context,) {
                           vtmName: controller.medicineData?.medicineListData?[index].vtmName ?? "",
                           packSize: controller.medicineData?.medicineListData?[index].packSize ?? "",
                           isCDShow: controller.medicineData?.medicineListData?[index].drugInfo != null && controller.medicineData!.medicineListData![index].drugInfo!.isNotEmpty,
-                          onTapSelect: (){},
+                          onTapSelect: (){
+                            Navigator.of(context).pop(controller.medicineData?.medicineListData?[index]);
+                          },
                         );
                       }
                        ) : const SizedBox.shrink()

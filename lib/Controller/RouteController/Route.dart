@@ -123,7 +123,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
   case deliveryScheduleScreenRoute:
   final args = settings.arguments as PharmacyDeliverySchedule;
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliverySchedule(address: args.address,contact: args.contact,customerName: args.customerName,dob: args.dob,email: args.email,nhs: args.nhs,));        
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliverySchedule(address: args.address,contact: args.contact,firstName: args.firstName,dob: args.dob,email: args.email,nhs: args.nhs,postCode: args.postCode,lastName: args.lastName,middleName: args.middleName,));        
 
 
   case searchMedicineScreenRoute:

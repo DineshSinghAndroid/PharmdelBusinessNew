@@ -21,6 +21,7 @@ import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
 import '../../Model/OrderDetails/orderdetails_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
+import '../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
 import '../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../Model/PharmacyModels/P_DriverRoutePointsResponse/p_driverRoutePointsResponse.dart';
 import '../../Model/PharmacyModels/P_FetchDeliveryListModel/P_fetch_delivery_list_model.dart';
@@ -798,6 +799,31 @@ class ApiController {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
           result = SaveNotificationApiResponse.fromJson(response?.data);
+          PrintLog.printLog(result.message);
+          return result;
+        } else {
+          PrintLog.printLog(result!.message);
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+   ///Create Order Api
+  Future<CreateOrderApiResponse?> getCreateOrderApi({context, required String url, dictParameter, String? token}) async {
+  CreateOrderApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = CreateOrderApiResponse.fromJson(response?.data);
           PrintLog.printLog(result.message);
           return result;
         } else {

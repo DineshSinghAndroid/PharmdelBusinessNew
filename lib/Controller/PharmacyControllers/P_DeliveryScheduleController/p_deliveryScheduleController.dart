@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
 import '../../../Model/ParcelBox/parcel_box_response.dart';
+import '../../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../P_DriverListController/get_driver_list_controller.dart';
@@ -15,10 +16,10 @@ class DeliveryScheduleController extends GetxController{
   ApiController apiCtrl = ApiController();
 
   TextEditingController existingNoteController = TextEditingController();
+  TextEditingController deliveryNoteController = TextEditingController();
   TextEditingController deliveryChargeController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   TextEditingController daysController = TextEditingController();
-  TextEditingController preChargeController = TextEditingController();
 
   DeliveryScheduleApiResponse? deliveryScheduleData;
   NursingHomes? selectedNursingHome;
@@ -27,6 +28,8 @@ class DeliveryScheduleController extends GetxController{
   Exemptions? selectedExemption;
   List<ParcelBoxData>? parcelBoxList;
   ParcelBoxData? selectedParcelBox;
+  OrderData? orderData;
+
   List<String> bagSizeList = ["S", "M", "L", "C",];
   List paidList = [
     {
@@ -85,7 +88,6 @@ class DeliveryScheduleController extends GetxController{
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
-  
   
   ///Select Status
 void onTapSelectStatus(
@@ -186,7 +188,7 @@ void onTapSelectStatus(
         if (value != null) {
           getDriverListController.selectedDriver = value;
           await getParcelBoxApi(context: context,driverId: getDriverListController.selectedDriver?.driverId ?? "",)
-              .then((value) {                
+              .then((value) {
             update();
           }); 
           PrintLog.printLog("Selected Driver: ${getDriverListController.selectedDriver?.firstName}");
@@ -273,6 +275,7 @@ GetDriverListController getDriverListController = Get.put(GetDriverListControlle
 /// Get Route Controller
 PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRouteListController());
 
+
   /// Delivery Schedule Controller
   Future<NotificationApiResponse?> deliveryScheduleApi({required BuildContext context,required String pharmacyId}) async {
 
@@ -290,7 +293,7 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
 
     await apiCtrl.getDeliveryScheduleApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
-      if(result != null){             
+      if(result != null){
           try {                                
               deliveryScheduleData = result;
               result == null ? changeEmptyValue(true):changeEmptyValue(false);
@@ -349,6 +352,117 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
           PrintLog.printLog("Exception : $_");
         }
 
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+
+/// Create Order Controller
+  Future<CreateOrderApiResponse?> createOrderApi({
+    required BuildContext context, 
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String postCode,
+    required String addressLine1,
+    required String nhsNumber,
+    required String dob,
+    required String mobileNumber,
+    required String emailId,}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "order_type": "manual",
+      "pharmacyId": 0,
+      "otherpharmacy": false,
+      "pmr_type": "0",
+      "endRouteId": "",
+      "startRouteId": "",
+      "start_lat": "",
+      "start_lng": "",
+      "del_subs_id": selectedDeliveryCharge?.id ?? "",
+      "exemption": selectedExemption?.id ?? "",      
+      "paymentStatus": "", 
+      "bag_size": "",
+      "patient_id": "",
+      "pr_id": "",
+      "lat": "",      
+      "lng": "",
+      "parcel_box_id": selectedParcelBox?.id ?? "",
+      "surgery_name": "",
+      "surgery": "",
+      "amount": "",
+      "email_id": emailId,
+      "mobile_no_2": mobileNumber,
+      "dob": dob,
+      "nhs_number": nhsNumber,
+      "title": "",
+      "first_name": firstName,
+      "middle_name": middleName,
+      "last_name": lastName,
+      "address_line_1": addressLine1,
+      "country_id": "",
+      "post_code": postCode,
+      "gender": "",
+      "preferred_contact_type": "",
+      "delivery_type": "",
+      "driver_id": getDriverListController.selectedDriver?.driverId ?? "",
+      "delivery_route": getRouteListController.selectedroute?.routeId ?? "",
+      "storage_type_cd": controlDrugSelected,
+      "storage_type_fr": controlDrugSelected,
+      "delivery_status": "",
+      "nursing_homes_id":selectedNursingHome?.id ?? "",
+      "shelf": selectedService?.id ?? "",
+      "delivery_service":"",
+      "doctor_name": "",
+      "doctor_address": "",
+      "new_delivery_notes": deliveryNoteController.text.toString().trim(),
+      "existing_delivery_notes": existingNoteController.text.toString().trim(),
+      "del_charge": deliveryChargeController.text.toString().trim(),
+      "rx_charge": deliveryScheduleData?.rxCharge ?? "",
+      "subs_id": selectedDeliveryCharge?.id ?? "",
+      "rx_invoice": "",
+      "branch_notes": "",
+      "surgery_notes": "",
+      "medicine_name": "",
+      "prescription_images": "",
+      "delivery_date": selectedDate,
+    };
+
+    String url = WebApiConstant.GET_PHARMACY_CREATE_ORDER_URL;
+
+    await apiCtrl.getCreateOrderApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+        if(result.error != true){
+          try {
+              orderData = result.data;              
+              result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result.message);
+        }       
       }else{
         changeSuccessValue(false);
         changeLoadingValue(false);

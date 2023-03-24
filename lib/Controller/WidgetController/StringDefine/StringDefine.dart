@@ -452,6 +452,7 @@ const String kBookDelivery = "Book Delivery";
 const String kSelectExempt = "Select Exemption";
 const String kDeliveryCharge = "Delivery Charge";
 const String kBagSize = 'Bag Size';
+const String kPostCode = 'Postcode : ';
 
 /// Search Medicine Screen
 const String kPackSize = 'Pack Size : ';

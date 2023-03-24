@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
@@ -9,19 +8,26 @@ import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 class PharmacyDeliverySchedule extends StatefulWidget {
-  String? customerName;
+  String? firstName;
   String? dob;
   String? nhs;
   String? address;
   String? contact;
   String? email;
+  String? postCode;
+  String? middleName;
+  String? lastName;
+  
    PharmacyDeliverySchedule({super.key, 
-    required this.customerName,
+    required this.firstName,
     required this.dob,
     required this.nhs,
     required this.address,
     required this.contact,
     required this.email,
+    required this.postCode,
+    required this.middleName,
+    required this.lastName,
   });
 
   @override
@@ -39,8 +45,14 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
     super.initState();
   }
 
-  Future<void> init() async {  
+  Future<void> init() async {
     await delSchdCtrl.deliveryScheduleApi(context: context,pharmacyId: '0');    
+  }
+
+  @override
+  void dispose() {
+    Get.delete<DeliveryScheduleController>();
+    super.dispose();
   }
 
   @override
@@ -51,7 +63,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
               appBar: AppBar(
           title: BuildText.buildText(text: kDelSchd,size: 18),
           backgroundColor: AppColors.whiteColor,
@@ -61,21 +73,24 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
               ),
               body: Padding(
                padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-               child: SingleChildScrollView(
+               child: SingleChildScrollView(                
                  child: SizedBox(
-                  height: Get.height,
+                  height: Get.height - 100,
                    child: Column(
+                    mainAxisSize: MainAxisSize.max,
                      crossAxisAlignment: CrossAxisAlignment.start,
                      mainAxisAlignment: MainAxisAlignment.start,
                      children: [
-                               
+
                     ///Cusotmer Details
                     BuildText.buildText(
-                    text: widget.customerName ?? ""),
+                    text: "${widget.firstName} ${widget.middleName} ${widget.lastName}"),
                     BuildText.buildText(
                     text: "$kDateOfBirth" "${widget.dob}"),
                     BuildText.buildText(
                     text: "$kNHS" "${widget.nhs}"),
+                    BuildText.buildText(
+                    text: "$kPostCode" "${widget.postCode}"),
                     BuildText.buildText(
                     text: "Address : ${widget.address}"),
                     BuildText.buildText(
@@ -106,7 +121,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))),
                                 builder: (context) {
                                   return BottomSheetCustom.selectMediaBottomsheet(
-                                    onTapGallery: (){                                  
+                                    onTapGallery: (){
                                       Navigator.of(context).pop(controller.onTapGallery(context: context));
                                     },
                                     onTapCamera: (){
@@ -121,24 +136,30 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                           buildSizeBox(0.0, 10.0),
                                 
                           /// Rx Details
-                          DeliveryScheduleWidgets.customWidget(                            
+                          DeliveryScheduleWidgets.customWidget(
                             title: kRxDetails,
                             bgColor: AppColors.greenColor,
                             titleColor: AppColors.whiteColor,
                             onTap: (){
-                              showModalBottomSheet(
-                                enableDrag: false,
-                                isDismissible: false,
-                                context: context, 
+                              showModalBottomSheet(   
+                                isDismissible: true,
+                                isScrollControlled: true,
+                                clipBehavior: Clip.antiAlias,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(30.0),
+                                  topLeft: Radius.circular(30.0),
+                                )),
+                                context: context,
                                 builder: (context) {
                                   return BottomSheetCustom.RxDetailsBottomsheetCustom(
                                     quantityController: controller.quantityController, 
                                     daysController: controller.daysController, 
-                                    medicineName: 'Medicine Name', 
+                                    medicineName: 'Medicine Name', ///will show here by dynamic
                                     firdgeCheckValue: false,
                                     cdCheckValue: false,
                                     onTapDelete: (){},
-                                    onChangedCD: (value) {}, 
+                                    onChangedCD: (value) {},
                                     onChangedFridge: (value) {});
                                 },);
                             },
@@ -398,7 +419,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         checkBoxValue: controller.fridgeSelected,
                         onChanged: (value) {
                           setState(() {
-                            controller.fridgeSelected = !controller.fridgeSelected;
+                            controller.fridgeSelected = value!;
                           });
                         },),
                         buildSizeBox(0.0, 5.0),
@@ -410,7 +431,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         checkBoxValue: controller.controlDrugSelected,
                         onChanged: (value) {
                           setState(() {
-                            controller.controlDrugSelected = !controller.controlDrugSelected;
+                            controller.controlDrugSelected = value!;
                           });
                         }),
                         buildSizeBox(0.0, 5.0),
@@ -431,9 +452,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                         bgColor: AppColors.greenColor, 
                         title: BuildText.buildText(text: 'Exempt',color: AppColors.whiteColor),
                         checkBoxValue: controller.exemptSelected,
-                        onChanged: (value) {
-                          
-                        }),
+                        onChanged: (value) {}),
                         buildSizeBox(0.0, 5.0),
                         ],
                       ),
@@ -456,7 +475,7 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
                       BuildText.buildText(text: kDeliveryNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
                       buildSizeBox(5.0, 0.0),                  
                       TextFormField(
-                        controller: controller.existingNoteController,
+                        controller: controller.deliveryNoteController,
                         minLines: 1,
                         maxLines: null,
                         decoration: InputDecoration(
@@ -482,7 +501,20 @@ class _PharmacyDeliveryScheduleState extends State<PharmacyDeliverySchedule> {
 
               /// Book Delivery Button
               bottomNavigationBar: InkWell(
-                onTap: (){},
+                onTap: ()async{
+                  await controller.createOrderApi(
+                    context: context,
+                    firstName: widget.firstName ?? "",
+                    middleName: widget.middleName ?? "",
+                    lastName: widget.lastName ?? "",
+                    postCode: widget.postCode ?? "",
+                    dob: widget.dob ?? "",
+                    emailId: widget.email ?? "",
+                    nhsNumber: widget.nhs ?? "",
+                    mobileNumber: widget.contact ?? "",                    
+                    addressLine1: widget.address ?? "").then((value) => (value) {                                         
+                    });
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
