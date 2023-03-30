@@ -280,7 +280,9 @@ void isSelected(bool isSelect) {
                           ),
                         ),
 
-                        controller.driverDashboardData != null && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ?
+                        controller.driverDashboardData != null &&
+                            controller.driverDashboardData?.deliveryList != null &&
+                            controller.driverDashboardData!.deliveryList!.isNotEmpty ?
                         ListView.separated(
                           shrinkWrap: true,
                           padding: const EdgeInsets.only(top: 20,left: 8,right: 8),

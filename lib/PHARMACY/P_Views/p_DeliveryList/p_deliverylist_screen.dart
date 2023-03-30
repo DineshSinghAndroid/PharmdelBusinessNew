@@ -5,6 +5,7 @@ import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.d
 
 import '../../../Controller/PharmacyControllers/P_DeliveriesScreenController/P_deliverieslist_screen_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
+import '../../../Controller/WidgetController/AdditionalWidget/P_DeliveryCardCustom/deliveryCardCustom.dart';
 
 class PharmacyDeliveryListScreen extends StatefulWidget {
   const PharmacyDeliveryListScreen({super.key});
@@ -15,6 +16,7 @@ class PharmacyDeliveryListScreen extends StatefulWidget {
 
 class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen> {
   final PDeliveriesScreenController controller = Get.put(PDeliveriesScreenController());
+  TabController? tabController;
 
   @override
   Widget build(BuildContext context) {
@@ -95,17 +97,19 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                         },
                         child: Chip(
                           label: BuildText.buildText(text: kToday, color: AppColors.whiteColor),
-                          backgroundColor: AppColors.blueColor,
+                          backgroundColor: controller.todaySelected ? AppColors.redColor : AppColors.blueColor,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                         ),
                       ),
                       buildSizeBox(0.0, 8.0),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          controller.onTomorrowTap();
+                        },
                         child: Chip(
                           label: BuildText.buildText(text: kTomorrow, color: AppColors.whiteColor),
-                          backgroundColor: AppColors.blueColor,
+                          backgroundColor: controller.tomorrowSelected ? AppColors.redColor : AppColors.blueColor,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                         ),
@@ -125,27 +129,305 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                               BuildText.buildText(text: kSelect, color: AppColors.whiteColor),
                             ],
                           ),
-                          backgroundColor: AppColors.blueColor,
+                          backgroundColor: controller.otherDateSelected ? AppColors.redColor : AppColors.blueColor,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                         ),
                       ),
                     ],
                   ),
-                  buildSizeBox(25.0, 0.0),
+                  buildSizeBox(5.0, 0.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.blueColor, label: kTotal, counter: '0', onTap: () {})),
-                      Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.greyColorDark, label: kPickedUp, counter: '0', onTap: () {})),
-                      Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.greenAccentColor, label: kDelivered, counter: '0', onTap: () {})),
-                      Flexible(flex: 1, fit: FlexFit.tight, child: DefaultWidget.topCounter(bgColor: AppColors.redColor.withOpacity(0.9), label: kFailed, counter: '0', onTap: () {})),
+                      Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: DefaultWidget.topCounter(
+                            bgColor: AppColors.blueColor,
+                            label: kTotal,
+                            selectedTopBtnName: controller.selectedTopBtnName,
+                            counter: controller.totalList.length.toString() ?? "0",
+                            onTap: () {},
+                          )),
+                      Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: DefaultWidget.topCounter(
+                            bgColor: AppColors.greyColor,
+                            label: kPickedUp,
+                            selectedTopBtnName: controller.selectedTopBtnName,
+                            counter: controller.pickedUpList.length.toString() ?? "0",
+                            onTap: () {},
+                          )),
+                      Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: DefaultWidget.topCounter(
+                            bgColor: AppColors.greenColor,
+                            label: kDelivered,
+                            selectedTopBtnName: controller.selectedTopBtnName,
+                            counter: controller.deliveredList.length.toString() ?? "0",
+                            onTap: () {},
+                          )),
+                      Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
+                          child: DefaultWidget.topCounter(
+                            bgColor: AppColors.redColor,
+                            label: kFailed,
+                            selectedTopBtnName: controller.selectedTopBtnName,
+                            counter: controller.failedList.length.toString() ?? "0",
+                            onTap: () {},
+                          )),
                     ],
                   ),
+                  Container(
+                    height: 450,
+                    child: DefaultTabController(
+                      length: 4,
+                      child: TabBarView(
+                        controller: tabController,
+                        children: [
+                          TotalView(),
+                          pickedUpView(),
+                          deliverdView(),
+                          failedView(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  buildSizeBox(10.0, 0.0),
                 ],
               ),
             ));
       },
     );
   }
+
+  ListView TotalView() => ListView.separated(
+        shrinkWrap: true,
+        itemCount: controller.totalList.length ?? 0,
+        itemBuilder: (context, i) {
+          return PharmacyDeliveryCard(
+            /// onTap
+            onTap: () {
+              controller.onTotalListTap(
+                  context: context,
+                  orderId: controller.totalList[i].orderId ?? 0,
+                  patientName: controller.totalList[i].customerName.toString(),
+                  DeliveryNotes: controller.totalList[i].deliveryNote.toString(),
+                  ExistingNotes: controller.totalList[i].exitingNote.toString(),
+                  patientAddress: controller.totalList[i].address.toString(),
+                  patientMobileNumber: controller.totalList[i].customerMobileNumber.toString());
+            },
+
+            /// onTap Route
+            onTapRoute: () {},
+
+            /// onTap Manual
+            onTapManual: () {},
+
+            /// onTap DeliverNow
+            onTapDeliverNow: () {},
+
+            /// Customer Detail
+            customerName: "${controller.getDeliveryResponse?.list?[i].customerName ?? ""}",
+            customerAddress: "${controller.getDeliveryResponse?.list?[i].address}",
+            altAddress: "",
+            driverType: '',
+
+            isSelected: false,
+            nursingHomeId: "",
+            pharmacyName: "",
+
+            /// Order Detail
+            orderListType: controller.orderListType,
+            orderId: "",
+            deliveryStatus: controller.totalList[i].deliveryStatusDesc.toString() ?? "",
+            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            pmrId: "",
+            pmrType: "",
+            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+
+            /// PopUp Menu
+            popUpMenu: [],
+            isBulkScanSwitched: false,
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 15),
+          );
+        },
+      );
+
+  ListView pickedUpView() => ListView.separated(
+        shrinkWrap: true,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: controller.pickedUpList?.length ?? 0,
+        itemBuilder: (context, i) {
+          return PharmacyDeliveryCard(
+            /// onTap
+            // onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
+
+            /// onTap Route
+            onTapRoute: () {},
+
+            /// onTap Manual
+            onTapManual: () {},
+
+            /// onTap DeliverNow
+            onTapDeliverNow: () {},
+
+            /// Customer Detail
+            customerName: "${controller.pickedUpList[i].customerName ?? ""}",
+            customerAddress: "${controller.pickedUpList[i].address}",
+            altAddress: "",
+            driverType: '',
+
+            isSelected: false,
+            nursingHomeId: "",
+            pharmacyName: "",
+
+            /// Order Detail
+            orderListType: controller.orderListType,
+            orderId: "",
+            deliveryStatus: controller.pickedUpList[i].deliveryStatusDesc.toString() ?? "",
+
+//        deliveryStatus: "",
+            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            pmrId: "",
+            pmrType: "",
+            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+
+            /// PopUp Menu
+            popUpMenu: [],
+            isBulkScanSwitched: false,
+            onTap: () {},
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 15),
+          );
+        },
+      );
+
+  ListView deliverdView() => ListView.separated(
+        shrinkWrap: true,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: controller.deliveredList?.length ?? 0,
+        itemBuilder: (context, i) {
+          return PharmacyDeliveryCard(
+            /// onTap
+            // onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
+
+            /// onTap Route
+            onTapRoute: () {},
+
+            /// onTap Manual
+            onTapManual: () {},
+
+            /// onTap DeliverNow
+            onTapDeliverNow: () {},
+
+            /// Customer Detail
+            customerName: "${controller.deliveredList[i].customerName ?? ""}",
+            customerAddress: "${controller.deliveredList[i].address}",
+            altAddress: "",
+            driverType: '',
+
+            isSelected: false,
+            nursingHomeId: "",
+            pharmacyName: "",
+
+            /// Order Detail
+            orderListType: controller.orderListType,
+            orderId: "",
+            // deliveryStatus: "",
+            deliveryStatus: controller.deliveredList[i].deliveryStatusDesc.toString() ?? "",
+
+            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            pmrId: "",
+            pmrType: "",
+            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+
+            /// PopUp Menu
+            popUpMenu: [],
+            isBulkScanSwitched: false,
+            onTap: () {},
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 15),
+          );
+        },
+      );
+
+  ListView failedView() => ListView.separated(
+        shrinkWrap: true,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: controller.failedList?.length ?? 0,
+        itemBuilder: (context, i) {
+          return PharmacyDeliveryCard(
+            /// onTap
+            // onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
+
+            /// onTap Route
+            onTapRoute: () {},
+
+            /// onTap Manual
+            onTapManual: () {},
+
+            /// onTap DeliverNow
+            onTapDeliverNow: () {},
+
+            /// Customer Detail
+            customerName: "${controller.failedList[i].customerName ?? ""}",
+            customerAddress: "${controller.failedList[i].address}",
+            altAddress: "",
+            driverType: '',
+
+            isSelected: false,
+            nursingHomeId: "",
+            pharmacyName: "",
+
+            /// Order Detail
+            orderListType: controller.orderListType,
+            orderId: "",
+            deliveryStatus: controller.failedList[i].deliveryStatusDesc.toString() ?? "",
+            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            pmrId: "",
+            pmrType: "",
+            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+
+            /// PopUp Menu
+            popUpMenu: [],
+            isBulkScanSwitched: false,
+            onTap: () {},
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Padding(
+            padding: EdgeInsets.only(bottom: 15),
+          );
+        },
+      );
 }

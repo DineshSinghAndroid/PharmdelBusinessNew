@@ -24,8 +24,8 @@ import '../../Model/ParcelBox/parcel_box_response.dart';
 import '../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
 import '../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../Model/PharmacyModels/P_DriverRoutePointsResponse/p_driverRoutePointsResponse.dart';
-import '../../Model/PharmacyModels/P_GetDeliveryListModel/P_get_delivery_list_model.dart';
-import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
+import '../../Model/PharmacyModels/P_FetchDeliveryListModel/P_fetch_delivery_list_model.dart';
+ import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
@@ -795,6 +795,7 @@ class ApiController {
   Future<SaveNotificationApiResponse?> getSaveNotificationApi({context, required String url, dictParameter, String? token}) async {
   SaveNotificationApiResponse? result;
     if (await ConnectionValidator().check()) {
+
       try {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
@@ -1131,13 +1132,13 @@ class ApiController {
 
 
   ///delivery  list api for pharmacy
-  Future<P_GetDeliveryListModel?> getPharmacyDeliveryListApi({context, required String url, dictParameter, String? token}) async {
-    P_GetDeliveryListModel? result;
+  Future<P_FetchDeliveryListModel?> fetchPharmacyDeliveryListapi({context, required String url, dictParameter, String? token}) async {
+    P_FetchDeliveryListModel? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
-          result = P_GetDeliveryListModel.fromJson(response?.data);
+          result = P_FetchDeliveryListModel.fromJson(response?.data);
           return result;
         } else {
           return result;
