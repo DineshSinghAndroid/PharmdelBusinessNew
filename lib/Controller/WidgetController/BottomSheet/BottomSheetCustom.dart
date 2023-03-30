@@ -4,6 +4,7 @@ import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/BottomSheet/select_route_bottomsheet.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../../Helper/TextController/BuildText/BuildText.dart';
 import '../../PharmacyControllers/P_DeliveryScheduleController/p_deliveryScheduleController.dart';
@@ -16,6 +17,7 @@ import 'p_select_driver_bottomsheet.dart';
 import 'p_select_route_bottomsheet.dart';
 
 class BottomSheetCustom {
+  
   static Future<void> share(
       {required BuildContext context, required String link}) async {
     PrintLog.printLog('Share Tab');
@@ -160,15 +162,16 @@ class BottomSheetCustom {
   }
 
   static RxDetailsBottomsheetCustom({
+    required int itemCount,
     required TextEditingController quantityController,
     required TextEditingController daysController, 
-    required VoidCallback onTapDelete, 
+    required VoidCallback onTapDelete,
     required bool? firdgeCheckValue, 
     required bool? cdCheckValue, 
     required String medicineName,
     required Function(bool?) onChangedCD,
     required Function(bool?) onChangedFridge}
-    ){
+    ){      
     return SizedBox(
           height: 450,
           child: Column(
@@ -179,7 +182,7 @@ class BottomSheetCustom {
                 height: 60,
                 decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(color: AppColors.blackColor))
-                ),                                       
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -199,7 +202,7 @@ class BottomSheetCustom {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
-                  itemCount: 5,
+                  itemCount: itemCount,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return Column(
@@ -211,7 +214,7 @@ class BottomSheetCustom {
                         Row(
                           children: [
                             Flexible(
-                              child: TextFormField(                                                        
+                              child: TextFormField(
                                 controller: quantityController,
                                 minLines: 1,
                                 maxLines: null,

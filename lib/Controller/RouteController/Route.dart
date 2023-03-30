@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pharmdel/PHARMACY/P_Views/P_DeliverySchedule/p_delivery_schedule_screen.dart';
+import 'package:pharmdel/PHARMACY/P_Views/P_DeliveryScheduleManual/p_delivery_schedule_manual.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_DisplayMapRoutes/p_display_map_routes_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_Notification/pharmacy_notification_screen.dart';
 import 'package:pharmdel/PHARMACY/P_Views/P_NursingHome/p_nursing_home_screen.dart';
@@ -78,7 +78,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
   case scanPrescriptionScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const ScanPrescriptionScreen());
+  final args = settings.arguments as ScanPrescriptionScreen;
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: ScanPrescriptionScreen(bulkScanDate: args.bulkScanDate,driverId: args.driverId,isAssignSelf: args.isAssignSelf,isBulkScan: args.isBulkScan,isRouteStart: args.isRouteStart,nursingHomeId: args.nursingHomeId,parcelBoxId: args.parcelBoxId,pharmacyId: args.pharmacyId,routeId: args.routeId,toteId: args.toteId,type: args.type,pmrList: args.pmrList,prescriptionList: args.prescriptionList,));
 
 
   case mapScreenRoute:
@@ -87,7 +88,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
   case searchPatientScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchPatientScreen());            
+  final args = settings.arguments as SearchPatientScreen;
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: SearchPatientScreen(bulkScanDate: args.bulkScanDate,driverId: args.driverId,driverType: args.driverType,isBulkScan: args.isBulkScan,isRouteStart: args.isRouteStart,nursingHomeId: args.nursingHomeId,parcelBoxId: args.parcelBoxId,routeId: args.routeId,toteId: args.toteId,));
       // case introScreenRoute:
      // case introScreenRoute:
      //   return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const IntroScreen());
@@ -122,8 +124,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
   case deliveryScheduleScreenRoute:
-  final args = settings.arguments as PharmacyDeliverySchedule;
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliverySchedule(address: args.address,contact: args.contact,firstName: args.firstName,dob: args.dob,email: args.email,nhs: args.nhs,postCode: args.postCode,lastName: args.lastName,middleName: args.middleName,));        
+  final args = settings.arguments as PharmacyDeliveryScheduleManual;
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliveryScheduleManual(address: args.address,contact: args.contact,firstName: args.firstName,dob: args.dob,email: args.email,nhs: args.nhs,postCode: args.postCode,lastName: args.lastName,middleName: args.middleName,));        
 
 
   case searchMedicineScreenRoute:

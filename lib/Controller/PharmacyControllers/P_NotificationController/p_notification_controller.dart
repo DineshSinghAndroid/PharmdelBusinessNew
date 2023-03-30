@@ -157,8 +157,7 @@ class PharmacyNotificationController extends GetxController{
 
 
     ///Create Notification Controller
-  Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {
-    print('Test Controller');
+  Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {    
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -172,16 +171,14 @@ class PharmacyNotificationController extends GetxController{
     String url = WebApiConstant.GET_PHARMACY_CREATE_NOTIFICATION;
 
     await apiCtrl.getCreateNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {
-        print('Test Controller 2');
+        .then((result) async {        
         if (result != null && result.status != null && result.status != false) {
           try {
             if (result.status == true) {
               createNotificationData = result.data;
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
-              changeSuccessValue(true);
-             print('Test Controller 3');
+              changeSuccessValue(true);             
 
             } else {
               changeLoadingValue(false);

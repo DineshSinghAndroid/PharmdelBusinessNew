@@ -2,13 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-import 'package:pharmdel/PHARMACY/P_Views/P_DeliverySchedule/p_delivery_schedule_screen.dart';
 import '../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
 
 class SearchPatientScreen extends StatefulWidget {
-  const SearchPatientScreen({super.key});
+  bool? isBulkScan;
+  bool? isRouteStart;
+  String? driverId;
+  String? driverType;
+  String? routeId;
+  String? bulkScanDate;
+  String? nursingHomeId;
+  String? parcelBoxId;
+  String? toteId;
+  // callGetOrderApi callApi;
+  // BulkScanMode callPickedApi;
+  SearchPatientScreen({
+  this.bulkScanDate,
+  this.driverId,
+  this.driverType,
+  this.isBulkScan,
+  this.isRouteStart,
+  this.nursingHomeId,
+  this.parcelBoxId,
+  this.routeId,
+  this.toteId
+  });
 
   @override
   State<SearchPatientScreen> createState() => _SearchPatientScreenState();
@@ -119,20 +139,20 @@ Widget build(BuildContext context,) {
                         lastName:  controller.patientData?[index].lastName ?? "",
                         address:  controller.patientData?[index].address1 ?? "",
                         dob: controller.patientData?[index].dob ?? "",
-                        onTap: (){
-                          // Navigator.of(context).pop(controller.patientData?[index]);
-                          Get.toNamed(deliveryScheduleScreenRoute,
-                          arguments: PharmacyDeliverySchedule(
-                            firstName: controller.patientData?[index].firstName ?? "", 
-                            dob: controller.patientData?[index].dob ?? "", 
-                            nhs: controller.patientData?[index].nhsNumber ?? "", 
-                            address: controller.patientData?[index].address1 ?? "", 
-                            contact: controller.patientData?[index].contactNumber ?? "", 
-                            email: controller.patientData?[index].email ?? "",
-                            postCode: controller.patientData?[index].postalCode ?? "",
-                            lastName: controller.patientData?[index].lastName ?? "",
-                            middleName: controller.patientData?[index].middleName ?? "",)
-                          );
+                        onTap: (){      
+                          controller.onTileClicked(index: index, context: context);
+                          // Get.toNamed(deliveryScheduleScreenRoute,
+                          // arguments: PharmacyDeliveryScheduleManual(
+                          //   firstName: controller.patientData?[index].firstName ?? "", 
+                          //   dob: controller.patientData?[index].dob ?? "", 
+                          //   nhs: controller.patientData?[index].nhsNumber ?? "", 
+                          //   address: controller.patientData?[index].address1 ?? "", 
+                          //   contact: controller.patientData?[index].contactNumber ?? "", 
+                          //   email: controller.patientData?[index].email ?? "",
+                          //   postCode: controller.patientData?[index].postalCode ?? "",
+                          //   lastName: controller.patientData?[index].lastName ?? "",
+                          //   middleName: controller.patientData?[index].middleName ?? "",)
+                          // );
                         },
                       );  
                       }

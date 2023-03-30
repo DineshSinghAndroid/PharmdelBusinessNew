@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../../main.dart';
+import '../../PharmacyControllers/P_ProcessScanController/p_processScanController.dart';
 
 
 class GetPatientContoller extends GetxController{
@@ -19,6 +21,25 @@ class GetPatientContoller extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
+  ///OnTap Patient
+   void onTileClicked({required int index, required BuildContext context}) {   
+    if (patientData?[index].lastOrderId != null) {      
+      PrintLog.printLog("Last order id is ${patientData?[index].lastOrderId}");
+      String name = "";
+      if (patientData?[index].firstName != null) name = "${patientData?[index].firstName.toString()} ";
+      if (patientData?[index].middleName != null) name = "$name${patientData?[index].middleName.toString()} ";
+      if (patientData?[index].lastName != null) name = "$name${patientData?[index].lastName.toString()} ";
+      getProcessScanController.processScanApi(context: context, patientId: patientData?[index].customerId ?? "");      
+    } else {      
+      ToastCustom.showToast(msg: 'Order id not found');
+    }
+    //}
+  }
+
+  ///Process Scan Controller
+  PharmacyProcessScanController getProcessScanController = Get.put(PharmacyProcessScanController());
+
+  ///Get Patient List Controller
   Future<GetPatientApiResposne?> getPatientApi({required BuildContext context,required String firstName}) async {
 
     changeEmptyValue(false);

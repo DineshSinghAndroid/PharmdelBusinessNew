@@ -69,10 +69,10 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
                                     ),
                                   ),
                                   items: _controller.selectTitle
-                                      .map((item) => DropdownMenuItem<String>(
+                                      .map((item) => DropdownMenuItem<SurNameTitle>(
                                             value: item,
                                             child: Text(
-                                              item,
+                                              item.showTitle,
                                               style: const TextStyle(
                                                 fontSize: 14,
                                               ),
@@ -82,7 +82,7 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
                                   value: _controller.selectedTitleValue,
                                   onChanged: (value) {
                                     setState(() {
-                                      _controller.selectedTitleValue = value as String;
+                                      _controller.selectedTitleValue = value;
                                     });
                                   },
                                   buttonStyleData: ButtonStyleData(
@@ -105,10 +105,10 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
                                     ),
                                   ),
                                   items: _controller.selectGender
-                                      .map((item) => DropdownMenuItem<String>(
+                                      .map((item) => DropdownMenuItem<SurNameTitle>(
                                             value: item,
                                             child: Text(
-                                              item,
+                                              item.showTitle,
                                               style: const TextStyle(
                                                 fontSize: 14,
                                               ),
@@ -118,7 +118,7 @@ class _CreatePatientScreenState extends State<CreatePatientScreen> {
                                   value: _controller.selectedGenderValue,
                                   onChanged: (value) {
                                     setState(() {
-                                      _controller.selectedGenderValue = value as String;
+                                      _controller.selectedGenderValue = value;
                                     });
                                   },
                                   buttonStyleData: ButtonStyleData(
