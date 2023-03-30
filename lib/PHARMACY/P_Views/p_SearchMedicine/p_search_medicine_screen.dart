@@ -64,7 +64,7 @@ Widget build(BuildContext context,) {
                   margin: const EdgeInsets.only(left: 30),
                   color: Colors.transparent,
                   child: Container(
-                    height: 50,
+                    height: 42,
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: TextFormField(                      
                       textAlign: TextAlign.start,
@@ -134,7 +134,9 @@ Widget build(BuildContext context,) {
                           },
                         );
                       }
-                       ) : const SizedBox.shrink()
+                       ) : SizedBox(height: Get.height - 400,
+                        child: Center(child: BuildText.buildText(text: 'No Medicine Available',size: 18,color: AppColors.greyColor)),
+                       )
               ]))),
           ),
         );

@@ -64,24 +64,27 @@ class CreatePatientController extends GetxController {
   double? startLng;
   bool isStartRoute = false;
 
-  final List<String> selectTitle = [
-    "M",
-    "S",
-    "F",
-    "Q",
-    "C",
-    "D",
-    "P",
-    "R",
-    "X",
+  final List<SurNameTitle> selectTitle = [
+    SurNameTitle(showTitle: "Mr",sendTitle: "M"),
+    SurNameTitle(showTitle: "Miss",sendTitle: "S"),
+    SurNameTitle(showTitle: "Mrs",sendTitle: "F"),
+    SurNameTitle(showTitle: "Ms",sendTitle: "Q"),
+    SurNameTitle(showTitle: "Captain",sendTitle: "C"),
+    SurNameTitle(showTitle: "Dr",sendTitle: "D"),
+    SurNameTitle(showTitle: "Prof",sendTitle: "P"),
+    SurNameTitle(showTitle: "Rev",sendTitle: "R"),
+    SurNameTitle(showTitle: "Mx",sendTitle: "X"),
+   
   ];
-  String? selectedTitleValue;
-  final List<String> selectGender = [
-    "Male",
-    "Female",
-    "Other",
+  SurNameTitle? selectedTitleValue;
+
+  final List<SurNameTitle> selectGender = [
+    SurNameTitle(showTitle: "Male",sendTitle: "M"),
+    SurNameTitle(showTitle: "Female",sendTitle: "F"),
+    SurNameTitle(showTitle: "Other",sendTitle: "M"),
   ];
-  String? selectedGenderValue;
+
+  SurNameTitle? selectedGenderValue;
 
   void getLocationData(context) async {
     CheckPermission.checkLocationPermission(context).then((value) async {
@@ -102,17 +105,33 @@ class CreatePatientController extends GetxController {
   // String genderValue;
 
   btnPress(BuildContext context) async {
-    if (selectedTitleValue != null &&
-        selectedGenderValue != null &&
-        nameCtrl.text.isNotEmpty &&
-        lastNameCtrl.text.isNotEmpty &&
-        addressLine1Ctrl.text.isNotEmpty &&
-        townCtrl.text.isNotEmpty &&
-        postCodeCtrl.text.isNotEmpty) {
-     await createPatient(context: context);
+    
+    if(
+      selectedTitleValue != null &&
+      selectedGenderValue != null &&
+      nameCtrl.text.isNotEmpty &&
+      lastNameCtrl.text.isNotEmpty &&
+      addressLine1Ctrl.text.isNotEmpty &&
+      townCtrl.text.isNotEmpty &&
+      postCodeCtrl.text.isNotEmpty
+    ){
+      await createPatient(context: context);
     } else {
       ToastCustom.showToast(msg: "Please Complete All Required Fields");
     }
+
+    
+    // if (selectedTitleValue != null &&
+    //     selectedGenderValue != null &&
+    //     nameCtrl.text.isNotEmpty &&
+    //     lastNameCtrl.text.isNotEmpty &&
+    //     addressLine1Ctrl.text.isNotEmpty &&
+    //     townCtrl.text.isNotEmpty &&
+    //     postCodeCtrl.text.isNotEmpty) {
+    //  await createPatient(context: context);
+    // } else {
+    //   ToastCustom.showToast(msg: "Please Complete All Required Fields");
+    // }
   }
 
   CreatePatientModelResponse? createPatientModelResponse;
@@ -122,7 +141,7 @@ class CreatePatientController extends GetxController {
     CustomLoading().show(context, true);
 
     Map<String, dynamic> dictparm = {
-      "title": selectedTitleValue,
+      "title": selectedTitleValue?.sendTitle,
       "first_name": nameCtrl.text.toString().trim(),
       "last_name": lastNameCtrl.text.toString().trim(),
       "address_line_1": addressLine1Ctrl.text.toString().trim(),
@@ -134,8 +153,9 @@ class CreatePatientController extends GetxController {
       "nhs_number": nhsNoCtrl.text.toString().trim(),
       "middle_name": middleNameCtrl.text.toString().trim(),
       "country_id": "",
-      "gender": selectedGenderValue,
+      "gender": selectedGenderValue?.sendTitle,
     };
+    print("test ${dictparm}");
     String url = WebApiConstant.CREATE_PATIENT_URL;
     await apiCtrl.createPatientApi(context: context, url: url,
         dictParameter: dictparm, token: authToken).then((_result) {
@@ -321,4 +341,10 @@ class CreatePatientController extends GetxController {
 
 }
 
+class SurNameTitle{
+   String showTitle;
+   String sendTitle;
 
+   SurNameTitle({required this.sendTitle,required this.showTitle});
+
+}

@@ -69,6 +69,7 @@ const String kForgotMPIN = "Forgot M-Pin?";
 const String kusediffAcc = "Use different Account?";
 const String kUSERTYPE = "userType"; //Branch Admin + OR +
 const String kTotalMiles = "Total Miles";
+const String kOdrCrtdSucc = 'Order Created Successfully';
 
 /// Logo
 const String kSplashLogo = "assets/logo/logo.png";
@@ -92,7 +93,7 @@ const String strImgAutomaticIcon = "assets/images/automatic_icon.png";
 const String strImgAltAdd = "assets/images/alt-add.png";
 const String strImgSend = "assets/images/send.png";
 const String strImgDelTruck = "assets/images/delivery_truck.png";
-
+const String strImg_tick = 'assets/images/tick.png';
 
 
 
@@ -255,6 +256,7 @@ const String networkToastString = "Please check network connection and try again
 const String kTouchAndFaceNtAct  = "touch or Face Id is not activated on your device!";
 const String kUserLastTime = "lastTime";
 const String kName = "Name";
+const String kname = "Name : ";
 
 
 

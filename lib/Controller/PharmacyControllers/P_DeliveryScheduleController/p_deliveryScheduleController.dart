@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
@@ -6,8 +6,12 @@ import '../../../Model/Notification/NotifficationResponse.dart';
 import '../../../Model/ParcelBox/parcel_box_response.dart';
 import '../../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
+import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
+import '../../WidgetController/Popup/CustomDialogBox.dart';
+import '../../WidgetController/Popup/popup.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../P_DriverListController/get_driver_list_controller.dart';
+import '../P_ProcessScanController/p_processScanController.dart';
 import '../P_RouteListController/P_get_route_list_controller.dart';
 
 
@@ -29,6 +33,8 @@ class DeliveryScheduleController extends GetxController{
   List<ParcelBoxData>? parcelBoxList;
   ParcelBoxData? selectedParcelBox;
   OrderData? orderData;
+  List<MedicineListData>? selectedMedicineList = [];
+  List<MedicineListData>? medicineListData;
 
   List<String> bagSizeList = ["S", "M", "L", "C",];
   List paidList = [
@@ -70,8 +76,12 @@ class DeliveryScheduleController extends GetxController{
     'PickedUp',
   ];
   String selectedStatus = "Received";
+  String selectedPaid = "";
+  String? datetime;
+  DateTime? Ts;
+  dynamic subExpDate;
 
-  int bagId = -1;
+  int? selectedBagSize;
   bool fridgeSelected = false;
   bool controlDrugSelected = false;
   bool paidSelected = false;
@@ -88,8 +98,26 @@ class DeliveryScheduleController extends GetxController{
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
+
+  @override
+  void onInit() {    
+    super.onInit();
+    final DateTime now = DateTime.now();
+    selectedDate = formatter.format(now);
+    showDatedDate = formatterShow.format(now);  
+    if (getProcessScanController.processScanData?.orderInfo != null && getProcessScanController.processScanData?.orderInfo?.subsExpiryDate != null) {
+      subExpDate = getProcessScanController.processScanData?.orderInfo?.subsExpiryDate;
+      PrintLog.printLog('Expiry Subscription Date: $subExpDate');
+
+      DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(subExpDate * 1000);
+      Ts = DateTime.fromMillisecondsSinceEpoch(subExpDate * 1000);
+      datetime = "${tsdate.year}/${tsdate.month}/${tsdate.day}";      
+      PrintLog.printLog('Converted Date Date: $datetime');
+      // subExpiryPopUp('${patientSubList[selectedSubscription].name} Subscription Expired by $datetime');
+    }  
+  }
   
-  ///Select Status
+///Select Status
 void onTapSelectStatus(
       {required BuildContext context,
       required controller}) {
@@ -102,16 +130,16 @@ void onTapSelectStatus(
       onValue: (value) async {
         print("test value ${value}");
         if (value != null) {          
-          selectedStatus = value;
+          selectedStatus = value;          
           update();
-          PrintLog.printLog("Selected Nursing Home: ${statusItems}");
+          PrintLog.printLog("Selected Nursing Home: $statusItems");
         }
       },
     );
   }
 
-  ///Select Nursing home
-  void onTapSelectNursingHome(
+///Select Nursing home
+void onTapSelectNursingHome(
       {required BuildContext context,
       required controller}) {
     PrintLog.printLog("Clicked on Select Nursing Home");
@@ -130,8 +158,8 @@ void onTapSelectStatus(
     );
   }
 
-  /// Selected Delivery Charge
-  void onTapSeletedDeliveryCharge(
+/// Selected Delivery Charge
+void onTapSeletedDeliveryCharge(
       {required BuildContext context,
       required controller}) {    
     PrintLog.printLog("Clicked on Select Delivery Charge");
@@ -153,8 +181,8 @@ void onTapSelectStatus(
     );
   }
 
-  ///Select Route
-  void onTapSelectedRoute(
+///Select Route
+void onTapSelectedRoute(
       {required BuildContext context, required controller}) {
     PrintLog.printLog("Clicked on Select route");
     BottomSheetCustom.pShowSelectAddressBottomSheet(
@@ -174,8 +202,8 @@ void onTapSelectStatus(
     );
   }
 
-  ///Select Driver
-  void onTapSelectedDriver(
+///Select Driver
+void onTapSelectedDriver(
       {required BuildContext context,
       required controller}) {
     PrintLog.printLog("Clicked on Select driver");
@@ -187,18 +215,16 @@ void onTapSelectStatus(
       onValue: (value) async {
         if (value != null) {
           getDriverListController.selectedDriver = value;
-          await getParcelBoxApi(context: context,driverId: getDriverListController.selectedDriver?.driverId ?? "",)
-              .then((value) {
-            update();
-          }); 
+          await getParcelBoxApi(context: context,driverId: getDriverListController.selectedDriver?.driverId ?? "");
+          update();
           PrintLog.printLog("Selected Driver: ${getDriverListController.selectedDriver?.firstName}");
         }
       },
     );
   }
 
-   ///Select Service
-  void onTapSelectService(
+///Select Service
+void onTapSelectService(
       {required BuildContext context,
       required controller}) {
     PrintLog.printLog("Clicked on Select service");
@@ -217,8 +243,8 @@ void onTapSelectStatus(
     );
   }
 
-  ///Select Parcel Box
-  void onTapSelectParcelLocation(
+///Select Parcel Box
+void onTapSelectParcelLocation(
       {required BuildContext context,
       required controller}) {
     PrintLog.printLog("Clicked on Select Parcel Location");
@@ -237,8 +263,28 @@ void onTapSelectStatus(
     );
   }
 
-  ///Select Exemption
-  void onTapExempt(
+///Select Paid
+void onTapSelectPaid(
+      {required BuildContext context,
+      required controller}) {
+    PrintLog.printLog("Clicked on Select Rx Charge");
+    BottomSheetCustom.pDeliveryScheduleBottomSheet(
+      controller: controller,
+      context: context,
+      listType: 'paid',
+      selectedID: '0',
+      onValue: (value) async {         
+        if (value != null) {                    
+          selectedPaid = value['value'];          
+          update();
+          PrintLog.printLog("Selected Rx Charge: ${selectedPaid}");
+        }
+      },
+    );
+  }
+
+///Select Exemption
+void onTapExempt(
       {required BuildContext context,
       required controller}) {
     PrintLog.printLog("Clicked on Exempt");
@@ -248,8 +294,8 @@ void onTapSelectStatus(
       selectedID: selectedExemption?.id,
       listType: "exempt",
       onValue: (value) async {
-        if (value != null) {
-          exemptSelected = value;                  
+        if (value != null) {               
+          selectedExemption = value;
          update();
           PrintLog.printLog("Selected Exempt: ${selectedExemption?.code}");
         }
@@ -257,12 +303,74 @@ void onTapSelectStatus(
     );
   }
   
-   onTapGallery({required BuildContext context,}){
-    imgPickerController.getImage("Gallery", context, "documentImage");
+///Select Rx Details
+void onTapRxDetails({required BuildContext context}){
+    showModalBottomSheet(
+      isDismissible: true,
+      isScrollControlled: true,
+      clipBehavior: Clip.antiAlias,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+        topRight: Radius.circular(30.0),
+        topLeft: Radius.circular(30.0),
+      )),
+      context: context,
+      builder: (context) {                
+        return BottomSheetCustom.RxDetailsBottomsheetCustom(
+          itemCount: medicineListData?.length ?? 0,
+          quantityController: quantityController,
+          daysController: daysController,
+          medicineName: 'Medicine Name', ///will show here by dynamic
+          firdgeCheckValue: false,
+          cdCheckValue: false,
+          onTapDelete: (){},
+          onChangedCD: (val) {},
+          onChangedFridge: (val) {});
+      },).then((value) {
+        PrintLog.printLog('value is $value');
+        if(value != null){
+          selectedMedicineList?.add(value);
+        }
+        update();
+      });      
+  }
+  
+/// ONTap Back 
+Future<bool> onWillPop(context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    return (await showDialog(
+          context: context,
+          builder: (context) {
+            return PopupCustom.exitPopUp(context: context);
+          },
+        )) ??
+        false;
   }
 
-  void onTapCamera({required BuildContext context}){
-    imgPickerController.getImage("Camera", context, "documentImage");
+///onTap Gallery
+onTapGallery({required BuildContext context,}){
+  imgPickerController.getImage("Gallery", context, "documentImage");
+  }
+
+///onTap Camera
+onTapCamera({required BuildContext context}){
+  imgPickerController.getImage("Camera", context, "documentImage");
+  }
+
+///Subscription Expiry PopUp
+void subExpiryPopUp(BuildContext context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          img: Image.asset("assets/images/sad.png"),
+          title: "Alert...",
+          btnDone: "Okay",
+          btnNo: "",
+          descriptions: "Your Subscription Expired at",
+        );
+      });
   }
 
 
@@ -275,9 +383,11 @@ GetDriverListController getDriverListController = Get.put(GetDriverListControlle
 /// Get Route Controller
 PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRouteListController());
 
+/// Process Scan Controller
+PharmacyProcessScanController getProcessScanController = Get.put(PharmacyProcessScanController());
 
-  /// Delivery Schedule Controller
-  Future<NotificationApiResponse?> deliveryScheduleApi({required BuildContext context,required String pharmacyId}) async {
+/// Delivery Schedule Controller
+Future<NotificationApiResponse?> deliveryScheduleApi({required BuildContext context,required String pharmacyId}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -315,7 +425,8 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
     update();
   }
 
-  Future<GetParcelBoxApiResponse?> getParcelBoxApi({required BuildContext context,required String driverId}) async {
+/// Get Parcel Box Controller
+Future<GetParcelBoxApiResponse?> getParcelBoxApi({required BuildContext context,required String driverId}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -358,12 +469,18 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
         changeErrorValue(true);
       }
     });
+    if (Ts != null) {
+        var now = DateTime.now();
+        var berlinWallFellDate = DateTime.utc(Ts!.year, Ts!.month, Ts!.day);
+        if (berlinWallFellDate.compareTo(now) < 0) {
+          subExpiryPopUp(context);
+        }
+      }
     update();
   }
 
-
 /// Create Order Controller
-  Future<CreateOrderApiResponse?> createOrderApi({
+Future<CreateOrderApiResponse?> createOrderApi({
     required BuildContext context, 
     required String firstName,
     required String middleName,
@@ -393,7 +510,7 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
       "del_subs_id": selectedDeliveryCharge?.id ?? "",
       "exemption": selectedExemption?.id ?? "",      
       "paymentStatus": "", 
-      "bag_size": "",
+      "bag_size": selectedBagSize ?? "",
       "patient_id": "",
       "pr_id": "",
       "lat": "",      
@@ -445,7 +562,7 @@ PharmacyGetRouteListController  getRouteListController = Get.put(PharmacyGetRout
         .then((result) async {
       if(result != null){
         if(result.error != true){
-          try {
+          try {            
               orderData = result.data;              
               result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);

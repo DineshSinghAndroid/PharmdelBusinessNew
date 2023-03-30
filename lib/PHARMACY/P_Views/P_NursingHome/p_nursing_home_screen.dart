@@ -136,7 +136,16 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                 Flexible(
                 child: WidgetCustom.pharmacyTopSelectWidget(
                 title: controller.selectedNursingHome != null ? controller.selectedNursingHome?.nursingHomeName.toString() ?? "" : kSelectNursHome,
-                onTap:()=> controller.onTapSelectNursingHome(context:context,controller:controller),),
+                onTap:(){
+                 if(controller.getRouteListController.selectedroute == null){
+                  ToastCustom.showToast(msg: kPlsSlctRoute);
+                 }
+                 else if(controller.getDriverListController.selectedDriver == null){
+                  ToastCustom.showToast(msg: kPlsSlctDriver);
+                 } else {
+                  controller.onTapSelectNursingHome(context:context,controller:controller);
+                 }              
+                }),
               ),
               ],
             ),

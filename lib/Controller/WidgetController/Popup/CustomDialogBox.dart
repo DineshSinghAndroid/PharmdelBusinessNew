@@ -3,6 +3,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+
+import '../StringDefine/StringDefine.dart';
  // import 'package:progress_dialog/progress_dialog.dart';
 
 class CustomDialogBox extends StatefulWidget {
@@ -165,3 +168,32 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
 }
 
 typedef OnClicked = void Function(bool value);
+
+
+
+class SuccessOrderDialog extends StatelessWidget {
+  const SuccessOrderDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Container(
+        height: 200,                
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(15)
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(strImg_tick),
+            buildSizeBox(20.0, 0.0),
+            BuildText.buildText(text: kOdrCrtdSucc,size: 16)
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -32,6 +32,7 @@ import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_respo
 import '../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
+import '../../Model/PharmacyModels/P_ProcessScanApiResponse/p_processScanResponse.dart';
 import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
@@ -823,6 +824,32 @@ class ApiController {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
           result = CreateOrderApiResponse.fromJson(response?.data);
+          PrintLog.printLog(result.message);
+          return result;
+        } else {
+          PrintLog.printLog(result!.message);
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+
+  ///Process Scan Api
+  Future<ProcessScanApiResponse?> getProcessScanApi({context, required String url, dictParameter, String? token}) async {
+  ProcessScanApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = ProcessScanApiResponse.fromJson(response?.data);
           PrintLog.printLog(result.message);
           return result;
         } else {

@@ -24,14 +24,14 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
   Widget build(BuildContext context) {
     return GetBuilder<DeliveryScheduleController>(
       init: delSchdCtrl,
-      builder: (controller) {
+      builder: (controller,) {
         return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Scaffold(
               backgroundColor: AppColors.whiteColor,
               appBar: AppBar(
                 title: BuildText.buildText(
-                  text:  widget.listType == "service" ? kSelService : widget.listType == "recieved" ? kReceived : widget.listType == "nursing home" ? kSelectNursHome : widget.listType == "parcel location" ? kParcelLocation : widget.listType == "exempt" ? kSelectExempt : kSelDelCharge,
+                  text:  widget.listType == "service" ? kSelService : widget.listType == "recieved" ? kReceived : widget.listType == "nursing home" ? kSelectNursHome : widget.listType == "parcel location" ? kParcelLocation : widget.listType == "paid" ? "Rx Charge" : widget.listType == "exempt" ? kSelectExempt : kSelDelCharge,
                   size: 14,
                   color: AppColors.blackColor,                    
                 ),
@@ -200,6 +200,50 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                           );
                         }
                     ) :  
+                     widget.listType == "paid" ?
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.controller.paidList.length,
+                        itemBuilder: (context,i){
+                          return InkWell(
+                            onTap: (){
+                              Navigator.of(context).pop(widget.controller.paidList[i]);
+                            },
+                            child: Container(                              
+                              width: Get.width,
+                              margin: const EdgeInsets.only(bottom: 5),
+                              padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: widget.selectedID == widget.controller.paidList[i] ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 1,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                        color: Colors.grey.shade300
+                                    )
+                                  ]),
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: controller.paidList[i]["isSelected"],
+                                    visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
+                                    onChanged: (selected) {},
+                                  ),
+                                  BuildText.buildText(
+                                    text: "x ${widget.controller.paidList[i]['value']}",
+                                    size: 14,
+                                    color: AppColors.blueColorLight,
+                                    weight: FontWeight.w400,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                    ) :
                     widget.listType == "exempt" ?
                     ListView.builder(
                         shrinkWrap: true,

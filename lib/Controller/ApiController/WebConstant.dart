@@ -62,6 +62,7 @@ class WebApiConstant {
   static const String GET_PHARMACY_DELIVERY_MASTER_URL       =  "${BASE_URL_PHARMACY}getDeliveryMasterData";
   static const String GET_PHARMACY_CREATE_ORDER_URL          =  "${BASE_URL_PHARMACY}createOrder";
   static const String GET_PHARMACY_MEDICINE_LIST             =  "${BASE_URL_PHARMACY}GetMedicineList";
+  static const String GET_PHARMACY_PROCESS_SCAN_URL          =  "${BASE_URL_PHARMACY}processScan";
 
 
 }

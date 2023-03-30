@@ -57,19 +57,31 @@ class PopupCustom{
         });
   }
 
- static orderSuccess({required BuildContext context,required String msg}){
+ static orderSuccess({required BuildContext context}){
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return CustomDialogBox(
-            img: Image.asset("assets/images/success.png"),
-            title: "",
-            btnDone: null,
-            btnNo: "",
-            descriptions: msg,
-          );
+          return const SuccessOrderDialog();
         });
+  }
+
+  static exitPopUp({required BuildContext context}){
+    return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: BuildText.buildText(text: "Warning"),
+            content: BuildText.buildText(text:"Are you sure you want to cancel all prescriptions!"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: BuildText.buildText(text:kNo),
+              ),
+             TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: BuildText.buildText(text:kYes),
+              ),
+            ],
+          );
   }
 
 }
