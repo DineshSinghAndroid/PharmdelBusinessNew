@@ -171,17 +171,20 @@ class PDeliveriesScreenController extends GetxController {
 
   ///fetch delivery list
 
-  Future<P_FetchDeliveryListModel?> fetchDeliveryList({context, required routeID, required driverId, required int dateType}) async {
+  Future<P_FetchDeliveryListModel?> fetchDeliveryList({context, required routeID,
+    required driverId, required int dateType}) async {
     if (dateType == 1) {
       date = DateFormat('yyyy-MM-dd').format(DateTime.now());
       update();
-    } else if (dateType == 2) {
+    }
+    else if (dateType == 2) {
       final now = DateTime.now();
       var formatter = DateFormat('yyyy-MM-dd');
       final tomorrow = DateTime(now.year, now.month, (now.day + 1));
       date = formatter.format(tomorrow);
       update();
-    } else if (dateType == 3) {
+    }
+    else if (dateType == 3) {
       date = selectedDate;
 
       update();
@@ -193,7 +196,9 @@ class PDeliveriesScreenController extends GetxController {
       "driverId": driverId,
     };
     String url = WebApiConstant.GET_PHARMACY_DELIVERY_LIST;
-    await _apiCtrl.fetchPharmacyDeliveryListapi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) {
+    await _apiCtrl.fetchPharmacyDeliveryListapi(
+        context: context, url: url, dictParameter: dictparm,
+        token: authToken).then((result) {
       if (result != null) {
         try {
           getDeliveryResponse = result;
@@ -205,7 +210,9 @@ class PDeliveriesScreenController extends GetxController {
 
           PrintLog.printLog("Exception : $_");
         }
-      } else {
+      }
+
+      else {
         CustomLoading().show(context, false);
 
         update();

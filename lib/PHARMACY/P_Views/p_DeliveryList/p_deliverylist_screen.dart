@@ -231,7 +231,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             onTapDeliverNow: () {},
 
             /// Customer Detail
-            customerName: "${controller.getDeliveryResponse?.list?[i].customerName ?? ""}",
+            customerName: controller.getDeliveryResponse?.list?[i].customerName ?? "",
             customerAddress: "${controller.getDeliveryResponse?.list?[i].address}",
             altAddress: "",
             driverType: '',
@@ -284,7 +284,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             onTapDeliverNow: () {},
 
             /// Customer Detail
-            customerName: "${controller.pickedUpList[i].customerName ?? ""}",
+            customerName: controller.pickedUpList[i].customerName ?? "",
             customerAddress: "${controller.pickedUpList[i].address}",
             altAddress: "",
             driverType: '',
@@ -324,7 +324,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
   ListView deliverdView() => ListView.separated(
         shrinkWrap: true,
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: controller.deliveredList?.length ?? 0,
+        itemCount: controller.deliveredList.length ?? 0,
         itemBuilder: (context, i) {
           return PharmacyDeliveryCard(
             /// onTap
@@ -396,7 +396,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             onTapDeliverNow: () {},
 
             /// Customer Detail
-            customerName: "${controller.failedList[i].customerName ?? ""}",
+            customerName: controller.failedList[i].customerName ?? "",
             customerAddress: "${controller.failedList[i].address}",
             altAddress: "",
             driverType: '',

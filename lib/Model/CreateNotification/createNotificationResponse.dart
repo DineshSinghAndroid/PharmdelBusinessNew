@@ -6,13 +6,13 @@ class CreateNotificationApiResponse {
   CreateNotificationApiResponse({this.data, this.status, this.message});
 
   CreateNotificationApiResponse.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new CreateNotificationData.fromJson(json['data']) : null;
+    data = json['data'] != null ? CreateNotificationData.fromJson(json['data']) : null;
     status = json['status'];
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
