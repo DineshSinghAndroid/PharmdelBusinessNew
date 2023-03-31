@@ -9,8 +9,8 @@ class WebApiConstant {
 
 
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
-  static const String BASE_URL                               =  BASE_URL_DOMAIN +"/api/Delivery/v22/";
-  static const String BASE_URL_PHARMACY                      =  BASE_URL_DOMAIN +"/api/Pharmacy/v22/";
+  static const String BASE_URL                               =  "$BASE_URL_DOMAIN/api/Delivery/v22/";
+  static const String BASE_URL_PHARMACY                      =  "$BASE_URL_DOMAIN/api/Pharmacy/v22/";
 
   /// Public
   static const String API_URL_INTRO                          =  "${BASE_URL}intro";

@@ -946,7 +946,7 @@ class ApiController {
       _dio.options = options;
       Response response = await _dio.get(url!, queryParameters: dictParameter);
       PrintLog.printLog("Response_headers: ${response.headers}");
-      PrintLog.printLog("Response_data: ${response.data}");
+      logs.log("Response_data: ${response.data}");
 
       if(response.data["authenticated"] == false){
         // PopupCustom.logoutPopUP(context: context);
