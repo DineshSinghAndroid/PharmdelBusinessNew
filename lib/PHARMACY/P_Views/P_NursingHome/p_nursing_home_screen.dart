@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/NursingHomeWidget/nursing_home_cardwidget.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
@@ -40,6 +39,12 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
     showDatedDate = formatterShow.format(now);        
     await nurHmCtrl.nursingHomeApi(context: context);    
   }
+  
+  @override
+  void dispose() {
+    Get.delete<NursingHomeController>();
+    super.dispose();    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +67,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               ///Select Route
               Flexible(
                 child: WidgetCustom.pharmacyTopSelectWidget(
-                title: controller.getRouteListController.selectedroute != null ? controller.getRouteListController.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
+                title: controller.selectedroute != null ? controller.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
                 onTap:()async{
                   controller.onTapSelectedRoute(context:context,controller:controller);                  
                 },),
@@ -70,12 +75,18 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
               buildSizeBox(0.0, 10.0),
         
                ///Select Driver
-               nurHmCtrl.getDriverListController.driverList != null && nurHmCtrl.getDriverListController.driverList.isNotEmpty ?            
+              //  nurHmCtrl.getDriverListController.driverList != null && nurHmCtrl.getDriverListController.driverList.isNotEmpty ?
               Flexible(
                 child: WidgetCustom.pharmacyTopSelectWidget(
-                title: controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
-                onTap:()=> controller.onTapSelectedDriver(context:context,controller:controller),),
-              ) : const SizedBox.shrink(),
+                title: controller.selectedDriver != null ? controller.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
+                onTap:(){
+                  if(controller.selectedroute == null){
+                    ToastCustom.showToast(msg: 'Please select route');
+                  }else{
+                    controller.onTapSelectedDriver(context:context,controller:controller);
+                  }
+                }),
+              )
               ],
             ),
             buildSizeBox(10.0, 0.0),
@@ -137,10 +148,10 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                 child: WidgetCustom.pharmacyTopSelectWidget(
                 title: controller.selectedNursingHome != null ? controller.selectedNursingHome?.nursingHomeName.toString() ?? "" : kSelectNursHome,
                 onTap:(){
-                 if(controller.getRouteListController.selectedroute == null){
+                 if(controller.selectedroute == null){
                   ToastCustom.showToast(msg: kPlsSlctRoute);
                  }
-                 else if(controller.getDriverListController.selectedDriver == null){
+                 else if(controller.selectedDriver == null){
                   ToastCustom.showToast(msg: kPlsSlctDriver);
                  } else {
                   controller.onTapSelectNursingHome(context:context,controller:controller);
@@ -219,7 +230,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
             FloatingActionButton.extended(
               heroTag: 'btn2',
                 onPressed: () {
-                  nurHmCtrl.onTapSelectCloseTote();                  
+                  nurHmCtrl.onTapSelectCloseTote();
                   },
                 label: BuildText.buildText(
                   text: kCloseTote,

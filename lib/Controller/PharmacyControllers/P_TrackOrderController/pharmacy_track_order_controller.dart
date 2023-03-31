@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
 import '../P_DriverListController/get_driver_list_controller.dart';
 import '../P_NursingHomeController/p_nursinghome_controller.dart';
@@ -12,6 +14,8 @@ class PharmacyTrackOrderController extends GetxController {
   final ApiController _apiCtrl = ApiController();
   
   GetMapRoutesApiResponse? mapRoutesData;
+  RouteList? selectedroute;  
+  DriverModel? selectedDriver;
 
   bool isLoading = false;
   bool isError = false;
@@ -56,15 +60,15 @@ class PharmacyTrackOrderController extends GetxController {
     BottomSheetCustom.pShowSelectAddressBottomSheet(
       controller: controller,
       context: context,
-      selectedID: getRouteListController.selectedroute?.routeId,
+      selectedID: selectedroute?.routeId,
       listType: "route",
       onValue: (value) async {
         if (value != null) {
-          getRouteListController.selectedroute = value;
+          selectedroute = value;
           await getDriverListController.getDriverList(
-              context: context, routeId: getRouteListController.selectedroute?.routeId);
+              context: context, routeId: selectedroute?.routeId);
           update();
-          PrintLog.printLog("Selected Route: ${getRouteListController.selectedroute?.routeName}");
+          PrintLog.printLog("Selected Route: ${selectedroute?.routeName}");
         }
       },
     );
@@ -78,20 +82,20 @@ class PharmacyTrackOrderController extends GetxController {
     BottomSheetCustom.pShowSelectAddressBottomSheet(
       controller: controller,
       context: context,
-      selectedID: getDriverListController.selectedDriver?.driverId,
+      selectedID: selectedDriver?.driverId,
       listType: "driver",
       onValue: (value) async {
         if (value != null) {
-          getDriverListController.selectedDriver = value;
+          selectedDriver = value;
           await mapRoutesApi(
             context: context, 
-            routeId: getRouteListController.selectedroute?.routeId ?? "", 
+            routeId: selectedroute?.routeId ?? "", 
             date: selectedDate, 
-            driverId: getDriverListController.selectedDriver?.driverId ?? "").then((value) {
+            driverId: selectedDriver?.driverId ?? "").then((value) {
               Get.toNamed(displayMapRoutesScreenRoute);
               update();
             });
-          PrintLog.printLog("Selected Driver: ${getDriverListController.selectedDriver?.firstName}");
+          PrintLog.printLog("Selected Driver: ${selectedDriver?.firstName}");
         }
       },
     );

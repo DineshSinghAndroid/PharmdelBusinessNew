@@ -12,8 +12,7 @@ class PharmacyGetRouteListController extends GetxController {
   final ApiController _apiCtrl = ApiController();
   List<RouteList> routeList = [];
   RouteList? selectedroute;
-  String? selectedRouteName = RouteList().routeName;
-  String selectedRouteID = "";
+  
   @override
   void onInit() {
      super.onInit();

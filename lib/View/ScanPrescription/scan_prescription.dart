@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Model/PmrResponse/pmrResponse.dart';
-import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import '../../Controller/ProjectController/ScanPrescriptionController/scanPrescriptionController.dart';
 import '../../Controller/WidgetController/AdditionalWidget/CustomerListWidget/customer_list_widget.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
@@ -25,7 +23,7 @@ class ScanPrescriptionScreen extends StatefulWidget {
   // callGetOrderApi callApi;
   // BulkScanMode callPickedApi;
 
-  ScanPrescriptionScreen({ 
+  ScanPrescriptionScreen({super.key,  
  this.isAssignSelf, 
  this.parcelBoxId, 
  this.routeId, 
@@ -47,16 +45,43 @@ class ScanPrescriptionScreen extends StatefulWidget {
 
 class _ScanPrescriptionScreenState extends State<ScanPrescriptionScreen> {
 
+String? accessToken;
+String? userType;
+String? startRouteId;
+String? endRouteId;
+bool? isStartRoute;
+String? driverType;
+
 @override
-  void initState() {    
+  void initState() {
+    init();
     super.initState();
-    DefaultFuntions.barcodeScanning();
+  }
+
+  Future<void> init()async{
+    AppSharedPreferences.getInstance();
+    accessToken = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.authToken);
+    userType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType);
+    // endRouteId = ;
+    // isStartRoute = ;
+    // if (widget.toteId == null || widget.toteId!.isEmpty){
+      // isStartRoute = value from shared preferences
+    // } else{
+      isStartRoute = false;
+      driverType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.driverType);
+      // startRouteId = value from shared preferences
+      scanPrescCtrl.buildQrView(context: context, qrCodeType: widget.type ?? "");    
+      scanPrescCtrl.getLocationData(context: context);
+    // }        
+    if (widget.pharmacyId == null) {
+      widget.pharmacyId = "0";
+    }
   }
 
 ScanPrescriptionController scanPrescCtrl = Get.put(ScanPrescriptionController());
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   
     return GetBuilder<ScanPrescriptionController>(
       init: scanPrescCtrl,
       builder: (controller) {
@@ -81,13 +106,13 @@ ScanPrescriptionController scanPrescCtrl = Get.put(ScanPrescriptionController())
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
+          SingleChildScrollView(            
             physics: const AlwaysScrollableScrollPhysics(),
             child: 
-            // orderInfo != null && orderInfo.patientsList != null && orderInfo.patientsList.userId != null && orderInfo.patientsList.userId.length > 0 && orderInfo.patientsList.userId[0].toString().isNotEmpty ? 
+            controller.orderInfo != null &&  controller.orderInfo?.patientList != null &&  controller.orderInfo?.patientList?.userId != null &&  controller.orderInfo!.patientList!.userId!.isNotEmpty && controller.orderInfo!.patientList!.userId![0].toString().isNotEmpty ? 
                 Container(
                     margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 90),
-                    child: ListView.builder(
+                    child: ListView.builder(   
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: controller.getProcessScanController.processScanData?.orderInfo?.userId?.length ?? 0,
@@ -101,14 +126,16 @@ ScanPrescriptionController scanPrescCtrl = Get.put(ScanPrescriptionController())
                             userId: controller.getProcessScanController.processScanData?.orderInfo?.userId ?? "N/A",
                             onSelect: () {
                               controller.selectCustomer(
-                                userId: controller.getProcessScanController.processScanData?.orderInfo?.userId ?? "", 
+                                userId: controller.getProcessScanController.processScanData?.orderInfo?.userId ?? "",
                                 altAddress: controller.getProcessScanController.processScanData?.orderInfo?.altAddress ?? "");
                             },
                             );
                         }),
                   )
-                // : const SizedBox(),
+                : const SizedBox.shrink(),
           ),
+
+          /// Add New Customer
            Align(
             alignment: Alignment.bottomCenter,
             child: MaterialButton(
@@ -142,33 +169,24 @@ ScanPrescriptionController scanPrescCtrl = Get.put(ScanPrescriptionController())
                               widget.pmrList?.add(controller.pmrData!);
                               widget.prescriptionList?.addAll(controller.pmrData?.xml?.dd ?? []);
 
-                              if (widget.isBulkScan == true) {
-                                  // controller.getDeliveryScheduleController.createOrderApi(
-                                  // context: context, 
-                                  // firstName: controller.,
-                                  // middleName: middleName, 
-                                  // lastName: lastName, 
-                                  // postCode: postCode, 
-                                  // addressLine1: addressLine1, 
-                                  // nhsNumber: nhsNumber, dob: dob, mobileNumber: mobileNumber, emailId: emailId)
+                              if (widget.isBulkScan ?? false) {
+                                  controller.getDeliveryScheduleController.createOrderApi(
+                                  context: context,
+                                  firstName: controller.pmrData?.xml?.patientInformation?.firstName ?? "",
+                                  middleName: controller.pmrData?.xml?.patientInformation?.middleName ?? "", 
+                                  lastName: controller.pmrData?.xml?.patientInformation?.lastName ?? "", 
+                                  postCode: controller.pmrData?.xml?.patientInformation?.postCode ?? "", 
+                                  addressLine1: controller.pmrData?.xml?.patientInformation?.address ?? "", 
+                                  nhsNumber: controller.pmrData?.xml?.patientInformation?.nhs ?? "",
+                                  dob: controller.pmrData?.xml?.patientInformation?.dob ?? "", 
+                                  mobileNumber: controller.pmrData?.xml?.patientInformation?.mobileNo ?? "", 
+                                  emailId: controller.pmrData?.xml?.patientInformation?.email_id ?? "");
                               }else{
                                 Get.toNamed(deliveryScheduleScreenRoute);
                               }
-                  // Get.toNamed(searchPatientScreenRoute,
-                  // arguments: SearchPatientScreen(
-                  //   bulkScanDate: "",
-                  //   driverId: "",
-                  //   driverType: "",
-                  //   isBulkScan: false,
-                  //   isRouteStart: false,
-                  //   nursingHomeId: "",
-                  //   parcelBoxId: "",
-                  //   routeId: "",
-                  //   toteId: "",
-                  // ));
                 },
                 color: AppColors.colorOrange,
-                child: Row(
+                child: Row(                  
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -189,8 +207,4 @@ ScanPrescriptionController scanPrescCtrl = Get.put(ScanPrescriptionController())
       },
     );
   }  
-}
-
-abstract class CustomerSelectedListner {
-  void isSelected(dynamic userid, dynamic position, dynamic altAddress);
 }

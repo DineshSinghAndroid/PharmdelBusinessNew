@@ -84,10 +84,20 @@ class PopupCustom{
           );
   }
 
+   static userNotExistDialog({required BuildContext context,required String title,required String msg,required VoidCallback onTapNo,required VoidCallback onTapCreate}){
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return UserNotExistDialog(
+            title: title, 
+            msg: msg, 
+            onTapNo: onTapNo, 
+            onTapCreate: onTapCreate);
+        });
+  }
+
 }
-
-
-
 
 
 
@@ -250,6 +260,55 @@ class EmailSent extends StatelessWidget {
         ),
       ),
     );
+
+  }
+}
+
+class UserNotExistDialog extends StatelessWidget {
+  String? title;
+  String? msg;
+  VoidCallback? onTapNo;
+  VoidCallback? onTapCreate;
+  UserNotExistDialog({Key? key,required this.title,required this.msg,required this.onTapNo,required this.onTapCreate}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: BuildText.buildText(text: title ?? ""),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children:[
+                  BuildText.buildText(text: msg ?? ""),
+                ],
+              ),
+            ),
+            actions: [
+              InkWell(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: BuildText.buildText(
+                    text: 'No',
+                    color: AppColors.blueColor,
+                  ),
+                ),
+                onTap: onTapNo
+              ),
+              InkWell(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: BuildText.buildText(
+                    text: 'CREATE',
+                    color: AppColors.blueColor,                    
+                  ),
+                ),
+                onTap: onTapCreate,
+              ),
+            ],
+          ),
+        );
 
   }
 }

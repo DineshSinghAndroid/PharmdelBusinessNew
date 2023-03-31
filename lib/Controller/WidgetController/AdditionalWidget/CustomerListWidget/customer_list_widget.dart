@@ -13,9 +13,8 @@ class CustomerListWidget extends StatelessWidget {
   String? nhsNumber;
   String? address;
   VoidCallback? onSelect;
-  CustomerSelectedListner? selectedListner;
 
-  CustomerListWidget({Key? key,required this.address, required this.customerName, required this.dob, required this.nhsNumber, this.selectedListner, required this.userId, required this.onSelect}) : super(key: key);
+  CustomerListWidget({Key? key,required this.address, required this.customerName, required this.dob, required this.nhsNumber, required this.userId, required this.onSelect}) : super(key: key);
 
   @override
   Widget build(BuildContext context) { 
