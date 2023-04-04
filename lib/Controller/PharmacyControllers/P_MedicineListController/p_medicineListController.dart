@@ -7,7 +7,7 @@ import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListRespo
 class GetMedicineListController extends GetxController{
 
   ApiController apiCtrl = ApiController();
-  MedicineData? medicineData;
+  MedicineData? medicineData;  
 
   bool isLoading = false;
   bool isError = false;

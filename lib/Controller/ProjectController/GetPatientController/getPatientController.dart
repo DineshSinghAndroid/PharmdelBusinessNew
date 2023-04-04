@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:location/location.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/GetPatient/getPatientApiResponse.dart';
-import '../../../main.dart';
 import '../../PharmacyControllers/P_ProcessScanController/p_processScanController.dart';
 
 
@@ -14,6 +12,7 @@ class GetPatientContoller extends GetxController{
 
   ApiController apiCtrl = ApiController();
   List<PatientData>? patientData;
+  Location location =  Location();
 
   bool isLoading = false;
   bool isError = false;
@@ -21,8 +20,9 @@ class GetPatientContoller extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
+
   ///OnTap Patient
-   void onTileClicked({required int index, required BuildContext context}) {   
+   Future<void> onTileClicked({required int index, required BuildContext context}) async{   
     if (patientData?[index].lastOrderId != null) {      
       PrintLog.printLog("Last order id is ${patientData?[index].lastOrderId}");
       String name = "";

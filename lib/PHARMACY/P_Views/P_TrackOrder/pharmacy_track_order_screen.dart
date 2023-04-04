@@ -42,7 +42,7 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                           ///Select Route
                           Flexible(
                           child: WidgetCustom.pharmacyTopSelectWidget(
-                          title: controller.getRouteListController.selectedroute != null ? controller.getRouteListController.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
+                          title: controller.selectedroute != null ? controller.selectedroute?.routeName.toString() ?? "" : kSelectRoute,
                           onTap:()async{
                             controller.onTapSelectedRoute(context:context,controller:controller.getNurHomeCtrl);
                           },),
@@ -50,14 +50,14 @@ class _TrackOrderScreenPharmacyState extends State<TrackOrderScreenPharmacy> {
                           buildSizeBox(20.0, 0.0),
                 
                            ///Select Driver
-                           controller.getDriverListController.driverList.isNotEmpty ?
+                           controller.selectedroute != null ?
                            Flexible(
                           child: WidgetCustom.pharmacyTopSelectWidget(
-                          title: controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
+                          title: controller.selectedDriver != null ? controller.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
                           onTap:()=> controller.onTapSelectedDriver(context:context,controller:controller.getNurHomeCtrl),),
                             ) : const SizedBox.shrink(),
                 
-                           controller.getDriverListController.driverList.isNotEmpty ?
+                           controller.selectedroute != null ?
                           buildSizeBox(20.0, 0.0) : const SizedBox.shrink(),
                 
                     /// Select Date

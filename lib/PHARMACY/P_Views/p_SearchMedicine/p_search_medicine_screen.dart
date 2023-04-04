@@ -45,7 +45,7 @@ Widget build(BuildContext context,) {
             isSearchShow = false;
           },
           child: SafeArea(
-            child: Scaffold(
+            child: Scaffold(              
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 elevation: 1.5,
@@ -88,7 +88,7 @@ Widget build(BuildContext context,) {
                           hintStyle: const TextStyle(color: Colors.black38),
                           hintText: kSearchMeds),
                           onChanged: (value) async {
-                              if(value.toString().trim().isNotEmpty && value.length > 3){                                
+                              if(value.toString().trim().isNotEmpty && value.length > 1){                                
                                 await controller.medicineListApi(context: context, searchValue: value.toString().trim());
                                 setState(() {                                  
                                 });

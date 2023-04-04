@@ -16,7 +16,7 @@ class PharmacyDeliveryScheduleManual extends StatefulWidget {
   String? contact;
   String? email;
   String? postCode;
-  String? middleName;
+  String? middleName; 
   String? lastName;
   
    PharmacyDeliveryScheduleManual({super.key,
@@ -78,13 +78,12 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                  child: SingleChildScrollView(
                    child: SizedBox(
-                    height: Get.height - 100,
-                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
+                    height: Get.height - 100,                    
+                     child: Column(                      
                        crossAxisAlignment: CrossAxisAlignment.start,
                        mainAxisAlignment: MainAxisAlignment.start,
                        children: [
-        
+
                       ///Cusotmer Details
                       BuildText.buildText(
                       text: "$kname${widget.firstName} ${widget.middleName} ${widget.lastName}"),
@@ -141,12 +140,12 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                             /// Rx Details
                             DeliveryScheduleWidgets.customWidget(
                               title: kRxDetails,
-                              bgColor: AppColors.greenColor,
+                              bgColor: AppColors.greenDarkColor,
                               titleColor: AppColors.whiteColor,
                               onTap: (){
                                 controller.onTapRxDetails(context: context);
                               },
-                            ),
+                            ), 
                           ],
                         ),
                       ),
@@ -205,11 +204,11 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                         height: 40,
                         child: Row(
                           children: [
-                            BuildText.buildText(text: kBagSize,color: AppColors.greenColor),
+                            BuildText.buildText(text: kBagSize,color: AppColors.greenDarkColor),
                             buildSizeBox(0.0, 3.0),
-                            Icon(Icons.shopping_bag_outlined,color: AppColors.greenColor,size: 20,),
+                            Icon(Icons.shopping_bag_outlined,color: AppColors.greenDarkColor,size: 20,),
                             buildSizeBox(0.0, 3.0),
-                            BuildText.buildText(text: ':',color: AppColors.greenColor),
+                            BuildText.buildText(text: ':',color: AppColors.greenDarkColor),
                             ListView.builder(
                               padding: EdgeInsets.zero,
                               shrinkWrap: true,
@@ -235,7 +234,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                                     controller.bagSizeList[index] != "C" ?
                                     BuildText.buildText(
                                        text: controller.bagSizeList[index])
-                                      : Icon(Icons.shopping_bag_outlined,size: 20,color: AppColors.greenColor,),
+                                      : Icon(Icons.shopping_bag_outlined,size: 20,color: AppColors.greenDarkColor,),
                                     buildSizeBox(0.0, 8.0)
                                   ],
                                 );
@@ -406,6 +405,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                           onChanged: (value) {
                             setState(() {
                               controller.fridgeSelected = value!;
+                              PrintLog.printLog("Select Fridge : $value");
                             });
                           },),
                           buildSizeBox(0.0, 5.0),
@@ -418,6 +418,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                           onChanged: (value) {
                             setState(() {
                               controller.controlDrugSelected = value!;
+                              PrintLog.printLog("Select C.D : $value");
                             });
                           }),
                           buildSizeBox(0.0, 5.0),
@@ -492,7 +493,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: AppColors.greyColor, width: 1),
                             ),
-                          )),                        
+                          )),
                               ],
                             ),
                    ),

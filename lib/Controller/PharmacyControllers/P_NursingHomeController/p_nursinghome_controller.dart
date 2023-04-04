@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
@@ -25,6 +27,8 @@ class NursingHomeController extends GetxController {
   List<NursingHome> nursingHomeList = [];
   List<NursingOrdersData>? nursingOrdersData;
   NursingHome? selectedNursingHome;
+  RouteList? selectedroute;  
+  DriverModel? selectedDriver;
   List<BoxesData> boxesListData = [];
   BoxesData? selectedBox;
   UpdateNursingOrderApiResposne? updateOrderData;
@@ -40,6 +44,11 @@ class NursingHomeController extends GetxController {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
 
+
+  @override
+  void onInit() {
+    super.onInit();
+    }
 
   /// On Tap CD 
   void onTapWidgetCD({required int index,required BuildContext context})async{
@@ -90,15 +99,15 @@ class NursingHomeController extends GetxController {
     BottomSheetCustom.pShowSelectAddressBottomSheet(
       controller: controller,
       context: context,
-      selectedID: getRouteListController.selectedroute?.routeId,
+      selectedID: selectedroute?.routeId,
       listType: "route",
       onValue: (value) async {
         if (value != null) {
-          getRouteListController.selectedroute = value;
+          selectedroute = value;
           await getDriverListController.getDriverList(
-              context: context, routeId: getRouteListController.selectedroute?.routeId);
+              context: context, routeId: selectedroute?.routeId);
           update();
-          PrintLog.printLog("Selected Route: ${getRouteListController.selectedroute?.routeName}");
+          PrintLog.printLog("Selected Route: ${selectedroute?.routeName}");
         }
       },
     );
@@ -112,17 +121,17 @@ class NursingHomeController extends GetxController {
     BottomSheetCustom.pShowSelectAddressBottomSheet(
       controller: controller,
       context: context,
-      selectedID: getDriverListController.selectedDriver?.driverId,
+      selectedID: selectedDriver?.driverId,
       listType: "driver",
       onValue: (value) async {
         if (value != null) {
-          getDriverListController.selectedDriver = value;
+          selectedDriver = value;
           await getDriverListController
-              .getDriverList(context: context, routeId: getRouteListController.selectedroute?.routeId)
+              .getDriverList(context: context, routeId: selectedroute?.routeId)
               .then((value) {                
             update();
           }); 
-          PrintLog.printLog("Selected Driver: ${getDriverListController.selectedDriver?.firstName}");
+          PrintLog.printLog("Selected Driver: ${selectedDriver?.firstName}");
         }
       },
     );

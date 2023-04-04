@@ -15,7 +15,7 @@ class PharmacyProcessScanController extends GetxController {
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  ///Get Map Routes Controller
+  ///Process Scan Controller  
   Future<ProcessScanApiResponse?> processScanApi({required BuildContext context, String? patientId, String? scanType, String? pharmacyId}) async {
 
     changeEmptyValue(false);

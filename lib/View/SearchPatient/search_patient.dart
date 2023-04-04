@@ -5,6 +5,7 @@ import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.d
 import '../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
+import '../../PHARMACY/P_Views/P_DeliveryScheduleManual/p_delivery_schedule_manual.dart';
 
 class SearchPatientScreen extends StatefulWidget {
   bool? isBulkScan;
@@ -47,7 +48,7 @@ bool? isLoading = false;
 
 @override
  void initState() {
-    super.initState();
+    super.initState();        
   }
 
   @override
@@ -82,7 +83,7 @@ Widget build(BuildContext context,) {
                 flexibleSpace: Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(left: 30),
-                  color: Colors.transparent,
+                  color: AppColors.whiteColor,
                   child: Container(
                     height: 50,
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -94,12 +95,12 @@ Widget build(BuildContext context,) {
                           contentPadding:
                               const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                           filled: true,
-                          fillColor: Colors.transparent,
+                          fillColor: AppColors.transparentColor,
                           border: InputBorder.none,
                           hintStyle: const TextStyle(color: Colors.black38),
                           hintText: kSearchPat),
                           onChanged: (value) async {
-                              if(value.toString().trim().isNotEmpty && value.length > 3){
+                              if(value.toString().trim().isNotEmpty && value.length > 1){
                                 await controller.getPatientApi(context: context, firstName: value.toString().trim());
                               }else{
                                 setState(() {
@@ -126,7 +127,7 @@ Widget build(BuildContext context,) {
 
                 ///Patient List
                 controller.patientData != null && controller.patientData!.isNotEmpty && searchTextCtrl.text.toString().trim().length > 2 ?
-                ListView.builder(
+                ListView.builder(                  
                       itemCount: controller.patientData?.length ?? 0,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -139,20 +140,23 @@ Widget build(BuildContext context,) {
                         lastName:  controller.patientData?[index].lastName ?? "",
                         address:  controller.patientData?[index].address1 ?? "",
                         dob: controller.patientData?[index].dob ?? "",
-                        onTap: (){      
-                          controller.onTileClicked(index: index, context: context);
-                          // Get.toNamed(deliveryScheduleScreenRoute,
-                          // arguments: PharmacyDeliveryScheduleManual(
-                          //   firstName: controller.patientData?[index].firstName ?? "", 
-                          //   dob: controller.patientData?[index].dob ?? "", 
-                          //   nhs: controller.patientData?[index].nhsNumber ?? "", 
-                          //   address: controller.patientData?[index].address1 ?? "", 
-                          //   contact: controller.patientData?[index].contactNumber ?? "", 
-                          //   email: controller.patientData?[index].email ?? "",
-                          //   postCode: controller.patientData?[index].postalCode ?? "",
-                          //   lastName: controller.patientData?[index].lastName ?? "",
-                          //   middleName: controller.patientData?[index].middleName ?? "",)
-                          // );
+                        onTap: (){                          
+                          controller.onTileClicked(index: index, context: context).then((value) {
+                            if(controller.isSuccess == true){
+                              Get.toNamed(deliveryScheduleManualScreenRoute,
+                          arguments: PharmacyDeliveryScheduleManual(
+                            firstName: controller.patientData?[index].firstName ?? "", 
+                            dob: controller.patientData?[index].dob ?? "", 
+                            nhs: controller.patientData?[index].nhsNumber ?? "", 
+                            address: controller.patientData?[index].address1 ?? "", 
+                            contact: controller.patientData?[index].contactNumber ?? "", 
+                            email: controller.patientData?[index].email ?? "",
+                            postCode: controller.patientData?[index].postalCode ?? "",
+                            lastName: controller.patientData?[index].lastName ?? "",
+                            middleName: controller.patientData?[index].middleName ?? "",)
+                          );
+                            }
+                          });
                         },
                       );  
                       }

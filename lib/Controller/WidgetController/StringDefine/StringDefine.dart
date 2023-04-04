@@ -70,6 +70,7 @@ const String kusediffAcc = "Use different Account?";
 const String kUSERTYPE = "userType"; //Branch Admin + OR +
 const String kTotalMiles = "Total Miles";
 const String kOdrCrtdSucc = 'Order Created Successfully';
+const String kSurgery = "SURGERY";
 
 /// Logo
 const String kSplashLogo = "assets/logo/logo.png";

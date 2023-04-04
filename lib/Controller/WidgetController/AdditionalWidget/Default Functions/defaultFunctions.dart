@@ -1,3 +1,4 @@
+import 'package:barcode_scan2/model/scan_options.dart';
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,7 +18,10 @@ class DefaultFuntions {
   }
 
   static Future barcodeScanning() async {
-    var result = await BarcodeScanner.scan(); //options: ScanOptions()
+    var result = await BarcodeScanner.scan(
+      options: ScanOptions(),
+    );
+    //  options: ScanOptions()
     PrintLog.printLog("Type:${result.type}");
     PrintLog.printLog("RawContent:${result.rawContent}");
     if (result.rawContent.toString().length > 10) {
