@@ -15,6 +15,7 @@ import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:pharmdel/View/UpdateAddressScreen.dart/updateAddressScreen.dart';
 import '../../PHARMACY/P_Views/P_Home/Pharmacy_home_page.dart';
 import '../../PHARMACY/P_Views/P_TrackOrder/pharmacy_track_order_screen.dart';
+import '../../PHARMACY/P_Views/P_delivery_schedule/p_delivery_schedule.dart';
 import '../../PHARMACY/P_Views/p_DeliveryList/p_deliverylist_screen.dart';
 import '../../PHARMACY/P_Views/p_SearchMedicine/p_search_medicine_screen.dart';
 import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
@@ -123,13 +124,18 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const DisplayMapRoutesScreen());    
 
 
-  case deliveryScheduleScreenRoute:
+  case deliveryScheduleManualScreenRoute:
   final args = settings.arguments as PharmacyDeliveryScheduleManual;
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliveryScheduleManual(address: args.address,contact: args.contact,firstName: args.firstName,dob: args.dob,email: args.email,nhs: args.nhs,postCode: args.postCode,lastName: args.lastName,middleName: args.middleName,));        
 
 
   case searchMedicineScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchMedicineScreen());            
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const SearchMedicineScreen());
+
+
+  case deliveryScheduleScreenRoute:
+  final args = settings.arguments as DeliveryScheduleScreen;
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: DeliveryScheduleScreen(amount: args.amount,isPatient: args.isPatient,orderInfo: args.orderInfo,type: args.type,otherPharmacy: args.otherPharmacy,pharmacyId: args.pharmacyId,pmrList: args.pmrList,prescriptionList: args.prescriptionList,));
 
     default:
       return MaterialPageRoute(builder: (context) => const SplashScreen());

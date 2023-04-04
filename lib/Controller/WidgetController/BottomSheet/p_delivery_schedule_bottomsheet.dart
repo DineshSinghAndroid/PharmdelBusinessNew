@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../Helper/Colors/custom_color.dart';
 import '../../Helper/TextController/BuildText/BuildText.dart';
@@ -201,48 +202,59 @@ class _SelectDeliveryScheduleBottomsheetState extends State<SelectDeliverySchedu
                         }
                     ) :  
                      widget.listType == "paid" ?
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.controller.paidList.length,
-                        itemBuilder: (context,i){
-                          return InkWell(
-                            onTap: (){
-                              Navigator.of(context).pop(widget.controller.paidList[i]);
-                            },
-                            child: Container(                              
-                              width: Get.width,
-                              margin: const EdgeInsets.only(bottom: 5),
-                              padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: widget.selectedID == widget.controller.paidList[i] ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        spreadRadius: 1,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                        color: Colors.grey.shade300
-                                    )
-                                  ]),
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: controller.paidList[i]["isSelected"],
-                                    visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
-                                    onChanged: (selected) {},
+                    Column(
+                      children: [
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.controller.paidList.length,
+                            itemBuilder: (context,i){
+                              return InkWell(
+                                onTap: (){
+                                  Navigator.of(context).pop(widget.controller.paidList[i]);
+                                },
+                                child: Container(                              
+                                  width: Get.width,
+                                  margin: const EdgeInsets.only(bottom: 5),
+                                  padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      color: widget.selectedID == widget.controller.paidList[i] ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            spreadRadius: 1,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 4),
+                                            color: Colors.grey.shade300
+                                        )
+                                      ]),
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: controller.paidList[i]["isSelected"],
+                                        visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
+                                        onChanged: (selected) {},
+                                      ),
+                                      BuildText.buildText(
+                                        text: "x ${widget.controller.paidList[i]['value']}",
+                                        size: 14,
+                                        color: AppColors.blueColorLight,
+                                        weight: FontWeight.w400,
+                                      ),
+                                    ],
                                   ),
-                                  BuildText.buildText(
-                                    text: "x ${widget.controller.paidList[i]['value']}",
-                                    size: 14,
-                                    color: AppColors.blueColorLight,
-                                    weight: FontWeight.w400,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
+                                ),
+                              );
+                            }
+                        ),
+                        buildSizeBox(5.0, 0.0),
+                        ButtonCustom(
+                          onPress: (){}, 
+                          text: kConfirm, 
+                          buttonWidth: Get.width, 
+                          buttonHeight: 40,
+                          borderRadius: BorderRadius.circular(10),)
+                      ],
                     ) :
                     widget.listType == "exempt" ?
                     ListView.builder(

@@ -83,7 +83,7 @@ Widget build(BuildContext context,) {
                 flexibleSpace: Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(left: 30),
-                  color: Colors.transparent,
+                  color: AppColors.whiteColor,
                   child: Container(
                     height: 50,
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -95,7 +95,7 @@ Widget build(BuildContext context,) {
                           contentPadding:
                               const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                           filled: true,
-                          fillColor: Colors.transparent,
+                          fillColor: AppColors.transparentColor,
                           border: InputBorder.none,
                           hintStyle: const TextStyle(color: Colors.black38),
                           hintText: kSearchPat),
@@ -140,9 +140,10 @@ Widget build(BuildContext context,) {
                         lastName:  controller.patientData?[index].lastName ?? "",
                         address:  controller.patientData?[index].address1 ?? "",
                         dob: controller.patientData?[index].dob ?? "",
-                        onTap: (){
-                          controller.onTileClicked(index: index, context: context);
-                          Get.toNamed(deliveryScheduleScreenRoute,
+                        onTap: (){                          
+                          controller.onTileClicked(index: index, context: context).then((value) {
+                            if(controller.isSuccess == true){
+                              Get.toNamed(deliveryScheduleManualScreenRoute,
                           arguments: PharmacyDeliveryScheduleManual(
                             firstName: controller.patientData?[index].firstName ?? "", 
                             dob: controller.patientData?[index].dob ?? "", 
@@ -154,6 +155,8 @@ Widget build(BuildContext context,) {
                             lastName: controller.patientData?[index].lastName ?? "",
                             middleName: controller.patientData?[index].middleName ?? "",)
                           );
+                            }
+                          });
                         },
                       );  
                       }

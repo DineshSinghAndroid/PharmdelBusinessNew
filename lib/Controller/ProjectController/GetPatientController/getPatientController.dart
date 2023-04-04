@@ -22,7 +22,7 @@ class GetPatientContoller extends GetxController{
 
 
   ///OnTap Patient
-   void onTileClicked({required int index, required BuildContext context}) {   
+   Future<void> onTileClicked({required int index, required BuildContext context}) async{   
     if (patientData?[index].lastOrderId != null) {      
       PrintLog.printLog("Last order id is ${patientData?[index].lastOrderId}");
       String name = "";

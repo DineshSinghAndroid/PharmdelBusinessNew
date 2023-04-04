@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
@@ -80,12 +81,15 @@ class DeliveryScheduleController extends GetxController{
   String? datetime;
   DateTime? Ts;
   dynamic subExpDate;
+  String? userType;
 
   int? selectedBagSize;
   bool fridgeSelected = false;
   bool controlDrugSelected = false;
   bool paidSelected = false;
   bool exemptSelected = false;
+  bool isCollection = false;
+  bool isStartRoute = false;
 
   bool isLoading = false;
   bool isError = false;
@@ -102,6 +106,7 @@ class DeliveryScheduleController extends GetxController{
   @override
   void onInit() {    
     super.onInit();
+    userType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType);
     final DateTime now = DateTime.now();
     selectedDate = formatter.format(now);
     showDatedDate = formatterShow.format(now);  
@@ -335,6 +340,36 @@ void onTapRxDetails({required BuildContext context}){
       });      
   }
   
+///Select Meds
+void onTapMeds({required String type})async{
+  if (type == "1") {
+      String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode("#7EC3E6", "Cancel", true, ScanMode.QR);
+      if (barcodeScanRes != "-1") {
+        // loadPrescription(barcodeScanRes);
+      } 
+    } else if (type == "4" || type == "3" || type == "2" || type == "6") {
+      Get.toNamed(searchMedicineScreenRoute)?.then((value) {
+      if (value.drugInfo != null && value.drugInfo > 0) {
+          value.isControlDrug = true;
+        }
+        bool checkValid = false;
+        selectedMedicineList?.forEach((element) {
+          if (value.id == element.id) {
+            checkValid = true;
+          }
+        });
+        if (!checkValid) {
+          if (value != null) {
+            selectedMedicineList?.add(value);            
+          }
+        } else {
+          ToastCustom.showToast(msg: "Medicine is already Selected");
+        }
+      });
+    }
+    update();
+}
+
 /// ONTap Back 
 Future<bool> onWillPop(context) async {
     FocusScope.of(context).requestFocus(FocusNode());

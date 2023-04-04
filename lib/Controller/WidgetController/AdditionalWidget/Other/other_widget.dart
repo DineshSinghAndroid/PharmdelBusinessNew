@@ -147,7 +147,7 @@ class WidgetCustom{
               child: BuildText.buildText(
                 text: title,
                 size: 14,
-                color: AppColors.blackColor,
+                color: AppColors.greenDarkColor,
                 weight: FontWeight.w400,
               ),
             ),
