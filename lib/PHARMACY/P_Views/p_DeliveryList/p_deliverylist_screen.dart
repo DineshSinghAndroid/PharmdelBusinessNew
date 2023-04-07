@@ -19,6 +19,15 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
   TabController? tabController;
 
   @override
+  void initState() {
+    controller.getRouteListController.selectedroute = null;
+    controller.getDriverListController.selectedDriverPosition = 0;
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<PDeliveriesScreenController>(
       init: controller,
@@ -36,7 +45,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                   child: Row(
                     children: [
                       InkWell(
-                          onTap: () { },
+                          onTap: () {},
                           child: Icon(
                             Icons.search,
                             color: AppColors.blackColor,
@@ -76,8 +85,16 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                       ),
                       buildSizeBox(0.0, 10.0),
 
-
-                     ],
+                      ///Select Driver
+                      controller.getDriverListController.driverList.isNotEmpty && controller.getRouteListController.selectedroute != null
+                          ? Flexible(
+                              child: WidgetCustom.pharmacyTopSelectWidget(
+                                title: controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
+                                onTap: () => controller.onTapSelectedDriver(context: context, controller: controller.getNurHomeCtrl),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
                   ),
                   buildSizeBox(10.0, 0.0),
                   Row(
@@ -179,7 +196,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                       child: TabBarView(
                         controller: tabController,
                         children: [
-                          TotalView(),
+                          totalView(),
                           pickedUpView(),
                           deliverdView(),
                           failedView(),
@@ -195,7 +212,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
     );
   }
 
-  ListView TotalView() => ListView.separated(
+  ListView totalView() => ListView.separated(
         shrinkWrap: true,
         itemCount: controller.totalList.length ?? 0,
         itemBuilder: (context, i) {
@@ -203,13 +220,23 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             /// onTap
             onTap: () {
               controller.onTotalListTap(
-                  context: context,
-                  orderId: controller.totalList[i].orderId ?? 0,
-                  patientName: controller.totalList[i].customerName.toString(),
-                  DeliveryNotes: controller.totalList[i].deliveryNote.toString(),
-                  ExistingNotes: controller.totalList[i].exitingNote.toString(),
-                  patientAddress: controller.totalList[i].address.toString(),
-                  patientMobileNumber: controller.totalList[i].customerMobileNumber.toString());
+                context: context,
+                orderId: controller.totalList[i].orderId ?? 0,
+                patientName: controller.totalList[i].customerName??"${controller.totalList[i].surName}" ??"",
+                deliveryNotes: controller.totalList[i].deliveryNote??"",
+                existingNotes: controller.totalList[i].exitingNote??"",
+                patientAddress: controller.totalList[i].address??"",
+                patientMobileNumber: controller.totalList[i].customerMobileNumber??"",
+                patientBagSize: controller.totalList[i].bagSize??"",
+                isCdType: controller.totalList[i].isControlledDrugs??"",
+                isFridze: controller.totalList[i].isStorageFridge??"",
+                rxCharge: controller.totalList[i].rxCharge??"",
+                rxInvoice: controller.totalList[i].rxInvoice ??0,
+                exemptionName: controller.totalList[i].exemption??"",
+                delCharge: controller.totalList[i].delCharge??"",
+
+
+              );
             },
 
             /// onTap Route
@@ -222,8 +249,8 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             onTapDeliverNow: () {},
 
             /// Customer Detail
-            customerName: controller.getDeliveryResponse?.list?[i].customerName ?? "",
-            customerAddress: "${controller.getDeliveryResponse?.list?[i].address}",
+            customerName: "${controller.getDeliveryResponse?.sortedList?[i].customerName}"  ,
+            customerAddress: "${controller.getDeliveryResponse?.sortedList?[i].address}",
             altAddress: "",
             driverType: '',
 
@@ -234,15 +261,15 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             /// Order Detail
             orderListType: controller.orderListType,
             orderId: "",
-            deliveryStatus: controller.totalList[i].deliveryStatusDesc.toString() ?? "",
-            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
-            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
-            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
-            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
-            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            deliveryStatus: controller.totalList[i].deliveryStatusDesc??"" ?? "",
+            isControlledDrugs: controller.getDeliveryResponse?.sortedList?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.sortedList?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.sortedList?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.sortedList?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.sortedList?[i].serviceName ?? "",
             pmrId: "",
             pmrType: "",
-            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+            rescheduleDate: controller.getDeliveryResponse?.sortedList?[i].rescheduleDate ?? "",
 
             /// PopUp Menu
             popUpMenu: [],
@@ -287,17 +314,17 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             /// Order Detail
             orderListType: controller.orderListType,
             orderId: "",
-            deliveryStatus: controller.pickedUpList[i].deliveryStatusDesc.toString() ?? "",
+            deliveryStatus: controller.pickedUpList[i].deliveryStatusDesc??"" ?? "",
 
 //        deliveryStatus: "",
-            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
-            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
-            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
-            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
-            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            isControlledDrugs: controller.getDeliveryResponse?.sortedList?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.sortedList?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.sortedList?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.sortedList?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.sortedList?[i].serviceName ?? "",
             pmrId: "",
             pmrType: "",
-            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+            rescheduleDate: controller.getDeliveryResponse?.sortedList?[i].rescheduleDate ?? "",
 
             /// PopUp Menu
             popUpMenu: [],
@@ -344,16 +371,16 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             orderListType: controller.orderListType,
             orderId: "",
             // deliveryStatus: "",
-            deliveryStatus: controller.deliveredList[i].deliveryStatusDesc.toString() ?? "",
+            deliveryStatus: controller.deliveredList[i].deliveryStatusDesc??"" ?? "",
 
-            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
-            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
-            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
-            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
-            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            isControlledDrugs: controller.getDeliveryResponse?.sortedList?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.sortedList?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.sortedList?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.sortedList?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.sortedList?[i].serviceName ?? "",
             pmrId: "",
             pmrType: "",
-            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+            rescheduleDate: controller.getDeliveryResponse?.sortedList?[i].rescheduleDate ?? "",
 
             /// PopUp Menu
             popUpMenu: [],
@@ -399,15 +426,15 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
             /// Order Detail
             orderListType: controller.orderListType,
             orderId: "",
-            deliveryStatus: controller.failedList[i].deliveryStatusDesc.toString() ?? "",
-            isControlledDrugs: controller.getDeliveryResponse?.list?[i].isControlledDrugs ?? "",
-            isCronCreated: controller.getDeliveryResponse?.list?[i].isCronCreated ?? "",
-            isStorageFridge: controller.getDeliveryResponse?.list?[i].isStorageFridge ?? "",
-            parcelBoxName: controller.getDeliveryResponse?.list?[i].parcelBoxName ?? "",
-            serviceName: controller.getDeliveryResponse?.list?[i].serviceName ?? "",
+            deliveryStatus: controller.failedList[i].deliveryStatusDesc??"" ?? "",
+            isControlledDrugs: controller.getDeliveryResponse?.sortedList?[i].isControlledDrugs ?? "",
+            isCronCreated: controller.getDeliveryResponse?.sortedList?[i].isCronCreated ?? "",
+            isStorageFridge: controller.getDeliveryResponse?.sortedList?[i].isStorageFridge ?? "",
+            parcelBoxName: controller.getDeliveryResponse?.sortedList?[i].parcelBoxName ?? "",
+            serviceName: controller.getDeliveryResponse?.sortedList?[i].serviceName ?? "",
             pmrId: "",
             pmrType: "",
-            rescheduleDate: controller.getDeliveryResponse?.list?[i].rescheduleDate ?? "",
+            rescheduleDate: controller.getDeliveryResponse?.sortedList?[i].rescheduleDate ?? "",
 
             /// PopUp Menu
             popUpMenu: [],

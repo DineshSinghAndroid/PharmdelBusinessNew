@@ -937,8 +937,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: Duration(minutes: 1),
-          connectTimeout: Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
       );
@@ -977,8 +977,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: Duration(minutes: 1),
-          connectTimeout: Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
           headers: headers);
       _dio.options = options;
       Response response = await _dio.post(url,
@@ -1018,8 +1018,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: Duration(minutes: 1),
-          connectTimeout: Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
           headers: headers);
 
       _dio.options = options;
@@ -1113,7 +1113,7 @@ class ApiController {
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
           receiveTimeout: const Duration(minutes: 1),
-          connectTimeout: Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
       );
