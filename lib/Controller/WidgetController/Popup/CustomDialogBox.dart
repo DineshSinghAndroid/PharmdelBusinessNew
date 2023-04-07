@@ -42,47 +42,42 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
 
   contentBox(context) {
     return Stack(
-      children: <Widget>[
+      children: [
         Container(
-          padding: EdgeInsets.only(left: 10, top: 45, right: 10, bottom: 20),
-          margin: EdgeInsets.only(top: 45),
+          padding: const EdgeInsets.only(left: 10, top: 45, right: 10, bottom: 20),
+          margin: const EdgeInsets.only(top: 45),
           decoration: BoxDecoration(shape: BoxShape.rectangle, color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
-            BoxShadow(color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
+            BoxShadow(color: AppColors.blackColor, offset: const Offset(0, 10), blurRadius: 10),
           ]),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               if (widget.title != null)
-                Text(
-                  widget.title ??'',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                BuildText.buildText(
+                  text: widget.title ??'',
+                  size: 22,
+                  weight: FontWeight.w600,                  
                 ),
               if (widget.title != null)
-                SizedBox(
-                  height: 15,
-                ),
+                buildSizeBox(15.0, 0.0),
               if (widget.descriptionWidget != null) widget.descriptionWidget!,
               if (widget.descriptions != null)
-                Text(
-                  widget.descriptions??'',
-                  style: TextStyle(fontSize: 14),
+                BuildText.buildText(
+                  text: widget.descriptions??'',
+                  size: 14,                  
                   textAlign: TextAlign.center,
                 ),
               if (widget.descriptions != null || widget.descriptionWidget != null)
-                SizedBox(
-                  height: 22,
-                ),
+                buildSizeBox(22.0, 0.0),
               if (widget.textField != null) widget.textField!,
               if (widget.textField != null)
-                SizedBox(
-                  height: 10,
-                ),
+                buildSizeBox(10.0, 0.0),
               if (widget.cameraIcon != null) widget.cameraIcon!,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (widget.button1 != null) widget.button1!,
-                  Spacer(),
+                  const Spacer(),
                   if (widget.button2 != null) widget.button2!,
                 ],
               ),
@@ -95,7 +90,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                       child: TextButton(
                         // color: widget.btnDone == "End Route" ? Colors.grey : Colors.transparent,
                           style: TextButton.styleFrom(
-                            fixedSize: Size.fromHeight(30),
+                            fixedSize: const Size.fromHeight(30),
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -103,20 +98,20 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(left: 0.0, right: 10),
-                            child: Text(
-                              widget.btnNo!,
+                            child: BuildText.buildText(
+                              text: widget.btnNo!,
                               style: TextStyle(fontSize: 18, color: widget.btnNo == "Reoptimise stops" ? Colors.blueAccent : Colors.black),
                               textAlign: TextAlign.start,
                             ),
                           )),
                     ),
-                  Spacer(),
+                  const Spacer(),
                   if (widget.btnDone != null)
                     Align(
                       alignment: Alignment.bottomRight,
                       child: TextButton(
                           style: TextButton.styleFrom(
-                            fixedSize: Size.fromHeight(30),
+                            fixedSize: const Size.fromHeight(30),
                           ),
                           // color: widget.btnDone == "End Route" ? Colors.orange : Colors.transparent,
                           onPressed: () {
@@ -125,16 +120,15 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                             Navigator.pop(context);
                             if (widget.onClicked != null) widget.onClicked!(true);
                           },
-                          child: Text(
-                            widget.btnDone!,
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: widget.btnDone == "End Route"
-                                    ? Colors.red
+                          child: BuildText.buildText(
+                            text: widget.btnDone!,
+                            size: 18,                                                        
+                            color: widget.btnDone == "End Route"
+                                    ? AppColors.redColor
                                     : widget.btnDone == "Skip"
-                                    ? Colors.orange
-                                    : Colors.black),
-                          )),
+                                    ? AppColors.colorOrange
+                                    : AppColors.blackColor),
+                          ),
                     ),
                 ],
               ),
@@ -147,13 +141,13 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             left: 20,
             right: 20,
             child: CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.whiteColor,
               radius: 45,
-              child: Container(
+              child: SizedBox(
                   width: 60,
                   height: 60,
                   child: widget.descriptions == 'Please wait\nWe are updating your offline deliveries.' || widget.descriptions == "Please wait\nWe are updating deliveries and ending route."
-                      ? new CircularProgressIndicator(
+                      ? const CircularProgressIndicator(
                     value: null,
                     strokeWidth: 3.0,
                   )

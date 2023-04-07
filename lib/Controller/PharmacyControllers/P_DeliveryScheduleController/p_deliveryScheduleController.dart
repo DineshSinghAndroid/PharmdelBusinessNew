@@ -8,6 +8,7 @@ import '../../../Model/ParcelBox/parcel_box_response.dart';
 import '../../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
+import '../../../Model/PharmacyModels/P_ProcessScanApiResponse/p_processScanResponse.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
 import '../../WidgetController/Popup/popup.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
@@ -36,6 +37,7 @@ class DeliveryScheduleController extends GetxController{
   OrderData? orderData;
   List<MedicineListData>? selectedMedicineList = [];
   List<MedicineListData>? medicineListData;
+  OrderInfo? orderInfo;
 
   List<String> bagSizeList = ["S", "M", "L", "C",];
   List paidList = [
@@ -83,13 +85,14 @@ class DeliveryScheduleController extends GetxController{
   dynamic subExpDate;
   String? userType;
 
-  int? selectedBagSize;
+  int? selectedBagSize = -1;
   bool fridgeSelected = false;
   bool controlDrugSelected = false;
   bool paidSelected = false;
   bool exemptSelected = false;
   bool isCollection = false;
   bool isStartRoute = false;
+  bool isValidate = true;
 
   bool isLoading = false;
   bool isError = false;
@@ -120,6 +123,13 @@ class DeliveryScheduleController extends GetxController{
       PrintLog.printLog('Converted Date Date: $datetime');
       // subExpiryPopUp('${patientSubList[selectedSubscription].name} Subscription Expired by $datetime');
     }  
+  }
+
+@override
+  void onClose() {    
+    super.onClose();
+    Get.delete<PharmacyGetRouteListController>();
+    Get.delete<GetDriverListController>();
   }
   
 ///Select Status
@@ -176,7 +186,7 @@ void onTapSeletedDeliveryCharge(
       onValue: (value) async {
         if (value != null) {
           selectedDeliveryCharge = value;
-          if(selectedDeliveryCharge?.name == "Per Delivery"){
+          if(selectedDeliveryCharge!.name!.isNotEmpty && selectedDeliveryCharge?.name == "Per Delivery"){
            deliveryChargeController.text = selectedDeliveryCharge?.price ?? "";
           }
           update();
@@ -322,7 +332,7 @@ void onTapRxDetails({required BuildContext context}){
       context: context,
       builder: (context) {                
         return BottomSheetCustom.RxDetailsBottomsheetCustom(
-          itemCount: medicineListData?.length ?? 0,
+          itemCount: 2,
           quantityController: quantityController,
           daysController: daysController,
           medicineName: 'Medicine Name', ///will show here by dynamic
@@ -331,13 +341,14 @@ void onTapRxDetails({required BuildContext context}){
           onTapDelete: (){},
           onChangedCD: (val) {},
           onChangedFridge: (val) {});
-      },).then((value) {
-        PrintLog.printLog('value is $value');
-        if(value != null){
-          selectedMedicineList?.add(value);
-        }
-        update();
-      });      
+      },);
+      // .then((value) {
+      //   PrintLog.printLog('value is $value');
+      //   if(value != null){
+      //     selectedMedicineList?.add(value);
+      //   }
+      //   update();
+      // });      
   }
   
 ///Select Meds
@@ -368,6 +379,39 @@ void onTapMeds({required String type})async{
       });
     }
     update();
+}
+
+/// OnTap Book Delivery
+Future<void> onTapBookDelivery({required BuildContext context})async{
+  if(getRouteListController.selectedroute == null){
+    ToastCustom.showToast(msg: "Select route and try again");
+  }
+    else if(userType == "Pharmacy" || userType == "Pharmacy Staff"){
+    if(getDriverListController.selectedDriver == null) {
+      ToastCustom.showToast(msg: "Select driver and try again");
+    }
+  }
+  else{
+    await createOrderApi(
+    context: context, 
+    firstName: getProcessScanController.processScanData?.orderInfo?.firstName ?? "",
+    middleName: getProcessScanController.processScanData?.orderInfo?.middleName ?? "", 
+    lastName: getProcessScanController.processScanData?.orderInfo?.lastName ?? "", 
+    postCode: getProcessScanController.processScanData?.orderInfo?.postCode ?? "", 
+    dob: getProcessScanController.processScanData?.orderInfo?.dob ?? "", 
+    emailId: getProcessScanController.processScanData?.orderInfo?.email ?? "", 
+    nhsNumber: getProcessScanController.processScanData?.orderInfo?.nhsNumber ?? "", 
+    mobileNumber: getProcessScanController.processScanData?.orderInfo?.mobileNo ?? "", 
+    addressLine1: getProcessScanController.processScanData?.orderInfo?.address ?? "").then((value) {
+      if(isSuccess ==  true){
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      PopupCustom.orderSuccess(context: context);
+      Future.delayed(const Duration(milliseconds: 2500)).then((value) {
+        Get.back();
+      });
+      }
+    });
+  } 
 }
 
 /// ONTap Back 
@@ -401,7 +445,7 @@ void subExpiryPopUp(BuildContext context) {
         return CustomDialogBox(
           img: Image.asset("assets/images/sad.png"),
           title: "Alert...",
-          btnDone: "Okay",
+          btnDone: kOkay,
           btnNo: "",
           descriptions: "Your Subscription Expired at",
         );
@@ -543,12 +587,12 @@ Future<CreateOrderApiResponse?> createOrderApi({
       "start_lat": "",
       "start_lng": "",
       "del_subs_id": selectedDeliveryCharge?.id ?? "",
-      "exemption": selectedExemption?.id ?? "",      
+      "exemption": selectedExemption?.id ?? "",
       "paymentStatus": "", 
-      "bag_size": selectedBagSize ?? "",
+      "bag_size": selectedBagSize != -1 ? bagSizeList[selectedBagSize!].isNotEmpty ? bagSizeList[selectedBagSize!] : "" : "",
       "patient_id": "",
       "pr_id": "",
-      "lat": "",      
+      "lat": "",
       "lng": "",
       "parcel_box_id": selectedParcelBox?.id ?? "",
       "surgery_name": "",

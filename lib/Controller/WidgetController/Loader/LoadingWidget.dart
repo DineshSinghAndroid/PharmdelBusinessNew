@@ -5,8 +5,8 @@ import '../StringDefine/StringDefine.dart';
 
 
 class LoadingWidget extends StatelessWidget {
-  double height = 60.00;
-  double width = 60.00;
+  double height = 50.00;
+  double width = 50.00;
 
   LoadingWidget({Key? key,}) : super(key: key);
 
@@ -14,7 +14,10 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
      height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Container(      
+    return Container(  
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10)
+      ),    
       height: height,
       width: width,
       child: Column(

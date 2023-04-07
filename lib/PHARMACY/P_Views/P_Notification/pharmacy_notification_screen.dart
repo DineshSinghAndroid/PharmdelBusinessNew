@@ -4,17 +4,14 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
-import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
 import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
-import '../../../Controller/WidgetController/RefresherIndicator/RefreshIndicatorCustom.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
@@ -27,22 +24,24 @@ class PharmacyNotificationScreen extends StatefulWidget {
 class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen> {
 
   PharmacyNotificationController phrNotfCtrl = Get.put(PharmacyNotificationController());
-  RefreshController refreshController = RefreshController();  
 
   @override
   void initState() {    
-    init();
-    
+    init();    
     super.initState();
   }
 
   Future<void> init() async {
+    phrNotfCtrl.scrollController.addListener(() {
+      phrNotfCtrl.pagination(context: context);
+      });
     phrNotfCtrl.isNetworkError = false;
     phrNotfCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
       await phrNotfCtrl.notificationApi(context: context);
-      await phrNotfCtrl.sentNotificationApi(context: context, pageNo: '1');
+      await phrNotfCtrl.sentNotificationApi(context: context, pageNo: phrNotfCtrl.pageNo.toString());
     } else {
+      phrNotfCtrl.getNextPage = true;
       phrNotfCtrl.isNetworkError = true;
       setState(() {});
     }
@@ -90,7 +89,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
             ),
             bottom: TabBar(
               onTap: (value) {
-                init();
+                // init();
               },
               indicatorColor: AppColors.colorOrange,
               tabs: [
@@ -143,7 +142,12 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                       backgroundColor: AppColors.colorOrange,
                       child: const Icon(Icons.add),
                       onPressed: (){
-                        Get.toNamed(pharmacyCreateNotificationScreeenRoute);
+                        Get.toNamed(pharmacyCreateNotificationScreeenRoute)?.then((value) {
+                          if(value == true){                            
+                            controller.sentNotificationApi(context: context, pageNo: '1');
+                            controller.notificationApi(context: context);
+                          }                          
+                        });
                       },
                       ),
                   ),
@@ -151,6 +155,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                 body: Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: ListView.builder(
+                    controller: controller.scrollController,
                     itemCount: controller.sentNotificationData?.length ?? 0,
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,

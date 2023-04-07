@@ -148,7 +148,7 @@ class WidgetCustom{
                 text: title,
                 size: 14,
                 color: AppColors.greenDarkColor,
-                weight: FontWeight.w400,
+                weight: FontWeight.w500,
               ),
             ),
              Icon(

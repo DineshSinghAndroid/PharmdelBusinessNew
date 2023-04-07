@@ -143,18 +143,7 @@ Widget build(BuildContext context,) {
                         onTap: (){                          
                           controller.onTileClicked(index: index, context: context).then((value) {
                             if(controller.isSuccess == true){
-                              Get.toNamed(deliveryScheduleManualScreenRoute,
-                          arguments: PharmacyDeliveryScheduleManual(
-                            firstName: controller.patientData?[index].firstName ?? "", 
-                            dob: controller.patientData?[index].dob ?? "", 
-                            nhs: controller.patientData?[index].nhsNumber ?? "", 
-                            address: controller.patientData?[index].address1 ?? "", 
-                            contact: controller.patientData?[index].contactNumber ?? "", 
-                            email: controller.patientData?[index].email ?? "",
-                            postCode: controller.patientData?[index].postalCode ?? "",
-                            lastName: controller.patientData?[index].lastName ?? "",
-                            middleName: controller.patientData?[index].middleName ?? "",)
-                          );
+                              Get.toNamed(deliveryScheduleManualScreenRoute);
                             }
                           });
                         },
