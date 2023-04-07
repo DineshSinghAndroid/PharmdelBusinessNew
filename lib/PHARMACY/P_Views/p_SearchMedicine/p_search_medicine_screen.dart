@@ -75,7 +75,7 @@ Widget build(BuildContext context,) {
                           child: isSearchShow == false ? Icon(Icons.search,color: AppColors.blackColor,size: 28,) : InkWell(
                             onTap: () {
                               setState(() {
-                                searchTextCtrl.clear();
+                                searchTextCtrl.clear();                                
                               });
                             },
                             child: Icon(Icons.clear,color: AppColors.blackColor,size: 28,))),
@@ -89,9 +89,7 @@ Widget build(BuildContext context,) {
                           hintText: kSearchMeds),
                           onChanged: (value) async {
                               if(value.toString().trim().isNotEmpty && value.length > 1){                                
-                                await controller.medicineListApi(context: context, searchValue: value.toString().trim());
-                                setState(() {                                  
-                                });
+                                await controller.medicineListApi(context: context, searchValue: value.toString().trim());                                
                               }else{
                                 setState(() {
                                   controller.medicineData?.medicineListData?.clear();

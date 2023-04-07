@@ -124,9 +124,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const DisplayMapRoutesScreen());    
 
 
-  case deliveryScheduleManualScreenRoute:
-  final args = settings.arguments as PharmacyDeliveryScheduleManual;
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliveryScheduleManual(address: args.address,contact: args.contact,firstName: args.firstName,dob: args.dob,email: args.email,nhs: args.nhs,postCode: args.postCode,lastName: args.lastName,middleName: args.middleName,));        
+  case deliveryScheduleManualScreenRoute:  
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  PharmacyDeliveryScheduleManual());        
 
 
   case searchMedicineScreenRoute:

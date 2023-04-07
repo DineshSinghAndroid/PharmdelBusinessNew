@@ -87,7 +87,7 @@ bool isShowDoctorDetails = false;
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (widget.pmrList != null)
-                BuildText.buildText(  
+                BuildText.buildText(
                 text: " ${widget.pmrList?[0].xml?.patientInformation?.firstName != null && widget.pmrList?[0].xml?.patientInformation?.firstName != "null" ? widget.pmrList![0].xml?.patientInformation?.firstName : ""} "
                       "${widget.pmrList?[0].xml?.patientInformation?.middleName != null && widget.pmrList?[0].xml?.patientInformation?.middleName != "null" ? widget.pmrList![0].xml?.patientInformation?.middleName : ""} "
                       "${widget.pmrList?[0].xml?.patientInformation?.lastName != null ? (widget.pmrList?[0].xml?.patientInformation?.lastName != "null" ? widget.pmrList![0].xml?.patientInformation?.lastName : "") : ""}"),
@@ -121,7 +121,7 @@ bool isShowDoctorDetails = false;
                           margin: const EdgeInsets.only(left: 0, bottom: 5, top: 0),
                           alignment: Alignment.centerLeft,
                           child: Row(
-                            children: <Widget>[
+                            children: [
                               BuildText.buildText(
                                 text: kSurgery,
                                 style: TextStyleblueGrey14,

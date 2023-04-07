@@ -11,6 +11,7 @@ import '../../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.d
 import '../../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
 import '../../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
+import '../../../View/ScanPrescription/scan_prescription.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
@@ -191,17 +192,28 @@ class NursingHomeController extends GetxController {
   }
 
   void onTapSelectScanRx() {
-    if (getRouteListController.selectedroute?.routeId == null) {
+    if (selectedroute == null) {
       ToastCustom.showToast(msg: kPlsSlctRoute);
-    } else if (getDriverListController.selectedDriver?.driverId == null) {
+    } else if (selectedDriver == null) {
       ToastCustom.showToast(msg: kPlsSlctDriver);
-    } else if (selectedNursingHome?.id == null) {
+    } else if (selectedNursingHome == null) {
       ToastCustom.showToast(msg: kPlsSlctNurHome);
-    } else if (selectedBox?.id == null) {
+    } else if (selectedBox == null) {
       ToastCustom.showToast(msg: kPlsSlctTote);
-    } else {
-      DefaultFuntions.barcodeScanning();
-      Get.toNamed(searchPatientScreenRoute);
+    } else {      
+      Get.toNamed(searchPatientScreenRoute,
+      arguments: ScanPrescriptionScreen(
+        isAssignSelf: true,
+        bulkScanDate: selectedDate,
+        routeId: selectedroute?.routeId ?? "",
+        driverId: selectedDriver?.driverId ?? "",
+        toteId: selectedBox?.id ?? "",
+        nursingHomeId: selectedNursingHome?.id ?? "",
+        pmrList: [],
+        prescriptionList: [],
+        isBulkScan: true,
+        type: '5',
+      ));
     }
   }
 
@@ -257,29 +269,35 @@ class NursingHomeController extends GetxController {
 
   ///Nursing Home Controller
   Future<NursingHomeApiResponse?> nursingHomeApi({context}) async {
-    nursingHomeList.clear();
-    await CustomLoading().show(context, true);
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    nursingHomeList.clear();    
 
     Map<String, dynamic> dictparm = {};
     String url = WebApiConstant.GET_PHARMACY_NURSING_HOME;
-    await apiCtrl
-        .getNursingHomeApi(
-            context: context,
-            url: url,
-            dictParameter: dictparm,
-            token: authToken)
-        .then((result) {
+    await apiCtrl.getNursingHomeApi(context: context,url: url,dictParameter: dictparm,token: authToken).then((result) {
       if (result != null) {
         try {
           nursingHomeList.addAll(result.nursingHomeData!);
+          changeLoadingValue(false);
+          changeSuccessValue(true);
         } catch (_) {
-          CustomLoading().show(context, false);
+          changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
 
           PrintLog.printLog("Exception : $_");
           ToastCustom.showToast(msg: result.message ?? "");
         }
       } else {
-        CustomLoading().show(context, false);
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
 
         PrintLog.printLog(result?.message);
         ToastCustom.showToast(msg: result?.message ?? "");

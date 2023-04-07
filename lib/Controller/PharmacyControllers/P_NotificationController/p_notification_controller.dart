@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
@@ -16,6 +17,14 @@ class PharmacyNotificationController extends GetxController{
   SaveNotificationApiResponse? saveNotification;
   StaffList? selectedStaff;
   List<SentNotificationData>? sentNotificationData;
+  bool? noRecordFound;
+  bool? getNextPage;
+  int pageNo = 1;  
+
+  TextEditingController notificationNameController = TextEditingController();
+  TextEditingController notificationMessageController = TextEditingController();
+  TextEditingController pharStaffController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   bool isLoading = false;
   bool isError = false;
@@ -23,11 +32,28 @@ class PharmacyNotificationController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
+  @override
+  void onInit() {    
+    super.onInit();   
+  }
+
+  ///Select Pharmacy Satff
   void updateStaffValue(value){
     selectedStaff = value;
     update();
   }
   
+  ///Pagination
+   void pagination({required BuildContext context}) {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {      
+      if (getNextPage ?? false) {
+        pageNo++;
+        sentNotificationApi(context: context, pageNo: pageNo.toString());
+      }
+    }
+    update();
+  }
+
   ///Select Pharmacy Staff
   void onTapSelectStaff(
       {required BuildContext context,
@@ -45,6 +71,25 @@ class PharmacyNotificationController extends GetxController{
         }
       },
     );
+  }
+
+  ///OnTap Submit Button
+  void onTapSubmit({required BuildContext context})async{
+    if(notificationNameController.text.isEmpty){
+      ToastCustom.showToast(msg: 'Enter notification name');
+    } else if(selectedStaff == null){
+      ToastCustom.showToast(msg: 'Select pharmacy staff');
+    } else if(notificationMessageController.text.isEmpty){
+      ToastCustom.showToast(msg: 'Enter notification message');
+    } else{
+      await saveNotificationApi(
+    context: context,
+    name: notificationNameController.text.toString().trim(), 
+    userList: selectedStaff?.userId ?? "", 
+    message: notificationMessageController.text.toString().trim(), 
+    role: selectedStaff?.role ?? "");
+    }
+    update();
   }
 
   ///Recieve Notification Controller
@@ -126,12 +171,17 @@ class PharmacyNotificationController extends GetxController{
               result.sentNotificationData == null ? changeEmptyValue(true):changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
+              // noRecordFound = false;
+              // getNextPage = true;
+              // if(pageNo == 1) sentNotificationData?.clear();
+              // sentNotificationData?.addAll(result.sentNotificationData!);
 
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
               PrintLog.printLog(result.message);
+              // noRecordFound = true;
+              // getNextPage = false;
             }
 
           } catch (_) {
@@ -234,12 +284,12 @@ class PharmacyNotificationController extends GetxController{
         if (result.status != false) {          
           try {            
             if (result.status == true) {              
-              saveNotification = result;              
-              result == null ? changeEmptyValue(true):changeEmptyValue(false);
-              CustomLoading().show(context, isLoading).then((value) => ToastCustom.showToast(msg: "Notification Sent Successfully"));
+              saveNotification = result;                                          
+              result == null ? changeEmptyValue(true):changeEmptyValue(false);               
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
+              Navigator.of(context).pop(true);
+              ToastCustom.showToast(msg: "Notification Sent Successfully");
 
             } else {
               changeLoadingValue(false);
