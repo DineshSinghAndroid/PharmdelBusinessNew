@@ -36,7 +36,7 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                   child: Row(
                     children: [
                       InkWell(
-                          onTap: () { },
+                          onTap: () {},
                           child: Icon(
                             Icons.search,
                             color: AppColors.blackColor,
@@ -76,8 +76,17 @@ class _PharmacyDeliveryListScreenState extends State<PharmacyDeliveryListScreen>
                       ),
                       buildSizeBox(0.0, 10.0),
 
-
-                     ],
+                      ///Select Driver
+                      controller.getDriverListController.driverList.isNotEmpty
+                          ? Flexible(
+                              child: WidgetCustom.pharmacyTopSelectWidget(
+                                title:
+                                    controller.getDriverListController.selectedDriver != null ? controller.getDriverListController.selectedDriver?.firstName.toString() ?? "" : kSelectDriver,
+                                onTap: () => controller.onTapSelectedDriver(context: context, controller: controller.getNurHomeCtrl),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
                   ),
                   buildSizeBox(10.0, 0.0),
                   Row(

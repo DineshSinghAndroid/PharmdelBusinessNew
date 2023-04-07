@@ -333,7 +333,7 @@ class PDeliveriesScreenController extends GetxController {
 ///List Tap Popup
   CustomDialogBox onListTapPopup(int orderId, String patientName, String patientAddress, String patientMobileNumber, String DeliveryNotes, String ExistingNotes) {
     return CustomDialogBox(
-      title: "Order Id $orderId",
+      title: "Order Id:- $orderId",
       descriptionWidget: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +357,7 @@ class PDeliveriesScreenController extends GetxController {
                     style: TS.CTS(16.0, Colors.black, FontWeight.bold),
                   ),
                   Text(
-                    "$patientName",
+                    patientName,
                     style: TS.CTS(16.0, Colors.black, FontWeight.normal),
                   ),
                 ],
@@ -370,7 +370,7 @@ class PDeliveriesScreenController extends GetxController {
                     style: TS.CTS(16.0, Colors.black, FontWeight.bold),
                   ),
                   Text(
-                    "$patientAddress",
+                    patientAddress,
                     style: TS.CTS(16.0, Colors.black, FontWeight.normal),
                   ),
                 ],
@@ -466,9 +466,37 @@ class PDeliveriesScreenController extends GetxController {
                   ),
                 ),
               ),
+              buildSizeBox(10.0, 0.0),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      color: Colors.grey,
+                    )),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    hint: const Text("Select Parcle Location"),
+                    value: selectParcleBoxLocation,
+                    isExpanded: true,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: selectParcleBoxLocaitonItems.map((String selectParcleBoxLocation) {
+                      return DropdownMenuItem(
+                        value: selectParcleBoxLocation,
+                        child: Text(selectParcleBoxLocation),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      selectParcleBoxLocation = value!;
+                      update();
+                    },
+                  ),
+                ),
+              ),
               WidgetCustom.pharmacyTopSelectWidget(
                 title:
-                parcelBoxList![1].name.toString() != null ?  parcelBoxList![1].name.toString() ??"": 'Select Parcel Box',
+                parcelBoxList![1].name != null ?  parcelBoxList![1].name.toString() ??"": 'Select Parcel Box',
                 onTap: () {
                   update();
 
