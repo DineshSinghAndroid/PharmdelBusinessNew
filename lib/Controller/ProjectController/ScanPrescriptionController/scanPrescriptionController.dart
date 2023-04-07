@@ -102,7 +102,20 @@ PharmacyProcessScanController getProcessScanController = Get.put(PharmacyProcess
 DeliveryScheduleController getDeliveryScheduleController = Get.put(DeliveryScheduleController());
 
 /// Build QR View
-Future<void> buildQrView({required BuildContext context, required String qrCodeType})async {
+Future<void> buildQrView({
+  required BuildContext context, 
+  required String qrCodeType,
+  required bool isBulkScan,
+  required String bulkScanDate,
+  required String driverId,
+  required bool isRouteStart,
+  required String nursingHomeId,
+  required String parcelBoxId,
+  required String routeId,
+  required String toteId,
+  required List<PmrApiResponse> pmrList,
+  required List<Dd> prescriptionList,
+  })async {
   try{
     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode("#7EC3E6", "Cancel", true, ScanMode.QR);
 
@@ -141,15 +154,15 @@ Future<void> buildQrView({required BuildContext context, required String qrCodeT
       Get.back();
       Get.toNamed(searchPatientScreenRoute,
         arguments: SearchPatientScreen(
-          bulkScanDate: "",
-          driverId: "",
-          driverType: "",
-          isBulkScan: false,
-          isRouteStart: false,
-          nursingHomeId: "",
-          parcelBoxId: "",
-          routeId: "",
-          toteId: "",
+          bulkScanDate: bulkScanDate,
+          driverId: driverId,
+          driverType: driverType,
+          isBulkScan: isBulkScan,
+          isRouteStart: isRouteStart, 
+          nursingHomeId: nursingHomeId,
+          parcelBoxId: parcelBoxId,
+          routeId: routeId,
+          toteId: toteId
         ));
     }else {
       ToastCustom.showToast(msg: "Data not fetching. Plz try again !");

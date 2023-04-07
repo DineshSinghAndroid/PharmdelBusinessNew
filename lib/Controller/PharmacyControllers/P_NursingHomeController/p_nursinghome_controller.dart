@@ -46,11 +46,6 @@ class NursingHomeController extends GetxController {
   final DateFormat formatterShow = DateFormat('dd-MM-yyyy');
 
 
-  @override
-  void onInit() {
-    super.onInit();
-    }
-
   /// On Tap CD 
   void onTapWidgetCD({required int index,required BuildContext context})async{
     PrintLog.printLog("onTapWidgetCD.....$index");
@@ -127,12 +122,9 @@ class NursingHomeController extends GetxController {
       onValue: (value) async {
         if (value != null) {
           selectedDriver = value;
-          await getDriverListController
-              .getDriverList(context: context, routeId: selectedroute?.routeId)
-              .then((value) {                
-            update();
-          }); 
+          await nursingHomeApi(context: context);            
           PrintLog.printLog("Selected Driver: ${selectedDriver?.firstName}");
+          update();         
         }
       },
     );
@@ -172,20 +164,17 @@ class NursingHomeController extends GetxController {
       listType: kSelectTote,
       onValue: (value) async {
         if (value != null) {
-          selectedBox = value;
-          await boxesApi(context: context, nursingId: selectedNursingHome?.id ?? "").then((value) {
-            update();
-          }).then((value) async {
+          selectedBox = value;         
             await nursingHomeOrderApi(
               context: context,
               dateTime: selectDate,
               nursingHomeId: selectedNursingHome?.id ?? "",
-              driverId: getDriverListController.selectedDriver?.driverId ?? "",
-              routeId: getRouteListController.selectedroute?.routeId ?? "",
+              driverId: selectedDriver?.driverId ?? "",
+              routeId: selectedroute?.routeId ?? "",
               toteBoxId: selectedBox?.id ?? "",
             );
-          });
           PrintLog.printLog("Selected Tote: ${selectedBox?.boxName}");
+          update();
         }
       },
     );
@@ -201,7 +190,7 @@ class NursingHomeController extends GetxController {
     } else if (selectedBox == null) {
       ToastCustom.showToast(msg: kPlsSlctTote);
     } else {      
-      Get.toNamed(searchPatientScreenRoute,
+      Get.toNamed(scanPrescriptionScreenRoute,
       arguments: ScanPrescriptionScreen(
         isAssignSelf: true,
         bulkScanDate: selectedDate,
@@ -209,8 +198,8 @@ class NursingHomeController extends GetxController {
         driverId: selectedDriver?.driverId ?? "",
         toteId: selectedBox?.id ?? "",
         nursingHomeId: selectedNursingHome?.id ?? "",
-        pmrList: [],
-        prescriptionList: [],
+        pmrList: const [],
+        prescriptionList: const [],
         isBulkScan: true,
         type: '5',
       ));
@@ -465,7 +454,7 @@ class NursingHomeController extends GetxController {
     String url = WebApiConstant.GET_PHARMACY_DELIVERY_LIST;
 
     await apiCtrl.getNursingHomeOrderApi(context: context,url: url,dictParameter: dictparm,token: authToken).then((result) async {
-      if (result != null) {
+      if (result != null) {        
         if (result.status != 'false') {
           try {
             if (result.status == 'true') {

@@ -5,7 +5,6 @@ import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.d
 import '../../Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
-import '../../PHARMACY/P_Views/P_DeliveryScheduleManual/p_delivery_schedule_manual.dart';
 
 class SearchPatientScreen extends StatefulWidget {
   bool? isBulkScan;
@@ -127,7 +126,7 @@ Widget build(BuildContext context,) {
 
                 ///Patient List
                 controller.patientData != null && controller.patientData!.isNotEmpty && searchTextCtrl.text.toString().trim().length > 2 ?
-                ListView.builder(                  
+                ListView.builder(
                       itemCount: controller.patientData?.length ?? 0,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -140,14 +139,18 @@ Widget build(BuildContext context,) {
                         lastName:  controller.patientData?[index].lastName ?? "",
                         address:  controller.patientData?[index].address1 ?? "",
                         dob: controller.patientData?[index].dob ?? "",
-                        onTap: (){                          
-                          controller.onTileClicked(index: index, context: context).then((value) {
+                        onTap: (){
+                          if(widget.isBulkScan == false){
+                            controller.onTileClicked(index: index, context: context).then((value) {
                             if(controller.isSuccess == true){
                               Get.toNamed(deliveryScheduleManualScreenRoute);
                             }
                           });
+                          } else{
+                            Navigator.of(context).pop(controller.patientData?[index]);
+                          }
                         },
-                      );  
+                      );
                       }
                        ) : const SizedBox.shrink()
               ]))),

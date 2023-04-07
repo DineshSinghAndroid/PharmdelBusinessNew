@@ -37,14 +37,14 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
   Future<void> init() async {
     final DateTime now = DateTime.now();
     selectedDate = formatter.format(now);
-    showDatedDate = formatterShow.format(now);        
-    await nurHmCtrl.nursingHomeApi(context: context);    
+    showDatedDate = formatterShow.format(now);
+    await nurHmCtrl.getRouteListController.getRoutes(context: context);
   }
   
   @override
   void dispose() {
     Get.delete<NursingHomeController>();
-    super.dispose();    
+    super.dispose();
   }
 
   @override
@@ -173,9 +173,9 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                 ) : const SizedBox.shrink(),
               
               buildSizeBox(20.0, 0.0),
-        
+           
               ///Nursing Order Delivery List
-              nurHmCtrl.nursingOrdersData != null && nurHmCtrl.nursingOrdersData!.isNotEmpty ?
+              nurHmCtrl.nursingOrdersData != null && nurHmCtrl.nursingOrdersData!.isNotEmpty ? 
               Expanded(
                 flex: 4,
                 child: ListView.builder(
@@ -183,7 +183,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   shrinkWrap: true,              
                   physics: const ClampingScrollPhysics(),
                   padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, index) {                    
                     return NursingHomeCardWidget(
                       index: index,
                       selectDate: selectedDate,

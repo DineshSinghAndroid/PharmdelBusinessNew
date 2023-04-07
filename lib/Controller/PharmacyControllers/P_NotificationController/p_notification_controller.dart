@@ -16,9 +16,9 @@ class PharmacyNotificationController extends GetxController{
   CreateNotificationData? createNotificationData;
   SaveNotificationApiResponse? saveNotification;
   StaffList? selectedStaff;
-  List<SentNotificationData>? sentNotificationData;
+  List<SentNotificationData> sentNotificationList = [];
   bool? noRecordFound;
-  bool? getNextPage;
+  bool getNextPage = false;
   int pageNo = 1;  
 
   TextEditingController notificationNameController = TextEditingController();
@@ -43,16 +43,7 @@ class PharmacyNotificationController extends GetxController{
     update();
   }
   
-  ///Pagination
-   void pagination({required BuildContext context}) {
-    if (scrollController.position.maxScrollExtent == scrollController.offset) {      
-      if (getNextPage ?? false) {
-        pageNo++;
-        sentNotificationApi(context: context, pageNo: pageNo.toString());
-      }
-    }
-    update();
-  }
+
 
   ///Select Pharmacy Staff
   void onTapSelectStaff(
@@ -147,7 +138,7 @@ class PharmacyNotificationController extends GetxController{
   }
 
   ///Sent Notification Controller
-  Future<SentNotificationApiResponse?> sentNotificationApi({required BuildContext context,required String pageNo}) async {
+  Future<SentNotificationApiResponse?> sentNotificationApi({required BuildContext context,required int pageNo}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -163,25 +154,30 @@ class PharmacyNotificationController extends GetxController{
 
     await apiCtrl.getSentNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
+          if(pageNo == 1){
+        changeNextPageValue(true);
+        sentNotificationList.clear();
+      }
       if(result != null){
         if (result.status != false) {          
           try {            
-            if (result.status == true) {              
-              sentNotificationData = result.sentNotificationData;
-              result.sentNotificationData == null ? changeEmptyValue(true):changeEmptyValue(false);
+            if (result.status == true) {                                         
+              if(pageNo == 1){
+                result.sentNotificationData != null && result.sentNotificationData!.isEmpty ? changeEmptyValue(true):changeEmptyValue(false);
+              }
+              if(result.sentNotificationData != null && result.sentNotificationData!.isNotEmpty){
+                changeNextPageValue(true);
+                sentNotificationList.addAll(result.sentNotificationData!);
+              }else{
+                changeNextPageValue(false);
+              }
               changeLoadingValue(false);
               changeSuccessValue(true);
-              // noRecordFound = false;
-              // getNextPage = true;
-              // if(pageNo == 1) sentNotificationData?.clear();
-              // sentNotificationData?.addAll(result.sentNotificationData!);
 
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog(result.message);
-              // noRecordFound = true;
-              // getNextPage = false;
+              PrintLog.printLog(result.message);           
             }
 
           } catch (_) {
@@ -318,7 +314,10 @@ class PharmacyNotificationController extends GetxController{
     update();
   }
 
-
+  void changeNextPageValue(bool value){
+    getNextPage = value;
+    update();
+  }
   void changeSuccessValue(bool value){
     isSuccess = value;
     update();

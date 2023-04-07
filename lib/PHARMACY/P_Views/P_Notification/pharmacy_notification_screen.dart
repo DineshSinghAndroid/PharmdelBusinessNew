@@ -5,6 +5,7 @@ import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
+import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
@@ -12,6 +13,7 @@ import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart'
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
 import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
+import '../AnimationScreen/animationScreen.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
@@ -26,27 +28,38 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
   PharmacyNotificationController phrNotfCtrl = Get.put(PharmacyNotificationController());
 
   @override
-  void initState() {    
-    init();    
+  void initState() {  
+    phrNotfCtrl.scrollController.addListener(scrollListner);
+    Future.delayed(const Duration(milliseconds: 100),(){
+      init();
+    });
     super.initState();
   }
 
   Future<void> init() async {
-    phrNotfCtrl.scrollController.addListener(() {
-      phrNotfCtrl.pagination(context: context);
-      });
+    phrNotfCtrl.pageNo = 1;
     phrNotfCtrl.isNetworkError = false;
     phrNotfCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
       await phrNotfCtrl.notificationApi(context: context);
-      await phrNotfCtrl.sentNotificationApi(context: context, pageNo: phrNotfCtrl.pageNo.toString());
-    } else {
-      phrNotfCtrl.getNextPage = true;
-      phrNotfCtrl.isNetworkError = true;
-      setState(() {});
+      await phrNotfCtrl.sentNotificationApi(context: context, pageNo: phrNotfCtrl.pageNo);
+    } else {      
+      phrNotfCtrl.isNetworkError = true;      
     }
+    setState(() {});
   }
 
+ void scrollListner() {
+    if(phrNotfCtrl.scrollController.position.maxScrollExtent == phrNotfCtrl.scrollController.offset){
+      PrintLog.printLog("check: ${phrNotfCtrl.getNextPage}");
+      if(phrNotfCtrl.getNextPage){
+        phrNotfCtrl.pageNo++;
+        phrNotfCtrl.sentNotificationApi(context: context, pageNo: phrNotfCtrl.pageNo);
+      }
+    }else if(phrNotfCtrl.scrollController.position.minScrollExtent == phrNotfCtrl.scrollController.offset){
+
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PharmacyNotificationController>(
@@ -141,13 +154,8 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                     child: FloatingActionButton(
                       backgroundColor: AppColors.colorOrange,
                       child: const Icon(Icons.add),
-                      onPressed: (){
-                        Get.toNamed(pharmacyCreateNotificationScreeenRoute)?.then((value) {
-                          if(value == true){                            
-                            controller.sentNotificationApi(context: context, pageNo: '1');
-                            controller.notificationApi(context: context);
-                          }                          
-                        });
+                      onPressed: (){                        
+                        Get.toNamed(pharmacyCreateNotificationScreeenRoute);
                       },
                       ),
                   ),
@@ -156,7 +164,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                   padding: const EdgeInsets.only(top: 8),
                   child: ListView.builder(
                     controller: controller.scrollController,
-                    itemCount: controller.sentNotificationData?.length ?? 0,
+                    itemCount: controller.sentNotificationList?.length ?? 0,
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
@@ -167,17 +175,17 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                           context: context, 
                           builder: (context) {
                             return NotificationInfo(
-                              notificationName: controller.sentNotificationData?[index].name ?? "",
-                              type: controller.sentNotificationData?[index].type ?? "",
-                              userName: controller.sentNotificationData?[index].user ?? "",
-                              message: controller.sentNotificationData?[index].message ?? "",
-                              dateAdded: controller.sentNotificationData?[index].dateAdded ?? "",
+                              notificationName: controller.sentNotificationList?[index].name ?? "",
+                              type: controller.sentNotificationList?[index].type ?? "",
+                              userName: controller.sentNotificationList?[index].user ?? "",
+                              message: controller.sentNotificationList?[index].message ?? "",
+                              dateAdded: controller.sentNotificationList?[index].dateAdded ?? "",
                             );
                           },);
                         },
-                        time: controller.sentNotificationData?[index].dateAdded ?? "",                         
-                        message: controller.sentNotificationData?[index].user ?? "",///UserName
-                        name: controller.sentNotificationData?[index].name ?? "");
+                        time: controller.sentNotificationList?[index].dateAdded ?? "",                         
+                        message: controller.sentNotificationList?[index].user ?? "",///UserName
+                        name: controller.sentNotificationList?[index].name ?? "");
                     },
                   ),
                 ),

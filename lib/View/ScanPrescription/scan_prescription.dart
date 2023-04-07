@@ -70,7 +70,20 @@ String? driverType;
       isStartRoute = false;
       driverType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.driverType);
       // startRouteId = value from shared preferences
-      scanPrescCtrl.buildQrView(context: context, qrCodeType: widget.type ?? "");    
+      scanPrescCtrl.buildQrView(
+        context: context, 
+        qrCodeType: widget.type ?? "",
+        isBulkScan: widget.isBulkScan ?? false,
+        bulkScanDate: widget.bulkScanDate ?? "",
+        driverId: widget.driverId ?? "",
+        isRouteStart: widget.isRouteStart ?? false,
+        nursingHomeId: widget.nursingHomeId ?? "",
+        parcelBoxId: widget.parcelBoxId ?? "",
+        routeId: widget.routeId ?? "",
+        toteId: widget.toteId ?? "",
+        pmrList: widget.pmrList ?? [],
+        prescriptionList: widget.prescriptionList ?? []
+        );    
       scanPrescCtrl.getLocationData(context: context);
     // }        
     if (widget.pharmacyId == null) {
