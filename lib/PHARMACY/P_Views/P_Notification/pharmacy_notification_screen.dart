@@ -13,7 +13,6 @@ import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart'
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
 import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
-import '../AnimationScreen/animationScreen.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
