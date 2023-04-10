@@ -69,6 +69,7 @@ class WidgetCustom{
   }
 
 
+<<<<<<< HEAD
   static PopupMenuItem popUpMenuItems({
     required BuildContext context,
     required bool isCheckedCD,
@@ -174,6 +175,8 @@ class WidgetCustom{
 
 
 
+=======
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
   static Widget pharmacyTopSelectWidget({required String title,required Function() onTap}){
     return InkWell(
       onTap: onTap,
@@ -194,7 +197,11 @@ class WidgetCustom{
                 weight: FontWeight.w400,
               ),
             ),
+<<<<<<< HEAD
             Icon(
+=======
+             Icon(
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
               Icons.arrow_drop_down,
               color: AppColors.blackColor,
             ),
@@ -225,7 +232,11 @@ class WidgetCustom{
                 weight: FontWeight.w400,
               ),
             ),
+<<<<<<< HEAD
             Icon(
+=======
+             Icon(
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
               Icons.arrow_drop_down,
               color: AppColors.blackColor,
             ),
@@ -256,7 +267,11 @@ class WidgetCustom{
                 weight: FontWeight.w500,
               ),
             ),
+<<<<<<< HEAD
             Icon(
+=======
+             Icon(
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
               Icons.arrow_drop_down,
               color: AppColors.blackColor,
             ),

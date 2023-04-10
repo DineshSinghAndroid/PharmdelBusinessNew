@@ -86,7 +86,11 @@ Widget build(BuildContext context,) {
                           fillColor: Colors.transparent,
                           border: InputBorder.none,
                           hintStyle: const TextStyle(color: Colors.black38),
+<<<<<<< HEAD
                           hintText: kSearchMedicine),
+=======
+                          hintText: kSearchMeds),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                           onChanged: (value) async {
                               if(value.toString().trim().isNotEmpty && value.length > 1){                                
                                 await controller.medicineListApi(context: context, searchValue: value.toString().trim());                                
@@ -113,6 +117,10 @@ Widget build(BuildContext context,) {
                     ),
                   ),
                 ),
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                 ///Medicine List
                 controller.medicineData?.medicineListData != null && controller.medicineData!.medicineListData!.isNotEmpty && searchTextCtrl.text.toString().trim().length > 2 ?
                 ListView.builder(

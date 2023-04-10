@@ -12,10 +12,9 @@ class CustomerListWidget extends StatelessWidget {
   String? dob;
   String? nhsNumber;
   String? address;
-  int? position = 0;
-  CustomerSelectedListner? selectedListner;
+  VoidCallback? onSelect;
 
-  CustomerListWidget({Key? key,required this.address, required this.customerName, required this.dob, required this.nhsNumber, required this.position, this.selectedListner, required this.userId }) : super(key: key);
+  CustomerListWidget({Key? key,required this.address, required this.customerName, required this.dob, required this.nhsNumber, required this.userId, required this.onSelect}) : super(key: key);
 
   @override
   Widget build(BuildContext context) { 
@@ -74,9 +73,7 @@ class CustomerListWidget extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: MaterialButton(
-                                onPressed: () {                                  
-                                  // selectedListner.isSelected(dataList.patientsList.userId[position], position, dataList.patientsList.alt_address[position]);
-                                },
+                                onPressed: onSelect,
                                 color: AppColors.blueColor,
                                 child: BuildText.buildText(
                                   text: kSelCustomer,

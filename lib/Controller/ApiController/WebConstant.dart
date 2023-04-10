@@ -9,8 +9,13 @@ class WebApiConstant {
 
 
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
+<<<<<<< HEAD
   static const String BASE_URL                               =  BASE_URL_DOMAIN +"/api/Delivery/v24/";
   static const String BASE_URL_PHARMACY                      =  BASE_URL_DOMAIN +"/api/Pharmacy/v24/";
+=======
+  static const String BASE_URL                               =  "$BASE_URL_DOMAIN/api/Delivery/v22/";
+  static const String BASE_URL_PHARMACY                      =  "$BASE_URL_DOMAIN/api/Pharmacy/v22/";
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
   /// Public
   static const String API_URL_INTRO                          =  "${BASE_URL}intro";
@@ -73,7 +78,11 @@ class WebApiConstant {
   static const String GET_PHARMACY_DELIVERY_MASTER_URL       =  "${BASE_URL_PHARMACY}getDeliveryMasterData";
   static const String GET_PHARMACY_CREATE_ORDER_URL          =  "${BASE_URL_PHARMACY}createOrder";
   static const String GET_PHARMACY_MEDICINE_LIST             =  "${BASE_URL_PHARMACY}GetMedicineList";
+<<<<<<< HEAD
   static const String GET_PHARMACY_PROCESS_SCAN_URL                  =  "${BASE_URL_PHARMACY}getBoxesByNursingHome";
+=======
+  static const String GET_PHARMACY_PROCESS_SCAN_URL          =  "${BASE_URL_PHARMACY}processScan";
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 
 }

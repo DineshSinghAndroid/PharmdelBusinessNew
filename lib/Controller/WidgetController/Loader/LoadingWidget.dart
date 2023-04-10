@@ -5,8 +5,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 class LoadingWidget extends StatelessWidget {
-  double height = 60.00;
-  double width = 60.00;
+  double height = 50.00;
+  double width = 50.00;
 
   LoadingWidget({Key? key,}) : super(key: key);
 
@@ -14,7 +14,10 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
      height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return SizedBox(
+    return Container(  
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10)
+      ),    
       height: height,
       width: width,
       child: Column(
@@ -31,6 +34,7 @@ class LoadingWidget extends StatelessWidget {
                 color: Colors.white
               ),
               child: Center(
+<<<<<<< HEAD
                   child: Image.asset(strGIF_LOADING)
               )
           ),
@@ -63,6 +67,13 @@ class LoadingWidget2 extends StatelessWidget {
                 size: 42.0,lineWidth: 5,
               ),
           ),
+=======
+                  child: SizedBox(                   
+                      height: 150.0,
+                      width: 300.0,
+                      child: Image.asset(strGIF_LOADING),
+                      ))),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
         ],
       ),
     );

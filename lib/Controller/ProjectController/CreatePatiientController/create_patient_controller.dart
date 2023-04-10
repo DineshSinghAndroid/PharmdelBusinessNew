@@ -50,6 +50,89 @@ class CreatePatientController extends GetxController {
   TextEditingController townCtrl = TextEditingController();
   TextEditingController postCodeCtrl = TextEditingController();
 
+<<<<<<< HEAD
+=======
+  // PmrModel model;
+  // int endRouteId;
+  // int startRouteId;
+  double? startLat;
+  double? startLng;
+  bool isStartRoute = false;
+
+  final List<SurNameTitle> selectTitle = [
+    SurNameTitle(showTitle: "Mr",sendTitle: "M"),
+    SurNameTitle(showTitle: "Miss",sendTitle: "S"),
+    SurNameTitle(showTitle: "Mrs",sendTitle: "F"),
+    SurNameTitle(showTitle: "Ms",sendTitle: "Q"),
+    SurNameTitle(showTitle: "Captain",sendTitle: "C"),
+    SurNameTitle(showTitle: "Dr",sendTitle: "D"),
+    SurNameTitle(showTitle: "Prof",sendTitle: "P"),
+    SurNameTitle(showTitle: "Rev",sendTitle: "R"),
+    SurNameTitle(showTitle: "Mx",sendTitle: "X"),
+   
+  ];
+  SurNameTitle? selectedTitleValue;
+
+  final List<SurNameTitle> selectGender = [
+    SurNameTitle(showTitle: "Male",sendTitle: "M"),
+    SurNameTitle(showTitle: "Female",sendTitle: "F"),
+    SurNameTitle(showTitle: "Other",sendTitle: "M"),
+  ];
+
+  SurNameTitle? selectedGenderValue;
+
+  void getLocationData(context) async {
+    CheckPermission.checkLocationPermission(context).then((value) async {
+      if (value == true) {
+        var position = await GeolocatorPlatform.instance.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+        startLat = position.latitude;
+        startLng = position.longitude;
+      }
+    });
+  }
+
+  // OrderInfoResponse orderInfo;
+  // FlutterGooglePlacesSdk googlePlace;
+  // List<AutocompletePrediction> prediction = [];
+  // List<Dd> prescriptionList = List();
+  // List<PmrModel> pmrList = List();
+  // String titleValue;
+  // String genderValue;
+
+  btnPress(BuildContext context) async {
+    
+    if(
+      selectedTitleValue != null &&
+      selectedGenderValue != null &&
+      nameCtrl.text.isNotEmpty &&
+      lastNameCtrl.text.isNotEmpty &&
+      addressLine1Ctrl.text.isNotEmpty &&
+      townCtrl.text.isNotEmpty &&
+      postCodeCtrl.text.isNotEmpty
+    ){
+      await createPatient(context: context);
+    } else {
+      ToastCustom.showToast(msg: "Please Complete All Required Fields");
+    }
+
+    
+    // if (selectedTitleValue != null &&
+    //     selectedGenderValue != null &&
+    //     nameCtrl.text.isNotEmpty &&
+    //     lastNameCtrl.text.isNotEmpty &&
+    //     addressLine1Ctrl.text.isNotEmpty &&
+    //     townCtrl.text.isNotEmpty &&
+    //     postCodeCtrl.text.isNotEmpty) {
+    //  await createPatient(context: context);
+    // } else {
+    //   ToastCustom.showToast(msg: "Please Complete All Required Fields");
+    // }
+  }
+
+  CreatePatientModelResponse? createPatientModelResponse;
+
+  Future<CreatePatientModelResponse?> createPatient({context,}) async {
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
   bool isFirstName = false;
   bool isLastName = false;
@@ -58,8 +141,37 @@ class CreatePatientController extends GetxController {
   bool isTownName = false;
   bool isPostCode = false;
 
+<<<<<<< HEAD
   bool isHideStartTypingCTRL = false;
   bool isStartTyping = false;
+=======
+    Map<String, dynamic> dictparm = {
+      "title": selectedTitleValue?.sendTitle,
+      "first_name": nameCtrl.text.toString().trim(),
+      "last_name": lastNameCtrl.text.toString().trim(),
+      "address_line_1": addressLine1Ctrl.text.toString().trim(),
+      "address_line_2": addressLine2Ctrl.text.toString().trim(),
+      "town_name": townCtrl.text.toString().trim(),
+      "post_code": postCodeCtrl.text.toString().trim(),
+      "mobile_no": mobileCtrl.text.toString().trim(),
+      "email_id": emailCtrl.text.toString().trim(),
+      "nhs_number": nhsNoCtrl.text.toString().trim(),
+      "middle_name": middleNameCtrl.text.toString().trim(),
+      "country_id": "",
+      "gender": selectedGenderValue?.sendTitle,
+    };
+    print("test ${dictparm}");
+    String url = WebApiConstant.CREATE_PATIENT_URL;
+    await apiCtrl.createPatientApi(context: context, url: url,
+        dictParameter: dictparm, token: authToken).then((_result) {
+      if (_result != null) {
+        if (_result.error != true) {
+          ToastCustom.showToast(msg: _result.message ?? "");
+          try {
+            if (_result.error == false) {
+              createPatientModelResponse = _result;
+              ToastCustom.showToast(msg: _result.message ?? "");
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
   double spaceBetween = 10;
 
@@ -371,9 +483,17 @@ class CreatePatientController extends GetxController {
 }
 
 class SurNameTitle{
+<<<<<<< HEAD
   String showTitle;
   String sendTitle;
 
   SurNameTitle({required this.sendTitle,required this.showTitle});
 
+=======
+   String showTitle;
+   String sendTitle;
+
+   SurNameTitle({required this.sendTitle,required this.showTitle});
+
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 }

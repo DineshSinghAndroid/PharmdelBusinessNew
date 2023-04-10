@@ -71,7 +71,11 @@ bool isShowDoctorDetails = false;
         return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+<<<<<<< HEAD
   title: BuildText.buildText(text: kDeliverySchedule,size: 18),
+=======
+  title: BuildText.buildText(text: kDelSchd,size: 18),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
   backgroundColor: AppColors.whiteColor,
   leading: InkWell(
     onTap: () => Get.back(),
@@ -208,7 +212,11 @@ bool isShowDoctorDetails = false;
               ///Select Service
               Flexible(
                 child: WidgetCustom.selectDeliveryScheduleWidget(
+<<<<<<< HEAD
                 title: controller.selectedService != null ? controller.selectedService?.name.toString() ?? "" : kSelectService,
+=======
+                title: controller.selectedService != null ? controller.selectedService?.name.toString() ?? "" : kSelService,
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                 onTap:()async{
                   controller.onTapSelectService(context: context, controller: controller);
                 },),
@@ -381,7 +389,11 @@ bool isShowDoctorDetails = false;
               children: [
                 Flexible(
                 child: WidgetCustom.selectDeliveryScheduleWidget(
+<<<<<<< HEAD
                 title: controller.selectedDeliveryCharge != null ? controller.selectedDeliveryCharge?.name.toString() ?? "" : kSelectDeliveryCharge,
+=======
+                title: controller.selectedDeliveryCharge != null ? controller.selectedDeliveryCharge?.name.toString() ?? "" : kSelDelCharge,
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                 onTap:()async{
                   controller.onTapSeletedDeliveryCharge(context: context, controller: controller);
                 },),),
@@ -478,7 +490,11 @@ bool isShowDoctorDetails = false;
              buildSizeBox(10.0, 0.0),
                   
             /// Existing Delivery Note
+<<<<<<< HEAD
             BuildText.buildText(text: kExistingDeliveryNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
+=======
+            BuildText.buildText(text: kExistingDelNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
             buildSizeBox(5.0, 0.0),
             InkWell(
               onTap: (){controller.subExpiryPopUp(context);},
@@ -489,7 +505,11 @@ bool isShowDoctorDetails = false;
                   color: AppColors.whiteColor,
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(color: AppColors.greyColor)),
+<<<<<<< HEAD
                 child: BuildText.buildText(text: kExistingDeliveryNote),
+=======
+                child: BuildText.buildText(text: kExistingDelNote),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
               ),
             ),
             buildSizeBox(10.0, 0.0),

@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+<<<<<<< HEAD
 
 import '../../../Model/ProcessScan/process_scan.dart';
+=======
+import '../../../Model/PharmacyModels/P_ProcessScanApiResponse/p_processScanResponse.dart';
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 class PharmacyProcessScanController extends GetxController {
 

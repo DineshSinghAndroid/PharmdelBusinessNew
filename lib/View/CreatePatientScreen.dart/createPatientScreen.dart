@@ -84,6 +84,7 @@ class _DriverCreatePatientScreenState extends State<DriverCreatePatientScreen> {
                                       fontSize: 14,
                                     ),
                                   ),
+<<<<<<< HEAD
                                 )).toList(),
                                 value: controller.selectedTitleValue,
                                 onChanged: (value) {
@@ -97,6 +98,29 @@ class _DriverCreatePatientScreenState extends State<DriverCreatePatientScreen> {
                                         borderRadius: BorderRadius.circular(30),
                                         border: Border.all(color: AppColors.greyColor)
                                     )
+=======
+                                  items: _controller.selectTitle
+                                      .map((item) => DropdownMenuItem<SurNameTitle>(
+                                            value: item,
+                                            child: Text(
+                                              item.showTitle,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: _controller.selectedTitleValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _controller.selectedTitleValue = value;
+                                    });
+                                  },
+                                  buttonStyleData: ButtonStyleData(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(20)), border: Border.all(color: Colors.black))),
+                                  menuItemStyleData: const MenuItemStyleData(),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                                 ),
                                 menuItemStyleData: const MenuItemStyleData(),
                               ),
@@ -124,6 +148,7 @@ class _DriverCreatePatientScreenState extends State<DriverCreatePatientScreen> {
                                       fontSize: 14,
                                     ),
                                   ),
+<<<<<<< HEAD
                                 ))
                                     .toList(),
                                 value: controller.selectedGenderValue,
@@ -138,6 +163,31 @@ class _DriverCreatePatientScreenState extends State<DriverCreatePatientScreen> {
                                         borderRadius: BorderRadius.circular(30),
                                         border: Border.all(color: AppColors.greyColor)
                                     )
+=======
+                                  items: _controller.selectGender
+                                      .map((item) => DropdownMenuItem<SurNameTitle>(
+                                            value: item,
+                                            child: Text(
+                                              item.showTitle,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: _controller.selectedGenderValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _controller.selectedGenderValue = value;
+                                    });
+                                  },
+                                  buttonStyleData: ButtonStyleData(
+
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+
+                                      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(20)), border: Border.all(color: Colors.black))),
+                                  menuItemStyleData: const MenuItemStyleData(),
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                                 ),
                                 menuItemStyleData: const MenuItemStyleData(),
                               ),

@@ -1,19 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
+import 'package:location/location.dart';
+import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Model/GetPatient/getPatientApiResponse.dart';
+<<<<<<< HEAD
 import '../../../main.dart';
 import '../../PharmacyControllers/P_ProcessScanController/p_processScanController.dart';
 import '../../WidgetController/Toast/ToastCustom.dart';
+=======
+import '../../PharmacyControllers/P_ProcessScanController/p_processScanController.dart';
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 
 class GetPatientContoller extends GetxController{
 
   ApiController apiCtrl = ApiController();
   List<PatientData>? patientData;
+  Location location =  Location();
 
   bool isLoading = false;
   bool isError = false;
@@ -22,6 +27,26 @@ class GetPatientContoller extends GetxController{
   bool isSuccess = false;
   PharmacyProcessScanController getProcessScanController = Get.put(PharmacyProcessScanController());
 
+
+  ///OnTap Patient
+   Future<void> onTileClicked({required int index, required BuildContext context}) async{   
+    if (patientData?[index].lastOrderId != null) {      
+      PrintLog.printLog("Last order id is ${patientData?[index].lastOrderId}");
+      String name = "";
+      if (patientData?[index].firstName != null) name = "${patientData?[index].firstName.toString()} ";
+      if (patientData?[index].middleName != null) name = "$name${patientData?[index].middleName.toString()} ";
+      if (patientData?[index].lastName != null) name = "$name${patientData?[index].lastName.toString()} ";
+      getProcessScanController.processScanApi(context: context, patientId: patientData?[index].customerId ?? "");      
+    } else {      
+      ToastCustom.showToast(msg: 'Order id not found');
+    }
+    //}
+  }
+
+  ///Process Scan Controller
+  PharmacyProcessScanController getProcessScanController = Get.put(PharmacyProcessScanController());
+
+  ///Get Patient List Controller
   Future<GetPatientApiResposne?> getPatientApi({required BuildContext context,required String firstName}) async {
 
     changeEmptyValue(false);

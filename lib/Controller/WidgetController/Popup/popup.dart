@@ -262,6 +262,7 @@ class PopupCustom{
         });
   }
 
+<<<<<<< HEAD
   static showNoInternetPopUpWhenOffline({required BuildContext context,required Function(dynamic) onValue,}){
     simpleTruckDialogBox(
         context: context,
@@ -289,6 +290,9 @@ class PopupCustom{
   }
 
   static orderSuccess({required BuildContext context}){
+=======
+ static orderSuccess({required BuildContext context}){
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -299,6 +303,7 @@ class PopupCustom{
 
   static exitPopUp({required BuildContext context}){
     return AlertDialog(
+<<<<<<< HEAD
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: BuildText.buildText(text: "Warning"),
       content: BuildText.buildText(text:"Are you sure you want to cancel all prescriptions!"),
@@ -316,15 +321,41 @@ class PopupCustom{
   }
 
   static userNotExistDialog({required BuildContext context,required String title,required String msg,required VoidCallback onTapNo,required VoidCallback onTapCreate}){
+=======
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: BuildText.buildText(text: "Warning"),
+            content: BuildText.buildText(text:"Are you sure you want to cancel all prescriptions!"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: BuildText.buildText(text:kNo),
+              ),
+             TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: BuildText.buildText(text:kYes),
+              ),
+            ],
+          );
+  }
+
+   static userNotExistDialog({required BuildContext context,required String title,required String msg,required VoidCallback onTapNo,required VoidCallback onTapCreate}){
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return UserNotExistDialog(
+<<<<<<< HEAD
               title: title,
               msg: msg,
               onTapNo: onTapNo,
               onTapCreate: onTapCreate);
+=======
+            title: title, 
+            msg: msg, 
+            onTapNo: onTapNo, 
+            onTapCreate: onTapCreate);
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
         });
   }
 
@@ -332,7 +363,10 @@ class PopupCustom{
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 class ForgotPassword extends StatelessWidget {
   LoginController ctrl;
   ForgotPassword({Key? key,required this.ctrl,}) : super(key: key);
@@ -497,6 +531,7 @@ class EmailSent extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD
 
 class ChooseVehiclePopUp extends StatefulWidget {
   LoginController ctrl;
@@ -752,6 +787,8 @@ class _ChooseVehiclePopUpState extends State<ChooseVehiclePopUp> {
   }
 }
 
+=======
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 class UserNotExistDialog extends StatelessWidget {
   String? title;
   String? msg;
@@ -763,6 +800,7 @@ class UserNotExistDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+<<<<<<< HEAD
       onWillPop: () async => false,
       child: AlertDialog(
         title: BuildText.buildText(text: title ?? ""),
@@ -797,6 +835,42 @@ class UserNotExistDialog extends StatelessWidget {
         ],
       ),
     );
+=======
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: BuildText.buildText(text: title ?? ""),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children:[
+                  BuildText.buildText(text: msg ?? ""),
+                ],
+              ),
+            ),
+            actions: [
+              InkWell(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: BuildText.buildText(
+                    text: 'No',
+                    color: AppColors.blueColor,
+                  ),
+                ),
+                onTap: onTapNo
+              ),
+              InkWell(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: BuildText.buildText(
+                    text: 'CREATE',
+                    color: AppColors.blueColor,                    
+                  ),
+                ),
+                onTap: onTapCreate,
+              ),
+            ],
+          ),
+        );
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
   }
 }

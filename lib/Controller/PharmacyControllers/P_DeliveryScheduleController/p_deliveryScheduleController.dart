@@ -7,7 +7,11 @@ import '../../../Model/Notification/NotifficationResponse.dart';
 import '../../../Model/ParcelBox/parcel_box_response.dart';
 import '../../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
+<<<<<<< HEAD
 import '../../../Model/PharmacyModels/P_MedicineListResponse/p_medicineListResponse.dart';
+=======
+import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 import '../../../Model/PharmacyModels/P_ProcessScanApiResponse/p_processScanResponse.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
 import '../../WidgetController/Popup/popup.dart';
@@ -181,7 +185,11 @@ void onTapSeletedDeliveryCharge(
     BottomSheetCustom.pDeliveryScheduleBottomSheet(
       controller: controller,
       context: context,
+<<<<<<< HEAD
       listType: kSelectDeliveryCharge,
+=======
+      listType: kSelDelCharge,
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
       selectedID: selectedDeliveryCharge?.id,
       onValue: (value) async {
         if (value != null) {
@@ -394,6 +402,7 @@ Future<void> onTapBookDelivery({required BuildContext context})async{
   else{
     await createOrderApi(
     context: context, 
+<<<<<<< HEAD
     firstName: getProcessScanController.processScanData?.orderInfo?.firstName?.s0 ?? "",
     middleName: getProcessScanController.processScanData?.orderInfo?.middleName?.n0 ?? "",
     lastName: getProcessScanController.processScanData?.orderInfo?.lastName?.s0 ?? "",
@@ -403,6 +412,17 @@ Future<void> onTapBookDelivery({required BuildContext context})async{
     nhsNumber: getProcessScanController.processScanData?.orderInfo?.nhsNumber?.i0 ?? "",
     mobileNumber: getProcessScanController.processScanData?.orderInfo?.mobileNo ?? "", 
     addressLine1: getProcessScanController.processScanData?.orderInfo?.address?.s0 ?? "").then((value) {
+=======
+    firstName: getProcessScanController.processScanData?.orderInfo?.firstName ?? "",
+    middleName: getProcessScanController.processScanData?.orderInfo?.middleName ?? "", 
+    lastName: getProcessScanController.processScanData?.orderInfo?.lastName ?? "", 
+    postCode: getProcessScanController.processScanData?.orderInfo?.postCode ?? "", 
+    dob: getProcessScanController.processScanData?.orderInfo?.dob ?? "", 
+    emailId: getProcessScanController.processScanData?.orderInfo?.email ?? "", 
+    nhsNumber: getProcessScanController.processScanData?.orderInfo?.nhsNumber ?? "", 
+    mobileNumber: getProcessScanController.processScanData?.orderInfo?.mobileNo ?? "", 
+    addressLine1: getProcessScanController.processScanData?.orderInfo?.address ?? "").then((value) {
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
       if(isSuccess ==  true){
       Navigator.of(context).popUntil((route) => route.isFirst);
       PopupCustom.orderSuccess(context: context);
@@ -428,12 +448,20 @@ Future<bool> onWillPop(context) async {
 
 ///onTap Gallery
 onTapGallery({required BuildContext context,}){
+<<<<<<< HEAD
   imgPickerController.getImage(source: "Gallery", context: context, type: "documentImage");
+=======
+  imgPickerController.getImage("Gallery", context, "documentImage");
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
   }
 
 ///onTap Camera
 onTapCamera({required BuildContext context}){
+<<<<<<< HEAD
   imgPickerController.getImage(source: "Camera", context: context, type: "documentImage");
+=======
+  imgPickerController.getImage("Camera", context, "documentImage");
+>>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
   }
 
 ///Subscription Expiry PopUp
