@@ -4,7 +4,7 @@ import '../../Helper/Colors/custom_color.dart';
 
 class BtnCustom{
 
-  static btnSmall({required String title,Color? titleColor,required Function() onPressed}){
+  static btnSmall({required String title,Color? titleColor,required Function() onPressed,double? fontSize}){
     return SizedBox(
         height: 35.0,
         width: 110.0,
@@ -15,7 +15,7 @@ class BtnCustom{
           ),
           onPressed:onPressed,
           child: BuildText.buildText(
-              text: title,style: TextStyle(color: titleColor ?? AppColors.greyColor,fontWeight:FontWeight.bold,fontSize: 13.0 )
+              text: title,style: TextStyle(color: titleColor ?? AppColors.greyColor,fontWeight:FontWeight.bold,fontSize: fontSize ?? 13.0 )
           ),
         ));
   }

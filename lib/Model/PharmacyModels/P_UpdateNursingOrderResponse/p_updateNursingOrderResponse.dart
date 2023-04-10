@@ -8,10 +8,10 @@ class UpdateNursingOrderApiResposne {
       {this.error, this.authenticated, this.message, this.data});
 
   UpdateNursingOrderApiResposne.fromJson(Map<String, dynamic> json) {
-    error = json['error'];
+    error = json['error'] != null && json['error'].toString() == "true" ? true:false;
     authenticated = json['authenticated'];
-    message = json['message'];
-    data = json['data'];
+    message = json['message'] != null ? json['message'].toString():null;
+    data = json['data'] != null ? json['data'].toString():null;
   }
 
   Map<String, dynamic> toJson() {

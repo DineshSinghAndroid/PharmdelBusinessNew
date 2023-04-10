@@ -67,4 +67,202 @@ class WidgetCustom{
       ),
     );
   }
+
+
+  static PopupMenuItem popUpMenuItems({
+    required BuildContext context,
+    required bool isCheckedCD,
+    required bool isCheckedFridge,
+  }){
+    return PopupMenuItem(
+        enabled: true,
+        height: 30.0,
+        onTap: () {},
+        child: StatefulBuilder(
+          builder: ((context, setstat) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop("cd");
+                  },
+                  child: Container(
+                    color: AppColors.redColor,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          activeColor: AppColors.colorOrange,
+                          visualDensity: const VisualDensity(horizontal: -4,vertical: -4),
+                          value: isCheckedCD,
+                          onChanged: (newValue) {
+                            Navigator.of(context).pop("cd");
+                          },
+                        ),
+                        BuildText.buildText(
+                            text: 'C. D.',
+                            color: AppColors.whiteColor),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  margin: const EdgeInsets.only(left: 4.0, right: 4.0),
+                  height: 25,
+                  decoration: BoxDecoration(border: Border.all(color: Colors.black)),),
+
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop("fridge");
+                  },
+                  child: Container(
+                    color: AppColors.blueColor,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          activeColor: AppColors.colorOrange,
+                          visualDensity: const VisualDensity( horizontal: -4,vertical: -4),
+                          value: isCheckedFridge,
+                          onChanged: (newValue) {
+                            Navigator.of(context).pop("fridge");
+                          },
+                        ),
+                        Padding(
+                          padding:const EdgeInsets.only(right: 12.0),
+                          child: Image.asset(
+                            strIMG_Fridge,
+                            height: 21,
+                            color: AppColors.whiteColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  margin: const EdgeInsets.only(
+                      left: 4.0, right: 4.0),
+                  height: 25,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.black)),
+                ),
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop("cancel");
+                  },
+                  child: Row(
+                    mainAxisSize:MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.cancel_outlined,
+                      ),
+                      buildSizeBox(0.0, 5.0),
+                      BuildText.buildText(text: kCancel)
+                    ],
+                  ),
+                )
+              ],
+            );
+          }),
+        )
+    );
+  }
+
+
+
+  static Widget pharmacyTopSelectWidget({required String title,required Function() onTap}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: AppColors.whiteColor),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: BuildText.buildText(
+                text: title,
+                size: 14,
+                color: AppColors.blackColor,
+                weight: FontWeight.w400,
+              ),
+            ),
+            Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.blackColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget pharmacySelectStaffWidget({required String title,required Function() onTap}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: AppColors.greyColor),
+            color: AppColors.whiteColor),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: BuildText.buildText(
+                text: title,
+                size: 14,
+                color: AppColors.greyColor,
+                weight: FontWeight.w400,
+              ),
+            ),
+            Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.blackColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget selectDeliveryScheduleWidget({required String title,required Function() onTap}){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 10, bottom: 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: AppColors.greyColor),
+            color: AppColors.whiteColor),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: BuildText.buildText(
+                text: title,
+                size: 14,
+                color: AppColors.greenDarkColor,
+                weight: FontWeight.w500,
+              ),
+            ),
+            Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.blackColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

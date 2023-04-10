@@ -4,17 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import 'package:pharmdel/Controller/Helper/Permission/PermissionHandler.dart';
 import 'package:pharmdel/Controller/Helper/Shared%20Preferences/SharedPreferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'package:pharmdel/Controller/WidgetController/Popup/popup.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/DriverProfile/profile_driver_response.dart';
 import '../../../Model/Enum/enum.dart';
+import '../../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Helper/Camera/CameraScreen.dart';
-import '../../WidgetController/Loader/LoadingScreen.dart';
+import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
+import '../../RouteController/RouteNames.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
+import '../../WidgetController/StringDefine/StringDefine.dart';
+import '../DriverDashboard/driver_dashboard_ctrl.dart';
+import '../LoginController/login_controller.dart';
 
 
 
@@ -29,15 +38,22 @@ class DriverProfileController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  bool isLoadApi = false;
+  bool isAvlInternet = false;
 
-  String driverType = "";
+
+  LoginController loginCTRL = Get.put(LoginController());
+  DriverDashboardCTRL dashCTRL = Get.put(DriverDashboardCTRL());
+
+  DriverProfileApiResponse? driverProfileData;
   String versionCode = "";
+  String showWages = "";
+  String endMile = "";
+  String startMile = "";
+
   bool onBreak = false;
 
 
 
-  DriverProfileApiResponse? driverProfileData;
 
 
 
@@ -48,16 +64,10 @@ class DriverProfileController extends GetxController{
   }
 
   Future<void> getData()async{
-    driverType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.driverType) ?? "";
-    versionCode = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.appVersion) ?? "";
-    update();
+    await driverProfileApi();
   }
 
-
-  double lat = 0.0;
-  double lng = 0.0;
-
-  Future<DriverProfileApiResponse?> driverProfileApi({required BuildContext context,}) async {
+  Future<DriverProfileApiResponse?> driverProfileApi() async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -66,19 +76,30 @@ class DriverProfileController extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-    "":""
+      "":""
     };
 
     String url = WebApiConstant.GET_DRIVER_PROFILE_URL;
 
-    await apiCtrl.getDriverProfileApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.getDriverProfileApi(url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
         if (result.status != "false") {
           try {
             if (result.status == "true") {
               driverProfileData = result;
-              isLoadApi = true;
+              versionCode = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.appVersion) ?? "";
+              showWages = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.showWages) ?? "";
+              startMile = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.startMiles) ?? "";
+              endMile = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.endMiles) ?? "";
+              onBreak = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.lunchBreakStatus).toString().toLowerCase() == "true" ? true:false;
+
+              if(onBreak == true){
+                Future.delayed(
+                  const Duration(seconds: 1),
+                      () => Get.toNamed(lunchBreakScreenRoute),
+                );
+              }
               changeLoadingValue(false);
               changeSuccessValue(true);
 
@@ -109,302 +130,336 @@ class DriverProfileController extends GetxController{
     update();
   }
 
+  Future<void> onTapEnterMiles()async{
 
+    PrintLog.printLog(
+        "ShowWages:${showWages.toString()}"
+        "\nStartMile:$startMile"
+        "\nEndMile:$endMile"
+    );
 
+    if (showWages.toString() == "1"  && (startMile == "" || startMile == "0" || startMile.isEmpty)) {
 
-  void showStartMilesDialog(context) async {
+        if(loginCTRL.vehicleListData != null && loginCTRL.vehicleListData!.isNotEmpty){
+          loginCTRL.selectedVehicleData = null;
+          loginCTRL.selectVehiclePopUp(context: Get.overlayContext!,ctrl: loginCTRL).then((value) {
+            loginCTRL.imagePicker?.speedometerImage = null;
+          });
+        }else{
+          changeLoadingValue(true);
+          loginCTRL.vehicleListApi(context: Get.overlayContext!).then((value) {
+            changeLoadingValue(false);
+            if(loginCTRL.vehicleListData != null && loginCTRL.vehicleListData!.isNotEmpty){
+              loginCTRL.selectedVehicleData = null;
+              loginCTRL.selectVehiclePopUp(context: Get.overlayContext!,ctrl: loginCTRL).then((value) {
+                loginCTRL.imagePicker?.speedometerImage = null;
+              });
+            }
+          });
+        }
+
+    } else if (showWages.toString() == "1" && (endMile == "" || endMile == "0" || endMile.isEmpty)) {
+      showStartMilesDialog(context: Get.overlayContext!);
+    } else {
+      PopupCustom.simpleTruckDialogBox(
+        context: Get.overlayContext!,
+          title: kAlert,
+          subTitle: kYouHaveEnteredStartAndEndMiles,
+          btnActionTitle: kOkay,
+          btnBackTitle: "",
+          onValue: (value){
+
+          },
+      );
+    }
+
+  }
+
+  void showStartMilesDialog({context}) async {
     bool checkStartMiles = false;
     TextEditingController startMilesController = TextEditingController();
     File? image;
     String base64Image='';
+    DriverProfileController ctrl = Get.find();
     showDialog<ConfirmAction>(
         context: context,
-        barrierDismissible: false, // user must tap button for close dialog!
+        barrierDismissible: false,
         builder: (BuildContext context1) {
-          return StatefulBuilder(builder: (context, setStat) {
-            return CustomDialogBox(
-              // img: Image.asset("assets/delivery_truck.png"),
-              descriptionWidget: Column(
-                children: const [
-                  Text(
-                    "Enter miles",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    "&",
-                    style: TextStyle(color: Colors.orangeAccent, fontSize: 17),
-                  ),
-                  Text(
-                    "take speedometer picture",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              button2: TextButton(
-                onPressed: () async {
-                  if (startMilesController.text.toString().toString().isEmpty) {
-                    Fluttertoast.showToast(msg: "Enter Start Miles");
-                  } else if (image == null) {
-                    Fluttertoast.showToast(msg: "Take Speedometer Picture");
-                  } else {
-                    Map<String, dynamic> prams = {
-                      "entry_type": "start",
-                      "start_miles": int.tryParse(
-                          startMilesController.text.toString().trim()),
-                      "end_miles": 0,
-                      "end_miles_image": "",
-                      "lat": "$lat",
-                      "lng": "$lng",
-                      "start_mile_image":
-                      base64Image != null && base64Image.isNotEmpty
-                          ? base64Image
-                          : "",
-                    };
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.setString(AppSharedPreferences.startMiles,
-                        startMilesController.text.toString().trim());
-                    updateStartMiles(context, prams);
-                  }
-                },
-                child: Text("Okay",
-                    style: TextStyle(fontSize: 18.0, color: Colors.black)),
-              ),
-              button1: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "No",
-                  style: TextStyle(fontSize: 18.0, color: Colors.black),
+          return GetBuilder<DriverProfileController>(
+            init: ctrl,
+              builder: (controller) {
+            return LoadScreen(
+              widget: CustomDialogBox(
+                descriptionWidget: Column(
+                  children: [
+                    BuildText.buildText(
+                        text: kEnterMiles,size: 16
+                    ),
+                   BuildText.buildText(
+                        text: "&",size: 17,color: AppColors.colorOrange
+                    ),
+                    BuildText.buildText(
+                        text: kTakeSpdMtrPic,size: 16
+                    ),
+
+                  ],
                 ),
-              ),
-              textField: TextField(
-                controller: startMilesController,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                style: TextStyle(color: Colors.blue),
-                autofocus: false,
-                onChanged: (value) {
-                  setStat(() {});
-                },
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
-                ],
-                decoration: InputDecoration(
-                  labelText: "Please enter start miles",
-                  fillColor: Colors.white,
-                  labelStyle: TextStyle(color: Colors.blue),
-                  filled: true,
-                  errorText: checkStartMiles ? "Enter Start Miles" : null,
-                  contentPadding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: BorderSide(color: Colors.blue),
+                button2: TextButton(
+                  onPressed: () async {
+                    if (startMilesController.text.toString().toString().isEmpty) {
+                      Fluttertoast.showToast(msg: kPleaseEnterStartMiles);
+                    } else if (image == null) {
+                      Fluttertoast.showToast(msg: kTakeSpeedometerPicture);
+                    } else {
+                      changeLoadingValue(true);
+                        Map<String, dynamic> prams = {
+                          "entry_type": "start",
+                          "start_miles": int.tryParse(startMilesController.text.toString().trim()),
+                          "end_miles": 0,
+                          "end_miles_image": "",
+                          "lat": await CheckPermission.getLatitude(Get.overlayContext!),
+                          "lng": await CheckPermission.getLatitude(Get.overlayContext!),
+                          "start_mile_image":
+                          base64Image != null && base64Image.isNotEmpty
+                              ? base64Image
+                              : "",
+                        };
+                       await  loginCTRL.updateVehicleMilesApi(
+                            context: context,
+                            startMiles: startMilesController.text.toString().trim(),
+                            lat: await CheckPermission.getLatitude(Get.overlayContext!) ?? "",
+                            lng: await CheckPermission.getLatitude(Get.overlayContext!) ?? "",
+                            vehicleID: dashCTRL.selectedVehicleData?.id ?? "0",
+                            startMileImage: base64Image != null && base64Image.isNotEmpty
+                                ? base64Image : "",
+                        ).then((value){
+                         changeLoadingValue(false);
+                         if(loginCTRL.isSuccess){
+                           AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startMiles, variableValue: startMilesController.text.toString().trim());
+                           Get.back();
+                         }else{
+                           Get.back();
+                         }
+                       });
+
+                    }
+                  },
+                  child: BuildText.buildText(
+                      text: kOkay,size: 18,
                   ),
                 ),
-              ),
-              cameraIcon: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CameraScreen()))
-                              .then((value) async {
-                            if (value != null) {
-                              setStat(() {
-                                image = File(value);
-                              });
-                              final imageData = await image!.readAsBytes();
-                              base64Image = base64Encode(imageData);
-                            }
-                          });
-                        },
-                        child: Container(
-                          height: 75.0,
-                          child: Image.asset("assets/images/speedometer.png"),
-                        ),
-                      ),
-                      if (image != null)
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                      if (image != null)
-                        Container(
-                          width: 70.0,
-                          height: 70.0,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.file(
-                              image!,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            ),
+                button1: TextButton(
+                  onPressed: () {
+                   Get.back();
+                  },
+                  child: BuildText.buildText(
+                    text: kNo,size: 18,
+                  ),
+
+                ),
+                textField: TextField(
+                  controller: startMilesController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  style: const TextStyle(color: Colors.blue),
+                  autofocus: false,
+                  onChanged: (value) {
+                    update();
+                  },
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+                  ],
+                  decoration: InputDecoration(
+                    labelText: "Please enter start miles",
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.blue),
+                    filled: true,
+                    errorText: checkStartMiles ? "Enter Start Miles" : null,
+                    contentPadding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                  ),
+                ),
+                cameraIcon: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const CameraScreen()))
+                                .then((value) async {
+                              if (value != null) {
+                                  image = File(value);
+                                update();
+                                final imageData = await image!.readAsBytes();
+                                base64Image = base64Encode(imageData);
+                              }
+                            });
+                          },
+                          child: SizedBox(
+                            height: 75.0,
+                            child: Image.asset(strImgSpeedometer),
                           ),
                         ),
-                    ],
-                  ),
-                  // if(vehicleList != null && vehicleList.isNotEmpty)
-                  //   Text("Choose Vehicle", style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w500),),
-                  // // Row(
-                  // //   children: [
-                  // //     Checkbox(
-                  // //       value: checkIdCar,
-                  // //       visualDensity: VisualDensity(vertical: -4, horizontal: -4),
-                  // //       onChanged: (value){
-                  // //         checkIdBike = false;
-                  // //         checkIdCar = value;
-                  // //         setStat(() {});setState(() {});
-                  // //       },
-                  // //     ),
-                  // //     Text("Car", style: TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w400),),
-                  // //   ],
-                  // // ),
-                  // // if(checkIdCar && vehicleList != null && vehicleList.isNotEmpty)
-                  // // Container(
-                  // //   height: 30.0,
-                  // //   child: ListView.builder(
-                  // //     itemCount: vehicleList.length,
-                  // //     shrinkWrap: true,
-                  // //     scrollDirection: Axis.horizontal,
-                  // //     itemBuilder: (context, index) {
-                  // //       return Padding(
-                  // //         padding: const EdgeInsets.only(left: 20.0),
-                  // //         child: Row(
-                  // //           children: [
-                  // //             Radio(
-                  // //               value: index,
-                  // //               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  // //               groupValue: carId,
-                  // //               visualDensity: VisualDensity(vertical: -4, horizontal: -4),
-                  // //               onChanged: (value){
-                  // //                 setStat(() {
-                  // //                   carId = value;
-                  // //                 });
-                  // //                 setState(() {});
-                  // //               },
-                  // //             ),
-                  // //             Text(vehicleList[index].vehicleType ?? ""),
-                  // //           ],
-                  // //         ),
-                  // //       );
-                  // //     }),
-                  // // ),
-                  // // Row(
-                  // //   children: [
-                  // //     Checkbox(
-                  // //       value: checkIdBike,
-                  // //       visualDensity: VisualDensity(vertical: -4, horizontal: -4),
-                  // //       onChanged: (value){
-                  // //         checkIdCar = false;
-                  // //         carId = -1;
-                  // //         checkIdBike = value;
-                  // //         setState(() {});setStat(() {});
-                  // //       },
-                  // //     ),
-                  // //     Text("Bike", style: TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w400),),
-                  // //   ],
-                  // // ),
-                  // // if(checkIdBike || carId >= 0)
-                  // // SizedBox(
-                  // //   height: 5.0,
-                  // // ),
-                  // // if(checkIdBike || carId >= 0)
-                  // // Row(
-                  // //   children: [
-                  // //     Text("Registration No.: ", style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w500),),
-                  // //     Text("1235262", style: TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w400),),
-                  // //   ],
-                  // // ),
-                  // if(vehicleList != null && vehicleList.isNotEmpty)
-                  //   Padding(
-                  //     padding: const EdgeInsets.all(4.0),
-                  //     child: Container(
-                  //       decoration: BoxDecoration(
-                  //           border: Border.all(color: Colors.grey[700]),
-                  //           borderRadius: BorderRadius.circular(50.0)
-                  //       ),
-                  //       child: DropdownButtonHideUnderline(
-                  //         child: ButtonTheme(
-                  //           alignedDropdown: true,
-                  //           padding: EdgeInsets.zero,
-                  //           child: DropdownButton<VehicleData>(
-                  //             isExpanded: true,
-                  //             value: selectedVehicle,
-                  //             icon: Icon(Icons.arrow_drop_down),
-                  //             iconSize: 24,
-                  //             elevation: 16,
-                  //             style: TextStyle(color: Colors.black),
-                  //             underline: Container(
-                  //               height: 2,
-                  //               color: Colors.black,
-                  //             ),
-                  //             onChanged: (VehicleData newValue) {
-                  //               setStat(() {
-                  //                 selectedVehicle = newValue;
-                  //               });
-                  //             },
-                  //             items: vehicleList
-                  //                 .map<DropdownMenuItem<VehicleData>>(
-                  //                     (VehicleData value) {
-                  //                   return DropdownMenuItem<VehicleData>(
-                  //                     value: value != null ? value : null,
-                  //                     child: Container(
-                  //                       height: 45.0,
-                  //                       width: MediaQuery.of(context).size.width,
-                  //                       alignment: Alignment.centerLeft,
-                  //                       child: Padding(
-                  //                         padding: const EdgeInsets.only(left: 0.0),
-                  //                         child: Text(
-                  //                           "${value.name != null && value.name.isNotEmpty ? value.name : ""}${value.modal != null && value.modal.isNotEmpty ?" - " + value.modal : ""}${value.regNo != null && value.regNo.isNotEmpty ? " - " + value.regNo : ""}${value.color != null && value.color.isNotEmpty ? " - " + value.color : ""}".toUpperCase(),
-                  //                           style: TextStyle(color: Colors.black),
-                  //                         ),
-                  //                       ),
-                  //                     ),
-                  //                   );
-                  //                 }).toList(),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                ],
+                        if (image != null)
+                          buildSizeBox(0.0, 10.0),
+
+                        if (image != null)
+                          SizedBox(
+                            width: 70.0,
+                            height: 70.0,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.file(
+                                image!,
+                                fit: BoxFit.cover,
+                                alignment: Alignment.topCenter,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    buildSizeBox(5.0,0.0),
+                  ],
+                ),
               ),
+              isLoading: controller.isLoading,
             );
           });
-        });
+        }
+        );
   }
 
-  Future<void> updateStartMiles( BuildContext context1, Map<String, dynamic> prams) async {
-    // PrintLog.printLog(prams['start_miles']);
 
-    // await ProgressDialog(context, isDismissible: false).show();
-    await CustomLoading().show(context1, true);
-    PrintLog.printLog(AppSharedPreferences.updateMiles);
-    PrintLog.printLog(prams);
+
+  Future<void> onTapBreak({required bool value}) async {
+
+    lunchBreakApi(
+        context: Get.overlayContext!,
+        statusBreak: 1
+    ).then((value) {});
 
   }
 
-  void onTapBreak({required bool value}){
-    onBreak = value;
+  Future<void> onTapEndBreak() async {
+
+    if(onBreak){
+      PopupCustom.simpleTruckDialogBox(
+        context: Get.overlayContext!,
+        onValue: (value) async {
+          if(value == "yes"){
+            PrintLog.printLog("Lunch break end calling.....");
+            lunchBreakApi(
+                context: Get.overlayContext!,
+                statusBreak: 0
+            ).then((value) { });
+          }
+        },
+        title: kEndBreak,
+        subTitle: kAreYouSureToEndBreak,
+        btnBackTitle: kNo,
+        btnActionTitle: kYes,
+      );
+    }
+  }
+
+
+  Future<LunchBreakApiResponse?> lunchBreakApi({required BuildContext context, required int statusBreak})async{
+
+    isAvlInternet = await ConnectionValidator().check();
+    if(!isAvlInternet) {
+      PopupCustom.showNoInternetPopUpWhenOffline(
+        context: Get.overlayContext!,
+        onValue: (value){
+
+        }
+    );
+    }else{
+
+      if(statusBreak == 1){
+        onBreak = true;
+      }else{
+        onBreak = false;
+      }
+
+      changeEmptyValue(false);
+      changeLoadingValue(true);
+      changeNetworkValue(false);
+      changeErrorValue(false);
+      changeSuccessValue(false);
+
+      Map<String, dynamic> dictparm = {
+        // "lat":lat,
+        // "lng":lng,
+        "lat": await CheckPermission.getLatitude(Get.overlayContext!,) ?? "0",
+        "lng": await CheckPermission.getLongitude(Get.overlayContext!,) ?? "0",
+        "is_start":statusBreak,
+      };
+
+
+      await apiCtrl.getLunchBreakApi(context:context,url: WebApiConstant.LUNCH_BREAK_URL,dictParameter: dictparm,token:authToken)
+          .then((result) async {
+        if(result != null){
+          try {
+            if (result.status?.toLowerCase() == "true") {
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+
+              PrintLog.printLog("Lunch Break Api Response: ${result.status.toString()}");
+
+              if(statusBreak == 1) {
+                onBreak = true;
+                dashCTRL.stopWatchTimer?.onStopTimer();
+                await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.lunchBreakStatus, variableValue: "true");
+                Future.delayed(
+                  const Duration(seconds: 1),
+                      () => Get.toNamed(lunchBreakScreenRoute),
+                );
+              }else {
+                onBreak = false;
+                dashCTRL.stopWatchTimer?.onStartTimer();
+                await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.lunchBreakStatus, variableValue: "false");
+                Get.back();
+              }
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+            }
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+        }
+      });
+      update();
+    }
     update();
   }
+
 
 
   void changeSuccessValue(bool value){

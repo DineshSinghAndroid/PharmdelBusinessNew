@@ -13,9 +13,11 @@ class GetDeliveryApiResponse {
   int? notificationCount;
   List<Exemptions>? exemptions;
   int? onLunch;
+  String? systemTime;
 
   GetDeliveryApiResponse(
-      {this.deliveryList,
+      {this.systemTime,
+        this.deliveryList,
         this.status,
         this.pageNumber,
         this.pageSize,
@@ -30,6 +32,7 @@ class GetDeliveryApiResponse {
         this.onLunch});
 
   GetDeliveryApiResponse.fromJson(Map<String, dynamic> json) {
+    systemTime = json['system_time'] != null ? json['system_time'].toString():null;
     if (json['deliveryList'] != null) {
       deliveryList = <DeliveryPojoModal>[];
       json['deliveryList'].forEach((v) {
@@ -61,6 +64,7 @@ class GetDeliveryApiResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['system_time'] = this.systemTime;
     if (this.deliveryList != null) {
       data['deliveryList'] = this.deliveryList!.map((v) => v.toJson()).toList();
     }
@@ -172,6 +176,7 @@ class Exemptions {
   String? id;
   String? serialId;
   String? code;
+  bool isSelected = false;
 
   Exemptions({this.id, this.serialId, this.code});
 
@@ -232,6 +237,7 @@ class DeliveryPojoModal {
   String? companyId;
   String? branchId;
   String? toteBoxId;
+  String? isSubsCharge;
 
 
   DeliveryPojoModal({

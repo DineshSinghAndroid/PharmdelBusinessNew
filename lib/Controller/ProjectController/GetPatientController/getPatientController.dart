@@ -6,6 +6,8 @@ import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../../main.dart';
+import '../../PharmacyControllers/P_ProcessScanController/p_processScanController.dart';
+import '../../WidgetController/Toast/ToastCustom.dart';
 
 
 class GetPatientContoller extends GetxController{
@@ -18,6 +20,7 @@ class GetPatientContoller extends GetxController{
   bool isEmpty = false;
   bool isNetworkError = false;
   bool isSuccess = false;
+  PharmacyProcessScanController getProcessScanController = Get.put(PharmacyProcessScanController());
 
   Future<GetPatientApiResposne?> getPatientApi({required BuildContext context,required String firstName}) async {
 
@@ -72,6 +75,21 @@ class GetPatientContoller extends GetxController{
     update();
   }
 
+
+  ///OnTap Patient
+  Future<void> onTileClicked({required int index, required BuildContext context}) async{
+    if (patientData?[index].lastOrderId != null) {
+      PrintLog.printLog("Last order id is ${patientData?[index].lastOrderId}");
+      String name = "";
+      if (patientData?[index].firstName != null) name = "${patientData?[index].firstName.toString()} ";
+      if (patientData?[index].middleName != null) name = "$name${patientData?[index].middleName.toString()} ";
+      if (patientData?[index].lastName != null) name = "$name${patientData?[index].lastName.toString()} ";
+      getProcessScanController.processScanApi(context: context, patientId: patientData?[index].customerId ?? "");
+    } else {
+      ToastCustom.showToast(msg: 'Order id not found');
+    }
+    //}
+  }
 
   void changeSuccessValue(bool value){
     isSuccess = value;

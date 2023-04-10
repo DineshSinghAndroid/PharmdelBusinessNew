@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-
- import '../../../Model/CreatePatientModel/create_patient_model.dart';
-import '../../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
-import '../../ApiController/ApiController.dart';
-import '../../Helper/Permission/PermissionHandler.dart';
+import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Model/CreatePatientModel/driver_create_patient_response.dart';
+import '../../GeoCoder/GoogleAddresResponse/google_api_response.dart';
 
 class CreatePatientController extends GetxController {
   ApiController apiCtrl = ApiController();
@@ -17,33 +15,27 @@ class CreatePatientController extends GetxController {
   bool isNetworkError = false;
   bool isSuccess = false;
 
-  // CreatePatientModel? createPatientModel;
+  final List<SurNameTitle> selectTitle = [
+    SurNameTitle(showTitle: "Mr",sendTitle: "M"),
+    SurNameTitle(showTitle: "Miss",sendTitle: "S"),
+    SurNameTitle(showTitle: "Mrs",sendTitle: "F"),
+    SurNameTitle(showTitle: "Ms",sendTitle: "Q"),
+    SurNameTitle(showTitle: "Captain",sendTitle: "C"),
+    SurNameTitle(showTitle: "Dr",sendTitle: "D"),
+    SurNameTitle(showTitle: "Prof",sendTitle: "P"),
+    SurNameTitle(showTitle: "Rev",sendTitle: "R"),
+    SurNameTitle(showTitle: "Mx",sendTitle: "X"),
 
-  bool isBulkScan = false;
-  String? toteId;
+  ];
 
-  // BulkScanMode callPickedApi;
-  String? bulkScanDate;
-  String? nursingHomeId;
-  String? driverId;
-  String? routeId;
-  int? parcelBoxId;
+  final List<SurNameTitle> selectGender = [
+    SurNameTitle(showTitle: "Male",sendTitle: "M"),
+    SurNameTitle(showTitle: "Female",sendTitle: "F"),
+    SurNameTitle(showTitle: "Other",sendTitle: "M"),
+  ];
 
-  // callGetOrderApi ?callApi;
-  String accessToken = "";
-  int? pharmacyId;
-  bool otherPharmacy = false;
-
-  @override
-  void onInit() {
-    // nhsNoCtrl.text = widget.result??
-    //     "";
-
-    // getLocationData(context);
-
-    // TODO: implement onInit
-    super.onInit();
-  }
+  SurNameTitle? selectedTitleValue;
+  SurNameTitle? selectedGenderValue;
 
   TextEditingController nameCtrl = TextEditingController();
   TextEditingController middleNameCtrl = TextEditingController();
@@ -51,132 +43,35 @@ class CreatePatientController extends GetxController {
   TextEditingController mobileCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController nhsNoCtrl = TextEditingController();
+  TextEditingController startTypingCtrl = TextEditingController();
   TextEditingController searchAddress = TextEditingController();
   TextEditingController addressLine1Ctrl = TextEditingController();
   TextEditingController addressLine2Ctrl = TextEditingController();
   TextEditingController townCtrl = TextEditingController();
   TextEditingController postCodeCtrl = TextEditingController();
 
-  // PmrModel model;
-  // int endRouteId;
-  // int startRouteId;
-  double? startLat;
-  double? startLng;
-  bool isStartRoute = false;
 
-  final List<String> selectTitle = [
-    "Mr",
-    "Miss",
-    "Mrs",
-    "Ms",
-    "Captain",
-    "Dr",
-    "Prof",
-    "Rev",
-    "Mx",
-  ];
-  String? selectedTitleValue;
-  final List<String> selectGender = [
-    "Male",
-    "Female",
-    "Other",
-  ];
-  String? selectedGenderValue;
+  bool isFirstName = false;
+  bool isLastName = false;
+  bool isAddressLine1 = false;
+  bool isAddressLine2 = false;
+  bool isTownName = false;
+  bool isPostCode = false;
 
-  void getLocationData(context) async {
-    CheckPermission.checkLocationPermission(context).then((value) async {
-      if (value == true) {
-        var position = await GeolocatorPlatform.instance.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
-        startLat = position.latitude;
-        startLng = position.longitude;
-      }
-    });
-  }
+  bool isHideStartTypingCTRL = false;
+  bool isStartTyping = false;
 
-  // OrderInfoResponse orderInfo;
-  // FlutterGooglePlacesSdk googlePlace;
-  // List<AutocompletePrediction> prediction = [];
-  // List<Dd> prescriptionList = List();
-  // List<PmrModel> pmrList = List();
-  // String titleValue;
-  // String genderValue;
+  double spaceBetween = 10;
 
-  btnPress(BuildContext context) {
-    if (selectedTitleValue != null &&
-        selectedGenderValue != null &&
-        nameCtrl.text.isNotEmpty &&
-        lastNameCtrl.text.isNotEmpty &&
-        addressLine1Ctrl.text.isNotEmpty &&
-        townCtrl.text.isNotEmpty &&
-        postCodeCtrl.text.isNotEmpty) {
-      createPatient(context: context);
-    } else {
-      ToastCustom.showToast(msg: "Please Complete All Required Fields");
-    }
-  }
+  FlutterGooglePlacesSdk? googlePlace;
+  List<AutocompletePrediction> prediction = [];
+  String? pharmacyID;
 
-  CreatePatientModelResponse? createPatientModelResponse;
+  List<GoogleAddressResults>? googleAddressListData;
 
-  Future<CreatePatientModelResponse?> createPatient({context,}) async {
 
-    CustomLoading().show(context, true);
-
-    Map<String, dynamic> dictparm = {
-      "title": selectedTitleValue,
-      "first_name": nameCtrl.text.toString().trim(),
-      "last_name": lastNameCtrl.text.toString().trim(),
-      "address_line_1": addressLine1Ctrl.text.toString().trim(),
-      "address_line_2": addressLine2Ctrl.text.toString().trim(),
-      "town_name": townCtrl.text.toString().trim(),
-      "post_code": postCodeCtrl.text.toString().trim(),
-      "mobile_no": mobileCtrl.text.toString().trim(),
-      "email_id": emailCtrl.text.toString().trim(),
-      "nhs_number": nhsNoCtrl.text.toString().trim(),
-      "middle_name": middleNameCtrl.text.toString().trim(),
-      "country_id": "",
-      "gender": selectedGenderValue,
-    };
-    String url = WebApiConstant.CREATE_PATIENT_URL;
-    await apiCtrl.createPatientApi(context: context, url: url,
-        dictParameter: dictparm, token: authToken).then((_result) {
-      if (_result != null) {
-        if (_result.error != true) {
-          ToastCustom.showToast(msg: _result.message ?? "");
-          try {
-            if (_result.error == false) {
-              createPatientModelResponse = _result;
-              ToastCustom.showToast(msg: _result.message ?? "");
-
-              CustomLoading().show(context, false);
-              createPatientDone();
-            } else {
-              CustomLoading().show(context, false);
-              PrintLog.printLog(_result.message);
-              ToastCustom.showToast(msg: _result.message ?? "");
-            }
-          } catch (_) {
-            CustomLoading().show(context, false);
-
-            PrintLog.printLog("Exception : $_");
-            ToastCustom.showToast(msg: _result.message ?? "");
-          }
-        }
-        else {
-          CustomLoading().show(context, false);
-
-          PrintLog.printLog(_result.message);
-          ToastCustom.showToast(msg: _result.message ?? "");
-          update();
-        }
-      }
-    });
-    update();
-    CustomLoading().show(context, false);
-    return null;
-
-  }
-
-  void createPatientDone() async{
+  /// Clear All Text Field
+  Future<void> clearAllField() async{
     nameCtrl.clear();
     middleNameCtrl.clear();
     lastNameCtrl.clear();
@@ -188,137 +83,297 @@ class CreatePatientController extends GetxController {
     addressLine1Ctrl.clear();
     townCtrl.clear();
     postCodeCtrl.clear();
+    startTypingCtrl.clear();
+    selectedTitleValue = null;
+    selectedGenderValue = null;
+    update();
+  }
+
+  /// On Changed StartTyping Controller
+  Future<void> onChangedStartTyping({required String value})async{
+    isStartTyping = false;
+    if(value == " "){
+      startTypingCtrl.clear();
+    }
+
+    if (value.trim().isNotEmpty) {
+      FindAutocompletePredictionsResponse? result = await googlePlace?.findAutocompletePredictions(value.trim());
+      prediction = result != null && result.predictions.isNotEmpty ? result.predictions:[];
+    } else {
+      prediction.clear();
+    }
+    update();
+  }
+
+  /// On Tap Suggestion List
+  Future<void> onTapSuggestionListItem({required int index})async{
+    await getGoogleAddress(primaryText: prediction[index].primaryText ?? "",secondaryText: prediction[index].secondaryText ?? "").then((value) async {
+      if(googleAddressListData != null){
+        await assignAddress(data: googleAddressListData ?? []);
+      }
+    });
+  }
+
+  Future<void> assignAddress({required List<GoogleAddressResults> data})async{
+    addressLine1Ctrl.clear();
+    addressLine2Ctrl.clear();
+    townCtrl.clear();
+    postCodeCtrl.clear();
+    startTypingCtrl.clear();
+    isHideStartTypingCTRL = true;
+
+    if(data.isNotEmpty && data[0].geometry != null && data[0].geometry?.location != null){
+      Placemark? placeMark = await CheckPermission.getPlaceMarkWithLatLng(latitude: data[0].geometry?.location?.lat.toString() ?? "", longitude: data[0].geometry?.location?.lng.toString() ?? "");
+      PrintLog.printLog("Position-country: ${placeMark?.country}");
+      if(placeMark != null){
+
+        addressLine1Ctrl.text = "${placeMark.street ?? ""}, ${placeMark.subLocality ?? ""}, ${placeMark.locality ?? ""}";
+
+        addressLine2Ctrl.text = placeMark.administrativeArea ?? "";
+        townCtrl.text = "${placeMark.subAdministrativeArea ?? ""}, ${placeMark.administrativeArea ?? ""}";
+         postCodeCtrl.text = placeMark.postalCode ?? "";
+
+          prediction.clear();
+        update();
+      }
+    }
+
     update();
   }
 
 
+  Future<GoogleAddressApiResponse?> getGoogleAddress({required String primaryText,required String secondaryText}) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
 
 
-
-
-  //Create Order Controller ****************//
-  // PmrModel model;
-  int ? endRouteId;
-  int ? startRouteId;
-  // OrderInfoResponse ? orderInfo;
-
-
-
-
-
-
-  Future<UpdateCustomerWithOrderModel?> createOrder({context,}) async {
-
-    CustomLoading().show(context, true);
-
-    Map<String, dynamic> dictparm = {
-      "order_type": "scan",
-      "pharmacyId": pharmacyId,
-      "endRouteId": isStartRoute ? "$endRouteId" : "0",
-      "startRouteId": isStartRoute ? "$startRouteId" : "0",
-      "nursing_home_id": nursingHomeId,
-      "tote_box_id": toteId,
-      "start_lat": isStartRoute ? "$startLat" : "",
-      "start_lng": isStartRoute ? "$startLng" : "",
-      "del_charge": "",
-      "rx_charge": "",
-      "subs_id": "",
-      "rx_invoice": "",
-      "del_subs_id": 0,
-      "nursing_homes_id": 0,
-      "pmr_type": "2",
-      "otherpharmacy": otherPharmacy,
-      // "titan_scan_info": orderInfo.titanScaInfo != null ? orderInfo.titanScaInfo : "",
-      "amount": "0",
-      "exemption": "",
-      //_exemptSelected ? selectedExemptionId != null ? selectedExemptionId : 0 : 0,
-      "paymentStatus": "",
-      "bag_size": "",
-      // "patient_id": orderInfo.userId ?? 0,
-      // "pr_id": pmrList[0].xml.sc != null ? pmrList[0].xml.sc.id ?? "" : "",
-      "lat": "",
-
-      "lng": "",
-
-      "parcel_box_id": parcelBoxId != null ? "${parcelBoxId}" : "0",
-      // "surgery_name": pmrList[0].xml.doctorInformation != null ? pmrList[0].xml.doctorInformation.companyName ?? "" : "",
-      // "surgery": pmrList[0].xml.doctorInformation != null ? pmrList[0].xml.doctorInformation.i ?? "" : "",
-      "email_id": "",
-      // "mobile_no_2": pmrList[0].xml.patientInformation.mobileNo ?? "",
-      // "dob": "$dob",
-      // "nhs_number": pmrList[0].xml.patientInformation.nhs ?? "",
-      // "title": tittle ?? "",
-      // "first_name": pmrList[0].xml.patientInformation.firstName ?? "",
-      // "middle_name": pmrList[0].xml.patientInformation.middleName != null && pmrList[0].xml.patientInformation.middleName != "null" ? pmrList[0].xml.patientInformation.middleName : "",
-      // "last_name": pmrList[0].xml.patientInformation.lastName != null ? (pmrList[0].xml.patientInformation.lastName != "null" ? pmrList[0].xml.patientInformation.lastName : "") : "",
-      // "address_line_1": pmrList[0].xml.patientInformation.address ?? "",
-      "country_id": "",
-      // "post_code": pmrList[0].xml.patientInformation.postCode ?? "",
-      // "gender": gender,
-      "preferred_contact_type": "",
-      "delivery_type": "Delivery",
-      "driver_id": driverId,
-      "delivery_route": routeId,
-      "storage_type_cd": "f",
-      "storage_type_fr": "f",
-      "delivery_status": isStartRoute
-          ? "4"
-          : toteId == null || toteId!.isEmpty
-          ? "8"
-          : "2",
-      "shelf": "",
-      // "delivery_service": orderInfo.default_service,
-      // "doctor_name": pmrList[0].xml.doctorInformation != null ? pmrList[0].xml.doctorInformation.doctorName ?? "" : "",
-      // "doctor_address": pmrList[0].xml.doctorInformation != null ? pmrList[0].xml.doctorInformation.address ?? "" : "",
-      "new_delivery_notes": "",
-      // "existing_delivery_notes": orderInfo != null && orderInfo.default_delivery_note != null && orderInfo.default_delivery_note != "" ? orderInfo.default_delivery_note : "",
-      "branch_notes": "",
-      "surgery_notes": "",
-      "medicine_name": [],
-      "delivery_date": bulkScanDate,
-      "prescription_images": [],
-    };
-
-
-    String url = WebApiConstant.UPDATE_CUSTOMER_WITH_ORDER;
-    await apiCtrl.createPatientApi(context: context, url: url,
-        dictParameter: dictparm, token: authToken).then((_result) {
-      if (_result != null) {
-        if (_result.error != true) {
-          ToastCustom.showToast(msg: _result.message ?? "");
-          try {
-            if (_result.error == false) {
-              createPatientModelResponse = _result;
-              ToastCustom.showToast(msg: _result.message ?? "");
-
-              CustomLoading().show(context, false);
-              createPatientDone();
-            } else {
-              CustomLoading().show(context, false);
-              PrintLog.printLog(_result.message);
-              ToastCustom.showToast(msg: _result.message ?? "");
-            }
-          } catch (_) {
-            CustomLoading().show(context, false);
-
-            PrintLog.printLog("Exception : $_");
-            ToastCustom.showToast(msg: _result.message ?? "");
+    await apiCtrl.getGoogleAddressApi(primaryText: primaryText,secondaryText: secondaryText).then((result) async {
+      if (result != null) {
+        try {
+          if (result.status.toString().toLowerCase() == "ok" && result.status != null) {
+            googleAddressListData = result.results;
+            changeLoadingValue(false);
+            changeSuccessValue(true);
+          } else {
+            changeLoadingValue(false);
+            changeSuccessValue(false);
           }
+        } catch (_) {
+          PrintLog.printLog("Exception : $_");
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
         }
-        else {
-          CustomLoading().show(context, false);
-
-          PrintLog.printLog(_result.message);
-          ToastCustom.showToast(msg: _result.message ?? "");
-          update();
-        }
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
       }
     });
     update();
-    CustomLoading().show(context, false);
+  }
 
+
+  /// Validate Field
+  Future<bool> filledValidate({required BuildContext context})async{
+    FocusScope.of(context).unfocus();
+
+    if(selectedTitleValue == null){
+      ToastCustom.showToast(msg: kSelectTitle);
+    }else if(selectedGenderValue == null){
+      ToastCustom.showToast(msg: kSelectGender);
+    }else{
+      isFirstName = TxtValidation.normalTextField(nameCtrl);
+      isLastName = TxtValidation.normalTextField(lastNameCtrl);
+      isStartTyping = TxtValidation.normalTextField(startTypingCtrl);
+      if(!isStartTyping || !isFirstName && !isLastName){
+        if(isHideStartTypingCTRL){
+          isAddressLine1 = TxtValidation.normalTextField(nameCtrl);
+          isAddressLine2 = TxtValidation.normalTextField(nameCtrl);
+          isTownName = TxtValidation.normalTextField(nameCtrl);
+          isPostCode = TxtValidation.normalTextField(nameCtrl);
+
+          if(isStartTyping && !isAddressLine1 && !isAddressLine2 && !isTownName && !isPostCode){
+            return true;
+          }else{
+            ToastCustom.showToast(msg: kEnterYourCorrectAddress);
+          }
+        }else{
+          ToastCustom.showToast(msg: kEnterYourCorrectAddress);
+        }
+      }
+
+    }
+    update();
+    return false;
+  }
+
+  /// On Tap Create Patient
+  Future<void> onTapSaveAndCreate({required BuildContext context,required bool isScanPrescription})async{
+    if(await filledValidate(context: context) == true){
+      await createPatient(context: context,isScanPrescription: isScanPrescription);
+    }
+  }
+
+  /// Create Order Api
+  Future<DriverCreatePatientApiResponse?> createPatient({required BuildContext context,required bool isScanPrescription}) async {
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+
+    Map<String, dynamic> dictparm = {
+      "title": selectedTitleValue?.sendTitle,
+      "gender": selectedGenderValue?.sendTitle,
+      "first_name": nameCtrl.text.toString().trim(),
+      "middle_name": middleNameCtrl.text.toString().trim(),
+      "last_name": lastNameCtrl.text.toString().trim(),
+      "address_line_1": addressLine1Ctrl.text.toString().trim(),
+      "address_line_2": addressLine2Ctrl.text.toString().trim(),
+      "town_name": townCtrl.text.toString().trim(),
+      "post_code": postCodeCtrl.text.toString().trim(),
+      "mobile_no": mobileCtrl.text.toString().trim(),
+      "email_id": emailCtrl.text.toString().trim(),
+      "nhs_number": nhsNoCtrl.text.toString().trim(),
+      "country_id": "",
+    };
+
+
+    await apiCtrl.driverCreatePatientApi(context: context, url: WebApiConstant.CREATE_PATIENT_URL,
+        dictParameter: dictparm).then((result) {
+      if (result != null) {
+        if (result.error != true) {
+          try {
+            if (result.error == false) {
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+              ToastCustom.showToast(msg: result.message ?? "");
+              if(isScanPrescription){
+                Get.back();
+              }else{
+                clearAllField();
+              }
+              isHideStartTypingCTRL = false;
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+              ToastCustom.showToast(msg: result.message ?? "");
+            }
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+            ToastCustom.showToast(msg: result.message ?? "");
+          }
+        }
+        else {
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          PrintLog.printLog(result.message);
+          ToastCustom.showToast(msg: result.message ?? "");
+        }
+      }
+    }
+    );
+    update();
+  }
+
+  /// Process Scan Api
+  // Future<ProcessScanApiResponse?> processScanApi({required BuildContext context}) async {
+  //   changeEmptyValue(false);
+  //   changeLoadingValue(true);
+  //   changeNetworkValue(false);
+  //   changeErrorValue(false);
+  //   changeSuccessValue(false);
+  //
+  //
+  //   Map<String, dynamic> dictparm = {
+  //     "scan_type": "2",
+  //     "pharmacyId": ,
+  //
+  //   };
+  //
+  //   await apiCtrl.driverProcessScanApi(context: context, url: WebApiConstant.REGISTEER_CUSTOMER_WITH_ORDER,
+  //       dictParameter: dictparm).then((result) {
+  //     if (result != null) {
+  //       if (result.error != true) {
+  //         try {
+  //           if (result.error == false) {
+  //             changeLoadingValue(false);
+  //             changeSuccessValue(true);
+  //             ToastCustom.showToast(msg: result.message ?? "");
+  //             if(isScanPrescription){
+  //
+  //             }else{
+  //               clearAllField();
+  //             }
+  //
+  //           } else {
+  //             changeLoadingValue(false);
+  //             changeSuccessValue(false);
+  //             PrintLog.printLog(result.message);
+  //             ToastCustom.showToast(msg: result.message ?? "");
+  //           }
+  //         } catch (_) {
+  //           changeSuccessValue(false);
+  //           changeLoadingValue(false);
+  //           changeErrorValue(true);
+  //           PrintLog.printLog("Exception : $_");
+  //           ToastCustom.showToast(msg: result.message ?? "");
+  //         }
+  //       }
+  //       else {
+  //         changeSuccessValue(false);
+  //         changeLoadingValue(false);
+  //         PrintLog.printLog(result.message);
+  //         ToastCustom.showToast(msg: result.message ?? "");
+  //       }
+  //     }
+  //   }
+  //   );
+  //   update();
+  // }
+
+  void changeSuccessValue(bool value) {
+    isSuccess = value;
+    update();
+  }
+
+  void changeLoadingValue(bool value) {
+    isLoading = value;
+    update();
+  }
+
+  void changeEmptyValue(bool value) {
+    isEmpty = value;
+    update();
+  }
+
+  void changeNetworkValue(bool value) {
+    isNetworkError = value;
+    update();
+  }
+
+  void changeErrorValue(bool value) {
+    isError = value;
+    update();
   }
 
 }
 
+class SurNameTitle{
+  String showTitle;
+  String sendTitle;
 
+  SurNameTitle({required this.sendTitle,required this.showTitle});
+
+}

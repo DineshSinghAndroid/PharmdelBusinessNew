@@ -1,9 +1,13 @@
+import 'package:countdown_widget/countdown_widget.dart';
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Redirect/redirect.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import '../../../Controller/Helper/ConnectionValidator/internet_check_return.dart';
 import '../../../Controller/ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
-import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
+import '../../../Controller/StopWatchController/stop_watch_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/DeliveryCardCustom/deliveryCardCustom.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
@@ -33,10 +37,24 @@ void isSelected(bool isSelect) {
   }
 
   Future<void> init() async {
-  // await drDashCtrl.driverDashboardApi(context: context,routeID: "1");
-      await drDashCtrl.driverRoutesApi(context: context).then((value) async {
-        await drDashCtrl.getParcelBoxApi(context: context);
+  drDashCtrl.isAvlInternet = await InternetCheck.checkStatus();
+  if(drDashCtrl.isAvlInternet) {
+    await drDashCtrl.driverRoutesApi(context: context).then((value) async {
+        await drDashCtrl.getParcelBoxApi(context: context).then((value) async {
+          await drDashCtrl.vehicleListApi(context: context).then((value) async {
+            await drDashCtrl.getDeliveryMasterData(context: context).then((value) async {
+              if(driverType.toLowerCase() != kSharedDriver.toLowerCase()){
+                await drDashCtrl.getPharmacyInfo(context: context).then((value) async {
+
+                });
+              }
+            });
+          });
+        });
       });
+  }
+
+      drDashCtrl.onAssignPreviewsRout(context: context);
 
   }
 
@@ -48,6 +66,7 @@ void isSelected(bool isSelect) {
         return WillPopScope(
           onWillPop: () async => false,
           child: LoadScreen(
+            isLoaderChange: true,
             widget: Scaffold(
                 resizeToAvoidBottomInset: false,
                 backgroundColor: AppColors.whiteColor,
@@ -73,9 +92,12 @@ void isSelected(bool isSelect) {
                           ),
 
                           /// Refresh
-                          InkWell(
-                              onTap: () => controller.onTapAppBarRefresh(context:context),
-                              child: const Icon(Icons.refresh)
+                          Visibility(
+                            visible: controller.isRouteStart == false,
+                            child: InkWell(
+                                onTap: () => controller.onTapAppBarRefresh(context:context),
+                                child: const Icon(Icons.refresh)
+                            ),
                           ),
 
                           buildSizeBox(0.0, 10.0),
@@ -89,15 +111,45 @@ void isSelected(bool isSelect) {
                           : const SizedBox.shrink(),
 
                           /// QR code
-                          controller.receivedCount == 0 || controller.isRouteStart ?
-                          const SizedBox.shrink() :
-                          InkWell(
-                              onTap: ()=> controller.onTapAppBarQrCode(context: context),
-                              child: Image.asset(strIMG_location,height: 25,color: AppColors.redColor,)
+                          Visibility(
+                            visible: controller.driverDashboardData?.orderCounts?.totalOrders != null && int.parse(controller.driverDashboardData?.orderCounts?.totalOrders.toString() ?? "0") > 0  && controller.isRouteStart == false,
+                            child: InkWell(
+                                onTap: ()=> controller.onTapAppBarQrCode(context: context),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.only(left: 0, right: 10),
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 5, left: 5, bottom: 5),
+                                        child: Image.asset(strImgQrCode,
+                                          color: AppColors.blackColor,
+                                          height: 24,
+                                          width: 24,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 5, right: 5, top: 1, bottom: 1),
+                                        decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                            color: AppColors.deepOrangeColor2
+                                        ),
+                                        child: BuildText.buildText(
+                                            text: controller.driverDashboardData?.orderCounts?.totalOrders?.toString() ?? "",
+                                          weight: FontWeight.w300,size: 12
+                                        )
+                                      )
+                                    ],
+                                  ),
+                                )
+                                // Image.asset(strIMG_location,height: 25,color: AppColors.redColor,)
+                            ),
                           ),
 
 
                           buildSizeBox(0.0, 10.0),
+
+                          /// Notification
                           InkWell(
                               onTap: () {
                                 Get.toNamed(notificationScreenRoute);
@@ -110,24 +162,24 @@ void isSelected(bool isSelect) {
                                       size: 30,
                                     ),
                                   ),
-                                  Positioned(
-                                    right: 1,
-                                    top: 12,
-                                    child: SizedBox(
-                                      height: 16,
-                                      width: 16,
-                                      child: CircleAvatar(
-                                        backgroundColor: AppColors.redColor,
-                                        child: BuildText.buildText(
-                                          text: controller.driverDashboardData?.notificationCount.toString() ?? "",
-                                          //controller.notificationCountData?.list ?? "",
-                                          // notification_count != null
-                                          //     ? notification_count > 99
-                                          //     ? "+99"
-                                          //     : notification_count.toString()
-                                          //     : "",
-                                          size: 9,
-                                          color: AppColors.whiteColor,
+                                  Visibility(
+                                    visible: controller.driverDashboardData != null && controller.driverDashboardData?.notificationCount != null && controller.driverDashboardData!.notificationCount! > 0,
+                                    child: Positioned(
+                                      right: 1,
+                                      top: 12,
+                                      child: SizedBox(
+                                        height: 16,
+                                        width: 16,
+                                        child: CircleAvatar(
+                                          backgroundColor: AppColors.redColor,
+                                          child: BuildText.buildText(
+                                            text: controller.driverDashboardData?.notificationCount != null && controller.driverDashboardData!.notificationCount! > 99
+                                                ? "+99"
+                                                : controller.driverDashboardData?.notificationCount?.toString() ?? ""
+                                                ,
+                                            size: 9,
+                                            color: AppColors.whiteColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -139,30 +191,72 @@ void isSelected(bool isSelect) {
                     )
                   ],
                 ),
-                drawer: const DrawerDriver(),
+                drawer:  DrawerDriver(),
                 floatingActionButton: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FloatingActionButton.extended(
-                      backgroundColor: Colors.orange,
-                      label: Column(
-                        children: [
-                          const Icon(
-                            Icons.qr_code_scanner,
-                            color: Colors.white,
-                            size: 25.0,
+                    Visibility(
+                      visible: driverType.toLowerCase() == kDedicatedDriver.toLowerCase(),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: controller.isRouteStart && controller.systemDeliveryTime != null && controller.stopWatchTimer != null ? Get.width * 24 / 100 : 0.0),
+                        child: FloatingActionButton.extended(
+                          backgroundColor: Colors.orange,
+                          label: Column(
+                            children: [
+                              const Icon(Icons.qr_code_scanner,color: Colors.white,size: 25.0,),
+                              BuildText.buildText(text: kScanQr, color: AppColors.whiteColor)
+                            ],
                           ),
-                          BuildText.buildText(
-                              text: kScanRx, color: AppColors.whiteColor)
-                        ],
+                          onPressed: () => controller.onTapScanRx(context: context),
+                        ),
                       ),
-                      onPressed: () {
-                        Get.toNamed(searchPatientScreenRoute);
-                        // Get.toNamed(scanPrescriptionScreenRoute);
-                        DefaultFuntions.barcodeScanning();
-                      },
                     ),
+                    Visibility(
+                      visible: controller.isRouteStart && controller.systemDeliveryTime != null && controller.stopWatchTimer != null && controller.stopWatchTimer?.rawTime != null,
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 7.0, bottom: 7.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.0),
+                              color: controller.showIncreaseTime ? Colors.red : AppColors.timeLeftColor,
+                              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.4), spreadRadius: 3.0, blurRadius: 5.0, offset: const Offset(0, 2))]),
+                          child: CountDownWidget(
+                            duration: Duration(seconds: controller.systemDeliveryTime ?? 0),
+                            builder: (context, duration) {
+                              controller.systemDeliveryTime = duration.inSeconds;
+                              AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.deliveryTime, variableValue: duration.inSeconds.toString());
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  BuildText.buildText(text: kTimeLeft,color: AppColors.whiteColor),
+                                  buildSizeBox(1.0, 0.0),
+
+                                  StreamBuilder<int>(
+                                    stream: controller.stopWatchTimer?.rawTime,
+                                    initialData: 0,
+                                    builder: (context, snap) {
+                                      final value = snap.data;
+                                      final displayTime = StopWatchTimer.getDisplayTime(value ?? 0, milliSecond: false);
+
+                                      return BuildText.buildText(
+                                          text: controller.showIncreaseTime ? "+ $displayTime" : displayTime,
+                                          color: controller.showIncreaseTime ? AppColors.redColor : AppColors.whiteColor, weight: FontWeight.bold
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                            onFinish: () {
+
+                            },
+                            onExpired: () {
+                              // showBottomSheetTimesUp(context);
+                            },
+                          ),
+                        ),
+                    )
                   ],
                 ),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -196,16 +290,50 @@ void isSelected(bool isSelect) {
                               ),
                               buildSizeBox(0.0, 5.0),
 
-                              /// Select Parcel box
-                              controller.isBulkScanSwitched == true ?
-                              Expanded(
-                                child: WidgetCustom.driverDasTopSelectWidget(
-                                    title: controller.selectedParcelBox != null ? controller.selectedParcelBox?.name.toString() ?? "" : kSelectPhar,
-                                    onTap:()=> controller.onTapSelectParcelLocation(context:context,controller:controller),
+                              /// Select Pharmacy only for Shared driver case
+                              Visibility(
+                                visible: driverType.toLowerCase() == kSharedDriver.toLowerCase(),
+                                child: Expanded(
+                                  child: WidgetCustom.driverDasTopSelectWidget(
+                                    title: controller.selectedPharmacy != null ? controller.selectedPharmacy?.pharmacyName.toString() ?? "" : kSelectPhar,
+                                    onTap:()=> controller.onTapSelectPharmacy(context:context,controller:controller),
+                                  ),
                                 ),
-                              ) : const SizedBox.shrink(),
+                              ),
+
+                              /// Select Parcel box
+                              Visibility(
+                                visible: controller.isBulkScanSwitched == true && driverType.toLowerCase() != kSharedDriver.toLowerCase(),
+                                child: Expanded(
+                                  child: WidgetCustom.driverDasTopSelectWidget(
+                                      title: controller.selectedParcelBox != null ? controller.selectedParcelBox?.name.toString() ?? "" : kParcelLocation,
+                                      onTap:()=> controller.onTapSelectParcelLocation(context:context,controller:controller),
+                                  ),
+                                ),
+                              ),
 
                             ],
+                          ),
+                        ),
+
+                        /// Select Parcel Location only for shared driver
+                        Visibility(
+                          visible: controller.isBulkScanSwitched == true && driverType.toLowerCase() == kSharedDriver.toLowerCase(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+
+                                /// Select Parcel box
+                                Expanded(
+                                  child: WidgetCustom.driverDasTopSelectWidget(
+                                      title: controller.selectedParcelBox != null ? controller.selectedParcelBox?.name.toString() ?? "" : kParcelLocation,
+                                      onTap:()=> controller.onTapSelectParcelLocation(context:context,controller:controller),
+                                  ),
+                                ),
+
+                              ],
+                            ),
                           ),
                         ),
 
@@ -226,7 +354,7 @@ void isSelected(bool isSelect) {
                                           label: kTotal,
                                           selectedTopBtnName: controller.selectedTopBtnName,
                                           counter: controller.driverDashboardData?.orderCounts?.totalOrders ?? "0",
-                                          onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 1),
+                                          onTap: () => controller.onTapManTopDeliveryListBtn(context:context,btnType: 1),
                                       )
                               ),
 
@@ -239,8 +367,9 @@ void isSelected(bool isSelect) {
                                       bgColor: AppColors.yetToStartColor,
                                       label: kOnTheWay,
                                       selectedTopBtnName: controller.selectedTopBtnName,
-                                      counter: controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
-                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 4),
+                                      // counter: controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
+                                      counter: controller.orderListType == 4 ? controller.driverDashboardData != null && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ? controller.isNextPharmacyAvailable != null && controller.isNextPharmacyAvailable! >= 0 ? "${controller.driverDashboardData!.deliveryList!.length - 1 }": "${controller.driverDashboardData?.deliveryList?.length}" : "0":controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
+                                      onTap: () => controller.onTapManTopDeliveryListBtn(context:context,btnType: 4),
                                       )) :
                               Flexible(
                                   flex: 1,
@@ -250,7 +379,7 @@ void isSelected(bool isSelect) {
                                       label: kPickedUp,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.pickedupOrders ?? "0",
-                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 8),
+                                      onTap: () => controller.onTapManTopDeliveryListBtn(context:context,btnType: 8),
                                       )),
 
                               /// Delivered
@@ -262,7 +391,7 @@ void isSelected(bool isSelect) {
                                       label: kDelivered,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.deliveredOrders ?? "0",
-                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 5),
+                                      onTap: () => controller.onTapManTopDeliveryListBtn(context:context,btnType: 5),
                                       )),
 
                               /// Failed
@@ -274,80 +403,152 @@ void isSelected(bool isSelect) {
                                       label: kFailed,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       counter: controller.driverDashboardData?.orderCounts?.faildOrders ?? "0",
-                                      onTap: () => controller.onTapMaTopDeliveryListBtn(context:context,btnType: 6),
+                                      onTap: () => controller.onTapManTopDeliveryListBtn(context:context,btnType: 6),
                                       )),
                             ],
                           ),
                         ),
 
+
+                        Visibility(
+                          visible: controller.orderListType == 6 && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ,
+                            child: Container(
+                              width: Get.width,
+                              height: 50,
+                              margin: const EdgeInsets.only(left: 10,right: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DelayedDisplay(
+                                    child: DefaultWidget.squareButton(
+                                        bgColor: AppColors.deepOrangeColor,
+                                        label: controller.isAllSelected ? kUnSelectAll:kSelectAll,
+                                        onTap: ()=> controller.onTapSelectAllFailed(context: context)
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: controller.isShowReschedule,
+                                    child: DelayedDisplay(
+                                      child: DefaultWidget.squareButton(
+                                          bgColor: AppColors.deepOrangeColor,
+                                          label: kRescheduleNow,
+                                          onTap: ()=> controller.onTapRescheduleNowFailed(context: context)
+
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                        ),
+
                         controller.driverDashboardData != null && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ?
-                        ListView.separated(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.only(top: 20,left: 8,right: 8),
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.driverDashboardData?.deliveryList?.length ?? 0,
-                          itemBuilder: (context, i) {
-                            return
-                            DeliveryCardCustom(
-                              /// onTap
-                             onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
+                        Expanded(
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(top: 20,left: 8,right: 8,bottom: 100),
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: controller.driverDashboardData?.deliveryList?.length ?? 0,
+                            itemBuilder: (context, i) {
 
-                              /// onTap Route
-                              onTapRoute: (){
+                              return
+                              DeliveryCardCustom(
+                                /// onTap
+                               onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
 
-                              },
+                                /// onTap Manual
+                                onTapManual: ()=> controller.onTapManualDelivery(context: context,index: i),
 
-                              /// onTap Manual
-                              onTapManual: (){
+                                /// onTap Route
+                                onTapRoute: ()=>
+                                    RedirectCustom.mapRedirectWithCustomerAddress(
+                                        latitude: controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.latitude ?? "0.0",
+                                        longitude: controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.longitude ?? "0.0",
+                                        customerDetailAddress: controller.driverDashboardData?.deliveryList?[i].customerDetials?.address ?? "",
+                                        customerDetailAddress1: controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address1 ?? controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address2 ?? ""
+                                    ),
 
-                              },
+                                /// onTap Make Next
+                                onTapMakeNext: ()=> controller.onTapMakeNextOrder(context: context,orderData: controller.driverDashboardData?.deliveryList?[i],),
 
-                              /// onTap DeliverNow
-                              onTapDeliverNow: (){
+                                /// onTap DeliverNow
+                                onTapDeliverNow: ()=> controller.onTapDeliverNow(context: context,index: i),
 
-                              },
+                                /// Customer Detail
+                                customerName: "${controller.driverDashboardData?.deliveryList?[i].customerDetials?.title ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.firstName ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.middleName ?? ""}  ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.lastName ?? ""}",
+                                customerAddress: "${controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address1 ?? controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address2 ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.postCode ?? ""}",
+                                altAddress: controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.alt_address ?? "",
+                                driverType: driverType,
 
-                              /// Customer Detail
-                              customerName: "${controller.driverDashboardData?.deliveryList?[i].customerDetials?.title ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.firstName ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.middleName ?? ""}  ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.lastName ?? ""}",
-                              customerAddress: "${controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address1 ?? controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.address2 ?? ""} ${controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.postCode ?? ""}",
-                              altAddress: controller.driverDashboardData?.deliveryList?[i].customerDetials?.customerAddress?.alt_address ?? "",
-                              driverType: driverType,
+                                isBulkScanSwitched: controller.isBulkScanSwitched,
+                                isSelected: controller.driverDashboardData?.deliveryList?[i].isSelected ?? false,
+                                nursingHomeId: controller.driverDashboardData?.deliveryList?[i].nursing_home_id ?? "",
+                                pharmacyName: controller.driverDashboardData?.deliveryList?[i].pharmacyName ?? "",
+                                index: i,
+                                bagSize: controller.driverDashboardData?.deliveryList?[i].bagSize ?? "",
 
-                              isBulkScanSwitched: controller.isBulkScanSwitched,
-                              isSelected: controller.driverDashboardData?.deliveryList?[i].isSelected ?? false,
-                              nursingHomeId: controller.driverDashboardData?.deliveryList?[i].nursing_home_id ?? "",
-                              pharmacyName: controller.driverDashboardData?.deliveryList?[i].pharmacyName ?? "",
+                                /// Order Detail
+                                orderListType: controller.orderListType,
+                                orderId: controller.driverDashboardData?.deliveryList?[i].orderId ?? "",
+                                deliveryStatus: controller.driverDashboardData?.deliveryList?[i].status ?? "",
+                                isControlledDrugs: controller.driverDashboardData?.deliveryList?[i].isControlledDrugs ?? "",
+                                isCronCreated: controller.driverDashboardData?.deliveryList?[i].isCronCreated ?? "",
+                                isStorageFridge: controller.driverDashboardData?.deliveryList?[i].isStorageFridge ?? "",
+                                parcelBoxName: controller.driverDashboardData?.deliveryList?[i].parcelBoxName ?? "",
+                                serviceName: controller.orderListType == 4 ? (controller.driverDashboardData?.deliveryList?[i].serviceName ?? "").toString() : (controller.driverDashboardData?.deliveryList?[i].customerDetials?.service_name ?? "").toString() ,
+                                pmrId: controller.driverDashboardData?.deliveryList?[i].pr_id ?? "",
+                                pmrType: controller.driverDashboardData?.deliveryList?[i].pmr_type ?? "",
+                                rescheduleDate: controller.driverDashboardData?.deliveryList?[i].rescheduleDate ?? "",
 
-                              /// Order Detail
-                              orderListType: controller.orderListType,
-                              orderId: controller.driverDashboardData?.deliveryList?[i].orderId ?? "",
-                              deliveryStatus: controller.driverDashboardData?.deliveryList?[i].status ?? "",
-                              isControlledDrugs: controller.driverDashboardData?.deliveryList?[i].isControlledDrugs ?? "",
-                              isCronCreated: controller.driverDashboardData?.deliveryList?[i].isCronCreated ?? "",
-                              isStorageFridge: controller.driverDashboardData?.deliveryList?[i].isStorageFridge ?? "",
-                              parcelBoxName: controller.driverDashboardData?.deliveryList?[i].parcelBoxName ?? "",
-                              serviceName: controller.driverDashboardData?.deliveryList?[i].serviceName ?? "",
-                              pmrId: controller.driverDashboardData?.deliveryList?[i].pr_id ?? "",
-                              pmrType: controller.driverDashboardData?.deliveryList?[i].pmr_type ?? "",
-                              rescheduleDate: controller.driverDashboardData?.deliveryList?[i].rescheduleDate ?? "",
-
-                              /// PopUp Menu
-                              popUpMenu: [],
+                                /// PopUp Menu
+                                popUpMenu: [
+                                   WidgetCustom.popUpMenuItems(
+                                      context: context,
+                                      isCheckedCD: controller.driverDashboardData?.deliveryList?[i].isControlledDrugs.toString() == "t" ? true:false ,
+                                      isCheckedFridge: controller.driverDashboardData?.deliveryList?[i].isStorageFridge.toString() == "t" ? true:false ,
+                                  )
+                                ],
+                                onPopUpMenuSelected: (value)=> controller.onTapPopUpMenuSelection(context: context,value: value,index: i),
 
 
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const Padding(
-                              padding: EdgeInsets.only(bottom: 15),
-                            ) ;
-                          },
-                        )
-                        : controller.isRouteStart == false ?
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return const Padding(
+                                padding: EdgeInsets.only(bottom: 15),
+                              ) ;
+                            },
+                          ),
+                        ) :
+                        controller.isLoading == false && controller.isRouteStart == false && driverType.toLowerCase() == kSharedDriver.toLowerCase() && controller.selectedPharmacy == null && controller.selectedRoute?.routeId != null?
+                        SizedBox(
+                            height: getHeightRatio(value: 50),
+                            width: getWidthRatio(value: 50),
+                            child: Center(
+                                child: BuildText.buildText(
+                                    text: kSelectPharmacyFirst
+                                )
+                            )
+                        ) :
+                        controller.isLoading == false && controller.isRouteStart == false && controller.selectedRoute?.routeId != null ?
+                        SizedBox(
+                            height: getHeightRatio(value: 50),
+                            width: getWidthRatio(value: 50),
+                            child: Center(
+                                child: BuildText.buildText(
+                                    text: "${controller.orderListType == 1 ? kReady : controller.orderListType == 8 ? kPickedUp : controller.orderListType == 4 ? kOnTheWay : controller.orderListType == 5 ? kCompleted : controller.orderListType == 6 ? kFailed : ""} $kOrderNotFound"
+                                )
+                            )
+                        ) :
+                        controller.isLoading == false && controller.isRouteStart == false ?
                         SizedBox(
                           height: getHeightRatio(value: 50),
                             width: getWidthRatio(value: 50),
-                            child: Center(child: BuildText.buildText(text: kSelectRouteFirst))
+                            child: Center(
+                                child: BuildText.buildText(
+                                    text: kSelectRouteFirst
+                                )
+                            )
                         ) : const SizedBox.shrink(),
 
                         // Visibility(
@@ -718,32 +919,7 @@ void isSelected(bool isSelect) {
                   ],
                 ),
                 /// Bottom Navigation bar
-                // bottomNavigationBar:
-                // isPickedUp == true ?
-                // InkWell(
-                //   onTap: () {
-                //     showDialog(
-                //       context: context,
-                //       builder: (context) {
-                //         return   const ConfirmationRouteStartDialog();
-                //       },
-                //     );
-                //   },
-                //   child: Container(
-                //     color: AppColors.blueColor,
-                //     padding: const EdgeInsets.all(16),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         BuildText.buildText(
-                //             text: kStartRoute,
-                //             color: AppColors.whiteColor,
-                //             size: 16,
-                //             weight: FontWeight.w700),
-                //       ],
-                //     ),
-                //   ),
-                // ) : const SizedBox.shrink()
+                bottomNavigationBar: controller.bottomNavigationBarDashboard(context: context,ctrl: controller)
             ),
             isLoading: controller.isLoading,
           ),

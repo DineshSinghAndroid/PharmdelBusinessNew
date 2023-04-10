@@ -29,17 +29,25 @@ class AppSharedPreferences {
   static String updateMiles = "updateMiles";
 
   static String routeID = "route_id";
-  static String isRouteStart = "is_route_start";
   static String companyID = "device_id";
+  static String lunchBreakStatus = "lunch_break_status";
 
   static String userEmail = "user_email";
   static String userMobile = "user_mobile";
   static String userStatus = "user_status";
+  static String isAddressUpdated = "address_update";
   static String isStartRoute = "is_start_route";
   static String deliveryType = "delivery_type";
   static String forgotMPin = "forgot_mpin";
 
+  /// Use for On Start Route PopUp
+  static const String startRouteId = "start_route_id";
+  static const String endRouteId = "end_route_id";
 
+  static String userDeliveryLastTime = "user_last_time";
+  static String deliveryTime = "delivery_time";
+
+  static String vehicleId = "vehicle_id";
 
 
 
@@ -63,6 +71,11 @@ class AppSharedPreferences {
       {required String variableName,
       required List<String> variableValue}) async {
     await _preferences?.setStringList(variableName, variableValue);
+  }
+
+  static removeValueToSharedPref(
+      {required String variableName}) async {
+    await _preferences?.remove(variableName);
   }
 
   ///GET DATA

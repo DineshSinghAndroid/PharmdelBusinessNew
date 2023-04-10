@@ -1,6 +1,5 @@
 
 
-import 'dart:convert';
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
@@ -9,42 +8,86 @@ import 'package:pharmdel/Model/DriverDashboard/driver_dashboard_response.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
 import '../../Model/CreateNotification/createNotificationResponse.dart';
+import '../../Model/CreateOrder/driver_create_order_response.dart';
+import '../../Model/CreatePatientModel/driver_create_patient_response.dart';
+import '../../Model/DriverDashboard/get_pharmacy_info_response.dart';
+import '../../Model/DriverDashboard/make_next_order_response.dart';
+import '../../Model/DriverDashboard/reschedule_delivery_response.dart';
+import '../../Model/DriverDashboard/update_storage_or_cd_response.dart';
 import '../../Model/DriverList/driver_list_response.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
 import '../../Model/DriverProfile/profile_driver_response.dart';
 import '../../Model/DriverRoutes/get_route_list_response.dart';
 import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
+import '../../Model/GetDeliveryMasterData/get_delivery_master_data.dart';
 import '../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../Model/Login/login_model.dart';
 import '../../Model/LunchBreak/lunchBreakResponse.dart';
 import '../../Model/Notification/NotifficationResponse.dart';
-import '../../Model/OrderDetails/orderdetails_response.dart';
+import '../../Model/OrderDetails/detail_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
+import '../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
+import '../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
+import '../../Model/PharmacyModels/P_DriverRoutePointsResponse/p_driverRoutePointsResponse.dart';
+import '../../Model/PharmacyModels/P_FetchDeliveryListModel/P_fetch_delivery_list_model.dart';
 import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
-import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
+import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
+import '../../Model/PharmacyModels/P_MedicineListResponse/p_medicineListResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
+import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
+import '../../Model/ProcessScan/driver_process_scan.dart';
+import '../../Model/ProcessScan/process_scan.dart';
 import '../../Model/SaveNotification/saveNotificationResponse.dart';
+import '../../Model/SearchMedicine/search_medicine_response.dart';
 import '../../Model/SetupPin/setupPin_model.dart';
+import '../../Model/UpdateMiles/update_miles_response.dart';
 import '../../Model/UpdateProfile/updateProfileResponse.dart';
 import '../../Model/UpdateCustomerWithOrder/UpdateCustomerWithOrder.dart';
 import '../../Model/VehicleList/vehicleListResponse.dart';
 import '../../main.dart';
+import '../GeoCoder/GoogleAddresResponse/google_api_response.dart';
 import '../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../Helper/PrintLog/PrintLog.dart';
 import '../Helper/Shared Preferences/SharedPreferences.dart';
 import '../RouteController/RouteNames.dart';
 import '../WidgetController/Loader/LoadingScreen.dart';
-import '../WidgetController/Popup/PopupCustom.dart';
 import '../WidgetController/StringDefine/StringDefine.dart';
 import '../WidgetController/Toast/ToastCustom.dart';
 import 'WebConstant.dart';
+import 'important_keys.dart';
 
 class ApiController {
   final Dio _dio = Dio();
+
+  /// Google Address Api
+  Future<GoogleAddressApiResponse?> getGoogleAddressApi({required String primaryText,required String secondaryText})async{
+    GoogleAddressApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        var encodedAddressData = Uri.encodeComponent("$primaryText $secondaryText");
+
+        Response response = await _dio.get("https://maps.google.com/maps/api/geocode/json?key=${ImportantKey.kGooglePlacesSdkKey}&address=$encodedAddressData",
+            options: Options(followRedirects: false,validateStatus: (status) => true));
+        PrintLog.printLog("Response:: $response");
+        if (response.data != null && response.statusCode == 200) {
+          result = GoogleAddressApiResponse.fromJson(response.data);
+          return result;
+        } else {
+          ToastCustom.showToast(msg: response.statusMessage.toString()??"");
+        }
+      } catch (error) {
+        PrintLog.printLog("Exception_Main: $error");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
 
 
   /// Login Api
@@ -166,6 +209,53 @@ class ApiController {
    }
 
 
+   /// Driver Create Patient Api
+  Future<DriverCreatePatientApiResponse?> driverCreatePatientApi({context, required String url,
+    dictParameter}) async {
+    DriverCreatePatientApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: authToken);
+        if (response?.data != null && response!.statusCode == 200) {
+          result = DriverCreatePatientApiResponse.fromJson(response.data);
+          return result;
+        } else {
+          return result;
+         }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1s: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+   }
+
+   /// Driver Process Scan  Api
+  Future<ProcessScanApiResponse?> driverProcessScanApi({context, required String url,
+    dictParameter}) async {
+    ProcessScanApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: authToken);
+        if (response?.data != null && response!.statusCode == 200) {
+          result = ProcessScanApiResponse.fromJson(response.data);
+          return result;
+        } else {
+          return result;
+         }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1s: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+   }
+
+
 
    ///UPDATE CUSTOMER WITH ORDER
   Future<UpdateCustomerWithOrderModel?> updateCustomerWithOrder({context, required String url,
@@ -241,7 +331,7 @@ class ApiController {
     return null;
   }
 
-  //Driver Dashboard Api
+  ///Driver Dashboard Api
   Future<GetDeliveryApiResponse?> getDriverDashboardApi({context, required String url, dictParameter, String? token}) async {
     GetDeliveryApiResponse? result;
     if (await ConnectionValidator().check()) {
@@ -262,6 +352,50 @@ class ApiController {
     }
     return null;
   }
+
+
+  ///Driver Dashboard Api
+  Future<GetPharmacyInfoResponse?> getPharmacyInfoApi({context, required String url, dictParameter, String? token}) async {
+    GetPharmacyInfoResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetPharmacyInfoResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Update Vehicle Miles Api
+  Future<UpdateVehicleMilesResponse?> updateMilesApi({context, required String url, dictParameter, String? token}) async {
+    UpdateVehicleMilesResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ?? "");
+        if (response?.data != null && response?.statusCode == 200) {
+          result = UpdateVehicleMilesResponse.fromJson(response?.data);
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
 
   /// Driver Routes Api
   Future< GetRouteListResponse?> getDriverRoutesApi({context, required String url, dictParameter, String? token}) async {
@@ -349,11 +483,11 @@ class ApiController {
   }
 
   ///Driver Profile Api
-  Future<DriverProfileApiResponse?> getDriverProfileApi({context, required String url, dictParameter, String? token}) async {
+  Future<DriverProfileApiResponse?> getDriverProfileApi({required String url, dictParameter, String? token}) async {
     DriverProfileApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
-        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        final response = await requestGetForApi(context: G.Get.overlayContext!, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = DriverProfileApiResponse.fromJson(response?.data);
           return result;
@@ -394,14 +528,14 @@ class ApiController {
   }
 
 
-  ///Get Order Details Api
-    Future<OrderModal?> getOrderDetailApi({context, required String url, dictParameter, String? token}) async {
-      OrderModal? result;
+  /// Get Order Details Api
+    Future<OrderDetailResponse?> getOrderDetailApi({context, required String url, dictParameter, String? token}) async {
+      OrderDetailResponse? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
-          result = OrderModal.fromJson(response?.data);
+          result = OrderDetailResponse.fromJson(response?.data);
           return result;
         } else {
           return result;
@@ -416,8 +550,117 @@ class ApiController {
     return null;
   }
 
+  /// Update Storage or CD Api
+    Future<UpdateOrderStorageOrCDResponse?> updateStorageOrCDApi({context, required String url, dictParameter, String? token}) async {
+      UpdateOrderStorageOrCDResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ?? "");
+        if (response?.data != null && response?.statusCode == 200) {
+          result = UpdateOrderStorageOrCDResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
 
-  //Get Patient Api
+  /// Delete Order by Order ID Api
+  Future<Response?> deleteOrderByOrderIDApi({required context, String? url, formData}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $formData");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL_PHARMACY,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.get(url!,
+          data: formData,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }else if(response.statusCode == 200){
+      //   return response;
+      // }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  /// Update Delivery Status Api
+  Future<Response?> updateDeliveryStatusApi({required context, String? url, formData}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $formData");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.post(url!,
+          data: formData,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }else if(response.statusCode == 200){
+      //   return response;
+      // }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  ///Get Patient Api
   Future<GetPatientApiResposne?> getPatientApi({context, required String url, dictParameter, String? token}) async {
   GetPatientApiResposne? result;
     if (await ConnectionValidator().check()) {
@@ -439,8 +682,95 @@ class ApiController {
     return null;
   }
 
+  ///Process Scan Api
+  Future<DriverProcessScan?> processScanApi({context, required String url, dictParameter, String? token}) async {
+    DriverProcessScan? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: authToken);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverProcessScan.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
 
- ///Get All Delivery Api
+  /// Create order Api
+  Future<DriverCreateOrderApiResponse?> driverCreateOrderApi({context, required String url, dictParameter, String? token}) async {
+    DriverCreateOrderApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: authToken);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverCreateOrderApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  /// Get Medicine List Api
+  Future<SearchMedicineListApiResponse?> getMedicineListApi({context, required String url, dictParameter, String? token}) async {
+    SearchMedicineListApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = SearchMedicineListApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  /// Get Delivery Master Data Api
+  Future<GetDeliveryMasterDataResponse?> getDeliveryMasterDataApi({context, required String url, dictParameter, String? token}) async {
+    GetDeliveryMasterDataResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetDeliveryMasterDataResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Get All Delivery Api
   Future<AllDeliveryApiResponse?> getAllDeliveryApi({context, required String url, dictParameter, String? token}) async {
     AllDeliveryApiResponse? result;
     if (await ConnectionValidator().check()) {
@@ -628,16 +958,11 @@ class ApiController {
         final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
           result = LunchBreakApiResponse.fromJson(response?.data);
-          print("THIS IS API RESULT FOR LOGIN API $result");
           return result;
-        } else {
-          print("THIS IS API RESULT FOR LOGIN API $result");
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
-
         return result;
-
       }
     } else {
       ToastCustom.showToast( msg: networkToastString);
@@ -670,6 +995,69 @@ class ApiController {
     return null;
   }
 
+  /// Get Deliveries with route start api
+  Future<GetDeliveryApiResponse?> getDeliveriesWithRouteStartApi({context, required String url, dictParameter, String? token}) async {
+    GetDeliveryApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetDeliveryApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  /// Get Reschedule order api
+  Future<RescheduleDeliveryResponse?> rescheduleOrderApi({context, required String url, dictParameter}) async {
+    RescheduleDeliveryResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: authToken);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = RescheduleDeliveryResponse.fromJson(response?.data);
+          return result;
+        } else {
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  /// Make next order api
+  Future<MakeNextApiResponse?> makeNextApi({context, required String url, dictParameter}) async {
+    MakeNextApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: authToken);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = MakeNextApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
 
   ///Save Notification Api
   Future<SaveNotificationApiResponse?> getSaveNotificationApi({context, required String url, dictParameter, String? token}) async {
@@ -695,6 +1083,9 @@ class ApiController {
     }
     return null;
   }
+
+
+
 
   Future<Response?> requestGetForApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
@@ -759,8 +1150,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: Duration(minutes: 1),
-          connectTimeout: Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
           headers: headers);
       _dio.options = options;
       Response response = await _dio.post(url,
@@ -769,12 +1160,12 @@ class ApiController {
               followRedirects: false,
               validateStatus: (status) => true,
               headers: headers));
-      if(response.data["authenticated"] == false){
-        // PopupCustom.logoutPopUP(context: context);
-      }
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }
       PrintLog.printLog("Response: $response");
       PrintLog.printLog("Response_headers: ${response.headers}");
-      PrintLog.printLog("Response_realuri: ${response.realUri}");
+      PrintLog.printLog("Response_real_url: ${response.realUri}");
       return response;
     } catch (error) {
       PrintLog.printLog("Exception_Main: $error");
@@ -870,7 +1261,142 @@ class ApiController {
     }
   }
 
-///driver list api for pharmacy
+  /// Background data api
+  Future<Response?> startRoutesAPI(
+      {required context, String? url, dictParameter}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $dictParameter");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.get(url!,
+          data: dictParameter,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }else if(response.statusCode == 200){
+      //   return response;
+      // }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  /// End Route Api
+  Future<Response?> endRoutesAPI(
+      {required context, String? url, dictParameter}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $dictParameter");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.get(url!,
+          data: dictParameter,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }else if(response.statusCode == 200){
+      //   return response;
+      // }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  /// End Route Api
+  Future<Response?> completeDataUploadAPI(
+      {required context, String? url, dictParameter}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $dictParameter");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.post(url!,
+          data: dictParameter,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      // if(response.data["authenticated"] == false){
+      //   // PopupCustom.logoutPopUP(context: context);
+      // }else if(response.statusCode == 200){
+      //   return response;
+      // }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  ///driver list api for pharmacy
   Future<dynamic> requestGetForDriverListApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
     try {
@@ -966,6 +1492,7 @@ class ApiController {
       if(response.data.toString().toLowerCase() == "success"){
         AppSharedPreferences.clearSharedPref().then((value) {
           G.Get.offAllNamed(loginScreenRoute);
+          G.Get.deleteAll();
         });
       }else{
         CustomLoading().show(context, false);
@@ -979,5 +1506,231 @@ class ApiController {
     }
   }
 
+  ///delivery  list api for pharmacy
+  Future<P_FetchDeliveryListModel?> fetchPharmacyDeliveryListapi({context, required String url, dictParameter, String? token}) async {
+    P_FetchDeliveryListModel? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = P_FetchDeliveryListModel.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Get Driver Routes Api
+  Future<DeliveryScheduleApiResponse?> getDeliveryScheduleApi({context, required String url, dictParameter, String? token}) async {
+    DeliveryScheduleApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DeliveryScheduleApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Create Order Api
+  Future<CreateOrderApiResponse?> getCreateOrderApi({context, required String url, dictParameter, String? token}) async {
+    CreateOrderApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = CreateOrderApiResponse.fromJson(response?.data);
+          PrintLog.printLog(result.message);
+          return result;
+        } else {
+          PrintLog.printLog(result!.message);
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Get Driver Routes Api
+  Future<DriverRoutePointsApiResponse?> getDriverRoutePointsApi({context, required String url, dictParameter, String? token}) async {
+    DriverRoutePointsApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = DriverRoutePointsApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  /// Get Medicine List Api
+  Future<MedicineListApiResponse?> p_getMedicineListApi({context, required String url, dictParameter, String? token}) async {
+    MedicineListApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = MedicineListApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Sent Notification Api
+  Future<SentNotificationApiResponse?> getSentNotificationApi({context, required String url, dictParameter, String? token}) async {
+    SentNotificationApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = SentNotificationApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  /// Delete Nursing Order Api
+  Future<Response?> deleteNursingOrderApi(
+      {required context, String? url, formData}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+
+      PrintLog.printLog("Headers: $headers");
+      PrintLog.printLog("Url:  $url");
+      PrintLog.printLog("Token:  $authToken");
+      PrintLog.printLog("formData: $formData");
+
+      BaseOptions options = BaseOptions(
+          baseUrl: WebApiConstant.BASE_URL,
+          receiveTimeout: const Duration(minutes: 1),
+          connectTimeout: const Duration(minutes: 1),
+          headers: headers);
+
+      _dio.options = options;
+      Response response = await _dio.get(url!,
+          data: formData,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ));
+
+      PrintLog.printLog("Response: $response");
+
+      if(response.data["authenticated"] == false){
+        // PopupCustom.logoutPopUP(context: context);
+      }else if(response.statusCode == 200){
+        return response;
+      }
+      return response;
+    } catch (error) {
+      PrintLog.printLog("Exception_Main: $error");
+      return null;
+    }
+  }
+
+  ///Process Scan Api
+  Future<ProcessScanApiResponse?> getProcessScanApi({context, required String url, dictParameter, String? token}) async {
+    ProcessScanApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
+          result = ProcessScanApiResponse.fromJson(response?.data);
+          PrintLog.printLog(result.message);
+          return result;
+        } else {
+          PrintLog.printLog(result!.message);
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+
+        return result;
+
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
+
+  ///Get Map Routes Api
+  Future<GetMapRoutesApiResponse?> getMapRoutesApi({context, required String url, dictParameter, String? token}) async {
+    GetMapRoutesApiResponse? result;
+    if (await ConnectionValidator().check()) {
+      try {
+        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
+        if (response?.data != null && response?.statusCode == 200) {
+          result = GetMapRoutesApiResponse.fromJson(response?.data);
+          return result;
+        } else {
+          return result;
+        }
+      } catch (e) {
+        PrintLog.printLog("Exception_main1: $e");
+        return result;
+      }
+    } else {
+      ToastCustom.showToast( msg: networkToastString);
+    }
+    return null;
+  }
 
 }

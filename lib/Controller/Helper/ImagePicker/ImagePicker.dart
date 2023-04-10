@@ -8,14 +8,17 @@ import '../PrintLog/PrintLog.dart';
 class ImagePickerController extends GetxController{
   XFile?  _image;
   XFile?  profileImage;
+  XFile?  rxImage;
   XFile?  documentImage;
+  XFile?  speedometerImage;
+  XFile?  orderImage;
   bool isLoading = false;
   XFile? image1;
 
   final ImagePicker _picker = ImagePicker();
   List<XFile> images = [];
 
-  void getImage(source,BuildContext context, String type) async {
+  Future<void> getImage({required String source, required BuildContext context, required String type}) async {
     isLoading = true;
     try {
       if(_picker != null) {
@@ -31,8 +34,20 @@ class ImagePickerController extends GetxController{
             profileImage = _image;
             isLoading = false;
           }
+          if(type == "rxImage"){
+            rxImage = _image;
+            isLoading = false;
+          }
           if(type == "documentImage") {
             documentImage = _image;
+            isLoading = false;
+          }
+          if(type == "speedometerImage") {
+            speedometerImage = _image;
+            isLoading = false;
+          }
+          if(type == "orderImage") {
+            orderImage = _image;
             isLoading = false;
           }
         }else{
@@ -53,6 +68,11 @@ class ImagePickerController extends GetxController{
     PrintLog.printLog("profileImage $profileImage");
     update();
   }
+  void updateRxImage(XFile image){
+    rxImage = image;
+    PrintLog.printLog("rxImage $rxImage");
+    update();
+  }
   void updatePhoto(XFile image){
     image1 = image;
     PrintLog.printLog("profileImage $profileImage");
@@ -63,4 +83,16 @@ class ImagePickerController extends GetxController{
     documentImage = image;
     update();
   }
+  void updateSpeedometerImage(XFile image){
+    speedometerImage = image;
+    update();
+  }
+  void updateOrderImage(XFile image){
+    orderImage = image;
+    update();
+  }
+
+  // void getImageFromImageController(source, BuildContext context) {
+  //   imagePicker?.getImage(source, context, "documentImage");
+  // }
 }

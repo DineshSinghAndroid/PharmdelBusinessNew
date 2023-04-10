@@ -1,18 +1,19 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
+import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/RouteController/RouteNames.dart';
 import '../../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
-import '../../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
-import '../../../Controller/WidgetController/RefresherIndicator/RefreshIndicatorCustom.dart';
+import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
+import 'notification_info.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
@@ -25,26 +26,40 @@ class PharmacyNotificationScreen extends StatefulWidget {
 class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen> {
 
   PharmacyNotificationController phrNotfCtrl = Get.put(PharmacyNotificationController());
-  RefreshController refreshController = RefreshController();
 
   @override
-  void initState() {    
-    init();
+  void initState() {  
+    phrNotfCtrl.scrollController.addListener(scrollListner);
+    Future.delayed(const Duration(milliseconds: 100),(){
+      init();
+    });
     super.initState();
   }
 
   Future<void> init() async {
+    phrNotfCtrl.pageNo = 1;
     phrNotfCtrl.isNetworkError = false;
     phrNotfCtrl.isEmpty = false;
     if (await ConnectionValidator().check()) {
       await phrNotfCtrl.notificationApi(context: context);
-      await phrNotfCtrl.createNotificationApi(context: context);
-    } else {
-      phrNotfCtrl.isNetworkError = true;
-      setState(() {});
+      await phrNotfCtrl.sentNotificationApi(context: context, pageNo: phrNotfCtrl.pageNo);
+    } else {      
+      phrNotfCtrl.isNetworkError = true;      
     }
+    setState(() {});
   }
 
+ void scrollListner() {
+    if(phrNotfCtrl.scrollController.position.maxScrollExtent == phrNotfCtrl.scrollController.offset){
+      PrintLog.printLog("check: ${phrNotfCtrl.getNextPage}");
+      if(phrNotfCtrl.getNextPage){
+        phrNotfCtrl.pageNo++;
+        phrNotfCtrl.sentNotificationApi(context: context, pageNo: phrNotfCtrl.pageNo);
+      }
+    }else if(phrNotfCtrl.scrollController.position.minScrollExtent == phrNotfCtrl.scrollController.offset){
+
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PharmacyNotificationController>(
@@ -53,11 +68,6 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
         return  LoadScreen(
           widget: controller.isError ?
             ErrorScreen(
-            onTap: () {
-              init();
-            },
-          ) : controller.isNetworkError ?
-            NoInternetConnectionScreen(
             onTap: () {
               init();
             },
@@ -91,6 +101,9 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
               ),
             ),
             bottom: TabBar(
+              onTap: (value) {
+                // init();
+              },
               indicatorColor: AppColors.colorOrange,
               tabs: [
                 Padding(
@@ -112,33 +125,24 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
               ],
             ),
           ),
-          body: TabBarView(                    
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-          
+          body: TabBarView(
+            physics: const AlwaysScrollableScrollPhysics(),                         
+            dragStartBehavior: DragStartBehavior.start,
+            children: [          
               ///Recieve Notification
-              RefreshIndicatorCustom(
-              refreshController: refreshController,
-              onRefresh: (){
-                refreshController.refreshCompleted();
-                init();
-              },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Container(
-                          margin: const EdgeInsets.all(8),
-                          child: ListView.builder(                          
-                              shrinkWrap: true,
-                              itemCount: controller.notificationData?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                return NotificationCardWidget(
-                                  name: controller.notificationData?[index].name ?? "",
-                                  messsage: controller.notificationData?[index].message ?? "",
-                                  time:controller.notificationData?[index].created ?? "",
-                                );
-                              }),
-                        ),
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8,),
+                child: ListView.builder(                          
+                    shrinkWrap: true,   
+                    physics: const AlwaysScrollableScrollPhysics(),                                               
+                    itemCount: controller.notificationData?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return P_NotificationCardWidget(
+                        name: controller.notificationData?[index].name ?? "",
+                        message: controller.notificationData?[index].message ?? "",
+                        time:controller.notificationData?[index].created ?? "",
+                      );
+                    }),
               ), 
           
               ///Sent Notification  
@@ -147,25 +151,41 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                   offset: const Offset(-10, -15),
                   child: Tooltip(
                     message: kCreateNotification,
-                    child: FloatingActionButton(                                        
+                    child: FloatingActionButton(
                       backgroundColor: AppColors.colorOrange,
                       child: const Icon(Icons.add),
-                      onPressed: (){
+                      onPressed: (){                        
                         Get.toNamed(pharmacyCreateNotificationScreeenRoute);
                       },
                       ),
                   ),
                 ),
                 body: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(top: 8),
                   child: ListView.builder(
-                    itemCount: controller.createNotificationData?.staffManagerInfo?.length ?? 0,
+                    controller: controller.scrollController,
+                    itemCount: controller.sentNotificationList?.length ?? 0,
+                    physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return NotificationCardWidget(
-                        time: '12:00', 
-                        messsage: controller.createNotificationData?.staffManagerInfo?[index].role ?? "", 
-                        name: controller.createNotificationData?.staffManagerInfo?[index].name ?? "");
+                      return P_NotificationCardWidget(
+                        onTap: (){
+                          showDialog(
+                          barrierDismissible: true,
+                          context: context, 
+                          builder: (context) {
+                            return NotificationInfo(
+                              notificationName: controller.sentNotificationList?[index].name ?? "",
+                              type: controller.sentNotificationList?[index].type ?? "",
+                              userName: controller.sentNotificationList?[index].user ?? "",
+                              message: controller.sentNotificationList?[index].message ?? "",
+                              dateAdded: controller.sentNotificationList?[index].dateAdded ?? "",
+                            );
+                          },);
+                        },
+                        time: controller.sentNotificationList?[index].dateAdded ?? "",                         
+                        message: controller.sentNotificationList?[index].user ?? "",///UserName
+                        name: controller.sentNotificationList?[index].name ?? "");
                     },
                   ),
                 ),

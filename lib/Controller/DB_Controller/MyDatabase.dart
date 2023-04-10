@@ -172,6 +172,13 @@ class MyDatabase extends _$MyDatabase {
     });
   }
 
+  /// New Method completed delete
+  Future deleteCompletedDeliveryByOrderId(String orderId) async {
+    return transaction(() async {
+      return await (delete(orderCompleteData)..where((tbl) => tbl.deliveryId.equals(orderId))).go();
+    });
+  }
+
   Future<List<delivery_list>> getAllOutForDeliveriesOnly() async {
     return transaction(() async {
       return await (select(deliveryList)..where((t) => t.deliveryStatus.equals(4))).get();
@@ -257,6 +264,16 @@ class MyDatabase extends _$MyDatabase {
       return await (select(customerAddresses)..where((t) => t.order_id.equals(orderid))).getSingleOrNull();
     });
   }
+
+  Future deleteEverything() async{
+    await delete(token).go();
+    await delete(deliveryList).go();
+    await delete(customerDetails).go();
+    await delete(customerAddresses).go();
+    await delete(orderCompleteData).go();
+    await delete(exemptionsData).go();
+  }
+
 }
 
 LazyDatabase _openConnection() {

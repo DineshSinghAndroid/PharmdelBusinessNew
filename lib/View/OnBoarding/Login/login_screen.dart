@@ -12,10 +12,21 @@ import '../../../Controller/ProjectController/LoginController/login_controller.d
 import '../../../Controller/WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   LoginController loginCtrl = Get.put(LoginController());
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +152,7 @@ class LoginScreen extends StatelessWidget {
 
                         buildSizeBox(20.0, 0.0),
                         ButtonCustom(
-                          onPress: () => controller.onTapLogin(context: context),
+                          onPress: () => controller.onTapLogin(context: context,ctrl: controller),
                           // onPress: () => controller.autoFillUser(),
                           text: kContinue,
                           buttonWidth: Get.width,
@@ -167,6 +178,4 @@ class LoginScreen extends StatelessWidget {
       },
     );
   }
-
-
 }

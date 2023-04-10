@@ -27,7 +27,7 @@ class SplashController extends GetxController {
   }
 
   runSplash() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       if(userPin != '' ){
         Get.offAndToNamed(securePinScreenRoute);
       } else {

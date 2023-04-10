@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../../Controller/ProjectController/GetPatientController/getPatientController.dart';
+import '../../Controller/ProjectController/SearchPatient/search_patient_controller.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
 
 class SearchPatientScreen extends StatefulWidget {
@@ -15,11 +16,8 @@ class SearchPatientScreen extends StatefulWidget {
 class _SearchPatientScreenState extends State<SearchPatientScreen> {
 
 
-GetPatientContoller patCtrl = Get.put(GetPatientContoller());
-TextEditingController searchTextCtrl = TextEditingController();
+  SearchPatientController searchCtrl = Get.put(SearchPatientController());
 
-bool? noData = false;
-bool? isLoading = false;
 
 @override
  void initState() {
@@ -28,95 +26,94 @@ bool? isLoading = false;
 
   @override
   void dispose() {
-    searchTextCtrl.dispose();
+    Get.delete<SearchPatientController>();
     super.dispose();
   }
 
 @override
 Widget build(BuildContext context,) {
-    return GetBuilder<GetPatientContoller>(
-      init: patCtrl,
+    return GetBuilder<SearchPatientController>(
+      init: searchCtrl,
       builder: (controller) {
         return GestureDetector(
-          onTap: (){
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
+          onTap: () => FocusScope.of(context).unfocus(),
           child: SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                backgroundColor: AppColors.whiteColor,
-                leading: InkWell(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: AppColors.blackColor,
+            child: LoadScreen(
+              widget: Scaffold(
+                resizeToAvoidBottomInset: false,
+                appBar: AppBar(
+                  backgroundColor: AppColors.whiteColor,
+                  leading: InkWell(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: AppColors.blackColor,
+                    ),
                   ),
-                ),
-                flexibleSpace: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 30),
-                  color: Colors.transparent,
-                  child: Container(
-                    height: 50,
-                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: TextFormField(
-                      textAlign: TextAlign.start,
-                      controller: searchTextCtrl,
-                      decoration: const InputDecoration(
-                          focusColor: Colors.white,
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.black38),
-                          hintText: kSearchPat),
-                          onChanged: (value) async {
-                              if(value.toString().trim().isNotEmpty && value.length > 3){
-                                await controller.getPatientApi(context: context, firstName: value.toString().trim());
-                              }else{
-                                setState(() {
-                                  controller.patientData?.clear();
-                                });
-                              }
-                          },
+                  flexibleSpace: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 30),
+                    color: Colors.transparent,
+                    child: Container(
+                      height: 50,
+                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      child: TextFormField(
+                        textAlign: TextAlign.start,
+                        controller: controller.searchTextCtrl,
+                        decoration: const InputDecoration(
+                            focusColor: Colors.white,
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            filled: true,
+                            fillColor: Colors.transparent,
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(color: Colors.black38),
+                            hintText: kSearchPat),
+                            onChanged: (value) => controller.onTypingText(value: value.trim(),context: context),
+
+                      ),
                     ),
                   ),
                 ),
-              ),
-              body: SafeArea(
-                  child: Stack(children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(                
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      strIMG_HomeBg,
-                      fit: BoxFit.fill,
-                    ),
-                  ),                
-                ),
-                controller.patientData != null && controller.patientData!.isNotEmpty && searchTextCtrl.text.toString().trim().length > 2 ?
-                ListView.builder(                  
+                body: Container(
+                  height: Get.height,width: Get.width,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(strImgHomeBg),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.bottomCenter
+                      )
+                  ),
+                  child: controller.patientData != null && controller.patientData!.isNotEmpty && controller.searchTextCtrl.text.toString().trim().length > 2 ?
+                  ListView.builder(
                       itemCount: controller.patientData?.length ?? 0,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return  PateintListWidget( 
-                        onTap: (){},                                           
-                        context: context,
-                        firstName: controller.patientData?[index].firstName ?? "",
-                        middleName: controller.patientData?[index].middleName ?? "",
-                        lastName:  controller.patientData?[index].lastName ?? "",
-                        address:  controller.patientData?[index].address1 ?? "",
-                        dob: controller.patientData?[index].dob ?? "",
-                      );  
+                        return  PateintListWidget(
+                          onTap: ()=> controller.onTapPatient(context: context,index: index),
+                          context: context,
+                          firstName: controller.patientData?[index].firstName ?? "",
+                          middleName: controller.patientData?[index].middleName ?? "",
+                          lastName:  controller.patientData?[index].lastName ?? "",
+                          address:  controller.patientData?[index].address1 ?? "",
+                          dob: controller.patientData?[index].dob ?? "",
+                        );
                       }
-                       ) : const SizedBox.shrink()
-              ]))),
+                  ) :
+                  controller.searchTextCtrl.text.toString().trim().length > 3 && controller.patientData == null || controller.searchTextCtrl.text.toString().trim().length > 3 && controller.patientData!.isEmpty?
+                  SizedBox(
+                    height: 200,
+                    child: Center(
+                      child: BuildText.buildText(text: kNoPatAvl,size: 24,color: AppColors.blackColor.withOpacity(0.4))
+                    ),
+                  ):const SizedBox.shrink(),
+                )
+              ),
+              isLoading: controller.isLoading,
+            ),
           ),
         );
       },

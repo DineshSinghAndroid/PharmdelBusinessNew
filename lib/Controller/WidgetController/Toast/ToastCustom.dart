@@ -8,6 +8,10 @@ class ToastCustom{
     Fluttertoast.showToast( msg:msg,textColor: Colors.white);
   }
 
+  static showToastWithLength({required String msg,Toast? toastLength}){
+    Fluttertoast.showToast( msg:msg,toastLength: toastLength ?? Toast.LENGTH_LONG);
+  }
+
 }
 
  class ToastUtils {

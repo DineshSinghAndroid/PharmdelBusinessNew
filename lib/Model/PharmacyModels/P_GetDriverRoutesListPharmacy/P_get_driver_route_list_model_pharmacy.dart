@@ -78,11 +78,11 @@ class  GetDriverRouteListModelResponse {
 }
 
 class RouteList {
-  int? routeId;
+  String? routeId;
   String? routeName;
-  int? isActive;
-  int? companyId;
-  int? branchId;
+  String? isActive;
+  String? companyId;
+  String? branchId;
 
   RouteList(
       {this.routeId,
@@ -92,11 +92,11 @@ class RouteList {
         this.branchId});
 
   RouteList.fromJson(Map<String, dynamic> json) {
-    routeId = json['routeId'];
-    routeName = json['routeName'];
-    isActive = json['isActive'];
-    companyId = json['companyId'];
-    branchId = json['branchId'];
+    routeId = json['routeId'] != null ? json['routeId'].toString():null;
+    routeName = json['routeName'] != null ? json['routeName'].toString():null;
+    isActive = json['isActive'] != null ? json['isActive'].toString():null;
+    companyId = json['companyId'] != null ? json['companyId'].toString():null;
+    branchId = json['branchId'] != null ? json['branchId'].toString():null;
   }
 
   Map<String, dynamic> toJson() {

@@ -39,8 +39,6 @@ class NursingOrdersData {
   String? address;
   String? deliveryStatus;
   String? deliveryStatusDesc;
-  bool? isCD = false;
-  bool? isFridge = false;
   String? deliveryDate;
   String? customerMobileNumber;
   String? isStorageFridge;
@@ -59,7 +57,6 @@ class NursingOrdersData {
     customerMobileNumber = json['customerMobileNumber'] != null ? json['customerMobileNumber'].toString() : null;
     isStorageFridge = json['isStorageFridge'] != null ? json['isStorageFridge'].toString() : null;
     isControlledDrugs = json['isControlledDrugs'] != null ? json['isControlledDrugs'].toString() : null;
-    ;
     routeName = json['route_name'] != null ? json['route_name'].toString() : null;
   }
 

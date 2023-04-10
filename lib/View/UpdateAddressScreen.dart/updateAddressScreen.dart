@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-
 import '../../Controller/ProjectController/UpdateProfileController/updateProfileController.dart';
 
 class UpdateAddressScreen extends StatefulWidget {
@@ -38,11 +37,18 @@ void initState() {
     init();
   }
 
-void init() async {
-  addressController.text = widget.address1!.toString().trim();
-  addressController2.text = widget.address2!;
-  townController.text = widget.townName!;
-  postCodeController.text = widget.postCode!;
+
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
+  void init() async {
+  addressController.text = widget.address1?.toString().trim() ?? "";
+  addressController2.text = widget.address2 ?? "";
+  townController.text = widget.townName ?? "";
+  postCodeController.text = widget.postCode ?? "";
 }
 
   @override

@@ -27,15 +27,22 @@ class _SelectRouteBottomSheetState extends State<SelectRouteBottomSheet> {
     return GetBuilder<DriverDashboardCTRL>(
         init: widget.controller,
         builder: (ctrl){
-          return Padding(
-            padding: EdgeInsets.only(top:getHeightRatio(value: 20)),
+          return Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20.0),
+                  topLeft: Radius.circular(20.0),
+                )
+            ),
+            margin: EdgeInsets.only(top:getHeightRatio(value: 20)),
             child: GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: Scaffold(
                 backgroundColor: AppColors.whiteColor,
                 appBar: AppBar(
                   title: BuildText.buildText(
-                    text:  widget.listType == "route" ? kSelectRoute:kSelectPhar,
+                    text:  widget.listType == "route" ? kSelectRoute: widget.listType == "pharmacy" ? kSelectPhar:kSelectParcelLocation,
                     size: 14,
                     color: AppColors.blueColorLight,
                     weight: FontWeight.w400,
@@ -84,14 +91,16 @@ class _SelectRouteBottomSheetState extends State<SelectRouteBottomSheet> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5.0),
                                     color: widget.selectedID == widget.controller.routeList?[i].routeId ? AppColors.blueColorLight.withOpacity(0.05):AppColors.whiteColor,
+                                    border: Border.all(width: 0.1,color: AppColors.greyColor),
                                     boxShadow: [
                                       BoxShadow(
                                           spreadRadius: 1,
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
+                                          blurRadius: 1,
+                                          offset: const Offset(0, 2),
                                           color: Colors.grey.shade300
                                       )
-                                    ]),
+                                    ]
+                                ),
                                 child: BuildText.buildText(
                                   text: widget.controller.routeList?[i].routeName ?? "",
                                   size: 14,
@@ -102,11 +111,60 @@ class _SelectRouteBottomSheetState extends State<SelectRouteBottomSheet> {
                             );
                           }
                       )
+                          : widget.listType == "pharmacy" ?
+                      ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: widget.controller.pharmacyList?.length ?? 0,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Padding(
+                              padding: EdgeInsets.only(bottom: 5),
+                            ) ;
+                          },
+                          itemBuilder: (context,i){
+                            return InkWell(
+                              onTap: (){
+                                setState(() {
+                                  widget.selectedID = widget.controller.pharmacyList?[i].pharmacyId;
+                                });
+                              },
+                              child: Container(
+                                width: Get.width,
+                                padding: const EdgeInsets.only(left: 13.0, right: 10.0, top: 12, bottom: 12),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    color: widget.selectedID == widget.controller.pharmacyList?[i].pharmacyId ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                    border: Border.all(width: 0.1,color: AppColors.greyColor),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                          offset: const Offset(0, 2),
+                                          color: Colors.grey.shade300
+                                      )
+                                    ]
+                                ),
+
+                                child: BuildText.buildText(
+                                  text: widget.controller.pharmacyList?[i].pharmacyName ?? "",
+                                  size: 14,
+                                  color: AppColors.blueColorLight,
+                                  weight: FontWeight.w400,
+                                ),
+                              ),
+                            );
+                          }
+                      )
                           : widget.listType == "parcel" ?
-                      ListView.builder(
+                      ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: widget.controller.parcelBoxList?.length ?? 0,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Padding(
+                              padding: EdgeInsets.only(bottom: 5),
+                            ) ;
+                          },
                           itemBuilder: (context,i){
                             return InkWell(
                               onTap: (){
@@ -120,14 +178,16 @@ class _SelectRouteBottomSheetState extends State<SelectRouteBottomSheet> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5.0),
                                     color: widget.selectedID == widget.controller.parcelBoxList?[i].id ? AppColors.blueColorLight.withOpacity(0.2):AppColors.whiteColor,
+                                    border: Border.all(width: 0.1,color: AppColors.greyColor),
                                     boxShadow: [
                                       BoxShadow(
                                           spreadRadius: 1,
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
+                                          blurRadius: 1,
+                                          offset: const Offset(0, 2),
                                           color: Colors.grey.shade300
                                       )
-                                    ]),
+                                    ]
+                                ),
                                 child: BuildText.buildText(
                                   text: widget.controller.parcelBoxList?[i].name ?? "",
                                   size: 14,
@@ -169,6 +229,12 @@ class _SelectRouteBottomSheetState extends State<SelectRouteBottomSheet> {
                                         Navigator.of(context).pop(element);
                                       }
                                     });
+                                  }else if(widget.listType == "pharmacy" && widget.selectedID != null){
+                                    widget.controller.pharmacyList?.forEach((element) {
+                                      if(widget.selectedID.toString() == element.pharmacyId){
+                                        Navigator.of(context).pop(element);
+                                      }
+                                    });
                                   }else if(widget.listType == "parcel" && widget.selectedID != null){
                                     widget.controller.parcelBoxList?.forEach((element) {
                                       if(widget.selectedID.toString() == element.id){
@@ -186,7 +252,8 @@ class _SelectRouteBottomSheetState extends State<SelectRouteBottomSheet> {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      buildSizeBox(30.0, 0.0)
                     ],
                   ),
                 ),

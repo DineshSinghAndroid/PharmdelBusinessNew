@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/AdditionalWidget/Default%20Functions/defaultFunctions.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import 'package:pharmdel/View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../../Controller/Helper/LogoutController/logout_controller.dart';
 import '../../../Controller/PharmacyControllers/p_ProfileController/p_profile_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/PharmacyDrawerTile/pharmacyDrawerTile.dart';
@@ -203,7 +204,7 @@ void initState() {
                   }),
                   const Divider(),
                   PharmacyDrawerTile(text: kCreatePatient, ontap: () {
-                    Get.toNamed(createPatientScreenRoute);
+                    Get.toNamed(driverCreatePatientScreenRoute,arguments: DriverCreatePatientScreen(isScanPrescription: false));
                   }),
                   const Divider(),
                   PharmacyDrawerTile(text: kMyNotifiaction, ontap: () {

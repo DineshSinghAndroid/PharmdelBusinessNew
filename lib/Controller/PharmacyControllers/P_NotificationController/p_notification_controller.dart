@@ -1,14 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/CreateNotification/createNotificationResponse.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../../Model/SaveNotification/saveNotificationResponse.dart';
-import '../../../main.dart';
-
 
 
 class PharmacyNotificationController extends GetxController{
@@ -18,8 +15,16 @@ class PharmacyNotificationController extends GetxController{
   List<NotificationData>? notificationData;
   CreateNotificationData? createNotificationData;
   SaveNotificationApiResponse? saveNotification;
-  List<StaffList>? staffList;
-  StaffList? staffValue;
+  StaffList? selectedStaff;
+  List<SentNotificationData> sentNotificationList = [];
+  bool? noRecordFound;
+  bool getNextPage = false;
+  int pageNo = 1;  
+
+  TextEditingController notificationNameController = TextEditingController();
+  TextEditingController notificationMessageController = TextEditingController();
+  TextEditingController pharStaffController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   bool isLoading = false;
   bool isError = false;
@@ -27,12 +32,56 @@ class PharmacyNotificationController extends GetxController{
   bool isNetworkError = false;
   bool isSuccess = false;
 
-
-  void updateStaffValue(value){
-    staffValue = value;
-    update();
+  @override
+  void onInit() {    
+    super.onInit();   
   }
 
+  ///Select Pharmacy Satff
+  void updateStaffValue(value){
+    selectedStaff = value;
+    update();
+  }
+  
+
+
+  ///Select Pharmacy Staff
+  void onTapSelectStaff(
+      {required BuildContext context,
+      required controller}) {
+    PrintLog.printLog("Clicked on Select staff");
+    BottomSheetCustom.pSelectPharmacyStaff(
+      controller: controller,
+      context: context,
+      selectedID: selectedStaff?.userId,
+      onValue: (value) async {
+        if (value != null) {
+          selectedStaff = value;
+          update();
+          PrintLog.printLog("Selected staff: ${selectedStaff?.name}");
+        }
+      },
+    );
+  }
+
+  ///OnTap Submit Button
+  void onTapSubmit({required BuildContext context})async{
+    if(notificationNameController.text.isEmpty){
+      ToastCustom.showToast(msg: 'Enter notification name');
+    } else if(selectedStaff == null){
+      ToastCustom.showToast(msg: 'Select pharmacy staff');
+    } else if(notificationMessageController.text.isEmpty){
+      ToastCustom.showToast(msg: 'Enter notification message');
+    } else{
+      await saveNotificationApi(
+    context: context,
+    name: notificationNameController.text.toString().trim(), 
+    userList: selectedStaff?.userId ?? "", 
+    message: notificationMessageController.text.toString().trim(), 
+    role: selectedStaff?.role ?? "");
+    }
+    update();
+  }
 
   ///Recieve Notification Controller
   Future<NotificationApiResponse?> notificationApi({required BuildContext context,}) async {
@@ -88,9 +137,8 @@ class PharmacyNotificationController extends GetxController{
     update();
   }
 
-
-    ///Create Notification Controller
-    Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {
+  ///Sent Notification Controller
+  Future<SentNotificationApiResponse?> sentNotificationApi({required BuildContext context,required int pageNo}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -99,28 +147,37 @@ class PharmacyNotificationController extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-    "":""
+    "page":pageNo
     };
 
-    String url = WebApiConstant.GET_PHARMACY_CREATE_NOTIFICATION;
+    String url = WebApiConstant.GET_SENT_NOTIFICATION_URL;
 
-    await apiCtrl.getCreateNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.getSentNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
+          if(pageNo == 1){
+        changeNextPageValue(true);
+        sentNotificationList.clear();
+      }
       if(result != null){
         if (result.status != false) {          
           try {            
-            if (result.status == true) {              
-              createNotificationData = result.data;
-              staffList = result.data?.staffList;
-              result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+            if (result.status == true) {                                         
+              if(pageNo == 1){
+                result.sentNotificationData != null && result.sentNotificationData!.isEmpty ? changeEmptyValue(true):changeEmptyValue(false);
+              }
+              if(result.sentNotificationData != null && result.sentNotificationData!.isNotEmpty){
+                changeNextPageValue(true);
+                sentNotificationList.addAll(result.sentNotificationData!);
+              }else{
+                changeNextPageValue(false);
+              }
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
 
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
-              PrintLog.printLog(result.message);
+              PrintLog.printLog(result.message);           
             }
 
           } catch (_) {
@@ -140,6 +197,54 @@ class PharmacyNotificationController extends GetxController{
         changeLoadingValue(false);
         changeErrorValue(true);
       }
+    });
+    update();
+  }
+
+
+    ///Create Notification Controller
+  Future<CreateNotificationApiResponse?> createNotificationApi({required BuildContext context,}) async {    
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+    "":""
+    };
+
+    String url = WebApiConstant.GET_PHARMACY_CREATE_NOTIFICATION;
+
+    await apiCtrl.getCreateNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {        
+        if (result != null && result.status != null && result.status != false) {
+          try {
+            if (result.status == true) {
+              createNotificationData = result.data;
+              result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+              changeLoadingValue(false);
+              changeSuccessValue(true);             
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog(result.message);
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+        }else{
+          changeSuccessValue(false);
+          changeLoadingValue(false);
+          changeErrorValue(true);
+          PrintLog.printLog(result?.message);
+        }
+
     });
     update();
   }
@@ -175,12 +280,12 @@ class PharmacyNotificationController extends GetxController{
         if (result.status != false) {          
           try {            
             if (result.status == true) {              
-              saveNotification = result;
-              result == null ? changeEmptyValue(true):changeEmptyValue(false);
-              ToastCustom.showToast(msg: "Notification Sent Successfully");
+              saveNotification = result;                                          
+              result == null ? changeEmptyValue(true):changeEmptyValue(false);               
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
+              Navigator.of(context).pop(true);
+              ToastCustom.showToast(msg: "Notification Sent Successfully");
 
             } else {
               changeLoadingValue(false);
@@ -209,7 +314,10 @@ class PharmacyNotificationController extends GetxController{
     update();
   }
 
-
+  void changeNextPageValue(bool value){
+    getNextPage = value;
+    update();
+  }
   void changeSuccessValue(bool value){
     isSuccess = value;
     update();
