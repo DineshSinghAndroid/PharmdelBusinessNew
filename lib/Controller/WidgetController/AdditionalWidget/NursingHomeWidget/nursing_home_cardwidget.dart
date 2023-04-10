@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pharmdel/Controller/PharmacyControllers/P_NursingHomeController/p_nursinghome_controller.dart';
 
 import '../../../Helper/Colors/custom_color.dart';
 import '../../../Helper/TextController/BuildText/BuildText.dart';
@@ -9,26 +7,10 @@ import '../../StringDefine/StringDefine.dart';
 class NursingHomeCardWidget extends StatefulWidget {
   String? customerName;
   String? leadingText;
-  String? address;
-  String? selectDate;
-  bool? isShowFridge;
-  bool? isShowCD;
-  bool? isCheckedCD;
-  bool? isCheckedFridge;
-  String? orderId;
-  int index;
 
-    NursingHomeCardWidget({
+   NursingHomeCardWidget({
     required this.customerName,
-    required this.index,
-    required this.leadingText,
-    required this.address,
-    required this.isShowFridge,
-    required this.isShowCD,
-    required this.isCheckedFridge,
-    required this.isCheckedCD,
-    required this.orderId,
-    required this.selectDate
+    required this.leadingText
    });
 
   @override
@@ -36,12 +18,11 @@ class NursingHomeCardWidget extends StatefulWidget {
 }
 
 class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
-
+  bool? isCheckedCD = false;
+  bool? isCheckedFridge = false;
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<NursingHomeController>(
-      builder: (controller) {
-        return Container(                  
+    return Container(                  
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
           boxShadow: [
@@ -80,7 +61,7 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                               size: 10,
                             ),
                             backgroundColor: AppColors.colorOrange,
-                            radius: 10.0,
+                            radius: 8.0,
                           ),
                           buildSizeBox(0.0, 5.0),
                           Expanded(
@@ -93,7 +74,6 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                           ),
                           Row(                            
                             children: <Widget>[
-                              widget.isShowFridge == true ?
                               Container(
                                   height: 25,
                                   padding: const EdgeInsets.only(
@@ -107,9 +87,8 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                     strIMG_Fridge,
                                     height: 21,
                                     color: AppColors.whiteColor,
-                                  ))) : const SizedBox.shrink(),
+                                  ))),
                               buildSizeBox(0.0, 10.0),
-                              widget.isShowCD == true ?
                               Container(
                                 height: 25,
                                 padding:
@@ -123,7 +102,7 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                     color: AppColors.whiteColor,
                                   ),
                                 ),
-                              ) : const SizedBox.shrink(),
+                              ),
                             ],
                           ),
                           buildSizeBox(0.0, 10.0),
@@ -139,73 +118,99 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                         height: 30.0,
                                         onTap: () {},
                                         child: StatefulBuilder(
-                                          builder: ((context, setstat) {
+                                          builder: ((context, setStat) {
                                             return Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 InkWell(
-                                                  onTap: (){
-                                                    setstat(() {
-                                                     controller.onTapWidgetCD(index:widget.index,context: context);
-                                                    });
+                                                  onTap: () {
+                                                    // pmrList[index].isCD = !pmrList[index].isCD;
+                                                    // updateOrders(pmrList[index].orderId, pmrList[index].isCD, pmrList[index].isFridge);
+                                                    // setStat((){});
+                                                    // setState(() {});
+                                                    // Navigator.pop(context);
                                                   },
                                                   child: Container(
                                                     color: AppColors.redColor,
                                                     child: Row(
-                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
                                                       children: [
                                                         Checkbox(
-                                                          activeColor: AppColors.colorOrange,
-                                                          visualDensity: const VisualDensity(horizontal: -4,vertical: -4),
-                                                          value: widget.isCheckedCD,
+                                                          activeColor: AppColors
+                                                              .blackColor,
+                                                          visualDensity:
+                                                              const VisualDensity(
+                                                                  horizontal: -4,
+                                                                  vertical: -4),
+                                                          value: isCheckedCD,
                                                           onChanged: (newValue) {
-                                                            setstat((){
-                                                               controller.onTapWidgetCD(index:widget.index,context: context);
+                                                            setState(() {
+                                                              isCheckedCD =
+                                                                  newValue;
                                                             });
+                                                            setStat(() {});
                                                           },
                                                         ),
                                                         BuildText.buildText(
                                                             text: 'C. D.',
-                                                            color: AppColors.whiteColor),
+                                                            color: AppColors
+                                                                .whiteColor),
                                                       ],
                                                     ),
                                                   ),
                                                 ),
                                                 Container(
                                                   width: 1,
-                                                  margin: const EdgeInsets.only(left: 4.0, right: 4.0),
+                                                  margin: const EdgeInsets.only(
+                                                      left: 4.0, right: 4.0),
                                                   height: 25,
-                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black)),),
-                                                
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors.black)),
+                                                ),
                                                 InkWell(
-                                                  // onTap: () => controller.onTapWidgetFridge(index:widget.index,context: context),
-                                                  onTap: (){
-                                                    setstat(() {
-                                                     controller.onTapWidgetFridge(index:widget.index,context: context);
-                                                    });
+                                                  onTap: () {
+                                                    // pmrList[index].isFridge = !pmrList[index].isFridge;
+                                                    // updateOrders(pmrList[index].orderId, pmrList[index].isCD, pmrList[index].isFridge);
+                                                    // setStat((){});
+                                                    // setState(() {});
+                                                    // Navigator.pop(context);
                                                   },
                                                   child: Container(
                                                     color: AppColors.blueColor,
                                                     child: Row(
-                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
                                                       children: [
                                                         Checkbox(
-                                                          activeColor: AppColors.colorOrange,
-                                                          visualDensity: const VisualDensity( horizontal: -4,vertical: -4),
-                                                          value: widget.isCheckedFridge,
+                                                          activeColor: AppColors
+                                                              .blackColor,
+                                                          visualDensity:
+                                                              const VisualDensity(
+                                                                  horizontal: -4,
+                                                                  vertical: -4),
+                                                          value: isCheckedFridge,
                                                           onChanged: (newValue) {
-                                                            setstat((){
-                                                               controller.onTapWidgetFridge(index:widget.index,context: context);
+                                                            setState(() {
+                                                              isCheckedFridge =
+                                                                  newValue;
                                                             });
+                                                            setStat(() {});
+                                                            // updateOrders(pmrList[index].orderId, pmrList[index].isCD, pmrList[index].isFridge);
+                                                            // Navigator.pop(context);
                                                           },
-                                                          // onChanged: (newValue) => controller.onTapWidgetFridge(index:widget.index,context: context),
                                                         ),
                                                         Padding(
-                                                          padding:const EdgeInsets.only(right: 12.0),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 12.0),
                                                           child: Image.asset(
                                                             strIMG_Fridge,
                                                             height: 21,
-                                                            color: AppColors.whiteColor,
+                                                            color: AppColors
+                                                                .whiteColor,
                                                           ),
                                                         )
                                                       ],
@@ -222,14 +227,20 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                                           color: Colors.black)),
                                                 ),
                                                 InkWell(
-                                                  onTap: () => controller.onTapWidgetCancel(index:widget.index,context: context,selectDate: widget.selectDate ?? ""),
+                                                  onTap: () {
+                                                    // cancelOrder(pmrList[index].orderId);
+                                                    // Navigator.pop(context);
+                                                  },
                                                   child: Row(
-                                                    mainAxisSize:MainAxisSize.min,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     children: [
-                                                      const Icon(Icons.cancel_outlined,
+                                                      const Icon(
+                                                        Icons.cancel_outlined,
                                                       ),
                                                       buildSizeBox(0.0, 5.0),
-                                                      BuildText.buildText(text: kCancel)
+                                                      BuildText.buildText(
+                                                          text: kCancel)
                                                     ],
                                                   ),
                                                 )
@@ -239,12 +250,7 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
                                         )),
                                   ])
                         ],
-                      ),
-                      buildSizeBox(3.0, 0.0),
-                      BuildText.buildText(
-                        text: widget.address ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        color: AppColors.greyColorDark)
+                      )
                     ],
                   ),
                 ),
@@ -253,8 +259,6 @@ class _NursingHomeCardWidgetState extends State<NursingHomeCardWidget> {
           ),
         ),
       ),
-    );
-      },
     );
   }
 }

@@ -409,25 +409,6 @@ void isSelected(bool isSelect) {
                           ),
                         ),
 
-<<<<<<< HEAD
-=======
-                        controller.driverDashboardData != null &&
-                            controller.driverDashboardData?.deliveryList != null &&
-                            controller.driverDashboardData!.deliveryList!.isNotEmpty ?
-                        ListView.separated(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.only(top: 20,left: 8,right: 8),
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.driverDashboardData?.deliveryList?.length ?? 0,
-                          itemBuilder: (context, i) {
-                            return
-                            DeliveryCardCustom(
-                              /// onTap
-                             onTap: ()=> controller.onTapDeliveryListItem(context: context,index: i),
-
-                              /// onTap Route
-                              onTapRoute: (){
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
                         Visibility(
                           visible: controller.orderListType == 6 && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ,

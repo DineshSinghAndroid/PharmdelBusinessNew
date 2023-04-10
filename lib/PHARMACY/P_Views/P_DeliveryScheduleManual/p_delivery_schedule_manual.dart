@@ -50,11 +50,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
               widget: Scaffold(
                 resizeToAvoidBottomInset: true,
                   appBar: AppBar(
-<<<<<<< HEAD
               title: BuildText.buildText(text: kDeliverySchedule,size: 18),
-=======
-              title: BuildText.buildText(text: kDelSchd,size: 18),
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
               backgroundColor: AppColors.whiteColor,
               leading: InkWell(
                 onTap: (){
@@ -74,11 +70,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                                  
                         ///Cusotmer Details
                         BuildText.buildText(
-<<<<<<< HEAD
                         text: "$kName${controller.getProcessScanController.processScanData?.orderInfo?.firstName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.middleName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.lastName ?? ""}"),
-=======
-                        text: "$kname${controller.getProcessScanController.processScanData?.orderInfo?.firstName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.middleName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.lastName ?? ""}"),
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                         BuildText.buildText(
                         text: "$kDateOfBirth" "${controller.getProcessScanController.processScanData?.orderInfo?.dob ?? ""}"),
                         BuildText.buildText(
@@ -185,11 +177,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                         /// Select Service
                         Flexible(
                           child: WidgetCustom.selectDeliveryScheduleWidget(
-<<<<<<< HEAD
                           title: controller.selectedService != null ? controller.selectedService?.name.toString() ?? "" : kSelectService,
-=======
-                          title: controller.selectedService != null ? controller.selectedService?.name.toString() ?? "" : kSelService,
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                           onTap:()async{
                             controller.onTapSelectService(context: context, controller: controller);
                           },),
@@ -356,11 +344,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                             children: [
                               Flexible(
                               child: WidgetCustom.selectDeliveryScheduleWidget(
-<<<<<<< HEAD
                               title: controller.selectedDeliveryCharge != null ? controller.selectedDeliveryCharge?.name.toString() ?? "" : kSelectDeliveryCharge,
-=======
-                              title: controller.selectedDeliveryCharge != null ? controller.selectedDeliveryCharge?.name.toString() ?? "" : kSelDelCharge,
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                               onTap:()async{
                                 controller.onTapSeletedDeliveryCharge(context: context, controller: controller);
                               },),),
@@ -457,11 +441,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                           ),
                           buildSizeBox(10.0, 0.0),
                           /// Existing Delivery Note
-<<<<<<< HEAD
                           BuildText.buildText(text: kExistingDeliveryNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
-=======
-                          BuildText.buildText(text: kExistingDelNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                           buildSizeBox(5.0, 0.0),
                           Container(
                             padding: const EdgeInsets.only(left: 10, right: 10, top: 12, bottom: 12),
@@ -470,11 +450,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                               color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(color: AppColors.greyColor)),
-<<<<<<< HEAD
                             child: BuildText.buildText(text: "${controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != null && controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != "" ? controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote : kExistingDeliveryNote}"),
-=======
-                            child: BuildText.buildText(text: "${controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != null && controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != "" ? controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote : kExistingDelNote}"),
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                           ),
                           buildSizeBox(10.0, 0.0),
                                    

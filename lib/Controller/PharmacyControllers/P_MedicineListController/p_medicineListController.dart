@@ -1,12 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-<<<<<<< HEAD
 
 import '../../../Model/PharmacyModels/P_MedicineListResponse/p_medicineListResponse.dart';
-=======
-import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 
 class GetMedicineListController extends GetxController{
@@ -35,11 +31,7 @@ class GetMedicineListController extends GetxController{
 
     String url = WebApiConstant.GET_PHARMACY_MEDICINE_LIST;
 
-<<<<<<< HEAD
     await apiCtrl.p_getMedicineListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-=======
-    await apiCtrl.getMedicineListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
         .then((result) async {
       if(result != null){
         if (result.error != true) {          

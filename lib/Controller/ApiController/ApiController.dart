@@ -3,7 +3,6 @@
 import 'dart:developer' as logs;
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart' as G;
 import 'package:pharmdel/Model/DriverDashboard/driver_dashboard_response.dart';
 import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
@@ -31,23 +30,12 @@ import '../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderRespons
 import '../../Model/PharmacyModels/P_DeliveryScheduleResponse/p_DeliveryScheduleResposne.dart';
 import '../../Model/PharmacyModels/P_DriverRoutePointsResponse/p_driverRoutePointsResponse.dart';
 import '../../Model/PharmacyModels/P_FetchDeliveryListModel/P_fetch_delivery_list_model.dart';
-<<<<<<< HEAD
 import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
 import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
 import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
 import '../../Model/PharmacyModels/P_MedicineListResponse/p_medicineListResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
-=======
- import '../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.dart';
-import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
-import '../../Model/PharmacyModels/P_GetDriverRoutesListPharmacy/P_get_driver_route_list_model_pharmacy.dart';
-import '../../Model/PharmacyModels/P_GetMapRoutesResponse/p_get_map_routes_response.dart';
-import '../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
-import '../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
-import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
-import '../../Model/PharmacyModels/P_ProcessScanApiResponse/p_processScanResponse.dart';
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
@@ -476,16 +464,14 @@ class ApiController {
   }
 ///Pharmacy Driver List Get Api
   Future<dynamic> getDriverListPharmacy({context, required String url, dictParameter, String? token}) async {
-    DriverModel? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = DriverModel.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
+        // if (response?.data != null && response?.statusCode == 200) {
+          return null;
+        // } else {
+        //   return null;
+        // }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
         return null;
@@ -896,16 +882,17 @@ class ApiController {
   }
 
   ///Update Nursing Order Api
-  Future<UpdateNursingOrderApiResposne?> updateNursingOrderApi({required BuildContext context, required String url, dictParameter, String? token}) async {
+  Future<UpdateNursingOrderApiResposne?> updateNursingOrderApi({context, required String url, dictParameter, String? token}) async {
     UpdateNursingOrderApiResposne? result;
     if (await ConnectionValidator().check()) {
       try {
-        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ?? '',);
-        if (response?.data != null && response?.statusCode == 200) {          
+        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
+        if (response?.data != null && response?.statusCode == 200) {
           result = UpdateNursingOrderApiResposne.fromJson(response?.data);
+          print("THIS IS API RESULT FOR LOGIN API $result");
           return result;
-        } else {          
-          return result;
+        } else {
+          print("THIS IS API RESULT FOR LOGIN API $result");
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
@@ -941,28 +928,6 @@ class ApiController {
     return null;
   }
 
-  ///Sent Notification Api
-  Future<SentNotificationApiResponse?> getSentNotificationApi({context, required String url, dictParameter, String? token}) async {
-    SentNotificationApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = SentNotificationApiResponse.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-        return result;
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  }
-
    ///Get Nursing Home Orders    
   Future<NursingOrderApiResponse?> getNursingHomeOrderApi({context, required String url, dictParameter, String? token}) async {
     NursingOrderApiResponse? result;
@@ -984,94 +949,6 @@ class ApiController {
     }
     return null;
   }
-
-  ///Get Map Routes Api
-  Future<GetMapRoutesApiResponse?> getMapRoutesApi({context, required String url, dictParameter, String? token}) async {
-    GetMapRoutesApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = GetMapRoutesApiResponse.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-        return result;
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  }
-
-  ///Get Driver Routes Api
-  Future<DriverRoutePointsApiResponse?> getDriverRoutePointsApi({context, required String url, dictParameter, String? token}) async {
-    DriverRoutePointsApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = DriverRoutePointsApiResponse.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-        return result;
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  }  
-
-   ///Get Driver Routes Api
-  Future<DeliveryScheduleApiResponse?> getDeliveryScheduleApi({context, required String url, dictParameter, String? token}) async {
-    DeliveryScheduleApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = DeliveryScheduleApiResponse.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-        return result;
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  } 
-
-  /// Get Medicine List Api
-  Future<MedicineListApiResponse?> getMedicineListApi({context, required String url, dictParameter, String? token}) async {
-    MedicineListApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
-        if (response?.data != null && response?.statusCode == 200) {
-          result = MedicineListApiResponse.fromJson(response?.data);
-          return result;
-        } else {
-          return result;
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-        return result;
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  } 
 
   ///Lunch Break Api
   Future<LunchBreakApiResponse?> getLunchBreakApi({context, required String url, dictParameter, String? token}) async {
@@ -1122,7 +999,6 @@ class ApiController {
   Future<GetDeliveryApiResponse?> getDeliveriesWithRouteStartApi({context, required String url, dictParameter, String? token}) async {
     GetDeliveryApiResponse? result;
     if (await ConnectionValidator().check()) {
-
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
         if (response?.data != null && response?.statusCode == 200) {
@@ -1208,107 +1084,8 @@ class ApiController {
     return null;
   }
 
-<<<<<<< HEAD
 
 
-=======
-   ///Create Order Api
-  Future<CreateOrderApiResponse?> getCreateOrderApi({context, required String url, dictParameter, String? token}) async {
-  CreateOrderApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
-        if (response?.data != null && response?.statusCode == 200) {
-          result = CreateOrderApiResponse.fromJson(response?.data);
-          PrintLog.printLog(result.message);
-          return result;
-        } else {
-          PrintLog.printLog(result!.message);
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-
-        return result;
-
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  }
-
-
-  ///Process Scan Api
-  Future<ProcessScanApiResponse?> getProcessScanApi({context, required String url, dictParameter, String? token}) async {
-  ProcessScanApiResponse? result;
-    if (await ConnectionValidator().check()) {
-      try {
-        final response = await requestPostForApi(context: context, url: url,dictParameter: dictParameter,token: token ??'');
-        if (response?.data != null && response?.statusCode == 200) {
-          result = ProcessScanApiResponse.fromJson(response?.data);
-          PrintLog.printLog(result.message);
-          return result;
-        } else {
-          PrintLog.printLog(result!.message);
-        }
-      } catch (e) {
-        PrintLog.printLog("Exception_main1: $e");
-
-        return result;
-
-      }
-    } else {
-      ToastCustom.showToast( msg: networkToastString);
-    }
-    return null;
-  }
-
-
-  /// Delete Nursing Order Api     
-  Future<Response?> deleteNursingOrderApi(
-      {required context, String? url, formData}) async {
-    try {
-      Map<String, String> headers = {
-        "Content-type": "application/json",
-        "Authorization": "Bearer $authToken",
-        "Connection": "Keep-Alive",
-        "Keep-Alive": "timeout=5, max=1000"
-      };
-
-      PrintLog.printLog("Headers: $headers");
-      PrintLog.printLog("Url:  $url");
-      PrintLog.printLog("Token:  $authToken");
-      PrintLog.printLog("formData: $formData");
-
-      BaseOptions options = BaseOptions(
-          baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: const Duration(minutes: 1),
-          connectTimeout: const Duration(minutes: 1),
-          headers: headers);
-
-      _dio.options = options;
-      Response response = await _dio.get(url!,
-          data: formData,
-          options: Options(
-            followRedirects: false,
-            validateStatus: (status) => true,
-            headers: headers,
-          ));
-
-      PrintLog.printLog("Response: $response");
-
-      if(response.data["authenticated"] == false){
-        // PopupCustom.logoutPopUP(context: context);
-      }else if(response.statusCode == 200){
-        return response;
-      }
-      return response;
-    } catch (error) {
-      PrintLog.printLog("Exception_Main: $error");
-      return null;
-    }
-  }
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
   Future<Response?> requestGetForApi(
       {required context,String? url,Map<String, dynamic>? dictParameter, String? token}) async {
@@ -1333,8 +1110,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: const Duration(minutes: 1),
-          connectTimeout: const Duration(minutes: 1),
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
       );
@@ -1342,7 +1119,7 @@ class ApiController {
       _dio.options = options;
       Response response = await _dio.get(url!, queryParameters: dictParameter);
       PrintLog.printLog("Response_headers: ${response.headers}");
-      logs.log("Response_data: ${response.data}");
+      PrintLog.printLog("Response_data: ${response.data}");
 
       if(response.data["authenticated"] == false){
         // PopupCustom.logoutPopUP(context: context);
@@ -1414,8 +1191,8 @@ class ApiController {
 
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
-          receiveTimeout: const Duration(minutes: 1),
-          connectTimeout: const Duration(minutes: 1),
+          receiveTimeout: Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
           headers: headers);
 
       _dio.options = options;
@@ -1644,7 +1421,7 @@ class ApiController {
       BaseOptions options = BaseOptions(
           baseUrl: WebApiConstant.BASE_URL,
           receiveTimeout: const Duration(minutes: 1),
-          connectTimeout: const Duration(minutes: 1),
+          connectTimeout: Duration(minutes: 1),
           headers: headers,
           validateStatus: (_) => true
       );
@@ -1663,13 +1440,13 @@ class ApiController {
 
 
   ///delivery  list api for pharmacy
-  Future<P_FetchDeliveryListModel?> fetchPharmacyDeliveryListapi({context, required String url, dictParameter, String? token}) async {
-    P_FetchDeliveryListModel? result;
+  Future getPharmacyDeliveryListApi({context, required String url, dictParameter, String? token}) async {
+    PharmacyProfileApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url,dictParameter: dictParameter,token: token);
         if (response?.data != null && response?.statusCode == 200) {
-          result = P_FetchDeliveryListModel.fromJson(response?.data);
+          result = PharmacyProfileApiResponse.fromJson(response?.data);
           return result;
         } else {
           return result;

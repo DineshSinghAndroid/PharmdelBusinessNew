@@ -316,11 +316,7 @@ class PDeliveriesScreenController extends GetxController {
                   Row(
                     children: [
                       Text(
-<<<<<<< HEAD
                         "$kName :",
-=======
-                        "$kname :",
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                         style: TS.CTS(16.0, Colors.black, FontWeight.bold),
                       ),
                       Text(
@@ -373,11 +369,7 @@ class PDeliveriesScreenController extends GetxController {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-<<<<<<< HEAD
                         "$kExistingDeliveryNote :",
-=======
-                        "$kExistingDelNote :",
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                         style: TS.CTS(16.0, Colors.black, FontWeight.bold),
                       ),
                       Expanded(child: Text(existingNotes ?? "")),

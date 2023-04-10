@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-import 'package:pharmdel/View/ScanPrescription/scan_prescription.dart';
 import '../../../Controller/PharmacyControllers/P_DashboardScreenController/P_dashboardScreenCotroller.dart';
 import '../../../Controller/PharmacyControllers/P_NotificationController/p_notification_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/PharmacyHomeCardWidget/p_homecard_widgte.dart';
@@ -121,13 +120,8 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                         image: strIMG_QrCode,
                         backgroundColor: AppColors.colorOrange,
                         onTap: () async {
-<<<<<<< HEAD
                           Get.toNamed(p_scanPrescriptionScreenRoute,
                           arguments: P_ScanPrescriptionScreen(
-=======
-                          Get.toNamed(scanPrescriptionScreenRoute,
-                          arguments: ScanPrescriptionScreen(                            
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                             isAssignSelf: true,
                             isBulkScan: false,                            
                             type: "1",                            

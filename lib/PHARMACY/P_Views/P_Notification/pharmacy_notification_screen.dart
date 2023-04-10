@@ -13,10 +13,7 @@ import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart'
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
 import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
-<<<<<<< HEAD
 import 'notification_info.dart';
-=======
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
@@ -140,11 +137,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                     physics: const AlwaysScrollableScrollPhysics(),                                               
                     itemCount: controller.notificationData?.length ?? 0,
                     itemBuilder: (context, index) {
-<<<<<<< HEAD
                       return P_NotificationCardWidget(
-=======
-                      return NotificationCardWidget(
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                         name: controller.notificationData?[index].name ?? "",
                         message: controller.notificationData?[index].message ?? "",
                         time:controller.notificationData?[index].created ?? "",
@@ -175,11 +168,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-<<<<<<< HEAD
                       return P_NotificationCardWidget(
-=======
-                      return NotificationCardWidget(
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
                         onTap: (){
                           showDialog(
                           barrierDismissible: true,

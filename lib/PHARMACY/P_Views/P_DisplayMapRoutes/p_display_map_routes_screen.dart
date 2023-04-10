@@ -4,10 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pharmdel/Controller/PharmacyControllers/P_TrackOrderController/pharmacy_track_order_controller.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-<<<<<<< HEAD
 
-=======
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 class DisplayMapRoutesScreen extends StatefulWidget {

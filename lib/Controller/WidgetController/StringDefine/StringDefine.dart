@@ -13,64 +13,7 @@ const String kCustomerList = 'Customer List';
 const String kAddNewCustomer = 'Add New Customer';
 const String kMapView = "Map View";
 const String kCloseTote = "Close Tote";
-const String kSplashTitle = "Pharmdel";
-const String kLogin = "Login";
-const String kEmail = "Email";
-const String kPassword = "Password";
-const String kRememberMe = "Remember Me";
-const String kSkip = "Skip";
-const String kBack = "Back";
-const String kEmptyData = "Empty";
-const String kFilters = "Filters";
-const String kSearchArea = "Search area";
-const String kSearch = "Search...";
-const String kDistance = "Distance type";
-const String kRange = "Range";
-const String kContinue = "Continue";
-const String kRenewSub = "Renew Subscription";
-const String kApply = "Apply";
-const String kReset = "Reset";
-const String kGoBack = "Go Back";
-const String kSuccess = "Success";
-const String kProfile = "Profile";
-const String kCompleteBookingTitle = "Enter student details";
-const String kPrice = "Price : ";
-const String kBookingNumber = "Booking number : ";
-const String fPrice = "Price";
-const String kAddReview = "Add Review";
-const String kRenewSubscription = "Renew Subscription";
-const String kTimeSlot = "Time Slot : ";
-const String kUpdate = "Update";
-const String kCompleteBooking = "Complete Booking";
-const String kGallery = "Gallery";
-const String kCamera = "Camera";
-const String kReview = "Review";
-const String kPayment = "Payment";
-const String kStar = "Star : ";
-const String kComment = "Comment...";
-const String kNotifications = "Notifications";
-const String kMyBooking  = "My Booking";
-const String kMyQRCode  = "My QR Code";
-const String kMyDetails  = "My Details";
-const String kMyQrCode  = "My Qr Code";
-const String kOk  = "OK";
-const String kYes  = "Yes";
-const String kDone  = "Done";
-const String kConfirm  = "Confirm";
-const String kNotAuthenticated  = "Not Authenticated";
-const String kAuthenticatedDes  = "Someone trying to login in another device so you logout form here!";
-const String kQueryDes  = "Thank you for submitting your request we will get in touch with you shortly.";
-const String kAreYouSureWantToLogout  = "Are you sure want to logout!";
-const String kApplyCoupon  = "Apply Coupon";
-const String kUserName = "name";
-const String kQuickPin = "quickPin";
-const String kEnterSecurePin = "Enter Secure Pin";
-const String kForgotMPIN = "Forgot M-Pin?";
-const String kusediffAcc = "Use different Account?";
-const String kUSERTYPE = "userType"; //Branch Admin + OR +
-const String kTotalMiles = "Total Miles";
-const String kOdrCrtdSucc = 'Order Created Successfully';
-const String kSurgery = "SURGERY";
+
 
 /// Logo
 const String kSplashLogo = "assets/logo/logo.png";
@@ -96,7 +39,6 @@ const String strImgAutomaticIcon = "assets/images/automatic_icon.png";
 const String strImgAltAdd = "assets/images/alt-add.png";
 const String strImgSend = "assets/images/send.png";
 const String strImgDelTruck = "assets/images/delivery_truck.png";
-<<<<<<< HEAD
 const String strImgHomeBg = "assets/images/bottom_bg.png";
 const String strImgHomeIcon = "assets/images/home_icon.png";
 const String strImgQrCode = "assets/images/qr_code.png";
@@ -106,9 +48,6 @@ const String strGifForRouteStart = "assets/images/route_loading.gif";
 const String strImgSad = "assets/images/sad.png";
 const String strImgCalendar = "assets/images/calendar.png";
 
-=======
-const String strImg_tick = 'assets/images/tick.png';
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 
 
@@ -122,18 +61,10 @@ const String strGIF_LOADING = "assets/images/loading.gif";
 const String kStoragePermissionToast = "msg...";
 const String kChangeRouteMsg = "You are already on a route, you can't change before completed.";
 const String kDontHaveroute = "You don't have any route. Try again after and refresh now.";
-<<<<<<< HEAD
 const String kThisOrderAlreadyCompleted = "This order already completed.";
 const String kPleaseOnLocaionPermission = "Please go to mobile setting and on location permission";
 const String kThisOrderAlreadyExits = "This order already exits.";
 const String kThisOrderAlreadyOutForDelivery = "This order not for out for delivery.";
-=======
-const String kPlsSlctRoute = 'Please select route';
-const String kPlsSlctDriver = 'Please select driver';
-const String kPlsSlctNurHome = 'Please select nursing home';
-const String kPlsSlctTote = 'Please select tote';
-const String kPunchSomeDel = 'Punch some deliveries';
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 
 
 ///DashBoard Screen
@@ -373,7 +304,6 @@ const String networkToastString = "Please check network connection and try again
 const String kTouchAndFaceNtAct  = "touch or Face Id is not activated on your device!";
 const String kUserLastTime = "lastTime";
 const String kName = "Name";
-<<<<<<< HEAD
 const String kDateOfBirth = "DOB : ";
 const String kEmailId = "Email : ";
 const String kTotalMiles = "Total Miles";
@@ -456,12 +386,6 @@ const String kFailedToGetPlatformVersion = "Failed to get platform version.";
 const String kUSERTYPE = "userType"; //Branch Admin + OR +
 
 
-=======
-const String kname = "Name : ";
-
-
-
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
 ///Png Define
 
 const String strimg_logo = 'assets/logo/logo.png';
@@ -631,7 +555,6 @@ const String kSelect = "Select";
 
 ///Pharmacy Nursing Home Screen
 const String kSelectNursHome = "Select Nursing Home";
-const String kSelectTote = 'Select Tote';
 
 
 /// Imp
@@ -655,7 +578,6 @@ const String kOrdersList = "Orders List";
 const String kMultipleDelivery = "Multiple Delivery...";
 const String kMoreDeliveryForThisAddress = "more delivery for this address. Would you like to deliver?";
 const String kDriverAlreadyOutForDelivery = "Driver is already out for delivery. You can not change status.";
-<<<<<<< HEAD
 const String kReadAllControlledDrug = "Please read all Controlled Drug (C.D.), Fridge and Delivery Note  ";
 const String kCheckCDFridgeDeliveryNote = "Check C.D., Fridge and Delivery note";
 const String kUploadingOfflineMsg = "Please wait\nWe are updating your offline deliveries.";
@@ -684,35 +606,3 @@ const String kPlsSlctDriver = 'Please select driver';
 const String kPlsSlctNurHome = 'Please select nursing home';
 const String kPlsSlctTote = 'Please select tote';
 const String kPunchSomeDel = 'Punch some deliveries';
-=======
-
-
-///Pharmacy Delivery Schedule Screen
-const String kDelSchd = "Delivery Schedule";
-const String kNHS = "NHS : ";
-const String kDateOfBirth = "DOB : ";
-const String kAdrs = "Address : ";
-const String kContact = "Contact : ";
-const String kEmailId = "Email : ";
-const String kMeds = "Meds";
-const String kRxImage = "Rx Image";
-const String kRxDetails = "Rx Details";
-const String kSelService = "Select Service";
-const String kSelDelCharge = "Select Delivery Charge";
-const String kExistingDelNote = "Existing Delivery Note";
-const String kDeliveryNote = "Delivery Note";
-const String kBookDelivery = "Book Delivery";
-const String kSelectExempt = "Select Exemption";
-const String kDeliveryCharge = "Delivery Charge";
-const String kBagSize = 'Bag Size';
-const String kPostCode = 'Postcode : ';
-
-/// Search Medicine Screen
-const String kPackSize = 'Pack Size : ';
-const String kSearchMeds = 'Search Medicine';
-const String kQuantity = 'Quantity';
-const String kDays = 'Days';
-
-
-
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a

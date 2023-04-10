@@ -35,12 +35,5 @@ const String pharmacyTrackOrderScreen = "track_order_screen";
 const String pharmacyDeliveryListScreenRoute = "delivery_list_screen";
 const String pharmacyCreateNotificationScreeenRoute = "create_notification_screen";
 const String nursingHomeScreenRoute = "nursing_home_screen";
-<<<<<<< HEAD
 const String displayMapRoutesScreenRoute = "display_route_screen";
 const String deliveryScheduleManualScreenRoute = "delivery_schedule_manual_Screen";
-=======
-const String displayMapRoutesScreenRoute = "display_map_routes_screen";
-const String deliveryScheduleManualScreenRoute = "delivery_schedule_manual_Screen";
-const String searchMedicineScreenRoute = "searchMedicineScreen";
-const String deliveryScheduleScreenRoute = "delivery_schedule_screen";
->>>>>>> 8b081882a3eced9002e51a19f4537178dbc5c90a
