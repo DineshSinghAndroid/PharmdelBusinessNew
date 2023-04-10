@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ApiController/ApiController.dart';
+import 'package:pharmdel/Controller/Helper/TimeChecker/timer_checker.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../main.dart';
+import '../../../Helper/Permission/PermissionHandler.dart';
 import '../../../Helper/PrintLog/PrintLog.dart';
 import '../../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../../RouteController/RouteNames.dart';
@@ -33,7 +36,6 @@ class SecurePinController extends GetxController {
   void onInit() {
     super.onInit();
     getSharePrefsValue();
-
   }
 
   void assignValueInField({required String value}) {
@@ -54,10 +56,17 @@ class SecurePinController extends GetxController {
       String enteredPin = "${controller1.text.toString().trim()}${controller2.text.toString().trim()}${controller3.text.toString().trim()}${controller4.text.toString().trim()}";
       PrintLog.printLog("userPin is ::::$userPin..");
       PrintLog.printLog("Entered Pin is ::::$enteredPin..");
+
       if(enteredPin == userPin){
-        openHomeScreen();
-       }
-      else{
+        if (isTimeCheckDialogBox) {
+          TimeCheckerCustom.setLastTime();
+          isTimeCheckDialogBox = false;
+          Get.back();
+        } else {
+          TimeCheckerCustom.setLastTime();
+          openHomeScreen();
+        }
+       } else{
         clearPin();
         ToastCustom.showToast(msg: kPinDoesNotMatched);
       }
@@ -119,5 +128,13 @@ class SecurePinController extends GetxController {
       userPin = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userPin);
       userName = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userName);
     update();
+  }
+
+  Future<void> checkLocation({required BuildContext context})async{
+    await CheckPermission.checkLocationPermission(context).then((value){
+      if(value == false) {
+         CheckPermission.showLocationPermissionPopUp(context);
+      }
+    });
   }
 }

@@ -10,4 +10,13 @@ class InternetCheck{
       return;
     }
   }
+  static Future<bool> checkStatus() async {
+    bool checkInternet = await ConnectionValidator().check();
+    if (!checkInternet) {
+
+      return false;
+    }else{
+      return true;
+    }
+  }
 }

@@ -3,10 +3,9 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
-import 'package:pharmdel/Controller/ProjectController/LunchBreakController.dart/lunchBreakController.dart';
-import 'package:pharmdel/Controller/RouteController/RouteNames.dart';
 import 'package:pharmdel/Controller/WidgetController/Button/ButtonCustom.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import '../../Controller/ProjectController/DriverProfile/driverProfileController.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
 
 class LunchBreakScreen extends StatefulWidget {
@@ -18,82 +17,77 @@ class LunchBreakScreen extends StatefulWidget {
 
 class _LunchBreakScreenState extends State<LunchBreakScreen> {
 
-  LunchBreakController LchBrkCtrl = Get.put(LunchBreakController());
-
-  double lat = 0.0;
-  double lng = 0.0;
-  int value = 0;
+  DriverProfileController drawerCtrl = Get.find();
 
   @override
   void initState() {
-    LchBrkCtrl.getLocationData(lat: lat, lng: lng, context: context);
     super.initState();
   }
 
-  // Future<void> init()async{
-  //   LchBrkCtrl.isNetworkError = false;
-  //   LchBrkCtrl.isEmpty = false;
-  //   if (await ConnectionValidator().check()) {
-  //     await LchBrkCtrl.lunchBreakApi(context: context,lat: lat,lng: lng,isStart: 0);
-  //   } else {
-  //     LchBrkCtrl.isNetworkError = true;
-  //     setState(() {});
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 100,bottom: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 300, 
-              width: double.infinity, 
-              child: Lottie.network(strLottieLunchBreak)),
-              buildSizeBox(40.0, 0.0),
-              BuildText.buildText(
-              text: kYouAreOnBreak,
-              textAlign: TextAlign.center,
-              weight: FontWeight.bold,
-              color: AppColors.blackColor,
-              size: 25,              
-            ),
-            buildSizeBox(30.0, 0.0),
-            ButtonCustom(
-              onPress: ()async{
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                bool? isUserOnbreak = prefs.getBool("UserOnBreak");
-                // if (isUserOnbreak == true){
-                  await LchBrkCtrl.lunchBreakApi(context: context, lat: lat, lng: lng, statusBreak: 0).then((value) {
-                    prefs.setBool("UserOnBreak", false);
-                    Future.delayed(
-                  const Duration(seconds: 1,),
-                  () => Get.toNamed(driverDashboardScreenRoute),
-                );
-                  },);
-                // }                
-              }, 
-              text: kEndBreak,               
-              buttonWidth: Get.width - 60, 
-              buttonHeight: 50,
-              backgroundColor: AppColors.colorOrange,
-              textColor: AppColors.blackColor,
-              borderRadius: BorderRadius.circular(10),
+    return GetBuilder<DriverProfileController>(
+      init: drawerCtrl,
+      builder: (controller){
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: LoadScreen(
+            widget: Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.only(top: 100,bottom: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // SizedBox(
+                    //     height: 300,
+                    //     width: double.infinity,
+                    //     child: Lottie.network(strLottieLunchBreak)
+                    // ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 25),
+                        height: 300,
+                        width: Get.width,
+                        child: Image.asset(kSplashLogo)
+                    ),
+                    buildSizeBox(40.0, 0.0),
+
+                    BuildText.buildText(
+                      text: kYouAreOnBreak,
+                      textAlign: TextAlign.center,
+                      weight: FontWeight.bold,
+                      color: AppColors.blackColor,
+                      size: 25,
+                    ),
+
+                    buildSizeBox(30.0, 0.0),
+                    ButtonCustom(
+                      onPress: ()=> controller.onTapEndBreak(),
+                      text: kEndBreak,
+                      buttonWidth: Get.width - 60,
+                      buttonHeight: 50,textSize: 20,
+                      backgroundColor: AppColors.colorOrange,
+                      textColor: AppColors.blackColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+
+                    const Spacer(),
+
+                    BuildText.buildText(
+                      text: kEndBreakMsg,
+                      textAlign: TextAlign.center,
+                      weight: FontWeight.w700,
+                      color: AppColors.blackColor,
+                      size: 12,
+                    ),
+                  ],
+                ),
               ),
-            const Spacer(),
-            BuildText.buildText(
-              text: kEndBreakMsg,
-              textAlign: TextAlign.center,
-              weight: FontWeight.w700,
-              color: AppColors.blackColor,
-              size: 12,              
-            ),            
-          ],
-        ),
-      ),
+            ),
+            isLoading: controller.isLoading,
+          ),
+        );
+      },
     );
   }
 }

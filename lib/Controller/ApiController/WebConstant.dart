@@ -9,8 +9,8 @@ class WebApiConstant {
 
 
   static const String BASE_URL_DOMAIN                        =  "https://www.pharmdel.com";
-  static const String BASE_URL                               =  "$BASE_URL_DOMAIN/api/Delivery/v22/";
-  static const String BASE_URL_PHARMACY                      =  "$BASE_URL_DOMAIN/api/Pharmacy/v22/";
+  static const String BASE_URL                               =  BASE_URL_DOMAIN +"/api/Delivery/v24/";
+  static const String BASE_URL_PHARMACY                      =  BASE_URL_DOMAIN +"/api/Pharmacy/v24/";
 
   /// Public
   static const String API_URL_INTRO                          =  "${BASE_URL}intro";
@@ -23,6 +23,7 @@ class WebApiConstant {
   static const String GET_NOTIFICATION_COUNT                 =  "${BASE_URL}GetNotificationCount";
   static const String GET_DELIVERY_LIST                      =  "${BASE_URL}GetDeliveryList";
   static const String GET_DRIVER_ROUTES                      =  "${BASE_URL}GetRoutes";
+  static const String GET_UPDATE_ORDER_STATUS_WITH_START_ROUTES =  "${BASE_URL}UpdateOrderStatusWithStartRoute";
   static const String GET_VEHICLE_LIST_URL                   =  "${BASE_URL}getVehicleList";
   static const String FORGOT_PASSWORD_URL                    =  "${BASE_URL}ForgotPassword?customerEmail=";
   static const String LUNCH_BREAK_URL                        =  "${BASE_URL}updateBreakTime";
@@ -30,15 +31,25 @@ class WebApiConstant {
   static const String SCAN_ORDER_BY_DRIVER                   =  "${BASE_URL}ScanOrderByDriver";
   static const String GET_ALL_DELIVERY                       =  "${BASE_URL}GetAllDelivery";
   static const String GET_UPDATE_PROFILE_URL                 =  "${BASE_URL}updateProfile";
-  
-  static const String UPDATE_CUSTOMER_WITH_ORDER             =  "${BASE_URL_PHARMACY}createOrder";
+  static const String END_ROUTE_BY_DRIVER                    ="${BASE_URL}endroutebydrvier";
+
+  static const String UPDATE_CUSTOMER_WITH_CREATE_ORDER      =  "${BASE_URL_PHARMACY}createOrder";
   static const String CREATE_PATIENT_URL                     =  "${BASE_URL_PHARMACY}createPatient";
+  static const String GET_PHARMACY_INFO                      ="${BASE_URL_PHARMACY}getPharmacyInfo";
 
   static const String LOGOUT_URL_PHARMACY                    =  "${BASE_URL_PHARMACY}Logout";
   static const String Logout_URL                             =  "${BASE_URL}Logout";
 
   static const GET_SORTEDLIST_BY_DURATION                    = "${BASE_URL}GetDelivarieswithRouteShort";
-
+  static const UPDATE_MILES                                  = "${BASE_URL}updateMiles";
+  static const UPDATE_DELIVERY_STATUS_URL                    = "${BASE_URL}Complete";
+  static const RESCHEDULE_DELIVERY_URL                       = "${BASE_URL}BulkReschedule";
+  static const MAKE_NEXT_BY_DRIVER                           = "${BASE_URL}MakeNextOrderSort";
+  static const PROCESS_SCAN_URL                              = "${BASE_URL_PHARMACY}processScan";
+  static const UPDATE_STORAGE_BY_ORDER_ID                    = "${BASE_URL_PHARMACY}updateStorageByOrderId";
+  static const DELETE_ORDER_BY_ORDER_ID                      = "${BASE_URL_PHARMACY}deleteOrderByOrderId";
+  static const GET_MEDICINE_LIST                             = "${BASE_URL_PHARMACY}GetMedicineList";
+  static const GET_DELIVERY_MASTER_DATA_API                  = "${BASE_URL_PHARMACY}getDeliveryMasterData";
 
   ///Pharmacy
   static const String GET_PATIENT_LIST_URL                   =  "${BASE_URL_PHARMACY}GetPatient";
@@ -62,7 +73,7 @@ class WebApiConstant {
   static const String GET_PHARMACY_DELIVERY_MASTER_URL       =  "${BASE_URL_PHARMACY}getDeliveryMasterData";
   static const String GET_PHARMACY_CREATE_ORDER_URL          =  "${BASE_URL_PHARMACY}createOrder";
   static const String GET_PHARMACY_MEDICINE_LIST             =  "${BASE_URL_PHARMACY}GetMedicineList";
-  static const String GET_PHARMACY_PROCESS_SCAN_URL          =  "${BASE_URL_PHARMACY}processScan";
+  static const String GET_PHARMACY_PROCESS_SCAN_URL                  =  "${BASE_URL_PHARMACY}getBoxesByNursingHome";
 
 
 }

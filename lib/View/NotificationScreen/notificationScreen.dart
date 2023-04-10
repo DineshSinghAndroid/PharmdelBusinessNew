@@ -97,7 +97,7 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
                     itemBuilder: (context, i) {
                       return NotificationCardWidget(
                         name: controller.notificationData?[i].name ?? "",
-                        message: controller.notificationData?[i].message ?? "",
+                        messsage: controller.notificationData?[i].message ?? "",
                         time: controller.notificationData?[i].created ?? "",
                       );
                     }),

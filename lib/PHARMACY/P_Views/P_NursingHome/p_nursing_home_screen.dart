@@ -8,6 +8,7 @@ import '../../../Controller/PharmacyControllers/P_NursingHomeController/p_nursin
 import '../../../Controller/WidgetController/AdditionalWidget/NursingHomeWidget/nursing_home_cardwidget.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'p_nursing_home_widget.dart';
 
 class NursingHomeScreen extends StatefulWidget {
   const NursingHomeScreen({super.key});
@@ -184,7 +185,7 @@ class _NursingHomeScreenState extends State<NursingHomeScreen> {
                   physics: const ClampingScrollPhysics(),
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {                    
-                    return NursingHomeCardWidget(
+                    return P_NursingHomeCardWidget(
                       index: index,
                       selectDate: selectedDate,
                       leadingText: "${index + 1}",

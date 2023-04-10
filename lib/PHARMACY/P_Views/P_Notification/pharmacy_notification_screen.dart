@@ -13,6 +13,7 @@ import '../../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart'
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/NotificationWidget.dart/notificationCardWidget.dart';
 import '../../../Controller/WidgetController/Popup/PopupCustom.dart';
+import 'notification_info.dart';
 
 class PharmacyNotificationScreen extends StatefulWidget {
   const PharmacyNotificationScreen({super.key});
@@ -136,7 +137,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                     physics: const AlwaysScrollableScrollPhysics(),                                               
                     itemCount: controller.notificationData?.length ?? 0,
                     itemBuilder: (context, index) {
-                      return NotificationCardWidget(
+                      return P_NotificationCardWidget(
                         name: controller.notificationData?[index].name ?? "",
                         message: controller.notificationData?[index].message ?? "",
                         time:controller.notificationData?[index].created ?? "",
@@ -167,7 +168,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return NotificationCardWidget(
+                      return P_NotificationCardWidget(
                         onTap: (){
                           showDialog(
                           barrierDismissible: true,

@@ -1,251 +1,501 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import 'package:pharmdel/Controller/Helper/Shared%20Preferences/SharedPreferences.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
-
+import '../../Controller/ApiController/important_keys.dart';
 import '../../Controller/ProjectController/CreatePatiientController/create_patient_controller.dart';
+import '../../Controller/WidgetController/AppBar/app_bar.dart';
 import '../../Controller/WidgetController/Button/ButtonCustom.dart';
 import '../../Controller/WidgetController/TextField/CustomTextField.dart';
 
-class CreatePatientScreen extends StatefulWidget {
-  const CreatePatientScreen({super.key});
+
+
+class DriverCreatePatientScreen extends StatefulWidget {
+  bool isScanPrescription;
+  DriverCreatePatientScreen({super.key,required this.isScanPrescription});
 
   @override
-  State<CreatePatientScreen> createState() => _CreatePatientScreenState();
+  State<DriverCreatePatientScreen> createState() => _DriverCreatePatientScreenState();
 }
 
-class _CreatePatientScreenState extends State<CreatePatientScreen> {
-  final GlobalKey _formKey = GlobalKey();
-  final CreatePatientController _controller = Get.put(CreatePatientController());
+class _DriverCreatePatientScreenState extends State<DriverCreatePatientScreen> {
 
+  final CreatePatientController ctrl = Get.put(CreatePatientController());
+
+  @override
+  void initState() {
+    ctrl.googlePlace = FlutterGooglePlacesSdk(ImportantKey.kGooglePlacesSdkKey);
+    ctrl.pharmacyID = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.pharmacyID);
+
+    super.initState();
+  }
+  @override
+  void dispose() {
+    Get.delete<CreatePatientController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      init: _controller,
+
+    return GetBuilder<CreatePatientController>(
+      init: ctrl,
       builder: (controller) {
-        return Scaffold(
-          appBar: AppBar(
-              backgroundColor: AppColors.materialAppThemeColor,
-              title: BuildText.buildText(text: kCreatePatient, size: 18),
-              elevation: 1.0,
-              leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context, false);
-                    },
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: AppColors.blackColor,
-                    ),
-                  ))),
-          body: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Container(
-                  height: Get.height,
-                  width: Get.width,
-                  child: Column(
+        return LoadScreen(
+          widget: Scaffold(
+            appBar: AppBarCustom.appBarStyle2(title: kCreatePatient,centerTitle: false,size: 22,elevation: 1),
+            body: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Column(
+                  children: [
 
-                    children: [
-
-                      Row(
+                    /// Select Title or Gender
+                    SizedBox(
+                      height: 50,width: Get.width,
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(
+
+                          /// Title
+                          Expanded(
                             child: DropdownButtonHideUnderline(
-                              child: FittedBox(
-                                child: DropdownButton2(
-                                  hint: Text(
-                                    'Select Title*',
-                                    style: TextStyle(
+                              child: DropdownButton2(
+                                hint: Text(
+                                  '$kSelectTitle*',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),isExpanded: true,
+                                items: controller.selectTitle
+                                    .map((item) => DropdownMenuItem<SurNameTitle>(
+                                  value: item,
+                                  child: Text(
+                                    item.showTitle,
+                                    style: const TextStyle(
                                       fontSize: 14,
-                                      color: Theme.of(context).hintColor,
                                     ),
                                   ),
-                                  items: _controller.selectTitle
-                                      .map((item) => DropdownMenuItem<SurNameTitle>(
-                                            value: item,
-                                            child: Text(
-                                              item.showTitle,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ))
-                                      .toList(),
-                                  value: _controller.selectedTitleValue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _controller.selectedTitleValue = value;
-                                    });
-                                  },
-                                  buttonStyleData: ButtonStyleData(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(20)), border: Border.all(color: Colors.black))),
-                                  menuItemStyleData: const MenuItemStyleData(),
+                                )).toList(),
+                                value: controller.selectedTitleValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    controller.selectedTitleValue = value;
+                                  });
+                                },
+                                buttonStyleData: ButtonStyleData(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(color: AppColors.greyColor)
+                                    )
                                 ),
+                                menuItemStyleData: const MenuItemStyleData(),
                               ),
                             ),
                           ),
-                          Flexible(
+                          buildSizeBox(0.0, controller.spaceBetween),
+
+                          /// Gender
+                          Expanded(
                             child: DropdownButtonHideUnderline(
-                              child: FittedBox(
-                                child: DropdownButton2(
-                                  hint: Text(
-                                    'Select Gender*',
-                                    style: TextStyle(
+                              child: DropdownButton2(
+                                hint: Text(
+                                  '$kSelectGender*',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),isExpanded: true,
+                                items: controller.selectGender
+                                    .map((item) => DropdownMenuItem<SurNameTitle>(
+                                  value: item,
+                                  child: Text(
+                                    item.showTitle,
+                                    style: const TextStyle(
                                       fontSize: 14,
-                                      color: Theme.of(context).hintColor,
                                     ),
                                   ),
-                                  items: _controller.selectGender
-                                      .map((item) => DropdownMenuItem<SurNameTitle>(
-                                            value: item,
-                                            child: Text(
-                                              item.showTitle,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ))
-                                      .toList(),
-                                  value: _controller.selectedGenderValue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _controller.selectedGenderValue = value;
-                                    });
-                                  },
-                                  buttonStyleData: ButtonStyleData(
-
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-
-                                      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(20)), border: Border.all(color: Colors.black))),
-                                  menuItemStyleData: const MenuItemStyleData(),
+                                ))
+                                    .toList(),
+                                value: controller.selectedGenderValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    controller.selectedGenderValue = value;
+                                  });
+                                },
+                                buttonStyleData: ButtonStyleData(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(color: AppColors.greyColor)
+                                    )
                                 ),
+                                menuItemStyleData: const MenuItemStyleData(),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      buildSizeBox(15.0, 00.00),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: CustomTextField(
-                              readOnly: false,
-                              hintText: "First Name*",
-                              controller: _controller.nameCtrl,
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
-                          buildSizeBox(0.0, 10.0),
-                          Flexible(
-                              child: CustomTextField(
-                            readOnly: false,
-                            hintText: "Middle Name",
-                            controller: _controller.middleNameCtrl,
-                            keyboardType: TextInputType.text,
-                          )),
-                        ],
-                      ),
-                      buildSizeBox(15.0, 00.00),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: CustomTextField(
+                    ),
 
-                              readOnly: false,
-                              hintText: "Last Name*",
-                              controller: _controller.lastNameCtrl,
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
-                          buildSizeBox(0.0, 10.0),
-                          Flexible(
-                              child: CustomTextField(
-                            readOnly: false,
-                            hintText: "Mobile Number",
-                            controller: _controller.mobileCtrl,
-                            keyboardType: TextInputType.text,
-                          )),
-                        ],
-                      ),
-                      buildSizeBox(15.0, 00.00),
-                      Row(
+                    buildSizeBox(15.0, 00.00),
+
+                    /// First Name* or Middle Name
+                    SizedBox(
+                      // height: 50,width: Get.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flexible(
-                            child: CustomTextField(
-                              readOnly: false,
-                              hintText: "Email (Optional)",
-                              controller: _controller.emailCtrl,
-                              keyboardType: TextInputType.text,
+
+                          /// First Name*
+                          Expanded(
+                            child: TextFieldCustomForMPin(
+                              controller: controller.nameCtrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: "$kFirstName*",
+                              errorText: controller.isFirstName
+                                  ? kFirstName: null,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp('[a-zA-Z -]'))
+                              ],
+
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.nameCtrl.clear();
+                                }
+                              },
                             ),
                           ),
-                          buildSizeBox(0.0, 10.0),
-                          Flexible(
-                              child: CustomTextField(
-                            readOnly: false,
-                            hintText: "NHS number(Optional)",
-                            controller: _controller.nhsNoCtrl,
-                            keyboardType: TextInputType.text,
-                          )),
+
+                          buildSizeBox(0.0, controller.spaceBetween),
+
+                          /// Middle Name
+                          Expanded(
+                            child: TextFieldCustomForMPin(
+                              controller: controller.middleNameCtrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: kMiddleName,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp('[a-zA-Z -]'))
+                              ],
+
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.middleNameCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
                         ],
                       ),
-                      buildSizeBox(15.0, 00.00),
-                      Flexible(
-                          child: CustomTextField(
-                        readOnly: false,
-                        hintText: "Address line 1",
-                        labelText: "Address line 1",
-                        controller: _controller.addressLine1Ctrl,
-                        keyboardType: TextInputType.text,
-                      )),
-                      buildSizeBox(15.0, 00.00),
-                      Flexible(
-                          child: CustomTextField(
-                        readOnly: false,
-                        hintText: "Address line 2",
-                        labelText: "Address line 2",
-                        controller: _controller.addressLine2Ctrl,
-                        keyboardType: TextInputType.text,
-                      )),
-                      buildSizeBox(15.0, 00.00),
-                      Flexible(
-                          child: CustomTextField(
-                        readOnly: false,
-                        hintText: "Town Name*",
-                        labelText: "Town Name*",
-                        controller: _controller.townCtrl,
-                        keyboardType: TextInputType.text,
-                      )),
-                      buildSizeBox(15.0, 00.00),
-                      Flexible(
-                          child: CustomTextField(
-                        readOnly: false,
-                        hintText: "Post Code*",
-                        labelText: "Post Code*",
-                        controller: _controller.postCodeCtrl,
-                        keyboardType: TextInputType.text,
-                      )),
-                      buildSizeBox(75.0, 00.00),
-                      ButtonCustom(onPress:() {
-                        _controller.btnPress(context);
-                      }, text: kSaveAndCreate,
-                    buttonWidth: Get.width / 1.4, buttonHeight: 60.0)
-                    ],
-                  ),
+                    ),
+
+                    buildSizeBox(15.0, 00.00),
+
+                    /// Last Name* or Mobile Number
+                    SizedBox(
+                      // height: 50,width: Get.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          /// Last Name*
+                          Expanded(
+                            child: TextFieldCustomForMPin(
+                              controller: controller.lastNameCtrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: "$kLastName*",
+                              errorText: controller.isLastName
+                                  ? kLastName: null,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp('[a-zA-Z -]'))
+                              ],
+
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.lastNameCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+
+                          buildSizeBox(0.0, controller.spaceBetween),
+
+                          /// Mobile number
+                          Expanded(
+                            child: TextFieldCustomForMPin(
+                              controller: controller.mobileCtrl,
+                              keyboardType: TextInputType.number,
+                              maxLength: 15,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: kMobileNumberOptional,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.mobileCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    buildSizeBox(15.0, 00.00),
+                    /// Email or NHS Number
+                    SizedBox(
+                      // height: 50,width: Get.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          /// Email
+                          Expanded(
+                            child: TextFieldCustomForMPin(
+                              controller: controller.emailCtrl,
+                              keyboardType: TextInputType.emailAddress,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: kEmailOptional,
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.emailCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+
+                          buildSizeBox(0.0, controller.spaceBetween),
+
+                          /// NHS number
+                          Expanded(
+                            child: TextFieldCustomForMPin(
+                              controller: controller.nhsNoCtrl,
+                              keyboardType: TextInputType.number,
+                              maxLength: 15,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: kNHSNumber,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.nhsNoCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    /// Start Typing*
+                    Visibility(
+                      visible: controller.isHideStartTypingCTRL == false,
+                      child: Stack(
+                        // mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: Get.width,
+                            margin: const EdgeInsets.only(top: 15.0),
+                            // height: 50,width: Get.width,
+                            child: TextFieldCustomForMPin(
+                              controller: controller.startTypingCtrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: "$kStartTypingAddress*",
+                              errorText: controller.isStartTyping
+                                  ? kEnterYourAddress: null,
+                              onChanged:(value)=> controller.onChangedStartTyping(value: value),
+                            ),
+                          ),
+
+                          /// Suggestion list
+                          Visibility(
+                            visible:controller.startTypingCtrl.text.toString().trim().isNotEmpty,
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 50),
+                              decoration: BoxDecoration(
+                                  color: AppColors.greyColor.withOpacity(0.2),
+                                  boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12.withOpacity(0.2),
+                                          spreadRadius: 3.0, blurRadius: 5.0,
+                                          offset: const Offset(0, 5)
+                                      )
+                                  ]
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemCount: controller.prediction.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    onTap: ()=> controller.onTapSuggestionListItem(index: index),
+                                    title: BuildText.buildText(text: "${controller.prediction[index].primaryText ?? ""} ${controller.prediction[index].secondaryText ?? ""}")
+                                    // Text(),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    /// Address section
+                    Visibility(
+                      visible: controller.isHideStartTypingCTRL,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+
+                          buildSizeBox(15.0, 00.00),
+                          /// Address Line 1
+                          SizedBox(
+                            height: 50,width: Get.width,
+                            child: TextFieldCustomForMPin(
+                              controller: controller.addressLine1Ctrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: kAddress1Line,
+                              errorText: controller.isAddressLine1
+                                  ? kAddress1Line: null,
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.addressLine1Ctrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+
+                          buildSizeBox(15.0, 00.00),
+                          /// Address Line 2
+                          SizedBox(
+                            height: 50,width: Get.width,
+                            child: TextFieldCustomForMPin(
+                              controller: controller.addressLine2Ctrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: kAddress2Line,
+                              errorText: controller.isAddressLine2
+                                  ? kAddress2Line: null,
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.addressLine2Ctrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+
+                          buildSizeBox(15.0, 00.00),
+                          /// Town Name*
+                          SizedBox(
+                            height: 50,width: Get.width,
+                            child: TextFieldCustomForMPin(
+                              controller: controller.townCtrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 100,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: "$kTownName*",
+                              errorText: controller.isTownName
+                                  ? kTownName: null,
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.townCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+
+                          buildSizeBox(15.0, 00.00),
+                          /// Post Code*
+                          SizedBox(
+                            height: 50,width: Get.width,
+                            child: TextFieldCustomForMPin(
+                              controller: controller.postCodeCtrl,
+                              keyboardType: TextInputType.name,
+                              maxLength: 10,
+                              radiusField: 30.0,
+                              isCheckOut: true,
+                              isHideCounterText: true,
+                              hintText: "$kPostCode*",
+                              errorText: controller.isPostCode
+                                  ? kPostCode: null,
+                              onChanged:(value){
+                                if(value == " "){
+                                  controller.postCodeCtrl.clear();
+                                }
+                              },
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+
+                    buildSizeBox(50.0, 00.00),
+                    /// Save And Create Btn
+                    ButtonCustom(
+                      onPress: () => controller.onTapSaveAndCreate(context: context,isScanPrescription: widget.isScanPrescription),
+                      text: kSaveAndCreate,
+                      buttonWidth: Get.width,
+                      buttonHeight: 50,
+                      backgroundColor: AppColors.colorAccent,
+                    ),
+
+                  ],
                 ),
               ),
             ),
           ),
+          isLoading: controller.isLoading,
         );
       },
     );
   }
 }
+

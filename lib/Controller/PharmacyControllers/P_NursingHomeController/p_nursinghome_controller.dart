@@ -11,6 +11,7 @@ import '../../../Model/PharmacyModels/P_GetBoxesResponse/p_getBoxesApiResponse.d
 import '../../../Model/PharmacyModels/P_NursingHomeOrderResponse/p_nursingHomeOrderResponse.dart';
 import '../../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.dart';
 import '../../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
+import '../../../PHARMACY/P_Views/P_ScanPrescription/p_scan_prescription_screen.dart';
 import '../../../View/ScanPrescription/scan_prescription.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
@@ -190,8 +191,8 @@ class NursingHomeController extends GetxController {
     } else if (selectedBox == null) {
       ToastCustom.showToast(msg: kPlsSlctTote);
     } else {      
-      Get.toNamed(scanPrescriptionScreenRoute,
-      arguments: ScanPrescriptionScreen(
+      Get.toNamed(p_scanPrescriptionScreenRoute,
+      arguments: P_ScanPrescriptionScreen(
         isAssignSelf: true,
         bulkScanDate: selectedDate,
         routeId: selectedroute?.routeId ?? "",

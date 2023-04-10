@@ -269,11 +269,13 @@ class TextFieldCustomForMPin extends StatefulWidget {
   bool? readOnly;
   bool? isCheckOut;
   bool? isAutoFocus;
+  bool? isHideCounterText;
   final String? Function(String?)? validator;
 
   TextFieldCustomForMPin(
       {Key? key,
         this.radiusField,
+        this.isHideCounterText,
         this.focusNode,
         this.textAlign,
         this.suffixIcon,
@@ -370,26 +372,31 @@ class _TextFieldCustomForMPinState extends State<TextFieldCustomForMPin> {
         ),
 
         Visibility(
-            // visible: widget.errorText != null && widget.errorText != "",
-            visible: true,
+            visible: (widget.errorText != null && widget.errorText != "") || (widget.isHideCounterText == true ? false:true),
             child: Padding(
               padding: const EdgeInsets.only(left: 2,top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
 
-                  BuildText.buildText(
-                      text: widget.errorText ?? "",
-                      style: TextStyleCustom.textFieldStyle(
-                          color:  widget.errorText != null && widget.errorText != "" ? AppColors.redColor:Colors.transparent
-                      ),
-                      textAlign: TextAlign.center
+                  Visibility(
+                    visible: widget.errorText != null,
+                    child: BuildText.buildText(
+                        text: widget.errorText ?? "",
+                        style: TextStyleCustom.textFieldStyle(
+                            color:  widget.errorText != null && widget.errorText != "" ? AppColors.redColor:Colors.transparent
+                        ),
+                        textAlign: TextAlign.center
+                    ),
                   ),
 
-                  BuildText.buildText(
-                      text: "${widget.controller?.text.length.toString() ?? ""}/${widget.maxLength.toString() ?? ""}",
-                      style: TextStyleCustom.textFieldStyle(color: AppColors.greyColorDark),
-                      textAlign: TextAlign.center
+                  Visibility(
+                    visible: widget.isHideCounterText == true ? false:true,
+                    child: BuildText.buildText(
+                        text: "${widget.controller?.text.length.toString() ?? ""}/${widget.maxLength.toString() ?? ""}",
+                        style: TextStyleCustom.textFieldStyle(color: AppColors.greyColorDark),
+                        textAlign: TextAlign.center
+                    ),
                   ),
 
                 ],
@@ -425,6 +432,95 @@ class SecurePinTextField{
         decoration: const InputDecoration(contentPadding: EdgeInsets.all(5.0), counterText: "", border: null),
       ));
 }
+}
+
+
+class TextFieldSimple extends StatelessWidget{
+  TextEditingController controller;
+  int? maxLength;
+  TextInputType? keyboardType;
+  List<TextInputFormatter>? inputFormatters;
+  TextInputAction? textInputAction;
+  bool? autofocus;
+  InputDecoration? decoration;
+  String? labelText;
+  String? hintText;
+  Color? fillColor;
+  Color? outlineBorderColor;
+  EdgeInsetsGeometry? contentPadding;
+  double? borderRadius;
+  InputBorder? enabledBorder;
+  TextStyle? style;
+  bool? readOnly;
+  Widget? prefix;
+  Function(String)? onChanged;
+  TextFieldSimple({Key? key,
+    required this.controller,
+    this.maxLength,
+    this.keyboardType,
+    this.inputFormatters,
+    this.textInputAction,
+    this.autofocus,
+    this.decoration,
+    this.labelText,
+    this.hintText,
+    this.fillColor,
+    this.contentPadding,
+    this.outlineBorderColor,
+    this.borderRadius,
+    this.enabledBorder,
+    this.style,
+    this.readOnly,
+    this.onChanged,
+    this.prefix,
+  }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: [
+        SizedBox(
+          width: Get.width,
+          child: TextField(
+            controller: controller,
+            textInputAction: textInputAction ?? TextInputAction.next,
+            keyboardType: keyboardType ?? TextInputType.emailAddress,
+            maxLength: maxLength ?? 12,
+            inputFormatters: inputFormatters,
+            autofocus: autofocus ?? false,
+            readOnly: readOnly ?? false,
+            onChanged: onChanged ?? (value){
+
+            },
+            style: style ?? const TextStyle(decoration: TextDecoration.none),
+            decoration: decoration ?? InputDecoration(
+              labelText: labelText ?? "",
+              fillColor: fillColor ??  Colors.white,
+              hintText: hintText ?? "",
+              filled: true,
+              counterText: "",
+                prefix: prefix ?? const SizedBox.shrink(),
+              contentPadding: contentPadding ?? const EdgeInsets.only(left: 15.0, right: 15.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(borderRadius ?? 50.0),
+                borderSide: BorderSide(color: outlineBorderColor ?? AppColors.greyColorDark),
+              ),
+              enabledBorder: enabledBorder ?? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(borderRadius ?? 50.0),
+                borderSide: BorderSide(color: outlineBorderColor ?? AppColors.greyColorDark),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 }
 
 

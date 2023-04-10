@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import '../StringDefine/StringDefine.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 class LoadingWidget extends StatelessWidget {
-  double height = 50.00;
-  double width = 50.00;
+  double height = 60.00;
+  double width = 60.00;
 
   LoadingWidget({Key? key,}) : super(key: key);
 
@@ -14,25 +14,55 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
      height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Container(  
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10)
-      ),    
+    return SizedBox(
       height: height,
       width: width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-              height: 150.00,
-              width: 200.00,          
+          Container(
+              height: 120.00,
+              width: 120.00,
+              padding: const EdgeInsets.all(10),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white
+              ),
               child: Center(
-                  child: SizedBox(                   
-                      height: 150.0,
-                      width: 300.0,
-                      child: Image.asset(strGIF_LOADING),
-                      ))),
+                  child: Image.asset(strGIF_LOADING)
+              )
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LoadingWidget2 extends StatelessWidget {
+  double height = 60.00;
+  double width = 60.00;
+
+  LoadingWidget2({Key? key,}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return SizedBox(
+      height: height,
+      width: width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+              child: SpinKitRing(
+                color: AppColors.deepOrangeColor,
+                size: 42.0,lineWidth: 5,
+              ),
+          ),
         ],
       ),
     );

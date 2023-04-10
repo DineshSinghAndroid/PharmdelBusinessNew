@@ -69,6 +69,111 @@ class WidgetCustom{
   }
 
 
+  static PopupMenuItem popUpMenuItems({
+    required BuildContext context,
+    required bool isCheckedCD,
+    required bool isCheckedFridge,
+  }){
+    return PopupMenuItem(
+        enabled: true,
+        height: 30.0,
+        onTap: () {},
+        child: StatefulBuilder(
+          builder: ((context, setstat) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop("cd");
+                  },
+                  child: Container(
+                    color: AppColors.redColor,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          activeColor: AppColors.colorOrange,
+                          visualDensity: const VisualDensity(horizontal: -4,vertical: -4),
+                          value: isCheckedCD,
+                          onChanged: (newValue) {
+                            Navigator.of(context).pop("cd");
+                          },
+                        ),
+                        BuildText.buildText(
+                            text: 'C. D.',
+                            color: AppColors.whiteColor),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  margin: const EdgeInsets.only(left: 4.0, right: 4.0),
+                  height: 25,
+                  decoration: BoxDecoration(border: Border.all(color: Colors.black)),),
+
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop("fridge");
+                  },
+                  child: Container(
+                    color: AppColors.blueColor,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          activeColor: AppColors.colorOrange,
+                          visualDensity: const VisualDensity( horizontal: -4,vertical: -4),
+                          value: isCheckedFridge,
+                          onChanged: (newValue) {
+                            Navigator.of(context).pop("fridge");
+                          },
+                        ),
+                        Padding(
+                          padding:const EdgeInsets.only(right: 12.0),
+                          child: Image.asset(
+                            strIMG_Fridge,
+                            height: 21,
+                            color: AppColors.whiteColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  margin: const EdgeInsets.only(
+                      left: 4.0, right: 4.0),
+                  height: 25,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.black)),
+                ),
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop("cancel");
+                  },
+                  child: Row(
+                    mainAxisSize:MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.cancel_outlined,
+                      ),
+                      buildSizeBox(0.0, 5.0),
+                      BuildText.buildText(text: kCancel)
+                    ],
+                  ),
+                )
+              ],
+            );
+          }),
+        )
+    );
+  }
+
+
+
   static Widget pharmacyTopSelectWidget({required String title,required Function() onTap}){
     return InkWell(
       onTap: onTap,
@@ -89,7 +194,7 @@ class WidgetCustom{
                 weight: FontWeight.w400,
               ),
             ),
-             Icon(
+            Icon(
               Icons.arrow_drop_down,
               color: AppColors.blackColor,
             ),
@@ -120,7 +225,7 @@ class WidgetCustom{
                 weight: FontWeight.w400,
               ),
             ),
-             Icon(
+            Icon(
               Icons.arrow_drop_down,
               color: AppColors.blackColor,
             ),
@@ -151,7 +256,7 @@ class WidgetCustom{
                 weight: FontWeight.w500,
               ),
             ),
-             Icon(
+            Icon(
               Icons.arrow_drop_down,
               color: AppColors.blackColor,
             ),

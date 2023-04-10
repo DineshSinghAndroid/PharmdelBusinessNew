@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import '../../../Model/PharmacyModels/P_MedicineListResponse/p_MedicineListResponse.dart';
+
+import '../../../Model/PharmacyModels/P_MedicineListResponse/p_medicineListResponse.dart';
 
 
 class GetMedicineListController extends GetxController{
@@ -30,7 +31,7 @@ class GetMedicineListController extends GetxController{
 
     String url = WebApiConstant.GET_PHARMACY_MEDICINE_LIST;
 
-    await apiCtrl.getMedicineListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.p_getMedicineListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
         if (result.error != true) {          

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pharmdel/Controller/Helper/Permission/PermissionHandler.dart';
 import 'package:pharmdel/Controller/WidgetController/Popup/popup.dart';
+import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:pharmdel/View/OnBoarding/SetupPin/setupPin.dart';
 import '../../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../../Model/Login/login_model.dart';
+import '../../../Model/UpdateMiles/update_miles_response.dart';
+import '../../../Model/VehicleList/vehicleListResponse.dart';
 import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Firebase/FirebaseMessaging/FirebaseMessaging.dart';
+import '../../Helper/Base64/base_64_converter.dart';
 import '../../Helper/DeviceInfo/DeviceInfo.dart';
+import '../../Helper/ImagePicker/ImagePicker.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
 import '../../Helper/SecureStorage/secure_storage.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
@@ -22,6 +28,9 @@ class LoginController extends GetxController {
   TextEditingController passCT = TextEditingController();
   TextEditingController emailCT = TextEditingController();
   TextEditingController forgotEmailCT = TextEditingController();
+
+  ImagePickerController? imagePicker = Get.put(ImagePickerController());
+
 
   bool isEmail = false;
   bool isPassword = false;
@@ -37,21 +46,39 @@ class LoginController extends GetxController {
   bool isNetworkError = false;
   bool isSuccess = false;
 
+  LoginModel? loginData;
+
+  /// Vehicle list
+  List<VehicleListData>? vehicleListData;
+  VehicleListData? selectedVehicleData;
+
 
   @override
   void onInit() {
-    emailCT.text = "pk@gmail.com";
-    passCT.text = "Admin@1234";
+
     autoFillUser();
+     emailCT.text = "md@gmail.com";
+    passCT.text = "Admin@1234";
 
     //  emailCT.text = "sdk@gmail.com";
     // passCT.text = "Admin@1234";
-    //  emailCT.text = "ddk@gmail.com";
+    //  emailCT.text = "sikandershared@test.com";
     // passCT.text = "Admin@1234";
      super.onInit();
   }
 
   Future<void> autoFillUser() async {
+    // FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+    // secureStorage.write(key: "NAME", value: "one");
+    // await SecureStorageCustom.save(key: "name",value: "one");
+    // String tes = await SecureStorageCustom.getValue(key: "name",) ?? "";
+    // // print("tesx.....");
+    // print("tesx.....${tes}..");
+    // if(await SecureStorageCustom.getValue(key: "name") != "") {
+    //   emailCT.text = SecureStorageCustom.getValue(key: "name").toString();
+    //   passCT.text = SecureStorageCustom.getValue(key: "password").toString();
+    //   update();
+    // }
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
       String version = packageInfo.version;
@@ -80,13 +107,13 @@ class LoginController extends GetxController {
     update();
   }
 
-  Future<void> onTapLogin({required BuildContext context}) async {
+  Future<void> onTapLogin({required BuildContext context,required LoginController ctrl}) async {
     FocusScope.of(context).unfocus();
     isEmail = TxtValidation.normalTextField(emailCT);
     isPassword = TxtValidation.normalTextField(passCT);
 
     if(!isEmail && !isPassword){
-      await loginApi(context: context, userMail: emailCT.text.toString().trim(), userPass: passCT.text.toString().trim()).then((value) {
+      await loginApi(context: context, ctrl: ctrl,userMail: emailCT.text.toString().trim(), userPass: passCT.text.toString().trim()).then((value) {
         if(savePassword){
           SecureStorageCustom.save(key: "name",value: emailCT.text.toString().trim());
           SecureStorageCustom.save(key: "password",value: passCT.text.toString().trim());
@@ -121,7 +148,7 @@ class LoginController extends GetxController {
     );
   }
 
-  Future<LoginModel?> loginApi({ required BuildContext context, required String userMail, required String userPass}) async {
+  Future<LoginModel?> loginApi({ required BuildContext context, required String userMail, required String userPass,required LoginController ctrl}) async {
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -145,9 +172,9 @@ class LoginController extends GetxController {
       if (result != null) {
           try {
             if (result.error == false) {
+              loginData = result;
               await saveUserData(userData: result).then((value){
                 String checkIsForgot = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.forgotMPin).toString();
-                print("tes....${result.userType.toString().toLowerCase()}");
                 if (result.pin.toString() != "") {
                   if (checkIsForgot != "" && checkIsForgot != "null") {
                     Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
@@ -160,6 +187,18 @@ class LoginController extends GetxController {
                   Get.toNamed(setupPinScreenRoute,arguments: SetupPinScreen(isChangePin: false,));
                 }
               });
+
+              if(result.showWages.toString() == "1" && result.startMiles == null || result.showWages.toString() == "1" && result.startMiles == ""){
+                 vehicleListApi(context: context).then((value) {
+                  if(vehicleListData != null && vehicleListData!.isNotEmpty){
+                    selectedVehicleData = null;
+                    selectVehiclePopUp(context: context,ctrl: ctrl).then((value) {
+                      imagePicker?.speedometerImage = null;
+                    });
+                  }
+                });
+              }
+
 
               ToastCustom.showToast(msg: result.message ?? "");
               changeLoadingValue(false);
@@ -236,6 +275,173 @@ class LoginController extends GetxController {
     update();
   }
 
+  ///Vehicle List Api
+  Future<VehicleListApiResponse?> vehicleListApi({required BuildContext context,}) async {
+
+    changeEmptyValue(false);
+    // changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+
+    Map<String, dynamic> dictparm = {
+      "":""
+    };
+
+    String url = WebApiConstant.GET_VEHICLE_LIST_URL;
+
+    await apiCtrl.getVehicleListApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+      if(result != null){
+          try {
+            if (result.status == true) {
+                if (result.list != null && result.list!.isNotEmpty) {
+                  if (result.list!.length > 1) {
+                    selectedVehicleData?.id = "0";
+                    selectedVehicleData?.name = "Please Select Vehicle";
+                    selectedVehicleData?.color = "";
+                    selectedVehicleData?.vehicleType = "";
+                    selectedVehicleData?.modal = "";
+                    selectedVehicleData?.regNo = "";
+                  } else {
+                    selectedVehicleData = result.list?[0];
+                  }
+                  String vehicleId = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.vehicleId) ?? "";
+                  if(vehicleId != "" && vehicleId != "0" && vehicleId != "null"){
+                    int indexVehicle = result.list!.indexWhere((element) => element.id.toString() == vehicleId);
+                    if(indexVehicle >= 0){
+                      selectedVehicleData = result.list?[indexVehicle];
+                    }
+                  }
+                  vehicleListData = result.list;
+                }
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog("Status : ${result.status}");
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+  /// Update Vehicle Miles Api
+  Future<UpdateVehicleMilesResponse?> updateVehicleMilesApi({
+    required BuildContext context,
+    String? entryType,
+    required String startMiles,
+    String? endMiles,
+    String? endMilesImage,
+    required String lat,
+    required String lng,
+    required String vehicleID,
+    required String startMileImage,
+  }) async {
+
+    changeEmptyValue(false);
+    changeLoadingValue(true);
+    changeNetworkValue(false);
+    changeErrorValue(false);
+    changeSuccessValue(false);
+    
+    Map<String, dynamic> dictparm = {
+      "entry_type": entryType ?? "start",
+      "start_miles": int.parse(startMiles.toString()),
+      "end_miles": endMiles ?? "0",
+      "end_miles_image": endMilesImage ?? "",
+      "lat": lat,
+      "lng": lng,
+      "vehicle_id": vehicleID,
+      "start_mile_image": startMileImage,
+    };
+
+    String url = WebApiConstant.UPDATE_MILES;
+
+    await apiCtrl.updateMilesApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+        .then((result) async {
+
+      if(result != null){
+          try {
+            if (result.status?.toLowerCase() == kTrue.toLowerCase()) {
+              await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.vehicleId, variableValue: vehicleID);
+              await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startMiles, variableValue: startMiles);
+              changeLoadingValue(false);
+              changeSuccessValue(true);
+              Get.back();
+
+            } else {
+              changeLoadingValue(false);
+              changeSuccessValue(false);
+              PrintLog.printLog("Status : ${result.status}");
+            }
+
+          } catch (_) {
+            changeSuccessValue(false);
+            changeLoadingValue(false);
+            changeErrorValue(true);
+            PrintLog.printLog("Exception : $_");
+          }
+
+      }else{
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+      }
+    });
+    update();
+  }
+
+  Future<void> getSpeedometerImage({required BuildContext context}) async {
+    imagePicker?.getImage(source: "Camera", context: context,type:  "speedometerImage").then((value) {
+      update();
+    });
+    // imagePicker?.getImage("Gallery", context, "speedometerImage").then((value) {
+    //   update();
+    // });
+  }
+
+  Future<void> selectVehiclePopUp({required BuildContext context,required LoginController ctrl})async{
+      PopupCustom.showChooseVehiclePopUp(
+          context: context,
+          ctrl: ctrl,
+          onValue: (value) {
+
+          }
+      );
+  }
+
+  Future<void> onTapOkaySelectVehiclePopUP({required BuildContext context,required String startMiles})async {
+    CheckPermission.checkLocationPermission(context).then((value) async {
+      if(value == true){
+          await updateVehicleMilesApi(
+              context: context,
+              startMiles: startMiles,
+              lat: await CheckPermission.getLatitude(context) ?? "",
+              lng: await CheckPermission.getLongitude(context) ?? "",
+              vehicleID: selectedVehicleData?.id ?? "",
+              startMileImage: await Base64ConverterCustom.fileToBase64(filePath: imagePicker?.speedometerImage?.path ?? "") ?? ""
+          );
+      }else{
+        ToastUtils.showCustomToast(context, kPleaseOnLocaionPermission);
+      }
+    });
+
+  }
 
   Future<void> saveUserData({LoginModel? userData}) async {
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userId, variableValue: userData?.userId.toString() ?? "");
@@ -256,6 +462,7 @@ class LoginController extends GetxController {
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.isStartRoute, variableValue: userData?.isStartRoute.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.driverType, variableValue: userData?.driverType.toString() ?? "");
     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.userStatus, variableValue: userData?.status.toString() ?? "");
+    await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.isAddressUpdated, variableValue: userData?.isAddressUpdated.toString() ?? "");
 
     authToken = userData?.token.toString() ?? "";
     userID = userData?.userId.toString() ?? "";

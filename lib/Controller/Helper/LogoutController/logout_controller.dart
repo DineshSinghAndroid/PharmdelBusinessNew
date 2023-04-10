@@ -4,8 +4,13 @@ import 'package:get/get.dart';
 import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
+import '../../RouteController/RouteNames.dart';
 import '../../WidgetController/Popup/PopupCustom.dart';
 import '../PrintLog/PrintLog.dart';
+import 'package:get/get.dart' as G;
+
+import '../Shared Preferences/SharedPreferences.dart';
+
 class LogoutController extends GetxController{
 
   ApiController apiCtrl = ApiController();
@@ -39,6 +44,14 @@ class LogoutController extends GetxController{
               );
             },
           );
+    }
+
+
+    Future<void> logoutWithoutApi()async {
+      AppSharedPreferences.clearSharedPref().then((value) {
+        Get.offAllNamed(loginScreenRoute);
+        Get.deleteAll();
+      });
     }
 }
 

@@ -50,7 +50,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
               widget: Scaffold(
                 resizeToAvoidBottomInset: true,
                   appBar: AppBar(
-              title: BuildText.buildText(text: kDelSchd,size: 18),
+              title: BuildText.buildText(text: kDeliverySchedule,size: 18),
               backgroundColor: AppColors.whiteColor,
               leading: InkWell(
                 onTap: (){
@@ -70,7 +70,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                                  
                         ///Cusotmer Details
                         BuildText.buildText(
-                        text: "$kname${controller.getProcessScanController.processScanData?.orderInfo?.firstName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.middleName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.lastName ?? ""}"),
+                        text: "$kName${controller.getProcessScanController.processScanData?.orderInfo?.firstName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.middleName ?? ""} ${controller.getProcessScanController.processScanData?.orderInfo?.lastName ?? ""}"),
                         BuildText.buildText(
                         text: "$kDateOfBirth" "${controller.getProcessScanController.processScanData?.orderInfo?.dob ?? ""}"),
                         BuildText.buildText(
@@ -177,7 +177,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                         /// Select Service
                         Flexible(
                           child: WidgetCustom.selectDeliveryScheduleWidget(
-                          title: controller.selectedService != null ? controller.selectedService?.name.toString() ?? "" : kSelService,
+                          title: controller.selectedService != null ? controller.selectedService?.name.toString() ?? "" : kSelectService,
                           onTap:()async{
                             controller.onTapSelectService(context: context, controller: controller);
                           },),
@@ -344,7 +344,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                             children: [
                               Flexible(
                               child: WidgetCustom.selectDeliveryScheduleWidget(
-                              title: controller.selectedDeliveryCharge != null ? controller.selectedDeliveryCharge?.name.toString() ?? "" : kSelDelCharge,
+                              title: controller.selectedDeliveryCharge != null ? controller.selectedDeliveryCharge?.name.toString() ?? "" : kSelectDeliveryCharge,
                               onTap:()async{
                                 controller.onTapSeletedDeliveryCharge(context: context, controller: controller);
                               },),),
@@ -441,7 +441,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                           ),
                           buildSizeBox(10.0, 0.0),
                           /// Existing Delivery Note
-                          BuildText.buildText(text: kExistingDelNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
+                          BuildText.buildText(text: kExistingDeliveryNote,color: AppColors.bluearrowcolor.withOpacity(0.7)),
                           buildSizeBox(5.0, 0.0),
                           Container(
                             padding: const EdgeInsets.only(left: 10, right: 10, top: 12, bottom: 12),
@@ -450,7 +450,7 @@ class _PharmacyDeliveryScheduleManualState extends State<PharmacyDeliverySchedul
                               color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(color: AppColors.greyColor)),
-                            child: BuildText.buildText(text: "${controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != null && controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != "" ? controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote : kExistingDelNote}"),
+                            child: BuildText.buildText(text: "${controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != null && controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote != "" ? controller.getProcessScanController.processScanData?.orderInfo?.defaultDeliveryNote : kExistingDeliveryNote}"),
                           ),
                           buildSizeBox(10.0, 0.0),
                                    

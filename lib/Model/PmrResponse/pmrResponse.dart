@@ -1,5 +1,9 @@
 class PmrApiResponse {
   Xml? xml;
+  // List<Dd>? dD;
+  // Pa? pa;
+  // Pb? pb;
+  // Sc? sc;
   bool? status;
   String? message;
 

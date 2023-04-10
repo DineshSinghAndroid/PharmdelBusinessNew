@@ -316,7 +316,7 @@ class PDeliveriesScreenController extends GetxController {
                   Row(
                     children: [
                       Text(
-                        "$kname :",
+                        "$kName :",
                         style: TS.CTS(16.0, Colors.black, FontWeight.bold),
                       ),
                       Text(
@@ -369,7 +369,7 @@ class PDeliveriesScreenController extends GetxController {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "$kExistingDelNote :",
+                        "$kExistingDeliveryNote :",
                         style: TS.CTS(16.0, Colors.black, FontWeight.bold),
                       ),
                       Expanded(child: Text(existingNotes ?? "")),
