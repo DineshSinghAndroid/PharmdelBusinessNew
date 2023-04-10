@@ -5,13 +5,17 @@ import '../../../Controller/Helper/Colors/custom_color.dart';
 import '../../../Controller/ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
 import '../../../Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../../Model/OrderDetails/orderdetails_response.dart';
 
-class ShowOrderListScreen extends StatefulWidget{
+class OrderDetailScreen extends StatefulWidget{
+  OrderModal orderDetail;
+  OrderDetailScreen({Key? key,required this.orderDetail}) : super(key: key);
+
   @override
-  State<ShowOrderListScreen> createState() => _ShowOrderListScreenState();
+  State<OrderDetailScreen> createState() => _OrderDetailScreenScreenState();
 }
 
-class _ShowOrderListScreenState extends State<ShowOrderListScreen> {
+class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
   DriverDashboardCTRL drDashCtrl = Get.find();
 
