@@ -13,6 +13,10 @@ const String kCustomerList = 'Customer List';
 const String kAddNewCustomer = 'Add New Customer';
 const String kMapView = "Map View";
 const String kCloseTote = "Close Tote";
+const String kPharmdel = "Pharmdel";
+const String kCreate = "Create";
+const String kUserNotRegisterContinueToCreate = "User not registered, Continue to create a new user";
+
 
 
 /// Logo
@@ -189,6 +193,7 @@ const String kPleaseCompleteManually = "Please complete manually";
 const String kStartroute = "Are you sure, you want to start route?";
 const String kAlert = "Alert...";
 const String kOkay = "Okay";
+const String kWrongBag = "Wrong bag";
 const String kRouteEnd = "Your route has been ended";
 const String kYouHaveEnteredStartAndEndMiles = "You have entered start and end miles";
 const String kOptimizingRouteMsg = "Pharmacy optimizing the route, please wait it might take some time";
@@ -221,7 +226,7 @@ const String kOdrCrtdSucc = 'Order Created Successfully';
 const String kAddress1Line = "Address Line 1";
 const String kAddress2Line = "Address Line 2";
 const String kAddressLine1 = "Address Line 1:*";
-const String kAddressLine2 = "Address Line 2:*";
+const String kAddressLine2 = "Address Line 2:";
 const String kTownName = "Town Name";
 const String kTown = "Town";
 const String kPostCode = "Postal Code";

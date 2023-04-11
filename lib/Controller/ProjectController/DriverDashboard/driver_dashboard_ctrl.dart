@@ -7,9 +7,13 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
 import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/Helper/TimeChecker/timer_checker.dart';
+import 'package:pharmdel/View/CreatePatientScreen.dart/createPatientScreen.dart';
 import 'package:pharmdel/View/OrderDetails/order_detail_screen.dart';
+import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:xml2json/xml2json.dart';
 import '../../../Model/DriverDashboard/driver_dashboard_response.dart';
 import '../../../Model/DriverDashboard/get_pharmacy_info_response.dart';
@@ -156,7 +160,52 @@ class DriverDashboardCTRL extends GetxController{
     );
   }
 
-  void onTapAppBarQrCode({required BuildContext context}){
+  Future<void> onTapAppBarQrCode({required BuildContext context,int? scanOrderMainId,}) async {
+    TimeCheckerCustom.checkLastTime(context: context);
+
+    isAvlInternet = await InternetCheck.checkStatus();
+    if(!isAvlInternet){
+      PrintLog.printLog("No Internet........On Tap QR");
+      showNoInternetCustomPopUp(subTitle: scanOrderMainId != null && scanOrderMainId != 0 ? kPleaseCompleteManually:"");
+      return;
+    }
+
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode("#7EC3E6", "Cancel", true, ScanMode.QR);
+      if (barcodeScanRes != "-1") {
+        FlutterBeep.beep();
+
+        if (orderListType == 4) {
+
+          await orderDetailApi(
+              context: Get.overlayContext!,
+              orderID: barcodeScanRes,
+              isScan:  true,
+              isComplete:  true,
+              orderIdMain: scanOrderMainId ?? 0,
+              routeID: selectedRoute?.routeId.toString() ?? "0"
+          );
+
+        } else if (orderListType != 4) {
+          orderListType = 1;
+          await orderDetailApi(
+              context: Get.overlayContext!,
+              orderID: barcodeScanRes,
+              isScan:  true,
+              isComplete:  false,
+              orderIdMain:  0,
+              routeID: selectedRoute?.routeId.toString() ?? "0"
+          );
+        } else {
+          ToastCustom.showToast(msg: kFormatNotCorrect);
+        }
+      } else {
+        ToastCustom.showToast(msg: kFormatNotCorrect);
+      }
+    } on PlatformException {
+      barcodeScanRes = kFailedToGetPlatformVersion;
+    }
 
   }
 
@@ -174,9 +223,10 @@ class DriverDashboardCTRL extends GetxController{
   }
 
   /// Show No internet Custom PopUP
-  Future<void> showNoInternetCustomPopUp()async{
+  Future<void> showNoInternetCustomPopUp({String? subTitle})async{
       PopupCustom.showNoInternetPopUpWhenOffline(
           context: Get.overlayContext!,
+          subTitle: subTitle,
           onValue: (value){
 
           }
@@ -209,17 +259,47 @@ class DriverDashboardCTRL extends GetxController{
     }
 
     if(selectedRoute != null){
-      Get.toNamed(searchPatientScreenRoute)?.then((value) async {
-        if(value == "created"){
-          if(isRouteStart){
-            await getDeliveriesWithRouteStart(context: context);
-          }else{
-            await driverDashboardApi(context: context);
+      if(isBulkScanSwitched){
+        Get.toNamed(scanPrescriptionScreenRoute)?.then((value) {
+          PrintLog.printLog("Scan Prescription value is: $value");
+          if(value == "search"){
+            Get.toNamed(searchPatientScreenRoute,arguments: SearchPatientScreen(isScan: true))?.then((value1) async {
+              if(value1 == "created"){
+                if(isRouteStart){
+                  await getDeliveriesWithRouteStart(context: context);
+                }else{
+                  await driverDashboardApi(context: context);
+                }
+              }
+            });
+          }else if(value == "create"){
+            Get.toNamed(driverCreatePatientScreenRoute,arguments: DriverCreatePatientScreen(isScanPrescription: true));
           }
-        }
-      });
-      // Get.toNamed(scanPrescriptionScreenRoute);
-      // DefaultFuntions.barcodeScanning();
+        });
+      }else{
+        Get.toNamed(searchPatientScreenRoute,arguments: SearchPatientScreen(isScan: true))?.then((value1) async {
+          if(value1 == "created"){
+            if(isRouteStart){
+              await getDeliveriesWithRouteStart(context: context);
+            }else{
+              await driverDashboardApi(context: context);
+            }
+          }else if(value1 == "search"){
+            Get.toNamed(searchPatientScreenRoute,arguments: SearchPatientScreen(isScan: false))?.then((value1) async {
+
+              if(value1 == "created"){
+                if(isRouteStart){
+                  await getDeliveriesWithRouteStart(context: context);
+                }else{
+                  await driverDashboardApi(context: context);
+                }
+              }
+            });
+          }
+        });
+      }
+
+
     }else{
       PopupCustom.simpleTruckDialogBox(
         context: Get.overlayContext!,
@@ -415,18 +495,24 @@ class DriverDashboardCTRL extends GetxController{
   }
 
   Future<void> onTapDeliveryListItem({required BuildContext context,required int index}) async {
-    if (orderListType == 6) {
-      if (driverType.toLowerCase() == kDedicatedDriver.toLowerCase()) {
-        driverDashboardData?.deliveryList?[index].isSelected = !driverDashboardData!.deliveryList![index].isSelected!;
-        isShowReschedule = driverDashboardData!.deliveryList!.any((element) => element.isSelected == true);
-        bool isFoundFalse = driverDashboardData!.deliveryList!.any((element) => element.isSelected == false);
-        isAllSelected = isFoundFalse == true ? false:true;
+    if(orderListType == 4){
+      onTapAppBarQrCode(
+          context: context,
+          scanOrderMainId: driverDashboardData?.deliveryList?[index].nursing_home_id == null || driverDashboardData?.deliveryList?[index].nursing_home_id == "" ||driverDashboardData?.deliveryList?[index].nursing_home_id == "null" || driverDashboardData?.deliveryList?[index].nursing_home_id == "0" ? int.parse(driverDashboardData?.deliveryList?[index].orderId.toString() ?? "0") : 0
+      );
+    }else{
+      if (orderListType == 6) {
+        if (driverType.toLowerCase() == kDedicatedDriver.toLowerCase()) {
+          driverDashboardData?.deliveryList?[index].isSelected = !driverDashboardData!.deliveryList![index].isSelected!;
+          isShowReschedule = driverDashboardData!.deliveryList!.any((element) => element.isSelected == true);
+          bool isFoundFalse = driverDashboardData!.deliveryList!.any((element) => element.isSelected == false);
+          isAllSelected = isFoundFalse == true ? false:true;
+        }
       }
-    }
-    else if (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kOutForDelivery || orderListType == 4) {
-      orderListType = 4;
-      bool isInternet = await ConnectionValidator().check();
-      if( isInternet == true){
+      else if (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kOutForDelivery || orderListType == 4) {
+        orderListType = 4;
+        bool isInternet = await ConnectionValidator().check();
+        if( isInternet == true){
           scanBarcodeNormal(
               context: Get.overlayContext!,
               isOutForDelivery: true,
@@ -434,35 +520,37 @@ class DriverDashboardCTRL extends GetxController{
               orderId: driverDashboardData?.deliveryList?[index].nursing_home_id == null || driverDashboardData?.deliveryList?[index].nursing_home_id == "" ||driverDashboardData?.deliveryList?[index].nursing_home_id == "null" || driverDashboardData?.deliveryList?[index].nursing_home_id == "0" ? int.parse(driverDashboardData?.deliveryList?[index].orderId.toString() ?? "0") : 0
           );
 
-      }else{
-        PopupCustom.showOnlyManualDeliveryPopUp(
-            context: Get.overlayContext!,
-            onValue: (value){
+        }else{
+          PopupCustom.showOnlyManualDeliveryPopUp(
+              context: Get.overlayContext!,
+              onValue: (value){
 
-            }
-        );
+              }
+          );
+        }
+
+
       }
+      else if (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReadyDelivery.toLowerCase() ||
+          driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReadyForDelivery.toLowerCase() ||
+          driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kPickedUpDelivery.toLowerCase() ||
+          driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReceived.toLowerCase() ||
+          driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kRequested.toLowerCase()) {
+        if (!isRouteStart) {
 
-
-    }
-    else if (driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReadyDelivery.toLowerCase() ||
-        driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReadyForDelivery.toLowerCase() ||
-        driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kPickedUpDelivery.toLowerCase() ||
-        driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kReceived.toLowerCase() ||
-        driverDashboardData?.deliveryList?[index].status?.toLowerCase() == kRequested.toLowerCase()) {
-      if (!isRouteStart) {
-
-        orderDetailApi(
-          context: context,
-            routeID: selectedRoute?.routeId.toString() ?? "0",
-            orderID: driverDashboardData?.deliveryList?[index].orderId ?? "",
-            isScan: false, isComplete:  false,orderIdMain:  0
-        );
-      } else if (isRouteStart) {
-        PopupCustom.showAlertRouteStartedPopUp(context: context);
+          orderDetailApi(
+              context: context,
+              routeID: selectedRoute?.routeId.toString() ?? "0",
+              orderID: driverDashboardData?.deliveryList?[index].orderId ?? "",
+              isScan: false, isComplete:  false,orderIdMain:  0
+          );
+        } else if (isRouteStart) {
+          PopupCustom.showAlertRouteStartedPopUp(context: context);
+        }
       }
+      update();
     }
-    update();
+
   }
 
   /// Manual Delivery
@@ -1092,53 +1180,77 @@ class DriverDashboardCTRL extends GetxController{
         .then((result) async {
       if(result != null){
         try {
-          if ((result.message == "") || isComplete || result.deliveryStatusDesc.toString().toLowerCase() == "received" ||
-              result.deliveryStatusDesc.toString().toLowerCase() == "ready" || result.deliveryStatusDesc.toString().toLowerCase() == "requested" ||
-              result.deliveryStatusDesc.toString().toLowerCase() == "pickedUp") {
-            if (result.deliveryStatusDesc.toString().toLowerCase() == "completed") {
-              ToastCustom.showToast(msg: kThisOrderAlreadyCompleted);
-            } else {
+          if(result.orderId == null || result.message != null && result.message!.contains("wrong bag") ){
+            changeLoadingValue(false);
+            changeSuccessValue(false);
 
-              // await MyDatabase().getExemptionsList().then((value) async {
-              //   modal.exemptions = [];
-              //   if (value != null && value.isNotEmpty) {
-              //     await Future.forEach(value, (element) {
-              //       ExemptionsList exemptions = ExemptionsList();
-              //       exemptions.id = element.exemptionId;
-              //       exemptions.serialId = element.serialId;
-              //       exemptions.name = element.name;
-              //
-              //       modal.exemptions.add(exemptions);
-              //     });
-              //   }
-              // });
+            PopupCustom.errorDialogBox(
+              onValue: (value){},
+              topWidget: SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: Center(
+                  child: Lottie.network(
+                    "https://assets6.lottiefiles.com/private_files/lf30_uDAsLk.json",
+                  ),
+                ),
+              ),
+              context: context,
+              btnActionTitle: kOkay,
+              title: kWrongBag,
+              subTitle: result.message ?? "",
+            );
 
-              if(result.relatedOrders != null && result.relatedOrders!.length > 1 && result.deliveryStatusDesc?.toLowerCase() != kPickedUp2.toLowerCase()){
-                PrintLog.printLog('Multiple deliveries::::::::::::${result.bagSize}');
-                showAlertOrderPopUp(context: context,deliveryDetails: result);
-              }else{
-                result.exemptions = driverDashboardData != null && driverDashboardData?.exemptions != null ? driverDashboardData!.exemptions!:[];
-                Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: result))?.then((value) {
-                  if(orderListType == 4 && value != "back"){
-                    PrintLog.printLog("Check Uploaded Order: 1");
-                    checkCompleteDataInDB(context: context,isUpdateFailed: false);
-                  }
+          }else{
+            if ((result.message == "") || isComplete || result.deliveryStatusDesc.toString().toLowerCase() == "received" ||
+                result.deliveryStatusDesc.toString().toLowerCase() == "ready" || result.deliveryStatusDesc.toString().toLowerCase() == "requested" ||
+                result.deliveryStatusDesc.toString().toLowerCase() == "pickedUp") {
+              if (result.deliveryStatusDesc.toString().toLowerCase() == "completed") {
+                ToastCustom.showToast(msg: kThisOrderAlreadyCompleted);
+              } else {
 
-                });
-                PrintLog.printLog('Single delivery::::::::::::');
+                // await MyDatabase().getExemptionsList().then((value) async {
+                //   modal.exemptions = [];
+                //   if (value != null && value.isNotEmpty) {
+                //     await Future.forEach(value, (element) {
+                //       ExemptionsList exemptions = ExemptionsList();
+                //       exemptions.id = element.exemptionId;
+                //       exemptions.serialId = element.serialId;
+                //       exemptions.name = element.name;
+                //
+                //       modal.exemptions.add(exemptions);
+                //     });
+                //   }
+                // });
+
+                if(result.relatedOrders != null && result.relatedOrders!.length > 1 && result.deliveryStatusDesc?.toLowerCase() != kPickedUp2.toLowerCase()){
+                  PrintLog.printLog('Multiple deliveries::::::::::::${result.bagSize}');
+                  showAlertOrderPopUp(context: context,deliveryDetails: result);
+                }else{
+                  result.exemptions = driverDashboardData != null && driverDashboardData?.exemptions != null ? driverDashboardData!.exemptions! : await dbCTRL.getExemptionList();
+                  Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: result))?.then((value) {
+                    if(orderListType == 4 && value != "back"){
+                      PrintLog.printLog("Check Uploaded Order: 1");
+                      checkCompleteDataInDB(context: context,isUpdateFailed: false);
+                    }
+
+                  });
+                  PrintLog.printLog('Single delivery::::::::::::');
+                }
+
+                PrintLog.printLog('ScanDetailPage ${result.delCharge}');
+                PrintLog.printLog('result.relatedOrders:: ${result.relatedOrders?.length}');
+                // showAlertOrderPopUp(deliveryDetails: result,context: context);
               }
-
-              PrintLog.printLog('ScanDetailPage ${result.delCharge}');
-              PrintLog.printLog('result.relatedOrders:: ${result.relatedOrders?.length}');
-              // showAlertOrderPopUp(deliveryDetails: result,context: context);
+            } else if (result.message != null) {
+              ToastCustom.showToast(msg: result.message ?? "");
+            } else {
+              orderListType = 1;
             }
-          } else if (result.message != null) {
-            ToastCustom.showToast(msg: result.message ?? "");
-          } else {
-            orderListType = 1;
+            changeLoadingValue(false);
+            changeSuccessValue(true);
           }
-          changeLoadingValue(false);
-          changeSuccessValue(true);
+ 
 
         } catch (_) {
 
@@ -1368,7 +1480,7 @@ class DriverDashboardCTRL extends GetxController{
             PopupCustom.showMultipleDeliveryListPopUp(
                 context: context,
               orderModal: deliveryDetails,
-              onValue: (value){
+              onValue: (value) async {
                   if(value != false && value != null){
                     List<RelatedOrders> selectedRelatedOrders = [];
                     deliveryDetails.relatedOrders?.forEach((element) {
@@ -1377,7 +1489,7 @@ class DriverDashboardCTRL extends GetxController{
                       }
                     });
                     deliveryDetails.relatedOrders = selectedRelatedOrders;
-                    deliveryDetails.exemptions = driverDashboardData != null && driverDashboardData?.exemptions != null ? driverDashboardData!.exemptions!:[];
+                    deliveryDetails.exemptions = driverDashboardData != null && driverDashboardData?.exemptions != null ? driverDashboardData!.exemptions!:await dbCTRL.getExemptionList();
                     Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: deliveryDetails))?.then((value) {
                       if(orderListType == 4 && value != "back"){
                         PrintLog.printLog("Check Uploaded Order: 2");

@@ -16,7 +16,7 @@ import '../../Model/DriverRoutes/get_route_list_response.dart';
 import '../../Model/GetDeliveryMasterData/get_delivery_master_data.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
 import '../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
-import '../../Model/ProcessScan/driver_process_scan.dart';
+import '../../Model/ProcessScan/driver_process_scan_response.dart';
 
 class DeliveryScheduleScreen extends StatefulWidget {
   final DriverProcessScanOrderInfo orderInfo;
@@ -83,7 +83,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                           children: [
 
                             BuildText.buildText(
-                                text: "$kName${controller.ctrlOrderInfo?.firstName ?? ""} ${controller.ctrlOrderInfo?.middleName ?? ""} ${controller.ctrlOrderInfo?.lastName ?? ""}"),
+                                text: "$kName: ${controller.ctrlOrderInfo?.firstName ?? ""} ${controller.ctrlOrderInfo?.middleName ?? ""} ${controller.ctrlOrderInfo?.lastName ?? ""}"),
                             buildSizeBox(controller.spaceBetweenCustomerDetail, 0.0),
                             BuildText.buildText(
                                 text: "$kDob: ${controller.ctrlOrderInfo?.dob ?? ""}"),
@@ -367,7 +367,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         '$kSelectRoute*',
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: Theme.of(context).hintColor,
+                                          color: AppColors.greenColor,
                                         ),
                                       ),isExpanded: true,
                                       items: controller.drDashCtrl.routeList!
@@ -375,8 +375,8 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         value: item,
                                         child: Text(
                                           item.routeName ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: TextStyle(
+                                            fontSize: 15,color: AppColors.greenColor
                                           ),
                                         ),
                                       )).toList(),
@@ -420,7 +420,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         '$kSelectRoute*',
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: Theme.of(context).hintColor,
+                                          color: AppColors.greenColor
                                         ),
                                       ),isExpanded: true,
                                       items: controller.drDashCtrl.driverList
@@ -428,8 +428,8 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         value: item,
                                         child: Text(
                                           item.firstName ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: TextStyle(
+                                            fontSize: 15,color: AppColors.greenColor
                                           ),
                                         ),
                                       )).toList(),
@@ -470,7 +470,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                       '$kSelectStatus*',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Theme.of(context).hintColor,
+                                        color: AppColors.blackColor
                                       ),
                                     ),isExpanded: true,
                                     items: controller.statusType
@@ -478,8 +478,8 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                       value: item,
                                       child: Text(
                                         item,
-                                        style: const TextStyle(
-                                          fontSize: 14,
+                                        style: TextStyle(
+                                          fontSize: 15,color: AppColors.blackColor
                                         ),
                                       ),
                                     )).toList(),
@@ -521,7 +521,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         kSelectNursHome,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: Theme.of(context).hintColor,
+                                          color: AppColors.greenColor
                                         ),
                                       ),isExpanded: true,
                                       items: controller.drDashCtrl.deliveryMasterData!.nursingHomes!
@@ -529,8 +529,8 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         value: item,
                                         child: Text(
                                           item.nursingHomeName ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: TextStyle(
+                                            fontSize: 15,color: AppColors.greenColor
                                           ),
                                         ),
                                       )).toList(),
@@ -563,7 +563,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         kParcelLocation,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: Theme.of(context).hintColor,
+                                          color: AppColors.greenColor
                                         ),
                                       ),isExpanded: true,
                                       items: controller.parcelBoxList!
@@ -571,8 +571,8 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                         value: item,
                                         child: Text(
                                           item.name ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: TextStyle(
+                                            fontSize: 15,color: AppColors.greenColor
                                           ),
                                         ),
                                       )).toList(),
@@ -617,7 +617,7 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                           '$kSelectSubscription*',
                                           style: TextStyle(
                                             fontSize: 14,
-                                            color: Theme.of(context).hintColor,
+                                            color: AppColors.greenColor
                                           ),
                                         ),
                                         isExpanded: true,
@@ -626,8 +626,8 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                           value: item,
                                           child: Text(
                                             item.name ?? "",
-                                            style: const TextStyle(
-                                              fontSize: 14,
+                                            style: TextStyle(
+                                              fontSize: 15,color: AppColors.greenColor
                                             ),
                                           ),
                                         )).toList(),
@@ -731,36 +731,38 @@ class _DeliveryScheduleScreenState extends State<DeliveryScheduleScreen> {
                                       color: AppColors.greenColor,
                                       borderRadius: BorderRadius.circular(5)
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
+                                  child: FittedBox(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
 
-                                      SizedBox(
-                                        height: 20,
-                                        width: 25,
-                                        child: Checkbox(
-                                          activeColor: AppColors.themeColor,
-                                          visualDensity: const VisualDensity(horizontal: -4),
-                                          value: controller.selectedExemption != null ? true:false,
-                                          onChanged: (newValue) {
-                                            if(controller.selectedExemption != null){
-                                              controller.onRemoveExempt();
-                                            }else{
-                                              controller.onTapExempt(context: context);
-                                            }
-                                          },
+                                        SizedBox(
+                                          height: 20,
+                                          width: 25,
+                                          child: Checkbox(
+                                            activeColor: AppColors.themeColor,
+                                            visualDensity: const VisualDensity(horizontal: -4),
+                                            value: controller.selectedExemption != null ? true:false,
+                                            onChanged: (newValue) {
+                                              if(controller.selectedExemption != null){
+                                                controller.onRemoveExempt();
+                                              }else{
+                                                controller.onTapExempt(context: context);
+                                              }
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      BuildText.buildText(
-                                          text: "$kExempt ${controller.selectedExemption != null && controller.selectedExemption?.serialId.toString() != "null" ? ": ${controller.selectedExemption?.serialId}" : ""}",
-                                          color: AppColors.whiteColor
-                                      ),
+                                        BuildText.buildText(
+                                            text: "$kExempt ${controller.selectedExemption != null && controller.selectedExemption?.serialId.toString() != "null" ? ": ${controller.selectedExemption?.serialId}" : ""}",
+                                            color: AppColors.whiteColor,size: 12
+                                        ),
 
-                                      const Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ),
-                                    ],
+                                        const Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

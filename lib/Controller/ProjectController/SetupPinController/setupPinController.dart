@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:pharmdel/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import 'package:pharmdel/Controller/WidgetController/AppBar/app_bar.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'package:pharmdel/View/ScanPrescription/scan_prescription_ctrl.dart';
+import '../../Controller/ProjectController/QrCodeController/qr_code_controller.dart';
 import '../../Controller/WidgetController/AdditionalWidget/CustomerListWidget/customer_list_widget.dart';
 import '../../Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../DeliverySchedule/delivery_schedule_screen.dart';
 
 class ScanPrescriptionScreen extends StatefulWidget {
   const ScanPrescriptionScreen({super.key});
@@ -12,60 +17,41 @@ class ScanPrescriptionScreen extends StatefulWidget {
 }
 
 class _ScanPrescriptionScreenState extends State<ScanPrescriptionScreen> {
+
+
+  DriverScanPrescriptionController ctrl = Get.put(DriverScanPrescriptionController());
+  QrCodeController qrCtrl = Get.put(QrCodeController());
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  Future<void> init()async{
+    await qrCtrl.buildQrView(context: context);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<QrCodeController>();
+    Get.delete<DriverScanPrescriptionController>();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.materialAppThemeColor,
-        centerTitle: true,
-        title: BuildText.buildText(
-          text: kCstmList,
-          color: AppColors.blackColor,
-          size: 18
-        ),
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: AppColors.blackColor,
-          ),
-        ),
-      ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: 
-            // orderInfo != null && orderInfo.patientsList != null && orderInfo.patientsList.userId != null && orderInfo.patientsList.userId.length > 0 && orderInfo.patientsList.userId[0].toString().isNotEmpty ? 
-                Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 90),
-                    child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 5,
-                        // orderInfo != null ? orderInfo.patientsList.userId.length : 0,
-                        itemBuilder: (context, index) {
-                          return CustomerListWidget(
-                            address: "address", 
-                            customerName: "customerName", 
-                            dob: "dob", 
-                            nhsNumber: "nhsNumber", 
-                            position: 0, 
-                            // selectedListner: index, 
-                            userId: "userId",
-                            );
-                        }),
-                  )
-                // : const SizedBox(),
-          ),
-           Align(
-            alignment: Alignment.bottomCenter,
-            child: MaterialButton(
-                onPressed: (){
-                  Get.toNamed(searchPatientScreenRoute);
-                },
+    return GetBuilder<QrCodeController>(
+      init: qrCtrl,
+      builder: (controller){
+        return LoadScreen(
+          widget: Scaffold(
+            appBar: AppBarCustom.appBarStyle2(
+                title: kCustomerList,
+                size: 18,centerTitle: false
+            ),
+            bottomNavigationBar: MaterialButton(
+                onPressed: ()=> controller.onTapListWidget(context: context),
                 color: AppColors.colorOrange,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,13 +63,33 @@ class _ScanPrescriptionScreenState extends State<ScanPrescriptionScreen> {
                     ),
                     BuildText.buildText(
                       text: kAddNewCustomer,
-                      color: AppColors.whiteColor,                      
+                      color: AppColors.whiteColor,
                     ),
                   ],
                 )),
-          )
-        ],
-      ),
+            body: controller.orderInfo != null && controller.orderInfo?.patientsList != null && controller.orderInfo!.patientsList!.userId![0].toString().isNotEmpty ?
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 90),
+                  child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: controller.orderInfo!.patientsList?.userId?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return CustomerListWidget(
+                          address:"N/A", // controller.orderInfo?.address ?? "N/A",
+                          customerName: controller.orderInfo?.patientsList?.customerName?[index] ?? "N/A" ?? "",
+                          dob: controller.orderInfo!.patientsList?.dob?[index] ?? "N/A",
+                          nhsNumber: controller.orderInfo!.patientsList?.nhsNumber?[index].toString() ?? "N/A",
+                          userId: controller.orderInfo!.patientsList?.userId?[index].toString() ?? "N/A",
+                          onPressed: ()=> controller.onTapListWidget(context: context),
+                        );
+                      }),
+                )
+                    : const SizedBox.shrink(),
+          ),
+          isLoading: controller.isLoading,
+        );
+      },
     );
   }  
 }

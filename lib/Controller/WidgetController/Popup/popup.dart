@@ -20,6 +20,28 @@ class PopupCustom{
   PopupCustom._privateConstructor();
   static final PopupCustom instance = PopupCustom._privateConstructor();
 
+  static errorDialogBox({bool? isShowClearBtn, Widget? topWidget,required Function(dynamic) onValue,required BuildContext context,String ? title, subTitle, btnBackTitle, btnActionTitle,Color? titleColor,subTitleColor,btnBackColor,btnActionColor,Function()? onTapBackBtn,onTapActionBtn}){
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context1) {
+          return CommonUsePopUp(
+            isShowClearBtn: isShowClearBtn,
+            title: title ?? "",
+            topWidget: topWidget ?? const Icon(Icons.error_outline,color: Colors.red,size: 50,),
+            subTitle: subTitle,
+            titleColor: titleColor,
+            btnActionColor: btnActionColor,
+            btnActionTitle: btnActionTitle ?? kRetry,
+            btnBackColor: btnBackColor,
+            btnBackTitle: btnBackTitle ?? "",
+            onTapActionBtn: onTapActionBtn,
+            onTapBackBtn: onTapBackBtn,
+            subTitleColor: subTitleColor,
+          );
+        }).then(onValue);
+  }
+
   static simpleTruckDialogBox({bool? isShowClearBtn, Widget? topWidget,required Function(dynamic) onValue,required BuildContext context,String ? title, subTitle, btnBackTitle, btnActionTitle,Color? titleColor,subTitleColor,btnBackColor,btnActionColor,Function()? onTapBackBtn,onTapActionBtn}){
     return showDialog(
         context: context,
@@ -262,7 +284,7 @@ class PopupCustom{
         });
   }
 
-  static showNoInternetPopUpWhenOffline({required BuildContext context,required Function(dynamic) onValue,}){
+  static showNoInternetPopUpWhenOffline({required BuildContext context,required Function(dynamic) onValue,String? subTitle}){
     simpleTruckDialogBox(
         context: context,
         onValue: onValue,
@@ -270,7 +292,7 @@ class PopupCustom{
       btnActionTitle: kOkay,
       btnBackTitle: "",
       title: kAlert,
-      subTitle: kInternetNotAvailable,
+      subTitle: subTitle != null && subTitle != "" ? subTitle: kInternetNotAvailable ,
       onTapBackBtn: ()=> Get.back(),
     );
   }
@@ -717,16 +739,15 @@ class _ChooseVehiclePopUpState extends State<ChooseVehiclePopUp> {
                                       }else if(controller.imagePicker?.speedometerImage == null) {
                                         ToastCustom.showToast(msg: kTakeSpeedometerPicture);
                                       }else{
-                                        print("tewsw.....$isTap");
 
                                         if(isTap == false) {
                                           isTap = true;
-                                        //   await controller.onTapOkaySelectVehiclePopUP(
-                                        //     context: context,
-                                        //   startMiles: enterMilesVehicleCT.text.toString().trim(),
-                                        // ).then((value) {
-                                        //     isTap = false;
-                                        // });
+                                          await controller.onTapOkaySelectVehiclePopUP(
+                                            context: context,
+                                          startMiles: enterMilesVehicleCT.text.toString().trim(),
+                                        ).then((value) {
+                                            isTap = false;
+                                        });
                                         }
                                       }
                                     },

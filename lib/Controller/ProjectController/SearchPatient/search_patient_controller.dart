@@ -1,19 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:pharmdel/Controller/ProjectController/DriverDashboard/driver_dashboard_ctrl.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:pharmdel/View/DeliverySchedule/delivery_schedule_screen.dart';
-import '../../../Controller/ApiController/ApiController.dart';
-import '../../../Controller/ApiController/WebConstant.dart';
-import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/CreateOrder/driver_create_order_response.dart';
 import '../../../Model/GetPatient/getPatientApiResponse.dart';
-import '../../../Model/ProcessScan/driver_process_scan.dart';
-import '../../../main.dart';
+import '../../../Model/ProcessScan/driver_process_scan_response.dart';
+import '../../WidgetController/Popup/popup.dart';
+import '../QrCodeController/qr_code_controller.dart';
 
 
 class SearchPatientController extends GetxController{
@@ -21,6 +19,8 @@ class SearchPatientController extends GetxController{
   ApiController apiCtrl = ApiController();
 
   DriverDashboardCTRL driverDasCtrl = Get.find();
+  QrCodeController qrCtrl = Get.put(QrCodeController());
+
 
   bool isLoading = false;
   bool isError = false;
@@ -50,6 +50,17 @@ class SearchPatientController extends GetxController{
     super.onInit();
   }
 
+  Future<void> init({required BuildContext context})async{
+    qrCtrl.buildQrView(context:context).then((value) async {
+      if(qrCtrl.qrType != "" && qrCtrl.qrCodeResult != ""){
+        await getProcessScan(context: context,patientID: "",isScan: true);
+      }
+    });
+
+  }
+
+
+
   /// On Typing Patient Name
   Future<void> onTypingText({required String value,required BuildContext context})async{
         if(value.toString().trim().isNotEmpty && value.length > 3){
@@ -65,7 +76,7 @@ class SearchPatientController extends GetxController{
         if(patientData != null && patientData!.isNotEmpty){
           PrintLog.printLog("Patient ID: ${patientData?[index].customerId}");
           if(patientData?[index].customerId != null){
-            await getProcessScan(context: context,patientID: patientData?[index].customerId ?? "");
+            await getProcessScan(context: context,patientID: patientData?[index].customerId ?? "",isScan: false);
           }else{
             ToastCustom.showToast(msg: kOrderIdNotFound);
           }
@@ -129,7 +140,7 @@ class SearchPatientController extends GetxController{
   }
 
   /// Get Process Scan Api
-  Future<DriverProcessScan?> getProcessScan({required BuildContext context,required String patientID}) async {
+  Future<DriverProcessScan?> getProcessScan({required BuildContext context,required String patientID, required bool isScan}) async {
     FocusScope.of(context).unfocus();
 
     changeEmptyValue(false);
@@ -138,9 +149,20 @@ class SearchPatientController extends GetxController{
     changeErrorValue(false);
     changeSuccessValue(false);
 
-    Map<String, dynamic> dictparm = {
-      "patientid":patientID
-    };
+    Map<String, dynamic> dictparm = {};
+
+    if(isScan){
+      dictparm = {
+        "scan_type":qrCtrl.qrType ?? "",
+        "prescription_info":qrCtrl.qrCodeResult ?? "",
+        "pharmacyId":"0"
+      };
+    }else{
+      dictparm = {
+        "patientid":patientID
+      };
+    }
+
 
     String url = WebApiConstant.PROCESS_SCAN_URL;
 
@@ -153,12 +175,29 @@ class SearchPatientController extends GetxController{
                 if(result.data != null){
                   if(result.data?.orderInfo != null){
                     orderInfo = result.data?.orderInfo;
-                    PrintLog.printLog("Order Info Data Added::::::::");
-                    if(driverDasCtrl.isBulkScanSwitched){
-                      await updateCustomerWithCreateOrder(context: context,orderInfo: result.data!.orderInfo!);
-                    }else{
-                      Get.offNamed(deliveryScheduleScreenRoute,arguments: DeliveryScheduleScreen(orderInfo: result.data!.orderInfo!));
+                    if(isScan){
+                      orderInfo?.title = result.data?.orderInfo?.title != null ? result.data?.orderInfo?.title["0"] : "";
+                      orderInfo?.firstName = result.data?.orderInfo?.firstName != null ? result.data?.orderInfo?.firstName["0"] : "";
+                      orderInfo?.middleName = result.data?.orderInfo?.middleName != null ? result.data?.orderInfo?.middleName["0"] : "";
+                      orderInfo?.lastName = result.data?.orderInfo?.lastName != null ? result.data?.orderInfo?.lastName["0"] : "";
+                      orderInfo?.nursingHomeId = result.data?.orderInfo?.nursingHomeId != null ? result.data?.orderInfo?.nursingHomeId["0"] : "";
+                      orderInfo?.address = result.data?.orderInfo?.address != null ? result.data?.orderInfo?.address["0"] : "";
+                      orderInfo?.postCode = result.data?.orderInfo?.postCode != null ? result.data?.orderInfo?.postCode["0"] : "";
+                      orderInfo?.nhsNumber = result.data?.orderInfo?.nhsNumber != null ? result.data?.orderInfo?.nhsNumber["0"] : "";
                     }
+                    PrintLog.printLog("Order Info Data Added::::::::");
+
+                    if(!isScan || result.data?.orderInfo?.patientsList != null && result.data!.orderInfo!.patientsList!.userId!.isNotEmpty && result.data!.orderInfo!.patientsList!.userId![0].toString().isNotEmpty){
+                      if(driverDasCtrl.isBulkScanSwitched){
+                        await updateCustomerWithCreateOrder(context: context,orderInfo: orderInfo!);
+                      }else{
+                        Get.offNamed(deliveryScheduleScreenRoute,arguments: DeliveryScheduleScreen(orderInfo: orderInfo!));
+                      }
+                    }else{
+                      qrCtrl.userNotExitsDialog(context: context,orderInfoNew: orderInfo!);
+                    }
+
+
                   }
                   result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
                   changeLoadingValue(false);
@@ -179,6 +218,12 @@ class SearchPatientController extends GetxController{
               changeLoadingValue(false);
               changeSuccessValue(false);
               PrintLog.printLog(result.message);
+              PopupCustom.errorDialogBox(
+                onValue: (value){},
+                context: context,
+                title: kError,
+                subTitle: result.message ?? "",
+              );
             }
 
           } catch (_) {
@@ -288,6 +333,12 @@ class SearchPatientController extends GetxController{
               changeLoadingValue(false);
               changeSuccessValue(false);
               PrintLog.printLog(result.message);
+              PopupCustom.errorDialogBox(
+                onValue: (value){},
+                context: context,
+                title: kError,
+                subTitle: result.message ?? "",
+              );
             }
           } catch (_) {
             changeSuccessValue(false);

@@ -59,7 +59,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case updateAddressScreenRoute:
     final args = settings.arguments as UpdateAddressScreen;
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  UpdateAddressScreen(address1: args.address1,address2: args.address2,postCode: args.postCode,townName: args.townName,));
+      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  UpdateAddressScreen(address1: args.address1,address2: args.address2,postCode: args.postCode,townName: args.townName,driverName: args.driverName,userType: args.userType,));
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;
@@ -79,12 +79,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final args = settings.arguments as SetupPinScreen;
       return MaterialPageRoute( builder: (context) => SetupPinScreen( isChangePin: args.isChangePin));
 
-      case lunchBreakScreenRoute:
+    case lunchBreakScreenRoute:
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const LunchBreakScreen());
 
 
   case scanPrescriptionScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  const ScanPrescriptionScreen());
+    return MaterialPageRoute( builder: (context) => const ScanPrescriptionScreen());
 
   case p_scanPrescriptionScreenRoute:
     final args = settings.arguments as P_ScanPrescriptionScreen;
@@ -104,7 +104,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
   case searchPatientScreenRoute:
-    return MaterialPageRoute(builder: (context) => const SearchPatientScreen());
+    final args = settings.arguments as SearchPatientScreen;
+    return MaterialPageRoute(builder: (context) => SearchPatientScreen(isScan: args.isScan,));
 
   case searchMedicineScreenRoute:
     return MaterialPageRoute(builder: (context) => const SearchMedicineScreen());

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
+import 'package:pharmdel/Controller/WidgetController/Popup/popup.dart';
 import '../../../Model/UpdateProfile/updateProfileResponse.dart';
+import '../../WidgetController/StringDefine/StringDefine.dart';
 
 class UpdateProfileController extends GetxController {
 
@@ -13,8 +15,51 @@ class UpdateProfileController extends GetxController {
   bool isNetworkError = false;
   bool isSuccess = false;
 
- 
-    Future<UpdateProfileApiResponse?> updateProfileApi({required BuildContext context,required String addressLine1, required String addressLine2, required String town, required String postCode })async{
+
+  TextEditingController addressController = TextEditingController();
+  TextEditingController addressController2 = TextEditingController();
+  TextEditingController townController = TextEditingController();
+  TextEditingController postCodeController = TextEditingController();
+
+  bool isAddress1 = false;
+  bool isAddress2 = false;
+  bool isTown = false;
+  bool isPostCode = false;
+
+  String userName = "";
+
+  double textFieldSpace = 20.0;
+
+
+  void initData({required String address1,required String address2,required String townName,required String postCode,required String name,}) async {
+    addressController.text = address1.toString().trim();
+    addressController2.text = address2.toString().trim();
+    townController.text = townName.toString().trim();
+    postCodeController.text = postCode.toString().trim();
+    userName = name.toString().trim().substring(0,1);
+    update();
+  }
+
+  Future<void> onTapUpdateAddress({required BuildContext context})async{
+    FocusScope.of(context).unfocus();
+    isAddress1 = TxtValidation.normalTextField(addressController);
+    // isAddress2 = TxtValidation.normalTextField(addressController2);
+    // isTown = TxtValidation.normalTextField(townController);
+    isPostCode = TxtValidation.normalTextField(postCodeController);
+
+    if(!isAddress1 && !isPostCode){
+      await updateProfileApi(
+          context: context,
+          addressLine1: addressController.text.toString().trim(),
+          addressLine2: addressController2.text.toString().trim(),
+          town: townController.text.toString().trim(),
+          postCode: postCodeController.text.toString().trim()
+      );
+    }
+    update();
+  }
+
+  Future<UpdateProfileApiResponse?> updateProfileApi({required BuildContext context,required String addressLine1, required String addressLine2, required String town, required String postCode })async{
 
     changeEmptyValue(false);
     changeLoadingValue(true);
@@ -34,7 +79,6 @@ class UpdateProfileController extends GetxController {
     await apiCtrl.getUpdateProfileApi(context:context,url: url,dictParameter: dictparm,token:authToken)
         .then((result) async {
        if(result != null){
-        if (result.status != false) {
           try {
             if (result.status == true) {
               ToastCustom.showToast(msg: "${result.message}");                                  
@@ -43,6 +87,13 @@ class UpdateProfileController extends GetxController {
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
+
+              PopupCustom.errorDialogBox(
+                onValue: (value){},
+                context: context,
+                title: kError,
+                subTitle: result.message ?? "",
+              );
             }
           } catch (_) {
             changeSuccessValue(false);
@@ -50,11 +101,7 @@ class UpdateProfileController extends GetxController {
             changeErrorValue(true);
             PrintLog.printLog("Exception : $_");
           }
-        }else{
-          changeSuccessValue(false);
-          changeLoadingValue(false);
-          changeErrorValue(true);
-        }
+
       }else{
         changeSuccessValue(false);
         changeLoadingValue(false);

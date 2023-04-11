@@ -243,8 +243,11 @@ class DrawerDriver extends StatelessWidget {
                                     address1: controller.driverProfileData?.data?.addressLine1 ?? "",
                                     address2: controller.driverProfileData?.data?.addressLine2 ?? "",
                                     postCode: controller.driverProfileData?.data?.postCode ?? "",
-                                    townName: controller.driverProfileData?.data?.townName ?? ""
-                                ),);                          },
+                                    townName: controller.driverProfileData?.data?.townName ?? "",
+                                  driverName: "${controller.driverProfileData?.data?.firstName ?? ""}${controller.driverProfileData?.data?.middleName != null ? " ${controller.driverProfileData?.data?.middleName}" : ""}${controller.driverProfileData?.data?.lastName != null ? " ${controller.driverProfileData?.data?.lastName}" : ""}",
+                                  userType: driverType.toLowerCase() == kSharedDriver.toLowerCase() || driverType.toLowerCase() == kDedicatedDriver.toLowerCase() ? "Driver":"",
+                                ),);
+                              },
                             title: kUpdateAddress,
                             icon: Icons.home
                         ),

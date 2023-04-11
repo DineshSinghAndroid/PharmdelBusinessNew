@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../Controller/ProjectController/QrCodeController/qr_code_controller.dart';
 import '../../Controller/ProjectController/SearchPatient/search_patient_controller.dart';
 import '../../Controller/WidgetController/AdditionalWidget/PatientListWidget/patientListWidget.dart';
 
 class SearchPatientScreen extends StatefulWidget {
-  const SearchPatientScreen({super.key});
+  bool isScan;
+  SearchPatientScreen({super.key,required this.isScan});
 
   @override
   State<SearchPatientScreen> createState() => _SearchPatientScreenState();
@@ -19,16 +21,23 @@ class _SearchPatientScreenState extends State<SearchPatientScreen> {
   SearchPatientController searchCtrl = Get.put(SearchPatientController());
 
 
-@override
- void initState() {
+  @override
+  void initState() {
+    if(widget.isScan) {
+      searchCtrl.init(context: context);
+    }
     super.initState();
   }
 
   @override
   void dispose() {
     Get.delete<SearchPatientController>();
+    Get.delete<QrCodeController>();
     super.dispose();
   }
+
+
+
 
 @override
 Widget build(BuildContext context,) {
@@ -120,3 +129,5 @@ Widget build(BuildContext context,) {
     );
   }
 }
+
+

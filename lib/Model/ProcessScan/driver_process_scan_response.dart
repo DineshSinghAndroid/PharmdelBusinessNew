@@ -57,7 +57,7 @@ class DriverProcessScanOrderInfo {
   String? lng;
   String? email;
   String? mobileNo;
-  String? nursingHomeId;
+  dynamic nursingHomeId;
   bool? nhsMatched;
   String? defaultDeliveryType;
   String? defaultDeliveryRoute;
@@ -71,21 +71,22 @@ class DriverProcessScanOrderInfo {
   String? prescriptionFt;
   String? prescriptionT;
   String? prescriptionDn;
-  String? lastName;
-  String? middleName;
-  String? firstName;
-  String? title;
-  String? nhsNumber;
+  dynamic lastName;
+  dynamic middleName;
+  dynamic firstName;
+  dynamic title;
+  dynamic nhsNumber;
   String? dob;
   String? x;
-  String? address;
-  String? postCode;
+  dynamic address;
+  dynamic postCode;
   String? drId;
   String? doctorName;
   String? surgeryName;
   String? pi;
   String? doctorAddress;
   String? drPostCode;
+  DriverProcessScanPatientsList? patientsList;
 
   DriverProcessScanOrderInfo(
       {this.otherpharmacy,
@@ -127,7 +128,9 @@ class DriverProcessScanOrderInfo {
         this.surgeryName,
         this.pi,
         this.doctorAddress,
-        this.drPostCode});
+        this.drPostCode,
+        this.patientsList,
+      });
 
   DriverProcessScanOrderInfo.fromJson(Map<String, dynamic> json) {
     otherpharmacy = json['otherpharmacy'] != null && json['otherpharmacy'].toString().toLowerCase() == "true" ? true:false;
@@ -141,7 +144,7 @@ class DriverProcessScanOrderInfo {
     lng = json['lng'] != null ? json['lng'].toString():null;
     email = json['email'] != null ? json['email'].toString():null;
     mobileNo = json['mobile_no'] != null ? json['mobile_no'].toString():null;
-    nursingHomeId = json['nursing_home_id'] != null ? json['nursing_home_id'].toString():null;
+    nursingHomeId = json['nursing_home_id'];
     nhsMatched = json['nhs_matched'] != null && json['nhs_matched'].toString().toLowerCase() == "true" ? true:false;
     defaultDeliveryType = json['default_delivery_type'] != null ? json['default_delivery_type'].toString():null;
     defaultDeliveryRoute = json['default_delivery_route'] != null ? json['default_delivery_route'].toString():null;
@@ -155,21 +158,24 @@ class DriverProcessScanOrderInfo {
     prescriptionFt = json['prescription_ft'] != null ? json['prescription_ft'].toString():null;
     prescriptionT = json['prescription_t'] != null ? json['prescription_t'].toString():null;
     prescriptionDn = json['prescription_dn'] != null ? json['prescription_dn'].toString():null;
-    lastName = json['last_name'] != null ? json['last_name'].toString():null;
-    middleName = json['middle_name'] != null ? json['middle_name'].toString():null;
-    firstName = json['first_name'] != null ? json['first_name'].toString():null;
-    title = json['title'] != null ? json['title'].toString():null;
-    nhsNumber = json['nhs_number'] != null ? json['nhs_number'].toString():null;
+    lastName = json['last_name'];
+    middleName = json['middle_name'];
+    firstName = json['first_name'];
+    title = json['title'];
+    nhsNumber = json['nhs_number'];
     dob = json['dob'] != null ? json['dob'].toString():null;
     x = json['x'] != null ? json['x'].toString():null;
-    address = json['address'] != null ? json['address'].toString():null;
-    postCode = json['post_code'] != null ? json['post_code'].toString():null;
+    address = json['address'];
+    postCode = json['post_code'];
     drId = json['dr_id'] != null ? json['dr_id'].toString():null;
     doctorName = json['doctor_name'] != null ? json['doctor_name'].toString():null;
     surgeryName = json['surgery_name'] != null ? json['surgery_name'].toString():null;
     pi = json['pi'] != null ? json['pi'].toString():null;
     doctorAddress = json['doctor_address'] != null ? json['doctor_address'].toString():null;
     drPostCode = json['dr_post_code'] != null ? json['dr_post_code'].toString():null;
+    patientsList = json['patients_list'] != null
+        ? new DriverProcessScanPatientsList.fromJson(json['patients_list'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -214,6 +220,66 @@ class DriverProcessScanOrderInfo {
     data['pi'] = this.pi;
     data['doctor_address'] = this.doctorAddress;
     data['dr_post_code'] = this.drPostCode;
+    if (this.patientsList != null) {
+      data['patients_list'] = this.patientsList!.toJson();
+    }
+    return data;
+  }
+}
+
+class DriverProcessScanPatientsList {
+  List? userId;
+  List? customerName;
+  List? firstName;
+  List? middleName;
+  List? lastName;
+  List? dob;
+  List? emailId;
+  List? mobileNoNew;
+  List? nhsNumber;
+  List? lat;
+  List? lng;
+
+  DriverProcessScanPatientsList(
+      {this.userId,
+        this.customerName,
+        this.firstName,
+        this.middleName,
+        this.lastName,
+        this.dob,
+        this.emailId,
+        this.mobileNoNew,
+        this.nhsNumber,
+        this.lat,
+        this.lng});
+
+  DriverProcessScanPatientsList.fromJson(Map<String, dynamic> json) {
+    userId = json['user_id'] != null ? json['user_id'] : null;
+    customerName = json['customer_name'] != null ? json['customer_name'] : null;
+    firstName = json['first_name'] != null ? json['first_name'] : null;
+    middleName = json['middle_name'] != null ? json['middle_name'] : null;
+    lastName = json['last_name'] != null ? json['last_name'] : null;
+    dob = json['dob'] != null ? json['dob'] : null;
+    emailId = json['email_id'] != null ? json['email_id'] : null;
+    mobileNoNew = json['mobile_no_new'] != null ? json['mobile_no_new'] : null;
+    nhsNumber = json['nhs_number'] != null ? json['nhs_number'] : null;
+    lat = json['lat'] != null ? json['lat'] : null;
+    lng = json['lng'] != null ? json['lng'] : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['user_id'] = this.userId;
+    data['customer_name'] = this.customerName;
+    data['first_name'] = this.firstName;
+    data['middle_name'] = this.middleName;
+    data['last_name'] = this.lastName;
+    data['dob'] = this.dob;
+    data['email_id'] = this.emailId;
+    data['mobile_no_new'] = this.mobileNoNew;
+    data['nhs_number'] = this.nhsNumber;
+    data['lat'] = this.lat;
+    data['lng'] = this.lng;
     return data;
   }
 }
