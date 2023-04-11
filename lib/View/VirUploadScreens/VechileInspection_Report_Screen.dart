@@ -20,12 +20,14 @@ class VechileInspectionReportScreen extends StatefulWidget {
 TextEditingController remarkController = TextEditingController();
 
 class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
-  VirHomeScreenController _virCtrl = Get.put(VirHomeScreenController());
+  final VirHomeScreenController _virCtrl = Get.put(VirHomeScreenController());
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _virCtrl.vechicleId = widget.vehicleId;
+    print("widget vehicle id is :::>> ${widget.vehicleId}");
   }
 
   @override

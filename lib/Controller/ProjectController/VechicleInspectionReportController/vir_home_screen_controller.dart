@@ -69,7 +69,7 @@ class VirHomeScreenController extends GetxController{
   }
 
 Future<GetInspectionDataModel?> fetchUpdatedData({context, required  vehicleId}) async {
-    if(vehicleId !="" && vehicleId != "0") {
+    if(vehicleId !="" && vehicleId != 0) {
       Map<String, dynamic> dictparam = {
         "vehicle_id": vehicleId,
       };
