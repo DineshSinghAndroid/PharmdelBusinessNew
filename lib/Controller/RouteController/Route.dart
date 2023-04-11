@@ -65,13 +65,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case updateAddressScreenRoute:
     final args = settings.arguments as UpdateAddressScreen;
-<<<<<<< HEAD
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  UpdateAddressScreen(address1: args.address1,address2: args.address2,postCode: args.postCode,townName: args.townName,driverName: args.driverName,userType: args.userType,));
-=======
-      return PageTransition(type: PageTransitionType.rightToLeft, duration:
-      const Duration(milliseconds: 300), alignment: Alignment.center, child:
-      UpdateAddressScreen(address1: args.address1,address2: args.address2,
-        postCode: args.postCode,townName: args.townName,));
+    return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  UpdateAddressScreen(address1: args.address1,address2: args.address2,postCode: args.postCode,townName: args.townName,driverName: args.driverName,userType: args.userType,));
 
 
       ///Update Vir report
@@ -80,10 +74,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft,
           duration: const Duration(milliseconds: 300),
           alignment: Alignment.center, child:
-          VechileInspectionReportScreen(vehicleId: args.vehicleId.toString(),
-
-          ));
->>>>>>> 54246a4358443758808a63c38cc6b302b0e784ab
+          VechileInspectionReportScreen(vehicleId: args.vehicleId.toString(),));
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;

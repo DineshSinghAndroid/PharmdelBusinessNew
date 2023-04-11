@@ -200,7 +200,15 @@ class DrawerDriver extends StatelessWidget {
                                   Get.back();
                                   Get.toNamed(
                                     updateAddressScreenRoute,
-                                    arguments: UpdateAddressScreen(address1: controller.driverProfileData?.data?.addressLine1 ?? "", address2: controller.driverProfileData?.data?.addressLine2 ?? "", postCode: controller.driverProfileData?.data?.postCode ?? "", townName: controller.driverProfileData?.data?.townName ?? ""),
+                                    arguments: UpdateAddressScreen(
+                                      address1: controller.driverProfileData?.data?.addressLine1 ?? "",
+                                      address2: controller.driverProfileData?.data?.addressLine2 ?? "",
+                                      postCode: controller.driverProfileData?.data?.postCode ?? "",
+                                      townName: controller.driverProfileData?.data?.townName ?? "",
+                                      userType: driverType.toLowerCase() == kDedicatedDriver.toLowerCase() || driverType.toLowerCase() == kSharedDriver.toLowerCase() ? "Driver":"",
+                                      driverName: "${controller.driverProfileData?.data?.firstName ?? ""}${controller.driverProfileData?.data?.middleName.toString() != "" ? " ${controller.driverProfileData?.data?.middleName ?? ""}":""}${controller.driverProfileData?.data?.lastName.toString() != "" ? " ${controller.driverProfileData?.data?.lastName ?? ""}":""}",
+
+                                    ),
                                   );
                                 },
                                 title: kUpdateAddress,
@@ -238,68 +246,8 @@ class DrawerDriver extends StatelessWidget {
                             buildSizeBox(20.0, 0.0),
                           ]),
                         ),
-<<<<<<< HEAD
-
-                        /// Enter Miles
-                        Visibility(
-                          visible: controller.showWages.toLowerCase() == "1",
-                          child: WidgetCustom.drawerBtn(
-                            onTap: ()=> controller.onTapEnterMiles(),
-                              title: kEnterMiles,
-                              icon: Icons.edit
-                          ),
-                        ),
-
-                        /// Update Address
-                        WidgetCustom.drawerBtn(
-                            onTap: (){
-                              Get.back();
-                              Get.toNamed(updateAddressScreenRoute,
-                                arguments: UpdateAddressScreen(
-                                    address1: controller.driverProfileData?.data?.addressLine1 ?? "",
-                                    address2: controller.driverProfileData?.data?.addressLine2 ?? "",
-                                    postCode: controller.driverProfileData?.data?.postCode ?? "",
-                                    townName: controller.driverProfileData?.data?.townName ?? "",
-                                  driverName: "${controller.driverProfileData?.data?.firstName ?? ""}${controller.driverProfileData?.data?.middleName != null ? " ${controller.driverProfileData?.data?.middleName}" : ""}${controller.driverProfileData?.data?.lastName != null ? " ${controller.driverProfileData?.data?.lastName}" : ""}",
-                                  userType: driverType.toLowerCase() == kSharedDriver.toLowerCase() || driverType.toLowerCase() == kDedicatedDriver.toLowerCase() ? "Driver":"",
-                                ),);
-                              },
-                            title: kUpdateAddress,
-                            icon: Icons.home
-                        ),
-
-                        /// Logout
-                        WidgetCustom.drawerBtn(
-                            onTap: () async {
-
-                              if(await InternetCheck.checkStatus() == false){
-
-                                PrintLog.printLog("No Internet........");
-                                PopupCustom.showNoInternetPopUpWhenOffline(
-                                    context: Get.overlayContext!,
-                                    onValue: (value){
-
-                                    }
-                                );
-                              }else{
-                                await LogoutController().validateAndLogout(context:context,userType: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType) ?? "");
-                              }
-
-                            },
-                            title: klogout,
-                            icon: Icons.logout
-                        ),
-
-                        const Spacer(),
-                        BuildText.buildText(
-                          text: kAppVersion + controller.versionCode ?? ""),
-                        buildSizeBox(20.0, 0.0),
-                      ]),
-                    ),
-=======
                       ),
                     ],
->>>>>>> 54246a4358443758808a63c38cc6b302b0e784ab
                   ),
                 )),
             isLoading: controller.isLoading,

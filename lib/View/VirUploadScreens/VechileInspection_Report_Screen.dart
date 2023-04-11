@@ -8,10 +8,7 @@ import 'click_images.dart';
 class VechileInspectionReportScreen extends StatefulWidget {
   String vehicleId;
 
-  VechileInspectionReportScreen({
-    super.key,
-    required this.vehicleId,
-  });
+  VechileInspectionReportScreen({super.key,required this.vehicleId,});
 
   @override
   _MyCustomWidgetState createState() => _MyCustomWidgetState();
@@ -24,7 +21,6 @@ class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
