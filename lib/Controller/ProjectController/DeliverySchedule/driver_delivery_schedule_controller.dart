@@ -9,7 +9,7 @@ import '../../../Model/DriverRoutes/get_route_list_response.dart';
 import '../../../Model/GetDeliveryMasterData/get_delivery_master_data.dart';
 import '../../../Model/ParcelBox/parcel_box_response.dart';
 import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
-import '../../../Model/ProcessScan/driver_process_scan.dart';
+import '../../../Model/ProcessScan/driver_process_scan_response.dart';
 import '../../../Model/SearchMedicine/search_medicine_response.dart';
 import '../../Helper/Calender/calender.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
@@ -717,6 +717,7 @@ class DriverDeliveryScheduleController extends GetxController{
       "delivery_date": selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate ?? DateTime.now()) : "",
     };
 
+
     String url = WebApiConstant.UPDATE_CUSTOMER_WITH_CREATE_ORDER;
 
     await apiCtrl.driverCreateOrderApi(context:context,url: url, dictParameter: dictparm,token: authToken)
@@ -739,6 +740,12 @@ class DriverDeliveryScheduleController extends GetxController{
           } else {
             changeLoadingValue(false);
             changeSuccessValue(false);
+            PopupCustom.errorDialogBox(
+              onValue: (value){},
+              context: context,
+              title: kError,
+              subTitle: result.message ?? "",
+            );
             PrintLog.printLog(result.message);
           }
         } catch (_) {

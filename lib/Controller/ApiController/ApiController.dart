@@ -37,8 +37,8 @@ import '../../Model/PharmacyModels/P_NursingHomeResponse/p_nursingHomeResponse.d
 import '../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../Model/PharmacyModels/P_UpdateNursingOrderResponse/p_updateNursingOrderResponse.dart';
 import '../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
-import '../../Model/ProcessScan/driver_process_scan.dart';
-import '../../Model/ProcessScan/process_scan.dart';
+import '../../Model/ProcessScan/driver_process_scan_response.dart';
+import '../../Model/ProcessScan/process_scan_response.dart';
 import '../../Model/SaveNotification/saveNotificationResponse.dart';
 import '../../Model/SearchMedicine/search_medicine_response.dart';
 import '../../Model/SetupPin/setupPin_model.dart';

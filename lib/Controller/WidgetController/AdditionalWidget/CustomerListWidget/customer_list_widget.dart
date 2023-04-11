@@ -7,21 +7,19 @@ import '../../StringDefine/StringDefine.dart';
 
 class CustomerListWidget extends StatelessWidget {
   
-  String? customerName;
-  String? userId;
-  String? dob;
-  String? nhsNumber;
-  String? address;
-  int? position = 0;
-  CustomerSelectedListner? selectedListner;
+  String customerName;
+  String userId;
+  String dob;
+  String nhsNumber;
+  String address;
+  Function() onPressed;
 
-  CustomerListWidget({Key? key,required this.address, required this.customerName, required this.dob, required this.nhsNumber, required this.position, this.selectedListner, required this.userId }) : super(key: key);
+  CustomerListWidget({Key? key,required this.onPressed,required this.address, required this.customerName, required this.dob, required this.nhsNumber, required this.userId }) : super(key: key);
 
   @override
   Widget build(BuildContext context) { 
     return Card(
       color: Colors.primaries[Random().nextInt(Colors.primaries.length)].shade100,
-      // color: AppColors.lightPinkColor,
       margin: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
       child: Column(
         children: [
@@ -46,40 +44,39 @@ class CustomerListWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BuildText.buildText(
-                            text: customerName!,
+                            text: customerName,
                             style: TextStyleblueGrey14,
                           ),
                           buildSizeBox(4.0, 0.0),
                           const Divider(height: 1,color: Colors.grey,),
                           buildSizeBox(10.0, 0.0),
                           BuildText.buildText(
-                            text: userId!,
+                            text:"UserID : ${userId ?? ""}",
                             style: TextStyleblueGrey14,
                           ),
                           buildSizeBox(4.0, 0.0),
                           BuildText.buildText(
-                            text: dob!,
+                            text: "DOB : ${dob ?? ""}",
                             style: TextStyleblueGrey14,
                           ),
                           buildSizeBox(3.0, 0.0),
                           BuildText.buildText(
-                            text: nhsNumber!,
+                            text: "NHS No : ${nhsNumber ?? ""}",
                             style: TextStyleblueGrey14,
                           ),
                           buildSizeBox(3.0, 0.0),
                           BuildText.buildText(
-                            text: address!,
+                            text: "Address : ${address ?? ""}",
                             style: TextStyleblueGrey14,
                           ),
                           Align(
                             alignment: Alignment.centerRight,
                             child: MaterialButton(
-                                onPressed: () {                                  
-                                  // selectedListner.isSelected(dataList.patientsList.userId[position], position, dataList.patientsList.alt_address[position]);
-                                },
+                                onPressed: onPressed,
                                 color: AppColors.blueColor,
                                 child: BuildText.buildText(
                                   text: kSelCustomer,
+                                  color: AppColors.whiteColor,
                                   style: TextStyle6White,
                                 )),
                           ),

@@ -58,6 +58,7 @@ class DriverProfileController extends GetxController{
 
 
 
+
   @override
   void onInit() {
     getData();

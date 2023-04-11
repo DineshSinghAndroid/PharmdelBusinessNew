@@ -200,7 +200,15 @@ class DrawerDriver extends StatelessWidget {
                                   Get.back();
                                   Get.toNamed(
                                     updateAddressScreenRoute,
-                                    arguments: UpdateAddressScreen(address1: controller.driverProfileData?.data?.addressLine1 ?? "", address2: controller.driverProfileData?.data?.addressLine2 ?? "", postCode: controller.driverProfileData?.data?.postCode ?? "", townName: controller.driverProfileData?.data?.townName ?? ""),
+                                    arguments: UpdateAddressScreen(
+                                      address1: controller.driverProfileData?.data?.addressLine1 ?? "",
+                                      address2: controller.driverProfileData?.data?.addressLine2 ?? "",
+                                      postCode: controller.driverProfileData?.data?.postCode ?? "",
+                                      townName: controller.driverProfileData?.data?.townName ?? "",
+                                      userType: driverType.toLowerCase() == kDedicatedDriver.toLowerCase() || driverType.toLowerCase() == kSharedDriver.toLowerCase() ? "Driver":"",
+                                      driverName: "${controller.driverProfileData?.data?.firstName ?? ""}${controller.driverProfileData?.data?.middleName.toString() != "" ? " ${controller.driverProfileData?.data?.middleName ?? ""}":""}${controller.driverProfileData?.data?.lastName.toString() != "" ? " ${controller.driverProfileData?.data?.lastName ?? ""}":""}",
+
+                                    ),
                                   );
                                 },
                                 title: kUpdateAddress,

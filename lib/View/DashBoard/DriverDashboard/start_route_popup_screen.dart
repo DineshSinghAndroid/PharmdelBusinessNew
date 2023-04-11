@@ -363,7 +363,10 @@ class _StartRoutePopUpState extends State<StartRoutePopUp> {
 
                                                     if(!isAddressUpdated && endRouteId == 2 ){
                                                       Get.back();
-                                                      Get.toNamed(updateAddressScreenRoute,arguments: UpdateAddressScreen(address1: "",address2: "",postCode: "",townName: "",));
+                                                      Get.toNamed(updateAddressScreenRoute,arguments: UpdateAddressScreen(
+                                                        address1: "",address2: "",postCode: "",townName: "",userType: "",driverName: "",
+                                                      )
+                                                      );
                                                     }else{
                                                       PrintLog.printLog("Clicked on Continue::ss::::");
                                                       StartOrEndRouteID data = StartOrEndRouteID();
