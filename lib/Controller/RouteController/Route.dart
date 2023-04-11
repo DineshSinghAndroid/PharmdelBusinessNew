@@ -22,6 +22,7 @@ import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/DashBoard/DriverDashboard/driver_dashboard_screen.dart';
 import '../../View/DeliverySchedule/delivery_schedule_screen.dart';
+import '../../View/NotificationScreen/createNotificationDriver.dart';
 import '../../View/OrderDetails/order_detail_screen.dart';
 import '../../View/Instructions/instructions_screen.dart';
 import '../../View/MapScreen/map_screen.dart';
@@ -78,7 +79,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;
-      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300),alignment: Alignment.center,child: PdfViewScreen(pdfUrl: args.pdfUrl));
+      return PageTransition(type: PageTransitionType.rightToLeft,duration: const Duration(milliseconds: 300),alignment:
+      Alignment.center,child: PdfViewScreen(pdfUrl: args.pdfUrl));
+
+  case createNotificationDriver:
+    final args = settings.arguments as CreateNotificationDriver;
+
+    return PageTransition(type: PageTransitionType.rightToLeft,
+           duration: const Duration(milliseconds: 300),alignment: Alignment.center,child: CreateNotificationDriver(customerId: args.customerId,));
 
 
     case updateStatusScreenRoute:      

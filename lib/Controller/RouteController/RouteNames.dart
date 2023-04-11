@@ -22,6 +22,7 @@ const String reschedulePopUpScreenRoute = "reschedule_popup_screen";
 const String deliveryScheduleScreenRoute = "delivery_schedule_screen";
 const String searchMedicineScreenRoute = "search_medicine_screen";
 const String virUploadScreen = "vehicle_inspection_report_screen";
+const String createNotificationDriver = "create_notification_screen";
 
 
 

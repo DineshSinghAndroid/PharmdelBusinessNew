@@ -159,6 +159,7 @@ const String kDays = 'Days';
 const String kMyNotifiaction = 'My Notification';
 const String kReceived = 'Received';
 const String kSent = 'Sent';
+const String kSend = 'Send';
 const String kCreateNotification = 'Create Notification';
 const String kNotificationName = 'Notification Name:';
 const String kPharmacyStaffString = "Pharmacy Staff";
@@ -533,9 +534,11 @@ const String kInternetNotAvailable2 = "Something went wrong, Failed connection w
 const String kPinDoesNotMatched = "Pin did not match";
 const String kChangeQuickAccessPin = "Change Quick Access Pin";
 const String kSetupQuickAccessPin = "Setup Quick Access Pin";
+const String kMyNotification = "My Notification";
 
 const String kChooseNursingHome = "Choose nursing home";
 const String kChooseRouteFirst = "Choose route first";
+  const String kEnterNameAndMessage = "Enter Name and message";
 
 
 const String kEnterValidMPin = "Enter 4 digit pin";

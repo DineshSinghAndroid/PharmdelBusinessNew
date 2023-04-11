@@ -81,7 +81,6 @@ void initState() {
                       child: InkWell(
                         onTap: () {
                           Navigator.pop(context);
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
                         },
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
