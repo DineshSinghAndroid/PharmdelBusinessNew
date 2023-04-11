@@ -30,6 +30,7 @@ import '../../View/OnBoarding/EnterPin/securePin.dart';
 import '../../View/SearchMedicine/search_medicine_screen.dart';
 import '../../View/SignOrImage/sign_image_screen.dart';
 import '../../View/UpdateStatusScreen/updatestatus_screen.dart';
+import '../../View/VirUploadScreens/VechileInspection_Report_Screen.dart';
 import '../ProjectController/DriverDashboard/reschedule_pop_up.dart';
 import 'RouteNames.dart';
 
@@ -51,15 +52,38 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: CustomerListScreen());
 
     case notificationScreenRoute:
-      return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: const NotificatinScreen());
+      final args = settings.arguments as NotificatinScreen;
+
+      return PageTransition(type: PageTransitionType.rightToLeft,
+           duration: const Duration(milliseconds: 300), alignment:
+          Alignment.center, child:  NotificatinScreen(customerId: args.customerId,screen1or2: args.screen1or2,));
 
     case driverCreatePatientScreenRoute:
       final args = settings.arguments as DriverCreatePatientScreen;
-      return MaterialPageRoute( builder: (context) => DriverCreatePatientScreen(isScanPrescription: args.isScanPrescription,));
+      return MaterialPageRoute( builder: (context) =>
+          DriverCreatePatientScreen(isScanPrescription: args.isScanPrescription,));
 
     case updateAddressScreenRoute:
     final args = settings.arguments as UpdateAddressScreen;
+<<<<<<< HEAD
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child:  UpdateAddressScreen(address1: args.address1,address2: args.address2,postCode: args.postCode,townName: args.townName,driverName: args.driverName,userType: args.userType,));
+=======
+      return PageTransition(type: PageTransitionType.rightToLeft, duration:
+      const Duration(milliseconds: 300), alignment: Alignment.center, child:
+      UpdateAddressScreen(address1: args.address1,address2: args.address2,
+        postCode: args.postCode,townName: args.townName,));
+
+
+      ///Update Vir report
+  case virUploadScreen:
+    final args = settings.arguments as VechileInspectionReportScreen;
+      return PageTransition(type: PageTransitionType.rightToLeft,
+          duration: const Duration(milliseconds: 300),
+          alignment: Alignment.center, child:
+          VechileInspectionReportScreen(vehicleId: args.vehicleId.toString(),
+
+          ));
+>>>>>>> 54246a4358443758808a63c38cc6b302b0e784ab
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;

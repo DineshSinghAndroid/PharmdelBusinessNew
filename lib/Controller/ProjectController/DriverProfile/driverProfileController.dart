@@ -49,6 +49,7 @@ class DriverProfileController extends GetxController{
   String showWages = "";
   String endMile = "";
   String startMile = "";
+  String vehicleId = "";
 
   bool onBreak = false;
 
@@ -89,6 +90,7 @@ class DriverProfileController extends GetxController{
           try {
             if (result.status == "true") {
               driverProfileData = result;
+              vehicleId = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.vehicleId) ?? "";
               versionCode = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.appVersion) ?? "";
               showWages = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.showWages) ?? "";
               startMile = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.startMiles) ?? "";

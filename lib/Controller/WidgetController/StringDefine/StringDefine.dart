@@ -146,6 +146,7 @@ const String kAppVersion = 'App Version:';
 const String kHowToOperate = 'How to operate';
 const String kEnterMiles = 'Enter miles';
 const String kUpdateAddress = 'Update Address';
+const String kVirUpload = 'Upload VIR ';
 const String klogout = 'Logout';
 const String kFridge = 'Fridge';
 const String kSearchMedicine = 'Search Medicine';
@@ -314,6 +315,7 @@ const String kEmailId = "Email : ";
 const String kTotalMiles = "Total Miles";
 
 const String kChooseDeliveryDate = "Choose delivery date";
+const String kEnterYourRemarkHere =  "Enter your remark's here";
 
 
 

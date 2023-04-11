@@ -127,7 +127,7 @@ bool isShowDoctorDetails = false;
                                 style: TextStyleblueGrey14,
                               ),
                               buildSizeBox(0.0, 10.0),
-                              BuildText.buildText(text: widget.pmrList!.isNotEmpty ? "${widget.pmrList?[0].xml?.doctorInformation?.companyName ?? ")"}" : ""),
+                              BuildText.buildText(text: widget.pmrList!.isNotEmpty ? "${widget.pmrList?[0].xml?.doctorInformation?.companyName ?? ""}" : ""),
                               const Spacer(),
                               isShowDoctorDetails
                                   ? Icon(Icons.keyboard_arrow_up,color: AppColors.greyColor,) : 

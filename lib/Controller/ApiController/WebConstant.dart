@@ -50,6 +50,7 @@ class WebApiConstant {
   static const DELETE_ORDER_BY_ORDER_ID                      = "${BASE_URL_PHARMACY}deleteOrderByOrderId";
   static const GET_MEDICINE_LIST                             = "${BASE_URL_PHARMACY}GetMedicineList";
   static const GET_DELIVERY_MASTER_DATA_API                  = "${BASE_URL_PHARMACY}getDeliveryMasterData";
+  static const INSPECTION_SUBMIT                  = "${BASE_URL}submitInspection";
 
   ///Pharmacy
   static const String GET_PATIENT_LIST_URL                   =  "${BASE_URL_PHARMACY}GetPatient";
@@ -74,6 +75,8 @@ class WebApiConstant {
   static const String GET_PHARMACY_CREATE_ORDER_URL          =  "${BASE_URL_PHARMACY}createOrder";
   static const String GET_PHARMACY_MEDICINE_LIST             =  "${BASE_URL_PHARMACY}GetMedicineList";
   static const String GET_PHARMACY_PROCESS_SCAN_URL                  =  "${BASE_URL_PHARMACY}getBoxesByNursingHome";
+  static const String GET_VIR_STATUS                  =  "${BASE_URL}getInspectionData";
+  static const String SAVE_DRIVER_NOTFICATION = BASE_URL + "createPharmacyNotification";
 
 
 }

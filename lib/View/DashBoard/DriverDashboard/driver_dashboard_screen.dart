@@ -11,6 +11,7 @@ import '../../../Controller/StopWatchController/stop_watch_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/DeliveryCardCustom/deliveryCardCustom.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../NotificationScreen/notificationScreen.dart';
 
 class DriverDashboardScreen extends StatefulWidget {
   const DriverDashboardScreen({Key? key}) : super(key: key);
@@ -152,7 +153,9 @@ void isSelected(bool isSelect) {
                           /// Notification
                           InkWell(
                               onTap: () {
-                                Get.toNamed(notificationScreenRoute);
+                                Get.toNamed(notificationScreenRoute,arguments: NotificatinScreen(
+                                   customerId: '1',screen1or2: 0,
+                                ));
                               },
                               child: Stack(
                                 children: [

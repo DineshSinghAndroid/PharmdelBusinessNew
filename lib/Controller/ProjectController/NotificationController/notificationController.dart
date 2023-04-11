@@ -1,16 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/Notification/NotifficationResponse.dart';
 import '../../../main.dart';
 
-
-
-class NotificationController extends GetxController{
-
-
+class NotificationController extends GetxController {
   ApiController apiCtrl = ApiController();
   List<NotificationData>? notificationData;
 
@@ -19,52 +16,51 @@ class NotificationController extends GetxController{
   bool isEmpty = false;
   bool isNetworkError = false;
   bool isSuccess = false;
+  int? screen1or2;
 
-  Future<NotificationApiResponse?> notificationApi({required BuildContext context,}) async {
-
+  Future<NotificationApiResponse?> notificationApi({
+    required BuildContext context,
+  }) async {
     changeEmptyValue(false);
     changeLoadingValue(true);
     changeNetworkValue(false);
     changeErrorValue(false);
     changeSuccessValue(false);
 
-    Map<String, dynamic> dictparm = {
-    "":""
-    };
+    Map<String, dynamic> dictparm = {"": ""};
 
-    String url = WebApiConstant.NOTIFICATION_URL;
+    String url = screen1or2 == 0? "${WebApiConstant.NOTIFICATION_URL}?type=Receive" :
+    "${WebApiConstant.NOTIFICATION_URL}?type=Send";
 
-    await apiCtrl.getNotificaitonApi(context:context,url: url, dictParameter: dictparm,token: authToken)
-        .then((result) async {
-      if(result != null){
-        if (result.status != false) {          
-          try {            
-            if (result.status == true) {              
+    await apiCtrl.getNotificaitonApi(context: context, url: url, dictParameter: dictparm, token: authToken).then((result) async {
+      if (result != null) {
+        notificationData?.clear();
+
+        if (result.status != false) {
+          try {
+            if (result.status == true) {
               notificationData = result.data;
-              result.data == null ? changeEmptyValue(true):changeEmptyValue(false);
+              result.data == null ? changeEmptyValue(true) : changeEmptyValue(false);
               changeLoadingValue(false);
               changeSuccessValue(true);
-             
-
             } else {
               changeLoadingValue(false);
               changeSuccessValue(false);
               PrintLog.printLog(result.message);
             }
-
           } catch (_) {
             changeSuccessValue(false);
             changeLoadingValue(false);
             changeErrorValue(true);
             PrintLog.printLog("Exception : $_");
           }
-        }else{
+        } else {
           changeSuccessValue(false);
           changeLoadingValue(false);
           changeErrorValue(true);
           PrintLog.printLog(result.message);
         }
-      }else{
+      } else {
         changeSuccessValue(false);
         changeLoadingValue(false);
         changeErrorValue(true);
@@ -73,27 +69,28 @@ class NotificationController extends GetxController{
     update();
   }
 
-
-  void changeSuccessValue(bool value){
+  void changeSuccessValue(bool value) {
     isSuccess = value;
     update();
   }
-  void changeLoadingValue(bool value){
+
+  void changeLoadingValue(bool value) {
     isLoading = value;
     update();
   }
-  void changeEmptyValue(bool value){
+
+  void changeEmptyValue(bool value) {
     isEmpty = value;
     update();
   }
-  void changeNetworkValue(bool value){
+
+  void changeNetworkValue(bool value) {
     isNetworkError = value;
     update();
   }
-  void changeErrorValue(bool value){
+
+  void changeErrorValue(bool value) {
     isError = value;
     update();
   }
-
 }
-
