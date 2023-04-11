@@ -5,18 +5,18 @@ import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.d
 
 import '../../Controller/ProjectController/NotificationController/driver_create_notification_controller.dart';
 
-class CreateNotificationDriver extends StatefulWidget {
+class createNotificationDriver extends StatefulWidget {
   String customerId;
 
-  CreateNotificationDriver({Key? key, required this.customerId}) : super(key: key);
+  createNotificationDriver({Key? key, required this.customerId}) : super(key: key);
 
   @override
-  State<CreateNotificationDriver> createState() => _createNotificationDriverState();
+  State<createNotificationDriver> createState() => _createNotificationDriverState();
 }
 
 DriverCreateNotificationController createNotf = Get.put(DriverCreateNotificationController());
 
-class _createNotificationDriverState extends State<CreateNotificationDriver> {
+class _createNotificationDriverState extends State<createNotificationDriver> {
   @override
   void initState() {
     // TODO: implement initState
@@ -104,4 +104,10 @@ class _createNotificationDriverState extends State<CreateNotificationDriver> {
     );
   }
 
+// Future<void> SaveScreenshot() async {
+//   FilePickerResult? result = await FilePicker.platform.pickFiles(
+//     type: FileType.image,
+//     allowedExtensions: ['jpg','jpeg', 'pdf', 'doc'],
+//   );
+// }
 }

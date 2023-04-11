@@ -15,22 +15,13 @@ class VechicleInspectionReportScreen extends StatefulWidget {
   State<VechicleInspectionReportScreen> createState() => _VechicleInspectionReportScreenState();
 }
 
-<<<<<<< HEAD
 class _VechicleInspectionReportScreenState extends State<VechicleInspectionReportScreen> {
   VirController virCtrl = Get.put(VirController());
-=======
-TextEditingController remarkController = TextEditingController();
-
-class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
-  final VirHomeScreenController _virCtrl = Get.put(VirHomeScreenController());
->>>>>>> 1d5859b538144cf52161ec87240ef171c1138d10
 
   @override
   void initState() {
     initData();
     super.initState();
-    _virCtrl.vechicleId = widget.vehicleId;
-    print("widget vehicle id is :::>> ${widget.vehicleId}");
   }
   @override
   void dispose() {

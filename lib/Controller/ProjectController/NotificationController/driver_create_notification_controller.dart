@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Model/CreateNotification/createNotificationResponse.dart';
@@ -34,7 +33,7 @@ class DriverCreateNotificationController extends GetxController {
 
   checkValidation(context) {
     if (messageController.text.isEmail || notificationNameController.text.isEmpty) {
-      ToastCustom.showToast(msg: kEnterNameAndMessage);
+      ToastCustom.showToast(msg: "Enter Name and message");
     } else {
       saveNotificataionApi(context: context);
     }
@@ -58,7 +57,8 @@ class DriverCreateNotificationController extends GetxController {
         try {
           if (result.status != false) {
             ToastCustom.showToast(msg: result.message,);
-           } else {
+            print("Hello world  testing ${result.data.toString()}");
+          } else {
             PrintLog.printLog(result.message);
           }
         } catch (_) {}

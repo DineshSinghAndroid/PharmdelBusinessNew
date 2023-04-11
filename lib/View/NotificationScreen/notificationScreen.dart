@@ -4,7 +4,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Controller/Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../Controller/ProjectController/NotificationController/notificationController.dart';
-import '../../Controller/RouteController/RouteNames.dart';
 import '../../Controller/WidgetController/ErrorHandling/EmptyDataScreen.dart';
 import '../../Controller/WidgetController/ErrorHandling/ErrorDataScreen.dart';
 import '../../Controller/WidgetController/ErrorHandling/NetworkErrorScreen.dart';
@@ -31,7 +30,8 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
   @override
   void initState() {
     notfCtrl.screen1or2 = widget.screen1or2;
-     init();
+    print(widget.screen1or2);
+    init();
     super.initState();
   }
 
@@ -56,11 +56,10 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
             length: 2,
             child: Scaffold(
               appBar: AppBar(
-                title:Text(
-                  kMyNotification,
+                title: const Text(
+                  "My Notification",
                   style: TextStyle(color: Colors.black),
                 ),
-
                 centerTitle: true,
                 backgroundColor: Colors.white,
                 // backgroundColor: CustomColors.darkPinkColor,
@@ -69,7 +68,7 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
                   onTap: () {
                     if (mounted) Navigator.pop(context);
                   },
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_back,
                     color: Colors.black,
                   ),
@@ -81,18 +80,18 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
                     setState(() {});
                     init();
                   },
-                  tabs: const[
-                     Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        kReceived,
+                        "Received",
                         style: TextStyle(color: Colors.black, fontSize: 16.0),
                       ),
                     ),
-                      Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                       kSend,
+                        "Send",
                         style: TextStyle(color: Colors.black, fontSize: 16.0),
                       ),
                     ),
@@ -100,7 +99,7 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
                 ),
               ),
               body: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
 
                 children: [
                   LoadScreen(
@@ -162,20 +161,17 @@ class _NotificatinScreenState extends State<NotificatinScreen> {
                   Scaffold(
                     floatingActionButton: FloatingActionButton(
                       backgroundColor: Colors.orange,
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        Get.toNamed(createNotificationDriver,arguments: CreateNotificationDriver(
-                            customerId: widget.customerId,
-                        ),);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CreateNotificationDriver(
+                                builder: (context) => createNotificationDriver(
                                       customerId: '',
-                                    )));
+                                    ))).then((value) {});
                       },
                     ),
                     body: SingleChildScrollView(
