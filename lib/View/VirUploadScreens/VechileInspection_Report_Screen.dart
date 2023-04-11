@@ -1,67 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pharmdel/Controller/Helper/Colors/custom_color.dart';
+import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.dart';
+import 'package:pharmdel/Controller/WidgetController/AppBar/app_bar.dart';
+import 'package:pharmdel/Controller/WidgetController/Loader/LoadScreen/LoadScreen.dart';
+import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
+import '../../Controller/ProjectController/VechicleInspectionReportController/vir_controller.dart';
+import 'click_vir_images.dart';
 
-import '../../Controller/Helper/TextController/FontStyle/FontStyle.dart';
-import '../../Controller/ProjectController/VechicleInspectionReportController/vir_home_screen_controller.dart';
-import 'click_images.dart';
-
-class VechileInspectionReportScreen extends StatefulWidget {
-  String vehicleId;
-
-  VechileInspectionReportScreen({super.key,required this.vehicleId,});
+class VechicleInspectionReportScreen extends StatefulWidget {
+  VechicleInspectionReportScreen({super.key});
 
   @override
-  _MyCustomWidgetState createState() => _MyCustomWidgetState();
+  State<VechicleInspectionReportScreen> createState() => _VechicleInspectionReportScreenState();
 }
 
-TextEditingController remarkController = TextEditingController();
-
-class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
-  VirHomeScreenController _virCtrl = Get.put(VirHomeScreenController());
+class _VechicleInspectionReportScreenState extends State<VechicleInspectionReportScreen> {
+  VirController virCtrl = Get.put(VirController());
 
   @override
   void initState() {
+    initData();
     super.initState();
+  }
+  @override
+  void dispose() {
+    Get.delete<VirController>();
+    super.dispose();
+  }
+
+  Future<void> initData()async{
+    await virCtrl.fetchUpdatedData(context: context);
   }
 
   @override
-  Widget build(BuildContext c) {
-    double w = MediaQuery.of(context).size.width;
+  Widget build(BuildContext context) {
 
-    return GetBuilder(
-      init: _virCtrl,
+    return GetBuilder<VirController>(
+      init: virCtrl,
       builder: (controller) {
-        return Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
+        return LoadScreen(
+          widget: SafeArea(
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+              backgroundColor: AppColors.blackColor,
+              appBar: AppBarCustom.appBarStyle2(
+                title: kVehicleInspectionReport,
+                  titleColor: AppColors.whiteColor,
+                  size: 18,
+                  backgroundColor: AppColors.blueColor,
+                centerTitle: true
+              ),
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 50.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
 
-            title: const Text("Vehicle Inspection Report"),
-            centerTitle: true,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SafeArea(
-                child: Column(
+                      /// Title
+                      BuildText.buildText(
+                          text: kPickAService,
+                        size: 32,color: AppColors.whiteColor,weight: FontWeight.bold
+                      ),
+                      buildSizeBox(30.0, 0.0),
 
-                  children: [
-
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Text(
-                      "Pick a service",
-                      style: TS.CTS(32.0, Colors.white, FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height / 1.8,
-                      child: ListView.builder(
-                        padding: EdgeInsets.all(w / 30),
-                        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                        itemCount: _virCtrl.texts.length,
+                      /// Btn list
+                      ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.all(Get.width / 30),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.servicePageList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () {
@@ -69,17 +78,15 @@ class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
                                 context: context,
                                 builder: (context) {
                                   return ClickInspectionImagesScreen(
-                                    screenName: _virCtrl.texts[index],
-                                    vehicleId: widget.vehicleId,
+                                    index: index
                                   );
                                 },
                               );
-                              print("Vehicle id going to click image screen is ${widget.vehicleId}");
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 20),
-                              margin: EdgeInsets.only(bottom: w / 20),
-                              height: w / 6,
+                              margin: EdgeInsets.only(bottom: Get.width / 20),
+                              height: Get.width / 6,
                               decoration: BoxDecoration(
                                 color: Colors.blue.withOpacity(0.4),
                                 borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -96,17 +103,18 @@ class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    _virCtrl.icons[index],
+                                      controller.servicePageList[index].icon,
                                     size: 32,
-                                    color: Colors.white,
+                                    color: AppColors.whiteColor
                                   ),
-                                  Text(
-                                    _virCtrl.texts[index],
-                                    style: TS.CTS(22.0, Colors.white, FontWeight.w500),
+                                  BuildText.buildText(
+                                      text: controller.servicePageList[index].title,
+                                      size: 22,color: AppColors.whiteColor,weight: FontWeight.w500
                                   ),
                                   Icon(
-                                    _virCtrl.arrowIcons[index],
-                                    color: Colors.white,
+                                      controller.servicePageList[index].isCompleted == true ?
+                                      Icons.check_box : Icons.arrow_forward_ios_outlined,
+                                    color: AppColors.whiteColor
                                   ),
                                 ],
                               ),
@@ -114,17 +122,20 @@ class _MyCustomWidgetState extends State<VechileInspectionReportScreen> {
                           );
                         },
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: ()=>_virCtrl.fetchUpdatedData(vehicleId: 0),
-                      color: Colors.white,
-                      child: const Text('Submit'),
-                    ),
-                  ],
+
+                      /// Submit
+                      MaterialButton(
+                        onPressed: ()=> controller.fetchUpdatedData(context: context),
+                        color: AppColors.whiteColor,
+                        child: BuildText.buildText(text: kSubmit)
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ),
+          ),
+          isLoading: controller.isLoading,
         );
       },
     );

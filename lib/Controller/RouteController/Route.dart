@@ -60,8 +60,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case driverCreatePatientScreenRoute:
       final args = settings.arguments as DriverCreatePatientScreen;
-      return MaterialPageRoute( builder: (context) =>
-          DriverCreatePatientScreen(isScanPrescription: args.isScanPrescription,));
+      return MaterialPageRoute( builder: (context) => DriverCreatePatientScreen(isScanPrescription: args.isScanPrescription,));
 
     case updateAddressScreenRoute:
     final args = settings.arguments as UpdateAddressScreen;
@@ -69,12 +68,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 
       ///Update Vir report
-  case virUploadScreen:
-    final args = settings.arguments as VechileInspectionReportScreen;
-      return PageTransition(type: PageTransitionType.rightToLeft,
-          duration: const Duration(milliseconds: 300),
-          alignment: Alignment.center, child:
-          VechileInspectionReportScreen(vehicleId: args.vehicleId.toString(),));
+  case virUploadScreenRoute:
+    return MaterialPageRoute( builder: (context) => VechicleInspectionReportScreen());
 
     case pdfViewScreenRoute:
       final args = settings.arguments as PdfViewScreen;

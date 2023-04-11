@@ -215,18 +215,20 @@ class DrawerDriver extends StatelessWidget {
                                 icon: Icons.home),
 
                             /// VIR UPDATE
-                            WidgetCustom.drawerBtn(
-                                onTap: () {
-                                  Get.back();
-                                  Get.toNamed(
-                                    virUploadScreen,
-                                    arguments: VechileInspectionReportScreen(
-                                      vehicleId: controller.vehicleId,
-                                    ),
-                                  );
-                                },
-                                title: kVirUpload,
-                                icon: Icons.directions_bike),
+                            Visibility(
+                              visible: controller.dashCTRL.vehicleInspection != "0" && controller.dashCTRL.vehicleId != null && controller.dashCTRL.vehicleId != "0",
+                              child: WidgetCustom.drawerBtn(
+                                  onTap: () {
+                                    Get.back();
+                                    Get.toNamed(
+                                      virUploadScreenRoute,
+                                      arguments: VechicleInspectionReportScreen(),
+                                    );
+                                  },
+                                  title: kVirUpload,
+                                  icon: Icons.directions_bike
+                              ),
+                            ),
 
                             /// Logout
                             WidgetCustom.drawerBtn(

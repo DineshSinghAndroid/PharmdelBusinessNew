@@ -14,7 +14,6 @@ class SearchMedicineScreen extends StatefulWidget {
 
 class _SearchMedicineScreenState extends State<SearchMedicineScreen> {
 
-
   SearchMedicineController searchCtrl = Get.put(SearchMedicineController());
 
 

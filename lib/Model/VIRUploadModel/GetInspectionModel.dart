@@ -2,7 +2,7 @@ class GetInspectionDataModel {
   bool? error;
   bool? authenticated;
   String? message;
-  Data? data;
+  InspectionData? data;
 
   GetInspectionDataModel({this.error, this.authenticated, this.message, this.data});
 
@@ -10,7 +10,7 @@ class GetInspectionDataModel {
     error = json['error'];
     authenticated = json['authenticated'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new InspectionData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -25,21 +25,21 @@ class GetInspectionDataModel {
   }
 }
 
-class Data {
-  int? tyre;
-  int? body;
-  int? boot;
-  int? engine;
-  int? inside;
+class InspectionData {
+  String? tyre;
+  String? body;
+  String? boot;
+  String? engine;
+  String? inside;
 
-  Data({this.tyre, this.body, this.boot, this.engine, this.inside});
+  InspectionData({this.tyre, this.body, this.boot, this.engine, this.inside});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    tyre = json['tyre'];
-    body = json['body'];
-    boot = json['boot'];
-    engine = json['engine'];
-    inside = json['inside'];
+  InspectionData.fromJson(Map<String, dynamic> json) {
+    tyre = json['tyre'] != null ? json['tyre'].toString():null;
+    body = json['body'] != null ? json['body'].toString():null;
+    boot = json['boot'] != null ? json['boot'].toString():null;
+    engine = json['engine'] != null ? json['engine'].toString():null;
+    inside = json['inside'] != null ? json['inside'].toString():null;
   }
 
   Map<String, dynamic> toJson() {

@@ -12,6 +12,10 @@ class ToastCustom{
     Fluttertoast.showToast( msg:msg,toastLength: toastLength ?? Toast.LENGTH_LONG);
   }
 
+  static showToastWithGravity({required String msg,ToastGravity? gravity}){
+    Fluttertoast.showToast( msg:msg,gravity: gravity ?? ToastGravity.TOP);
+  }
+
 }
 
  class ToastUtils {

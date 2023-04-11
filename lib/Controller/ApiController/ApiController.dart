@@ -1094,14 +1094,10 @@ class ApiController {
         final response = await requestGetForApi(context: context, url: url, dictParameter: dictParameter, token: token ?? '');
         if (response?.data != null && response?.statusCode == 200) {
           result = GetInspectionDataModel.fromJson(response?.data);
-          PrintLog.printLog(result.message);
           return result;
-        } else {
-          PrintLog.printLog(result!.message);
         }
       } catch (e) {
         PrintLog.printLog("Exception_main1: $e");
-
         return result;
       }
     } else {

@@ -397,6 +397,18 @@ const String kUSERTYPE = "userType"; //Branch Admin + OR +
 
 const String strimg_logo = 'assets/logo/logo.png';
 
+/// Vir
+const String kVehicleInspectionReport  = "Vehicle Inspection Report";
+const String kPickAService  = "Pick a service";
+const String kTyre  = "Tyre";
+const String kBody  = "Body";
+const String kInside  = "Inside";
+const String kBoot  = "Boot";
+const String kEngine  = "Engine";
+const String kRemarks  = "Remark's";
+const String kPleaseChooseAnyVehicleFirst  = "Please choose any vehicle first";
+const String kPleaseClickAllImages  = "Please Click All Images";
+
 
 // Validation string
 const String kEnterName = "Enter your name";
