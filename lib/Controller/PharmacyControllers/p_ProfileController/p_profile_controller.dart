@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/ApiController/WebConstant.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
-import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/Notification/notiffication_response.dart';
 import '../../../Model/PharmacyModels/PharmacyProfile/p_profileApiResponse.dart';
 import '../../../main.dart';
 

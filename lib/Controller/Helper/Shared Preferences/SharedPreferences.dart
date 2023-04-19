@@ -12,6 +12,7 @@ class AppSharedPreferences {
     return _preferences;
   }
 
+  static String isShowAppUpdatePopUp = "is_show_app_update_popup";
 
   static String appVersion = "app_version";
   static String authToken = "token";
@@ -48,6 +49,14 @@ class AppSharedPreferences {
   static String deliveryTime = "delivery_time";
 
   static String vehicleId = "vehicle_id";
+
+  static String deviceId = "device_id";
+
+  /// Auto Fill User Password
+  static String isAutoFillUserPassword = "is_auto_fill_user_password";
+  static String autoFillUserName = "auto_fill_user_name";
+  static String autoFillUserPassword = "auto_fill_user_password";
+
 
 
 
@@ -103,6 +112,15 @@ class AppSharedPreferences {
   ///CLEAR SHARED PREFERENCE
   static Future clearSharedPref() async {
     PrintLog.printLog("Shared Preference clean...");
+    String autoUserName = getStringFromSharedPref(variableName: autoFillUserName) ?? "";
+    String autoUserPassword = getStringFromSharedPref(variableName: autoFillUserPassword) ?? "";
+    String isAutoFill = getStringFromSharedPref(variableName: isAutoFillUserPassword) ?? "";
     _preferences?.clear();
+    if(isAutoFill == "true"){
+      await addStringValueToSharedPref(variableName: isAutoFillUserPassword, variableValue: "false");
+      await addStringValueToSharedPref(variableName: autoFillUserName, variableValue: autoUserName);
+      await addStringValueToSharedPref(variableName: autoFillUserPassword, variableValue: autoUserPassword);
+    }
+
   }
 }

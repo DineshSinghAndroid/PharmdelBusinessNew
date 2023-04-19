@@ -137,4 +137,16 @@ class SecurePinController extends GetxController {
       }
     });
   }
+
+  Future<void> onTapUseDifferentAccount({required BuildContext context})async{
+    if (isTimeCheckDialogBox) {
+      isTimeCheckDialogBox = false;
+      Navigator.pop(context, true);
+    }
+    AppSharedPreferences.clearSharedPref().then((value) {
+      Get.offAllNamed(loginScreenRoute);
+      Get.deleteAll();
+    });
+  }
+
 }

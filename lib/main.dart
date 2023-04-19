@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'Controller/ApiController/WebConstant.dart';
 import 'Controller/Firebase/FirebaseMessaging/FirebaseMessaging.dart';
@@ -11,8 +13,8 @@ import 'Controller/Helper/Dimensions/Dimensions.dart';
 import 'Controller/Helper/PrintLog/PrintLog.dart';
 import 'Controller/Helper/Shared Preferences/SharedPreferences.dart';
 import 'Controller/ProjectController/MainController/main_controller.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'Controller/SoketController/socket_controller.dart';
+import 'Controller/SoketController/socket_ctrl.dart';
+
 
 
 
@@ -24,13 +26,7 @@ bool isTimeCheckDialogBox = false;
 
 
 StreamController<int> msgController = StreamController<int>.broadcast();
-double addHeight = Dimensions.screenHeight;
-double addWidth = Dimensions.screenWidth;
-
-// int? remainingTIme;
-IO.Socket socket = IO.io(WebApiConstant.SOCKET_URL, OptionBuilder().setTransports(['websocket']).build());
-StreamSocket streamSocket = StreamSocket();
-
+SocketController socketCtrl = Get.put(SocketController());
 
 Future<void> main() async {
   await runZonedGuarded(() async {
@@ -39,6 +35,11 @@ Future<void> main() async {
     await Firebase.initializeApp();
     await FirebaseMessagingCustom.setUpNotification();
     await FirebaseMessagingCustom.getInstance();
+
+    /// Socket
+    HttpOverrides.global = MyHttpOverrides();
+    socketCtrl.connectAndListen();
+
     runApp(
         const MyApp()
     );
@@ -60,6 +61,15 @@ Future<void> main() async {
   });
 }
 
+
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 
 

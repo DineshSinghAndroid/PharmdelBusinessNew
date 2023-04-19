@@ -85,7 +85,7 @@ class _PharmacyNotificationScreenState extends State<PharmacyNotificationScreen>
               child: Scaffold(
           appBar: AppBar(
             title: BuildText.buildText(
-              text: kMyNotifiaction,
+              text: kMyNotification,
               color: AppColors.blackColor,  
               size: 18        
             ),

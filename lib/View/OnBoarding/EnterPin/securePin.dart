@@ -201,21 +201,13 @@ class SecurePinState extends State<SecurePin> {
                   buildSizeBox(15.0, 0.0),
 
                   InkWell(
-                    onTap: () async {
-                      if (isTimeCheckDialogBox) {
-                        isTimeCheckDialogBox = false;
-                        Navigator.pop(context, true);
-                      }
-
-                      Get.offAllNamed(loginScreenRoute);
-                      Get.deleteAll();
-                    },
+                    onTap: ()=> controller.onTapUseDifferentAccount(context: context),
                     child: Container(
                       padding: EdgeInsets.only(
                         top: Get.height*0.02,
                       ),
                       child: BuildText.buildText(
-                        text: kusediffAcc,
+                        text: kUseDifferentAccount,
                         fontFamily: FontFamily.NexaRegular,
                         size: 16,
                         color: AppColors.colorAccent,

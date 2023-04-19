@@ -52,13 +52,16 @@ class LoginController extends GetxController {
   List<VehicleListData>? vehicleListData;
   VehicleListData? selectedVehicleData;
 
+  String? autoFillUserName;
+  String? autoFillUserPassword;
+
 
   @override
   void onInit() {
-
+    saveAppVersion();
     autoFillUser();
-     emailCT.text = "md@gmail.com";
-    passCT.text = "Admin@1234";
+    //  emailCT.text = "md@gmail.com";
+    // passCT.text = "Admin@1234";
 
     //  emailCT.text = "sdk@gmail.com";
     // passCT.text = "Admin@1234";
@@ -68,17 +71,29 @@ class LoginController extends GetxController {
   }
 
   Future<void> autoFillUser() async {
+    savePassword = false;
+
+    autoFillUserName = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.autoFillUserName) ?? "";
+    autoFillUserPassword = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.autoFillUserPassword) ?? "";
+    if(autoFillUserName != null && autoFillUserName != ""){
+      emailCT.text = autoFillUserName ?? "";
+      passCT.text = autoFillUserPassword ?? "";
+      update();
+    }
     // FlutterSecureStorage secureStorage = const FlutterSecureStorage();
     // secureStorage.write(key: "NAME", value: "one");
     // await SecureStorageCustom.save(key: "name",value: "one");
     // String tes = await SecureStorageCustom.getValue(key: "name",) ?? "";
-    // // print("tesx.....");
-    // print("tesx.....${tes}..");
+
     // if(await SecureStorageCustom.getValue(key: "name") != "") {
     //   emailCT.text = SecureStorageCustom.getValue(key: "name").toString();
     //   passCT.text = SecureStorageCustom.getValue(key: "password").toString();
     //   update();
     // }
+
+  }
+
+  Future<void> saveAppVersion() async {
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
       String version = packageInfo.version;
@@ -87,9 +102,8 @@ class LoginController extends GetxController {
       PrintLog.printLog("BuildNumber: $buildNumber");
       await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.appVersion, variableValue: version);
     });
-    update();
-
   }
+
 
   void textFieldDispose() {
     passCT.dispose();
@@ -97,8 +111,13 @@ class LoginController extends GetxController {
     super.dispose();
   }
 
-  void onChangedCheckBoxValue({required bool value}){
+  Future<void> onChangedCheckBoxValue({required bool value}) async {
     savePassword = value;
+    if(savePassword){
+      await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.autoFillUserName, variableValue: emailCT.text.toString().trim());
+      await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.autoFillUserPassword, variableValue: passCT.text.toString().trim());
+      await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.isAutoFillUserPassword, variableValue: "true");
+    }
     update();
   }
 

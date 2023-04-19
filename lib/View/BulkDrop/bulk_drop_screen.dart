@@ -30,6 +30,12 @@ class _BulkDeliveryListScreenState extends State<BulkDeliveryListScreen> {
     init();
   }
 
+  @override
+  void dispose() {
+    Get.delete<BulkDropController>();
+    super.dispose();
+  }
+
   void init() {
     if (bulkCTRL.toController.text.toString().trim() == "") {
       bulkCTRL.toController.text = "Patient";
@@ -110,7 +116,7 @@ class _BulkDeliveryListScreenState extends State<BulkDeliveryListScreen> {
                   image: DecorationImage(
                     image: AssetImage(strImgHomeBg),
                     alignment: Alignment.bottomCenter,
-                    fit: BoxFit.fill
+                    fit: BoxFit.fitWidth
                   )
                 ),
                 child: controller.orderList.isNotEmpty

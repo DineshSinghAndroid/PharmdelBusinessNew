@@ -42,6 +42,24 @@ class PopupCustom{
         }).then(onValue);
   }
 
+  static appUpdateDialogBox({required String msg,required Function(dynamic) onValue,required BuildContext context,required bool isShowExit}){
+    return showDialog(
+        context: context,
+        barrierDismissible: isShowExit ? true:false,
+        builder: (BuildContext context1) {
+          return WillPopScope(
+            onWillPop: () => Future.value(isShowExit ? true:false),
+            child: CommonUsePopUp(
+              isShowClearBtn: false,
+              title: kNewUpdateAvailable,
+              subTitle: msg,
+              btnActionTitle: kUpdateNow,
+              btnBackTitle: isShowExit ? kExit:"",
+            ),
+          );
+        }).then(onValue);
+  }
+
   static simpleTruckDialogBox({bool? isShowClearBtn, Widget? topWidget,required Function(dynamic) onValue,required BuildContext context,String ? title, subTitle, btnBackTitle, btnActionTitle,Color? titleColor,subTitleColor,btnBackColor,btnActionColor,Function()? onTapBackBtn,onTapActionBtn}){
     return showDialog(
         context: context,

@@ -11,7 +11,7 @@ import '../../../Controller/StopWatchController/stop_watch_controller.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/DeliveryCardCustom/deliveryCardCustom.dart';
 import '../../../Controller/WidgetController/AdditionalWidget/Other/other_widget.dart';
 import '../../../Controller/WidgetController/StringDefine/StringDefine.dart';
-import '../../NotificationScreen/notificationScreen.dart';
+import '../../NotificationScreen/notification_screen.dart';
 
 class DriverDashboardScreen extends StatefulWidget {
   const DriverDashboardScreen({Key? key}) : super(key: key);
@@ -20,15 +20,10 @@ class DriverDashboardScreen extends StatefulWidget {
   State<DriverDashboardScreen> createState() => _DriverDashboardScreenState();
 }
 
-class _DriverDashboardScreenState extends State<DriverDashboardScreen>  with WidgetsBindingObserver implements BulkScanMode {
+class _DriverDashboardScreenState extends State<DriverDashboardScreen>  with WidgetsBindingObserver{
 
   DriverDashboardCTRL drDashCtrl = Get.put(DriverDashboardCTRL());
 
-
-@override
-void isSelected(bool isSelect) {
-  // TODO: implement isSelected
-}
 
 
  @override
@@ -46,16 +41,19 @@ void isSelected(bool isSelect) {
             await drDashCtrl.getDeliveryMasterData(context: context).then((value) async {
               if(driverType.toLowerCase() != kSharedDriver.toLowerCase()){
                 await drDashCtrl.getPharmacyInfo(context: context).then((value) async {
-
+                  await drDashCtrl.onAssignPreviewsRout(context: context);
                 });
+              }else{
+                await drDashCtrl.onAssignPreviewsRout(context: context);
               }
             });
           });
         });
       });
+  }else{
+    await drDashCtrl.onAssignPreviewsRout(context: context);
   }
 
-      drDashCtrl.onAssignPreviewsRout(context: context);
 
   }
 
@@ -152,11 +150,7 @@ void isSelected(bool isSelect) {
 
                           /// Notification
                           InkWell(
-                              onTap: () {
-                                Get.toNamed(notificationScreenRoute,arguments: NotificatinScreen(
-                                   customerId: '1',screen1or2: 0,
-                                ));
-                              },
+                              onTap: () => controller.onTapAppBarNotification(context: context),
                               child: Stack(
                                 children: [
                                   const Center(
@@ -188,7 +182,8 @@ void isSelected(bool isSelect) {
                                     ),
                                   ),
                                 ],
-                              )),
+                              )
+                          ),
                         ],
                       ),
                     )
@@ -199,8 +194,9 @@ void isSelected(bool isSelect) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+
                     Visibility(
-                      visible: driverType.toLowerCase() == kDedicatedDriver.toLowerCase(),
+                      visible: driverType.toLowerCase() == kDedicatedDriver.toLowerCase() || driverType.toLowerCase() == kSharedDriver.toLowerCase(),
                       child: Padding(
                         padding: EdgeInsets.only(left: controller.isRouteStart && controller.systemDeliveryTime != null && controller.stopWatchTimer != null ? Get.width * 24 / 100 : 0.0),
                         child: FloatingActionButton.extended(
@@ -215,6 +211,7 @@ void isSelected(bool isSelect) {
                         ),
                       ),
                     ),
+
                     Visibility(
                       visible: controller.isRouteStart && controller.systemDeliveryTime != null && controller.stopWatchTimer != null && controller.stopWatchTimer?.rawTime != null,
                         child: Container(
@@ -371,7 +368,7 @@ void isSelected(bool isSelect) {
                                       label: kOnTheWay,
                                       selectedTopBtnName: controller.selectedTopBtnName,
                                       // counter: controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
-                                      counter: controller.orderListType == 4 ? controller.driverDashboardData != null && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ? controller.isNextPharmacyAvailable != null && controller.isNextPharmacyAvailable! >= 0 ? "${controller.driverDashboardData!.deliveryList!.length - 1 }": "${controller.driverDashboardData?.deliveryList?.length}" : "0":controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
+                                      counter: controller.orderListType == 4 ? controller.driverDashboardData != null && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ? controller.isNextPharmacyAvailable  != null && controller.isNextPharmacyAvailable! >= 0 ? "${controller.driverDashboardData!.deliveryList!.length - 1 }": "${controller.driverDashboardData?.deliveryList?.length}" : "0":controller.driverDashboardData?.orderCounts?.outForDeliveryOrders ?? "0",
                                       onTap: () => controller.onTapManTopDeliveryListBtn(context:context,btnType: 4),
                                       )) :
                               Flexible(
@@ -412,9 +409,9 @@ void isSelected(bool isSelect) {
                           ),
                         ),
 
-
+                        /// Reschedule button
                         Visibility(
-                          visible: controller.orderListType == 6 && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ,
+                          visible: driverType.toLowerCase() != kSharedDriver.toLowerCase() && controller.orderListType == 6 && controller.driverDashboardData?.deliveryList != null && controller.driverDashboardData!.deliveryList!.isNotEmpty ,
                             child: Container(
                               width: Get.width,
                               height: 50,
@@ -554,371 +551,9 @@ void isSelected(bool isSelect) {
                             )
                         ) : const SizedBox.shrink(),
 
-                        // Visibility(
-                        //   visible: isVisiblePharmacyList,
-                        //   child: Container(
-                        //     margin: const EdgeInsets.only(top: 0, bottom: 10),
-                        //     decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(5.0),
-                        //         color: Colors.white,
-                        //         boxShadow: [
-                        //           BoxShadow(
-                        //               spreadRadius: 1,
-                        //               blurRadius: 10,
-                        //               offset: const Offset(0, 4),
-                        //               color: Colors.grey.shade300)
-                        //         ]),
-                        //     child: Column(
-                        //       children: [
-                        //         ListView.separated(
-                        //           itemCount: controller.routesData?.pharmacyList?.length ?? 0,
-                        //           shrinkWrap: true,
-                        //           physics: const NeverScrollableScrollPhysics(),
-                        //           itemBuilder: (context, index) {
-                        //             // PharmacyList pharmacy = pharmacyList[index];
-                        //             return InkWell(
-                        //               onTap: () {
-                        //                 // setState(() {
-                        //                 //   selectedPharmacyDropDown =
-                        //                 //   pharmacyList[index];
-                        //                 //   _selectedPharmacyPosition = index;
-                        //                 // });
-                        //               },
-                        //               child: Container(
-                        //                 width: MediaQuery.of(context).size.width,
-                        //                 padding: const EdgeInsets.only(left: 13.0,right: 10.0,top: 12,bottom: 12),
-                        //                 color:
-                        //                 // pharmacy == selectedPharmacyDropDown //route == selectedRoute//_selectedRoutePosition == index ?
-                        //                 Colors.blue[50],
-                        //                 // : Colors.transparent,
-                        //                 child: BuildText.buildText(
-                        //                   text: controller.routesData?.pharmacyList?[index].pharmacyName ?? "",
-                        //                   size: 14,
-                        //                   color: AppColors.blueColorLight,
-                        //                   weight: FontWeight.w400,
-                        //                 ),
-                        //               ),
-                        //             );
-                        //           },
-                        //           separatorBuilder: (BuildContext context, int index) {
-                        //             return const Divider(height: 1);
-                        //           },
-                        //         ),
-                        //         const Divider(height: 1),
-                        //         Container(
-                        //           width: MediaQuery.of(context).size.width,
-                        //           padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
-                        //           child: Row(
-                        //             children: [
-                        //               Flexible(
-                        //                 flex: 1,
-                        //                 fit: FlexFit.tight,
-                        //                 child: InkWell(
-                        //                   onTap: () {
-                        //                     setState(() {
-                        //                       // selectedPharmacyDropDown =
-                        //                       //     selectedPharmacy;
-                        //                       // _isVisiblePharmacyList = false;
-                        //                       // hideTote = false;
-                        //                     });
-                        //                   },
-                        //                   child: BuildText.buildText(
-                        //                       text: kCancel,
-                        //                       size: 14,
-                        //                       weight: FontWeight.w800,
-                        //                       color: AppColors.redColor,
-                        //                       textAlign: TextAlign.center
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //               Flexible(
-                        //                 flex: 1,
-                        //                 fit: FlexFit.tight,
-                        //                 child: InkWell(
-                        //                   onTap: () {
-                        //                     // if (_selectedPharmacyPosition < 0) {
-                        //                     //   Fluttertoast.showToast(
-                        //                     //       msg: "Choose Pharmacy First");
-                        //                     //   return;
-                        //                     // }
-                        //                     // setState(() {
-                        //                     //   _isVisiblePharmacyList = false;
-                        //                     //   selectedPharmacy =
-                        //                     //   pharmacyList[_selectedPharmacyPosition];
-                        //                     //   pharmacyId =
-                        //                     //   "${selectedPharmacy.pharmacyId}";
-                        //                     //   hideTote = false;
-                        //                     // });
-                        //                   },
-                        //                   child: BuildText.buildText(
-                        //                       text: kConfirm,
-                        //                       size: 14,
-                        //                       color: AppColors.greenAccentColor,
-                        //                       weight: FontWeight.w800,
-                        //                       textAlign: TextAlign.center
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-
-                        ///Parcel Location
-                        // Visibility(
-                        //   visible: isToteList,
-                        //   child: Container(
-                        //     margin: const EdgeInsets.only(top: 0, bottom: 10),
-                        //     decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(5.0),
-                        //         color: Colors.white,
-                        //         //border: Border.all(color: Colors.grey[400]),
-                        //         boxShadow: [
-                        //           BoxShadow(
-                        //               spreadRadius: 1,
-                        //               blurRadius: 10,
-                        //               offset: const Offset(0, 4),
-                        //               color: Colors.grey.shade300)
-                        //         ]),
-                        //     child: Column(
-                        //       children: [
-                        //         ListView.separated(
-                        //           itemCount: 2,
-                        //           // parcelBoxList != null &&
-                        //           //     parcelBoxList.isNotEmpty
-                        //           //     ? parcelBoxList.length
-                        //           //     : 0,
-                        //           shrinkWrap: true,
-                        //           physics: const NeverScrollableScrollPhysics(),
-                        //           itemBuilder: (context, index) {
-                        //             // ParcelBoxData nusingList = parcelBoxList[index];
-                        //             return InkWell(
-                        //               onTap: () {
-                        //                 // setState(() {
-                        //                 //   totePosition = index;
-                        //                 // });
-                        //               },
-                        //               child: Container(
-                        //                 width: MediaQuery.of(context).size.width,
-                        //                 padding: const EdgeInsets.only(left: 13.0,right: 10.0,top: 12,bottom: 12),
-                        //                 color:
-                        //                 // totePosition ==
-                        //                 //     index //route == selectedRoute//_selectedRoutePosition == index ?
-                        //                 AppColors.blueColor,
-                        //                 // : Colors.transparent,
-                        //                 child: BuildText.buildText(
-                        //                   text: kParcelLocation,
-                        //                   size: 14,
-                        //                   color: AppColors.blueColorLight,
-                        //                   weight: FontWeight.w400,
-                        //                 ),
-                        //               ),
-                        //             );
-                        //           },
-                        //           separatorBuilder: (BuildContext context, int index) {
-                        //             return const Divider(height: 1);
-                        //           },
-                        //         ),
-                        //         const Divider(height: 1),
-                        //         Container(
-                        //           width: MediaQuery.of(context).size.width,
-                        //           padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
-                        //           child: Row(
-                        //             children: <Widget>[
-                        //               Flexible(
-                        //                 flex: 1,
-                        //                 fit: FlexFit.tight,
-                        //                 child: InkWell(
-                        //                   onTap: () {
-                        //                     // setState(() {
-                        //                     //   _isToteList = false;
-                        //                     //   hideTote = false;
-                        //                     // });
-                        //                   },
-                        //                   child: BuildText.buildText(
-                        //                     text: kCancel,
-                        //                     size: 14,
-                        //                     color: AppColors.redColor,
-                        //                     weight: FontWeight.w800,
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //               Flexible(
-                        //                 flex: 1,
-                        //                 fit: FlexFit.tight,
-                        //                 child: InkWell(
-                        //                   onTap: () {
-                        //                     // if (totePosition < 0) {
-                        //                     //   Fluttertoast.showToast(
-                        //                     //       msg: "Choose Nursing Home");
-                        //                     //   return;
-                        //                     // }
-                        //                     // setState(() {
-                        //                     //   _isToteList = false;
-                        //                     //   _selectedTotePosition = totePosition;
-                        //                     //   logger.i(_selectedTotePosition);
-                        //                     //   hideTote = false;
-                        //                     // });
-                        //                   },
-                        //                   child: BuildText.buildText(
-                        //                     text: kConfirm,
-                        //                     size: 14,
-                        //                     color: AppColors.greenColor,
-                        //                     weight: FontWeight.w800,
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
 
-                    ///Select Route
-                    // Positioned(
-                    //   top: 60,
-                    //   child: Visibility(
-                    //     visible: isVisibleRouteList,
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                    //       child: Container(
-                    //         height: 350,
-                    //         margin: const EdgeInsets.only(top: 0, bottom: 10),
-                    //         decoration: BoxDecoration(
-                    //             borderRadius: BorderRadius.circular(5.0),
-                    //             color: AppColors.whiteColor,
-                    //             boxShadow: [
-                    //               BoxShadow(
-                    //                   spreadRadius: 1,
-                    //                   blurRadius: 10,
-                    //                   offset: const Offset(0, 4),
-                    //                   color: Colors.grey.shade300)
-                    //             ]),
-                    //         child: Column(
-                    //           children: [
-                    //             SizedBox(
-                    //               height: 300,
-                    //               width: Get.width,
-                    //               child: ListView.separated(
-                    //                 itemCount: controller.routesData?.routeList?.length ?? 0,
-                    //                 // routeList.length,
-                    //                 shrinkWrap: true,
-                    //                 physics: const AlwaysScrollableScrollPhysics(),
-                    //                 itemBuilder: (context, index) {
-                    //                   // RouteList route = routeList[index];
-                    //                   return InkWell(
-                    //                     onTap: () {
-                    //                       // setState(() {
-                    //                       //   selectedRouteDropDown = routeList[index];
-                    //                       //   _selectedRoutePosition = index;
-                    //                       // });
-                    //                     },
-                    //                     child: Container(
-                    //                       width: MediaQuery.of(context).size.width,
-                    //                       padding: const EdgeInsets.only(left: 13.0,right: 10.0,top: 12,bottom: 12),
-                    //                       color:
-                    //                       // route ==
-                    //                       // selectedRouteDropDown //route == selectedRoute//_selectedRoutePosition == index
-                    //                       // ?
-                    //                       Colors.blue[50],
-                    //                       // : Colors.transparent,
-                    //                       child: BuildText.buildText(
-                    //                         text: controller.routesData?.routeList?[index].routeName ?? "",
-                    //                         // "${route.routeName ?? "Select Pharmacy"}",
-                    //                         size: 14,
-                    //                         color: AppColors.blueColorLight,
-                    //                         weight: FontWeight.w400,
-                    //                       ),
-                    //                     ),
-                    //                   );
-                    //                 },
-                    //                 separatorBuilder: (BuildContext context, int index) {
-                    //                   return const Divider(height: 1);
-                    //                 },
-                    //               ),
-                    //             ),
-                    //             const Divider(height: 1),
-                    //             Container(
-                    //               width: MediaQuery.of(context).size.width,
-                    //               padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 12, bottom: 12),
-                    //               child: Row(
-                    //                 children: <Widget>[
-                    //                   Flexible(
-                    //                     flex: 1,
-                    //                     fit: FlexFit.tight,
-                    //                     child: InkWell(
-                    //                       onTap: () {
-                    //                         // setState(() {
-                    //                         //   selectedRouteDropDown = selectedRoute;
-                    //                         //   _isVisibleRouteList = false;
-                    //                         //   hideTote = false;
-                    //                         // });
-                    //                       },
-                    //                       child: BuildText.buildText(
-                    //                           text: kCancel,
-                    //                           size: 14,
-                    //                           color: AppColors.redColor,
-                    //                           weight: FontWeight.w800,
-                    //                           textAlign: TextAlign.center
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                   Flexible(
-                    //                     flex: 1,
-                    //                     fit: FlexFit.tight,
-                    //                     child: InkWell(
-                    //                       onTap: () {
-                    //                         // if (_selectedRoutePosition < 0) {
-                    //                         //   Fluttertoast.showToast(
-                    //                         //       msg: "Choose Route First");
-                    //                         //   return;
-                    //                         // }
-                    //                         // setState(() {
-                    //                         //   selectedType =
-                    //                         //       WebConstant.Status_total;
-                    //                         //   _isVisibleRouteList = false;
-                    //                         //   hideTote = false;
-                    //                         //   selectedRoute =
-                    //                         //   routeList[_selectedRoutePosition];
-                    //
-                    //                         //   routeId = "${selectedRoute.routeId}";
-                    //                         //   SharedPreferences.getInstance().then((
-                    //                         //       value) {
-                    //                         //     value.setString(
-                    //                         //         WebConstant.ROUTE_ID, routeId);
-                    //                         //   });
-                    //                         //   setState(() {
-                    //                         //     isProgressAvailable = true;
-                    //                         //   });
-                    //                         //   orderListType = 1;
-                    //                         //   fetchDeliveryList(0);
-                    //                         // });
-                    //                       },
-                    //                       child: BuildText.buildText(
-                    //                           text: kConfirm,
-                    //                           size: 14,
-                    //                           color: AppColors.greenAccentColor,
-                    //                           weight: FontWeight.w800,
-                    //                           textAlign: TextAlign.center
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
                 /// Bottom Navigation bar
@@ -931,38 +566,24 @@ void isSelected(bool isSelect) {
     );
   }
 
+  @override
+  void didChangeAppLifecycleState(final AppLifecycleState state) {
 
-
-
-  // Future<void> selectWithTypeCount(String status) async {
-  //   isDelivery = false;
-  //   if (routeId.isEmpty) {
-  //     ToastCustom.showToast(msg: "Select route and try again!");
-  //   } else {
-  //     setState(() {
-  //       page = 0;
-  //       lastPageLength = -1;
-  //       selectedType = status;
-
-  //       if (!isProgressAvailable!) {
-  //         setState(() {
-  //           isProgressAvailable = true;
-  //         });
-  //       }
-
-  //       if (status == kStatusOutForDelivery) {
-  //         selectedType = kStatusOutForDelivery;
-  //         getParcelList(0);
-  //       } else {
-  //         fetchDeliveryList(0);
-  //       }
-  //     });
-  //   }
-  // }
-}
-
-
-abstract class BulkScanMode {
-  void isSelected(bool isSelect);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        PrintLog.printLog("Dashboard App Lifecycle State::::::::: Resumed");
+        break;
+      case AppLifecycleState.inactive:
+        PrintLog.printLog("Dashboard App Lifecycle State::::::::: InActive");
+        break;
+      case AppLifecycleState.paused:
+        PrintLog.printLog("Dashboard App Lifecycle State::::::::: Paused");
+        // if (timer1 != null && timer1.isActive) timer1.cancel();
+        break;
+      case AppLifecycleState.detached:
+        PrintLog.printLog("Dashboard App Lifecycle State::::::::: Detached");
+        break;
+    }
+  }
 }
 

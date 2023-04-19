@@ -3,6 +3,8 @@ class WebApiConstant {
   /// Socket Url
   static const String SOCKET_URL = 'wss://pharmdel.com:3000'; //socket live url
   // static const String SOCKET_URL = 'wss://pharmdel.co.uk:3000'; // socket staging url
+  static const String SAVE_DATA_WITH_SOCKET = BASE_URL + "SaveSocketData";
+
 
   ///Google Api Key
   static const String GOOGLE_API_KEY                         = "AIzaSyAE6nVrsXWIXPFY6e7D0IQ9KACpv46HWw4";

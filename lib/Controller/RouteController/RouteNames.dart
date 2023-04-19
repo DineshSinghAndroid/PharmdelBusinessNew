@@ -8,6 +8,7 @@ const String securePinScreenRoute = "securePin_screen";
 const String driverDashboardScreenRoute = "driver_dashboard_screen";
 const String customerListScreenRoute = "customerList_screen";
 const String notificationScreenRoute = "notification_screen";
+const String createNotificationRoute = "create_notification_screen";
 const String driverCreatePatientScreenRoute = "driver_createPatient_screen";
 const String updateAddressScreenRoute = "updateAddress_screen";
 const String pdfViewScreenRoute = "pdfView_screen";

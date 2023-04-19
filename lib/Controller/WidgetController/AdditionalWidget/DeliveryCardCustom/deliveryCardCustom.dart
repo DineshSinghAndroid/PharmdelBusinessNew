@@ -445,29 +445,29 @@ class DeliveryCardCustom extends StatelessWidget {
                           ),
 
                         /// Pharmacy Name
-                        Visibility(
-                          visible: pharmacyName != "null" && pharmacyName != "" && driverType.toLowerCase() == kSharedDriver,
-                          child: Flexible(
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                    color: Colors.orange,
-                                    boxShadow: [BoxShadow(spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 4), color: Colors.grey.withOpacity(0.3))]),
-                                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 2, top: 2),
-                                child:
-                                BuildText.buildText(
-                                    text:
-                                    pharmacyName != ""
-                                        ? pharmacyName.toString().length > 16
-                                        ? pharmacyName.toString().substring(0, 16)
-                                        : pharmacyName.toString()
-                                        : "",
-                                    maxLines: 1,color: AppColors.whiteColor,size: 12
-                                )
-                            ),
-                          ),
-                        ),
+                        // Visibility(
+                        //   visible: pharmacyName != "null" && pharmacyName != "" && driverType.toLowerCase() == kSharedDriver,
+                        //   child: Flexible(
+                        //     child: Container(
+                        //       margin: const EdgeInsets.only(right: 10.0),
+                        //         decoration: BoxDecoration(
+                        //             borderRadius: const BorderRadius.all(Radius.circular(5)),
+                        //             color: Colors.orange,
+                        //             boxShadow: [BoxShadow(spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 4), color: Colors.grey.withOpacity(0.3))]),
+                        //         padding: const EdgeInsets.only(left: 10, right: 10, bottom: 2, top: 2),
+                        //         child:
+                        //         BuildText.buildText(
+                        //             text:
+                        //             pharmacyName != ""
+                        //                 ? pharmacyName.toString().length > 16
+                        //                 ? pharmacyName.toString().substring(0, 16)
+                        //                 : pharmacyName.toString()
+                        //                 : "",
+                        //             maxLines: 1,color: AppColors.whiteColor,size: 12
+                        //         )
+                        //     ),
+                        //   ),
+                        // ),
 
                       /// Parcel box name
                         Visibility(

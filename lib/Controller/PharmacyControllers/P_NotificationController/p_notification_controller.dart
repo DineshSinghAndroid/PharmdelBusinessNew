@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
-import '../../../Model/CreateNotification/createNotificationResponse.dart';
-import '../../../Model/Notification/NotifficationResponse.dart';
+import '../../../Model/Notification/create_notification_response.dart';
+import '../../../Model/Notification/notiffication_response.dart';
 import '../../../Model/PharmacyModels/P_SentNotificationResponse/p_sentNotificationRsponse.dart';
 import '../../../Model/SaveNotification/saveNotificationResponse.dart';
 
@@ -98,7 +98,7 @@ class PharmacyNotificationController extends GetxController{
 
     String url = WebApiConstant.GET_PHARMACY_NOTIFICATION;
 
-    await apiCtrl.getNotificaitonApi(context:context,url: url, dictParameter: dictparm,token: authToken)
+    await apiCtrl.getNotificationApi(context:context,url: url, dictParameter: dictparm,token: authToken)
         .then((result) async {
       if(result != null){
         if (result.status != false) {          

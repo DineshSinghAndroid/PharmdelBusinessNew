@@ -6,6 +6,7 @@ import 'package:pharmdel/Controller/Helper/ConnectionValidator/internet_check_re
 import 'package:pharmdel/Controller/ProjectController/MainController/import_controller.dart';
 import '../../../Model/DriverProfile/profile_driver_response.dart';
 import '../../../Model/OrderDetails/detail_response.dart';
+import '../../../View/SignOrImage/sign_image_screen.dart';
 import '../../WidgetController/Popup/popup.dart';
 import '../../WidgetController/QrCode/ar_code.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
@@ -23,6 +24,8 @@ class BulkDropController extends GetxController{
   bool isEmpty = false;
   bool isNetworkError = false;
   bool isSuccess = false;
+
+  OrderDetailResponse? orderDetailResponse;
 
   List<RelatedOrders> orderList = [];
   TextEditingController toController = TextEditingController();
@@ -81,6 +84,7 @@ class BulkDropController extends GetxController{
         .then((result) async {
         try {
           if (result != null) {
+            orderDetailResponse = result;
             // OrderModal modal = orderModalFromJson(result);
             if ((result.message == "") || isComplete || result.deliveryStatusDesc?.toLowerCase() == kReceived.toLowerCase() || result.deliveryStatusDesc?.toLowerCase() == kReady.toLowerCase() || result.deliveryStatusDesc?.toLowerCase() == kRequested.toLowerCase()) {
               if (result.deliveryStatusDesc.toString().toLowerCase() == kCompleted.toLowerCase()) {
@@ -96,16 +100,40 @@ class BulkDropController extends GetxController{
                   });
                   if (relateOrder.isNotEmpty) {
                     result.relatedOrders = relateOrder;
-                    PopupCustom.showAlertOrderPopUp(
-                        onValue: (value){
 
-                        },
+                    PopupCustom.simpleTruckDialogBox(
                         context: context,
-                        descriptions: "${result.relatedOrderCount} more delivery for this address. Would you like to deliver?",
-                        onClicked: (value){
-                        ///  showOrderList(result, value);
+                        title: kMultipleDelivery,
+                        subTitle: "${result.relatedOrders!.length - 1} $kMoreDeliveryForThisAddress",
+                        onValue: (value){
+                          if(value.toString().toLowerCase() == kYes.toLowerCase()){
+
+                            /// Multi Delivery PopUp
+                            PopupCustom.showMultipleDeliveryListPopUp(
+                              context: context,
+                              orderModal: result,
+                              onValue: (value) async {
+                                if(value != false && value != null){
+                                  List<RelatedOrders> selectedRelatedOrders = [];
+                                  result.relatedOrders?.forEach((element) {
+                                    if(element.isSelected) {
+                                      selectedRelatedOrders.add(element);
+                                    }
+                                  });
+                                  result.relatedOrders = selectedRelatedOrders;
+                                  orderList.addAll(result.relatedOrders!);
+                                  update();
+                                }
+                              },
+                            );
+
+                          }else if(value.toString().toLowerCase() == kNo.toLowerCase()){
+                            orderList.add(result.relatedOrders![0]);
+                          }
+                          update();
                         }
                     );
+
                   } else {
                     ToastCustom.showToast(msg: kThisOrderAlreadyExits);
                   }
@@ -160,8 +188,9 @@ class BulkDropController extends GetxController{
   }
 
 
-  void onTapScanOrder({required BuildContext context}){
+  Future<void> onTapScanOrder({required BuildContext context}) async {
     PrintLog.printLog("Clicked on Add order");
+    await scanBarcodeNormal(context: context);
   }
 
   /// Show bottom sheet
@@ -192,7 +221,7 @@ class BulkDropController extends GetxController{
     if (orderList.isEmpty) {
       return;
     }
-    List orderId = [];
+    List<String> orderId = [];
 
     orderList.forEach((element) {
       orderId.add(element.orderId.toString());
@@ -200,7 +229,7 @@ class BulkDropController extends GetxController{
 
     int index = orderList.indexWhere((element) => element.isControlledDrugs == true);
 
-    Get.toNamed(signOrImageScreenRoute);
+    // Get.toNamed(signOrImageScreenRoute);
     // Navigator.push(
     //     context,
     //     MaterialPageRoute(
@@ -214,6 +243,37 @@ class BulkDropController extends GetxController{
     //           orderid: orderId,
     //         ))
     // );
+    try{
+      if(orderDetailResponse != null) {
+        Get.toNamed(
+          signOrImageScreenRoute,
+          arguments: SignOrImageScreen(
+            delivery: orderDetailResponse!,
+            selectedStatusCode: 5,
+            remarks: remarkController.text.toString().trim() ?? "",
+            deliveredTo:  toController.text.toString().trim() ?? "",
+            orderIDs: orderId,
+            outForDelivery: [],//driverDasCTRL.driverDashboardData?.deliveryList ?? [],
+            routeId: orderDetailResponse?.routeId ?? "0",
+            rescheduleDate: "",
+            failedRemark: "",
+            paymentStatus: "unPaid",
+            exemptionId: 0,
+            mobileNo:  "",
+            addDelCharge: "",
+            subsId: 0,
+            paymentType: "",
+            rxInvoice: "",
+            rxCharge: "0",
+            amount: "",
+            isCdDelivery: index >= 0 ? true : false,
+            notPaidReason: "",
+          )
+      );
+      }
+    }catch(e){
+      PrintLog.printLog("Update Status Through Error: $e");
+    }
   }
 
 
@@ -275,7 +335,6 @@ class BulkDropController extends GetxController{
     });
     update();
   }
-
 
 
   void changeSuccessValue(bool value){

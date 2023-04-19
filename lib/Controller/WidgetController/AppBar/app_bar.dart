@@ -32,7 +32,7 @@ class AppBarCustom {
     );
   }
 
-  static PreferredSizeWidget appBarStyle2({String? title,Function()? onTap,double? elevation,Color? backgroundColor,bool? centerTitle,Color? titleColor,double? size}) {
+  static PreferredSizeWidget appBarStyle2({PreferredSizeWidget? bottom,String? title,Function()? onTap,double? elevation,Color? backgroundColor,bool? centerTitle,Color? titleColor,double? size}) {
     return AppBar(
       leading: InkWell(
           onTap: onTap ?? ()=> Get.back(),
@@ -51,6 +51,7 @@ class AppBarCustom {
       centerTitle: centerTitle ?? true,
       backgroundColor: backgroundColor ?? AppColors.whiteColor,
       elevation: elevation ?? 0,
+      bottom: bottom,
 
     );
   }

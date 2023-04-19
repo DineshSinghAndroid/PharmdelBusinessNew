@@ -14,7 +14,7 @@ import '../../../Controller/ApiController/ApiController.dart';
 import '../../../Controller/Helper/PrintLog/PrintLog.dart';
 import '../../../Model/DriverProfile/profile_driver_response.dart';
 import '../../../Model/Enum/enum.dart';
-import '../../../Model/LunchBreak/lunchBreakResponse.dart';
+import '../../../Model/LunchBreak/lunch_break_response.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Helper/Camera/CameraScreen.dart';

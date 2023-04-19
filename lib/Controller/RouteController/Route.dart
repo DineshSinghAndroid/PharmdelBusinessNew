@@ -22,10 +22,11 @@ import '../../View/CreatePatientScreen.dart/createPatientScreen.dart';
 import '../../View/CustomerListScreem.dart/customerlist.dart';
 import '../../View/DashBoard/DriverDashboard/driver_dashboard_screen.dart';
 import '../../View/DeliverySchedule/delivery_schedule_screen.dart';
+import '../../View/NotificationScreen/create_notification.dart';
 import '../../View/OrderDetails/order_detail_screen.dart';
 import '../../View/Instructions/instructions_screen.dart';
 import '../../View/MapScreen/map_screen.dart';
-import '../../View/NotificationScreen/notificationScreen.dart';
+import '../../View/NotificationScreen/notification_screen.dart';
 import '../../View/OnBoarding/EnterPin/securePin.dart';
 import '../../View/SearchMedicine/search_medicine_screen.dart';
 import '../../View/SignOrImage/sign_image_screen.dart';
@@ -52,11 +53,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return PageTransition(type: PageTransitionType.rightToLeft, duration: const Duration(milliseconds: 300), alignment: Alignment.center, child: CustomerListScreen());
 
     case notificationScreenRoute:
-      final args = settings.arguments as NotificatinScreen;
+      return MaterialPageRoute( builder: (context) => const NotificationScreen());
 
-      return PageTransition(type: PageTransitionType.rightToLeft,
-           duration: const Duration(milliseconds: 300), alignment:
-          Alignment.center, child:  NotificatinScreen(customerId: args.customerId,screen1or2: args.screen1or2,));
+    case createNotificationRoute:
+      return MaterialPageRoute( builder: (context) => const CreateNotification());
 
     case driverCreatePatientScreenRoute:
       final args = settings.arguments as DriverCreatePatientScreen;
@@ -130,7 +130,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case orderDetailScreenRoute:
       final args = settings.arguments as OrderDetailScreen;
-      return MaterialPageRoute(builder: (context) => OrderDetailScreen(orderDetail: args.orderDetail,));
+      return MaterialPageRoute(builder: (context) => OrderDetailScreen(detailData: args.detailData,isMultipleDeliveries: args.isMultipleDeliveries,));
 
     case bulkDeliveryListScreenRoute:
       return MaterialPageRoute(builder: (context) => const BulkDeliveryListScreen());

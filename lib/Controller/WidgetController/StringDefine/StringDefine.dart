@@ -1,3 +1,10 @@
+/// New Update Available
+const String kIosAppVersion = "12";
+const String kExit = "Exit";
+const String kUpdateNow = "Update Now";
+const String kNewUpdateAvailable = "New Update Available";
+const String kAppStoreUrl = "https://apps.apple.com/in/app/pharmdel-business/id1608513104";
+const String kPlayStoreUrl = "https://play.google.com/store/apps/details?id=com.pharmdel_business";
 
 /// Common string's
 const String kTest = "Test";
@@ -60,6 +67,8 @@ const String strIMG_NewGIF = "assets/images/new.gif";
 const String strImgNewGif = "assets/images/new.gif";
 const String strGIF_processing = "assets/images/processing.gif";
 const String strGIF_LOADING = "assets/images/loading.gif";
+const String strGifProcessing = "assets/images/processing.gif";
+
 
 /// Toast Msg
 const String kStoragePermissionToast = "msg...";
@@ -98,6 +107,7 @@ const String kTotal = "Total";
 const String kOther = "Other";
 const String kPickedUp = "Picked Up";
 const String kUnpick = "Unpick";
+const String kProcessing = "Processing...";
 const String kDelivered = "Delivered";
 const String kReadDeliveryNotes = "Read Delivery Notes";
 const String kReadCustomerNotes = "Read Customer Note";
@@ -156,7 +166,7 @@ const String kDays = 'Days';
 
 
 ///Notificaiton Screen
-const String kMyNotifiaction = 'My Notification';
+const String kMyNotification = 'My Notification';
 const String kReceived = 'Received';
 const String kSent = 'Sent';
 const String kCreateNotification = 'Create Notification';
@@ -188,7 +198,6 @@ const String kSaveAndCreate = "Save and Create";
 const String kTakeSpdMtrPic = "take speedometer picture";
 const String kPlsEntStrmiles = 'Please enter start miles';
 const String kUploadingMsg = "Please wait\nWe are updating your offline deliveries.";
-const String kuploadingMsg1 = "Please wait\nWe are updating deliveries and ending route.";
 const String kInternetNotAvailable = "Seems like you have weak or no internet.\nPlease connect to internet first!";
 const String kPleaseCompleteManually = "Please complete manually";
 const String kStartroute = "Are you sure, you want to start route?";
@@ -373,6 +382,7 @@ const String kMyQrCode  = "My Qr Code";
 const String kOk  = "OK";
 const String kPleaseSelectPharmacy = "Please Select Pharmacy!!";
 const String kPleaseSelectRoute = "Please Select Route!!";
+const String kPleaseSelectEntRoute = "Please Select End Route";
 const String kYes  = "Yes";
 const String kDone  = "Done";
 const String kConfirm  = "Confirm";
@@ -387,6 +397,7 @@ const String kCompleted = "Completed";
 const String kQuickPin = "quickPin";
 const String kEnterSecurePin = "Enter Secure Pin";
 const String kForgotMPIN = "Forgot M-Pin?";
+const String kUseDifferentAccount = "Use different Account?";
 const String kusediffAcc = "Use different Account?";
 const String kFormatNotCorrect = "Format not correct!";
 const String kFailedToGetPlatformVersion = "Failed to get platform version.";
@@ -529,6 +540,7 @@ const String kSelectExemptions = "Please select any one exemptions";
 const String kPleaseChooseVehicleEnterStartMiles = "Please choose vehicle or Enter Start Miles";
 const String kTakeSpeedometerPicture = "Take Speedometer Picture";
 const String kFilterToastString = "Please select any option";
+const String kPleaseWriteSign = "Please write sign";
 const String kSelectOrderToastString = "Please select any order";
 const String kReviewToastString = "Please enter your comment";
 const String kChoosePlanToastString = "Please choose plan";

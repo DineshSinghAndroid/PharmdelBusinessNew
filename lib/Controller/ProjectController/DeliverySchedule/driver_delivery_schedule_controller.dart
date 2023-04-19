@@ -731,7 +731,7 @@ class DriverDeliveryScheduleController extends GetxController{
             if(result.data != null){
               Navigator.of(context).pop("created");
               if(drDashCtrl.isRouteStart){
-                await drDashCtrl.getDeliveriesWithRouteStart(context: context);
+                await drDashCtrl. getDeliveriesWithRouteStart(context: context);
               }else{
                 await drDashCtrl.driverDashboardApi(context: context);
               }

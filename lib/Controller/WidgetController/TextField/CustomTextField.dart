@@ -125,7 +125,6 @@ class TextFieldCustom extends StatefulWidget {
   bool? isCheckOut;
   bool? isAutoFocus;
   final String? Function(String?)? validator;
-
   TextFieldCustom(
       {Key? key,
         this.focusNode,
@@ -518,6 +517,112 @@ class TextFieldSimple extends StatelessWidget{
           ),
         ),
       ],
+    );
+  }
+
+}
+
+
+class CustomTextFieldRaiseQuery extends StatelessWidget{
+
+  Function(String)? onChanged;
+  TextInputAction? textInputAction;
+  TextEditingController? controller;
+  TextInputType? keyboardType;
+  FocusNode? focus;
+  Function()? onTap;
+  String? hintText;
+  int? maxLine;
+  Widget? prefixIcon;
+  Widget? suffixIcon;
+  bool? readOnly = false;
+  bool? autofocus = false;
+  bool? isWhiteBg;
+  bool? isCheckOut;
+  double? radiusField;
+  String? errorText;
+
+  CustomTextFieldRaiseQuery({
+    Key? key,
+    this.onChanged,
+    this.textInputAction,
+    this.controller,
+    this.keyboardType,
+    this.focus,
+    this.maxLine,
+    this.onTap,
+    this.hintText,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.readOnly,
+    this.autofocus,
+    this.isWhiteBg,
+    this.isCheckOut,
+    this.radiusField,
+    this.errorText,
+
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(width: 0.5,color: isWhiteBg == true ? AppColors.blackColor:AppColors.transparentColor),
+          borderRadius: BorderRadius.circular(5.0)
+      ),
+      child: TextField(
+        controller: controller,
+        textInputAction: textInputAction,
+        keyboardType: keyboardType,
+        style: TextStyle(color: AppColors.blackColor),
+        readOnly: readOnly ?? false,
+        autofocus: autofocus ?? false,
+        focusNode: focus,
+        onTap: onTap,
+        maxLines: maxLine ?? 6,
+        maxLength: 500,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintStyle: TextStyle(
+            color: AppColors.greyColorDark,
+            fontSize: 14,
+          ),
+          errorText: errorText,
+          counterText: "",
+          hintText: hintText,
+          suffixIcon: suffixIcon,
+          suffixIconColor: AppColors.blackColor,
+          prefixIcon: Padding(
+              padding: const EdgeInsets.only(right: 10, left: 10),
+              child: prefixIcon
+          ),
+          prefixIconConstraints: const BoxConstraints(),
+          prefixStyle: const TextStyle(height: 16,),
+          filled: true,
+          fillColor: isCheckOut == true ? Colors.transparent:AppColors.textFieldBorderColor.withOpacity(0.1),
+          border: InputBorder.none,
+          errorBorder: InputBorder.none,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: AppColors.textFieldActiveBorderColor,width: 1
+            ),
+            borderRadius: BorderRadius.circular(radiusField ?? 30),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(radiusField ?? 30),
+            borderSide: BorderSide(
+                color: errorText != null && errorText != "" ? AppColors.textFieldErrorBorderColor:AppColors.textFieldBorderColor,width: 1
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(radiusField ?? 30),
+            borderSide: BorderSide(
+                color: AppColors.textFieldErrorBorderColor,width: 1
+            ),
+          ),
+        ),
+      ),
     );
   }
 

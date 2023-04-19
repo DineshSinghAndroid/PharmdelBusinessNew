@@ -9,7 +9,8 @@ import '../../ApiController/WebConstant.dart';
 import '../../DB_Controller/MyDatabase.dart';
 import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
-import '../MainController/main_controller.dart';
+import '../../Helper/SentryExemption/sentry_exemption.dart';
+import '../DriverDashboard/driver_dashboard_ctrl.dart';
 
 
 class LocalDBController extends GetxController {
@@ -29,6 +30,7 @@ class LocalDBController extends GetxController {
   List<Exemptions> getExemptions = [];
 
   bool isAvlInternet = false;
+
 
 
   @override
@@ -81,6 +83,21 @@ class LocalDBController extends GetxController {
       return getExemptions;
   }
 
+  Future<bool?> isFoundOrderInCompleted({required String orderID})async{
+    bool? isAvl;
+    var completeAllList = await MyDatabase().getAllOrderCompleteData();
+    if (completeAllList != null && completeAllList.isNotEmpty) {
+      completeAllList.forEach((element2) {
+
+        var orderId = element2.deliveryId.split(",");
+        PrintLog.printLog("Found Completed Order Id DB: $orderId");
+        if (orderId != null && orderId.isNotEmpty) {
+          isAvl = orderId.any((element3) => element3.toString() == orderID.toString());
+        }
+      });
+    }
+    return isAvl;
+  }
 
   /// Save OutForDelivery List
   Future<void> saveOutForDeliverList({required List<DeliveryPojoModal> deliveryList})async {
@@ -89,16 +106,17 @@ class LocalDBController extends GetxController {
     try{
       await clearDeliveryTable();
       bool isFoundDataInCompleted = false;
-      var completeAllList = await MyDatabase().getAllOrderCompleteData();
+      // var completeAllList = await MyDatabase().getAllOrderCompleteData();
       await Future.forEach(deliveryList, (DeliveryPojoModal element) async {
-        if (completeAllList != null && completeAllList.isNotEmpty) {
-          completeAllList.forEach((element2) {
-            var orderId = element2.deliveryId.split(",");
-            if (orderId != null && orderId.isNotEmpty) {
-              isFoundDataInCompleted = orderId.any((element3) => element3.toString() == element.orderId.toString());
-            }
-          });
-        }
+        isFoundDataInCompleted = await isFoundOrderInCompleted(orderID: element.orderId.toString()) ?? false;
+        // if (completeAllList != null && completeAllList.isNotEmpty) {
+        //   completeAllList.forEach((element2) {
+        //     var orderId = element2.deliveryId.split(",");
+        //     if (orderId != null && orderId.isNotEmpty) {
+        //       isFoundDataInCompleted = orderId.any((element3) => element3.toString() == element.orderId.toString());
+        //     }
+        //   });
+        // }
 
         var delivery = await MyDatabase().getDeliveryDetails(int.parse(element.orderId.toString() ?? "0"));
         PrintLog.printLog("Delivery Data:$delivery");
@@ -145,7 +163,7 @@ class LocalDBController extends GetxController {
             pr_id: element.pr_id != null && element.pr_id != "null" && element.pr_id != "" ? element.pr_id ?? "": "",
           );
 
-          PrintLog.printLog("Add Delivery list Parm: $deliveryListObj");
+          // PrintLog.printLog("Add Delivery list Parm: $deliveryListObj");
           await MyDatabase().insertDeliveries(deliveryListObj!);
 
           customerDetailsObj = CustomerDetailsCompanion.insert(
@@ -193,7 +211,7 @@ class LocalDBController extends GetxController {
                   ? element.customerDetials?.customerAddress?.matchAddress ?? ""
                   : "",
               order_id: element.orderId != null ? int.parse(element.orderId.toString() ?? "") : 0);
-          PrintLog.printLog("Add Delivery Customer Address Parm: $customerAddressObj");
+          // PrintLog.printLog("Add Delivery Customer Address Parm: $customerAddressObj");
           await MyDatabase().insertCustomerAddress(customerAddressObj!);
 
         }
@@ -433,6 +451,8 @@ class LocalDBController extends GetxController {
         PrintLog.printLog("Found Completed Data in DB::::::::");
         isAvlInternet = await ConnectionValidator().check();
 
+
+
         if(isAvlInternet) {
           await Future.forEach(value, (element) async {
           await completeDataUpload(
@@ -518,15 +538,14 @@ class LocalDBController extends GetxController {
 
     String url = WebApiConstant.DELIVERY_SIGNATURE_UPLOAD_URL;
 
-      apiCtrl.completeDataUploadAPI(context: context,url: url,dictParameter: prams).then((response) async {
+     await apiCtrl.completeDataUploadAPI(context: context,url: url,dictParameter: prams).then((response) async {
 
         try {
           if (response != null) {
             if (response.data["status"].toString().toLowerCase() == "true") {
               changeLoadingValue(false);
               changeSuccessValue(true);
-              // await MyDatabase().deleteCompletedDeliveryByOrderId(deliveryId.toString());
-
+              await MyDatabase().deleteCompletedDeliveryByOrderId(deliveryId.join(","));
             }else{
               changeLoadingValue(false);
               changeSuccessValue(false);

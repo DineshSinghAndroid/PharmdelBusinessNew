@@ -14,10 +14,19 @@ class RedirectCustom{
 
   static LocationData? _locationData;
   static PermissionStatus? _permissionGranted;
-  static Location? _location;
+  // static Location? _location;
 
   static Future<void> makePhoneCall({required String phoneNumber}) async {
     var url = Uri.parse('tel:$phoneNumber');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  static Future<void> storeRedirect({required String urlString}) async {
+    var url = Uri.parse(urlString);
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
     } else {
@@ -38,9 +47,9 @@ class RedirectCustom{
     }
 
     if (_locationData == null) {
-      if (_permissionGranted == PermissionStatus.granted) {
-        _locationData = await _location?.getLocation();
-      }
+      // if (_permissionGranted == PermissionStatus.granted) {
+      //   _locationData = await _location?.getLocation();
+      // }
     }
 
     PrintLog.printLog("Current location latitude:${_locationData?.latitude}");

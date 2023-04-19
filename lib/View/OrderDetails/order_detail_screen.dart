@@ -12,8 +12,9 @@ import '../../Model/OrderDetails/detail_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
 
 class OrderDetailScreen extends StatefulWidget{
-  OrderDetailResponse orderDetail;
-  OrderDetailScreen({Key? key,required this.orderDetail}) : super(key: key);
+  OrderDetailResponse detailData;
+  bool isMultipleDeliveries;
+  OrderDetailScreen({Key? key,required this.detailData,required this.isMultipleDeliveries}) : super(key: key);
 
   @override
   State<OrderDetailScreen> createState() => _OrderDetailScreenScreenState();
@@ -25,7 +26,8 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
   @override
   void initState() {
-    orderCtrl.init(context: context,orderDetailResponse: widget.orderDetail);
+    orderCtrl.newOrderDetail = widget.detailData;
+    orderCtrl.init(context: context,orderDetailResponse: orderCtrl.newOrderDetail!,isMultipleDeliveries: widget.isMultipleDeliveries);
     super.initState();
   }
 
@@ -51,7 +53,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                   title: FittedBox(
                       child: Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: widget.orderDetail.nursingHomeId == null || widget.orderDetail.nursingHomeId == "0" || widget.orderDetail.nursingHomeId == "" ?
+                        child: controller.newOrderDetail?.nursingHomeId == null || controller.newOrderDetail?.nursingHomeId == "0" || controller.newOrderDetail?.nursingHomeId == "" ?
                         BuildText.buildText(
                             text: 
                             "$kOrderID : ${controller.orderIDs.isNotEmpty ? controller.orderIDs[0].toString() : ""}",
@@ -59,7 +61,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                         ):
                         BuildText.buildText(
                             text:
-                            "$kNursingHomeID : ${widget.orderDetail.nursingHomeId.toString() ?? ""}",
+                            "$kNursingHomeID : ${controller.newOrderDetail?.nursingHomeId.toString() ?? ""}",
                             size: 16
                         )
                       )),
@@ -103,7 +105,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
                                   const Spacer(),
 
-                                  if (widget.orderDetail.parcelName != null && widget.orderDetail.parcelName.toString().isNotEmpty && widget.orderDetail.deliveryStatusDesc.toString().toLowerCase() == kOutForDelivery.toLowerCase())
+                                  if (controller.newOrderDetail?.parcelName != null && controller.newOrderDetail!.parcelName.toString().isNotEmpty && controller.newOrderDetail?.deliveryStatusDesc.toString().toLowerCase() == kOutForDelivery.toLowerCase())
                                     Padding(
                                       padding: const EdgeInsets.only(left: 10.0, bottom: 5.0),
                                       child: Row(
@@ -114,7 +116,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                             child: Padding(
                                               padding: const EdgeInsets.only(left: 3.0, right: 3.0, top: 2.0, bottom: 2.0),
                                               child: BuildText.buildText(
-                                                  text: widget.orderDetail.parcelName.toString().length > 8 ? widget.orderDetail.parcelName.toString().substring(0, 8) : widget.orderDetail.parcelName ?? "",
+                                                  text: controller.newOrderDetail!.parcelName.toString().length > 8 ? controller.newOrderDetail!.parcelName.toString().substring(0, 8) : controller.newOrderDetail!.parcelName ?? "",
                                                 size: 10,color: AppColors.pickedUp
                                               )
                                             ),
@@ -131,7 +133,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                 padding: const EdgeInsets.only(left: 28.0),
                                 child: FittedBox(
                                   child: BuildText.buildText(
-                                      text: widget.orderDetail.customer?.fullName ?? "",
+                                      text: controller.newOrderDetail?.customer?.fullName ?? "",
                                       weight: FontWeight.bold
                                   )
                                 ),
@@ -146,12 +148,12 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
                                     Expanded(
                                       flex: 8,
-                                      child: BuildText.buildText( text: widget.orderDetail.customer?.fullAddress ?? "",)
+                                      child: BuildText.buildText( text: controller.newOrderDetail?.customer?.fullAddress ?? "",)
                                     ),
                                     buildSizeBox(5.0, 0.0),
 
                                     Visibility(
-                                        visible: widget.orderDetail.customer?.altAddress.toString().toLowerCase() == "t",
+                                        visible: controller.newOrderDetail?.customer?.altAddress.toString().toLowerCase() == "t",
                                           child: Image.asset(strImgAltAdd,height: 18,width: 18)
                                       ),
                                     buildSizeBox(0.0, 5.0),
@@ -162,10 +164,10 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                       child: InkWell(
                                         onTap: () async {
 
-                                          if (widget.orderDetail.customer?.latitude != null) {
-                                            MapsLauncher.launchQuery(widget.orderDetail.customer?.fullAddress ?? widget.orderDetail.customer?.fullAddress ?? "");
-                                          } else if (widget.orderDetail.customer?.address != null) {
-                                            MapsLauncher.launchQuery(widget.orderDetail.customer?.fullAddress ?? widget.orderDetail.customer?.fullAddress ?? "");
+                                          if (controller.newOrderDetail?.customer?.latitude != null) {
+                                            MapsLauncher.launchQuery(controller.newOrderDetail?.customer?.fullAddress ?? controller.newOrderDetail?.customer?.fullAddress ?? "");
+                                          } else if (controller.newOrderDetail?.customer?.address != null) {
+                                            MapsLauncher.launchQuery(controller.newOrderDetail?.customer?.fullAddress ?? controller.newOrderDetail?.customer?.fullAddress ?? "");
                                           } else {
                                             ToastCustom.showToast(msg: "Address not found");
                                           }
@@ -181,7 +183,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
                               /// Mobile Number
                               Visibility(
-                                visible: widget.orderDetail.customer?.mobile != null && widget.orderDetail.customer!.mobile!.isNotEmpty && widget.orderDetail.customer?.mobile != "" && widget.orderDetail.customer?.mobile != "null",
+                                visible: controller.newOrderDetail?.customer?.mobile != null && controller.newOrderDetail!.customer!.mobile!.isNotEmpty && controller.newOrderDetail?.customer?.mobile != "" && controller.newOrderDetail?.customer?.mobile != "null",
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -192,7 +194,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                           Padding(
                                             padding: const EdgeInsets.only(left: 30.0),
                                             child: BuildText.buildText(
-                                                text: widget.orderDetail.customer?.mobile ?? "",
+                                                text: controller.newOrderDetail?.customer?.mobile ?? "",
                                               textAlign: TextAlign.left
                                             )
                                           ),
@@ -211,7 +213,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                           /// Redirect
                                           InkWell(
                                               onTap: () {
-                                                RedirectCustom.makePhoneCall(phoneNumber: widget.orderDetail.customer?.mobile ?? "");
+                                                RedirectCustom.makePhoneCall(phoneNumber: controller.newOrderDetail?.customer?.mobile ?? "");
                                               },
                                               child: CircleAvatar(
                                                   backgroundColor: AppColors.greenColor,
@@ -583,7 +585,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
 
-                      widget.orderDetail.nursingHomeId == null || widget.orderDetail.nursingHomeId == "0" || widget.orderDetail.nursingHomeId == "" ?
+                      controller.newOrderDetail?.nursingHomeId == null || controller.newOrderDetail?.nursingHomeId == "0" || controller.newOrderDetail?.nursingHomeId == "" ?
                       Visibility(
                             visible: controller.selectedDeliveryStatus == "PickedUp" && controller.driverDasCTRL.parcelBoxList != null && controller.driverDasCTRL.parcelBoxList!.isNotEmpty,
                             child: Padding(
@@ -655,9 +657,9 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
 
 
-                            if (widget.orderDetail.nursingHomeId == null || widget.orderDetail.nursingHomeId == "0" || widget.orderDetail.nursingHomeId == "")
+                            if (controller.newOrderDetail?.nursingHomeId == null || controller.newOrderDetail?.nursingHomeId == "0" || controller.newOrderDetail?.nursingHomeId == "")
                               if (controller.selectedStatusCode == 5)
-                                if (widget.orderDetail.customer?.mobile == null || widget.orderDetail.customer!.mobile!.isEmpty )
+                                if (controller.newOrderDetail?.customer?.mobile == null || controller.newOrderDetail!.customer!.mobile!.isEmpty )
 
                                     Visibility(
                                       visible: controller.selectedDeliveryStatus.toLowerCase() != kFailed.toLowerCase(),
@@ -708,7 +710,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                           readOnly: true,
                                           inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))],
                                           onChanged: (val) {
-                                            controller.calculateAmount(orderDetailResponse: widget.orderDetail);
+                                            controller.calculateAmount(orderDetailResponse: controller.newOrderDetail!);
                                           },
                                           labelText: kDeliveryCharge,
                                          outlineBorderColor: AppColors.blueColor,
@@ -733,9 +735,9 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                         readOnly: true,
                                         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                                         onChanged: (val) {
-                                          controller.calculateAmount(orderDetailResponse: widget.orderDetail);
+                                          controller.calculateAmount(orderDetailResponse: controller.newOrderDetail!);
                                         },
-                                        prefix: Text("${controller.charge == 0.0 || controller.charge.toStringAsFixed(0) == "0" ? widget.orderDetail.rxCharge : controller.charge} x "),
+                                        prefix: Text("${controller.charge == 0.0 || controller.charge.toStringAsFixed(0) == "0" ? controller.newOrderDetail?.rxCharge : controller.charge} x "),
                                         labelText: kRxCharge,
                                         outlineBorderColor: AppColors.greenColor,
                                       ),
@@ -799,7 +801,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                       /// Read Delivery or Customer Notes
                       Row(
                         children: <Widget>[
-                          (widget.orderDetail.deliveryNote == "false" || widget.orderDetail.deliveryNote == "f" || widget.orderDetail.deliveryNote == '') && (widget.orderDetail.exitingNote == "false" || widget.orderDetail.exitingNote == "f" || widget.orderDetail.exitingNote == null ||widget.orderDetail.exitingNote =='' )
+                          (controller.newOrderDetail?.deliveryNote == "false" || controller.newOrderDetail?.deliveryNote == "f" || controller.newOrderDetail?.deliveryNote == '') && (controller.newOrderDetail?.exitingNote == "false" || controller.newOrderDetail?.exitingNote == "f" || controller.newOrderDetail?.exitingNote == null ||controller.newOrderDetail?.exitingNote =='' )
                               ? Container(height: 1,width: 1,color: Colors.red,)
                               : Padding(
                                 padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 5, bottom: 10),
@@ -846,7 +848,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                 // ),
                               ),
 
-                          widget.orderDetail.customer?.customerNote == null || widget.orderDetail.customer?.customerNote == "" || widget.orderDetail.customer?.customerNote == "false" || widget.orderDetail.customer?.customerNote == "f"
+                          controller.newOrderDetail?.customer?.customerNote == null || controller.newOrderDetail?.customer?.customerNote == "" || controller.newOrderDetail?.customer?.customerNote == "false" || controller.newOrderDetail?.customer?.customerNote == "f"
                               ? const SizedBox.shrink()
                               : Flexible(
                                 flex: 1,
@@ -887,7 +889,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          widget.orderDetail.isStorageFridge == null || widget.orderDetail.isStorageFridge == false ?
+                          controller.newOrderDetail?.isStorageFridge == null || controller.newOrderDetail?.isStorageFridge == false ?
                               const SizedBox.shrink()
                           : Flexible(
                              flex: 1,
@@ -901,12 +903,12 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                            controller.isFridgeNote = !controller.isFridgeNote;
                                          });
                                      },
-                                   title: "${widget.orderDetail.totalStorageFridge != null && widget.orderDetail.totalStorageFridge != "0" ? widget.orderDetail.totalStorageFridge : ""} Fridge",
+                                   title: "${controller.newOrderDetail?.totalStorageFridge != null && controller.newOrderDetail?.totalStorageFridge != "0" ? controller.newOrderDetail?.totalStorageFridge : ""} Fridge",
                                  ),
                              ),
                            ),
 
-                          widget.orderDetail.isControlledDrugs == null || widget.orderDetail.isControlledDrugs == false ?
+                          controller.newOrderDetail?.isControlledDrugs == null || controller.newOrderDetail?.isControlledDrugs == false ?
                           const SizedBox.shrink()
                               :  Flexible(
                                 flex: 1,
@@ -920,12 +922,12 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                         controller.isControlledDrugs = !controller.isControlledDrugs;
                                       });
                                     },
-                                    title: "${widget.orderDetail.totalControlledDrugs != null && widget.orderDetail.totalControlledDrugs != "0" ? widget.orderDetail.totalControlledDrugs : ""} Controlled Drugs",
+                                    title: "${controller.newOrderDetail?.totalControlledDrugs != null && controller.newOrderDetail?.totalControlledDrugs != "0" ? controller.newOrderDetail?.totalControlledDrugs : ""} Controlled Drugs",
                                   ),
                                 ),
                               ),
 
-                          widget.orderDetail.customer?.controlNote == null || widget.orderDetail.customer?.controlNote == false ?
+                          controller.newOrderDetail?.customer?.controlNote == null || controller.newOrderDetail?.customer?.controlNote == false ?
                           const SizedBox.shrink()
                               : Flexible(
                                   flex: 1,
@@ -951,12 +953,12 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
                       /// Show exempt bottom sheet or Bag size
                         Visibility(
-                          visible: widget.orderDetail.nursingHomeId == null || widget.orderDetail.nursingHomeId == "0" || widget.orderDetail.nursingHomeId == "",
+                          visible: controller.newOrderDetail?.nursingHomeId == null || controller.newOrderDetail?.nursingHomeId == "0" || controller.newOrderDetail?.nursingHomeId == "",
                           child: Row(
                             children: [
 
                                 Visibility(
-                                  visible: widget.orderDetail.exemption != null && widget.orderDetail.exemption!.isNotEmpty,
+                                  visible: controller.newOrderDetail?.exemption != null && controller.newOrderDetail!.exemption!.isNotEmpty,
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: Container(
@@ -989,13 +991,13 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
                                             /// Show exempt bottom sheet
                                             Visibility(
-                                              visible: controller.selectedDeliveryStatus.toLowerCase() == kCompleted.toLowerCase() && widget.orderDetail.exemptions.isNotEmpty,
+                                              visible: controller.selectedDeliveryStatus.toLowerCase() == kCompleted.toLowerCase() && controller.newOrderDetail!.exemptions.isNotEmpty,
                                               child: InkWell(
                                                 onTap: () {
                                                   BottomSheetCustom.showSelectExemptBottomSheet(
                                                       controller: controller,
                                                       context: context,
-                                                      orderDetail: widget.orderDetail,
+                                                      orderDetail: controller.newOrderDetail!,
                                                     onValue: (value){
                                                         if(value != null) {
                                                           setState(() {
@@ -1017,7 +1019,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
 
                                 /// Bag size
                                 Visibility(
-                                  visible: widget.orderDetail.bagSize != null && widget.orderDetail.bagSize!.isNotEmpty,
+                                  visible: controller.newOrderDetail?.bagSize != null && controller.newOrderDetail!.bagSize!.isNotEmpty,
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: Container(
@@ -1030,7 +1032,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                                       child: Row(
                                         children: [
                                           BuildText.buildText(
-                                              text: "Bag Size : ${widget.orderDetail.bagSize}",
+                                              text: "Bag Size : ${controller.newOrderDetail?.bagSize}",
                                             color: AppColors.whiteColor
                                           )
                                         ],
@@ -1042,7 +1044,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
 
-                      if (widget.orderDetail.nursingHomeId == null || widget.orderDetail.nursingHomeId == "0" || widget.orderDetail.nursingHomeId == "")
+                      if (controller.newOrderDetail?.nursingHomeId == null || controller.newOrderDetail?.nursingHomeId == "0" || controller.newOrderDetail?.nursingHomeId == "")
                         if (controller.selectedDeliveryStatus == "Completed")
                           (controller.deliveryChargeController.text.isEmpty || controller.deliveryChargeController.text == '0' || controller.deliveryChargeController.text == '0.0') && (controller.preChargeController.text.isEmpty || controller.preChargeController.text == '0' || controller.preChargeController.text == '0.0') ?
                           const SizedBox.shrink()
@@ -1129,7 +1131,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                           ),
                         ),
 
-                      if (widget.orderDetail.nursingHomeId == null || widget.orderDetail.nursingHomeId == "0" || widget.orderDetail.nursingHomeId == "")
+                      if (controller.newOrderDetail?.nursingHomeId == null || controller.newOrderDetail?.nursingHomeId == "0" || controller.newOrderDetail?.nursingHomeId == "")
                         /// Multi order id's
                           Visibility(
                             visible: controller.orderIDs.length > 1,
@@ -1180,7 +1182,7 @@ class _OrderDetailScreenScreenState extends State<OrderDetailScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                               ),
-                              onPressed: () => controller.onTapUpdateStatus(context: context,orderDetailResponse: widget.orderDetail),
+                              onPressed: () => controller.onTapUpdateStatus(context: context,orderDetailResponse: controller.newOrderDetail!),
                               child: BuildText.buildText(
                                   text: kUpdateStatus,color: AppColors.whiteColor
                               )

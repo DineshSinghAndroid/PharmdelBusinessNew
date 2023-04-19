@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as G;
 import 'package:pharmdel/Model/DriverDashboard/driver_dashboard_response.dart';
-import 'package:pharmdel/Model/NotificationCount/notificationCountResponse.dart';
+import 'package:pharmdel/Model/NotificationCount/notification_count_response.dart';
 
 import '../../Model/AllDelivery/allDeliveryApiResponse.dart';
-import '../../Model/CreateNotification/createNotificationResponse.dart';
+import '../../Model/Notification/create_notification_response.dart';
 import '../../Model/CreateOrder/driver_create_order_response.dart';
 import '../../Model/CreatePatientModel/create_patient_model.dart';
 import '../../Model/CreatePatientModel/driver_create_patient_response.dart';
@@ -20,8 +22,8 @@ import '../../Model/ForgotPassword/forgotPasswordResponse.dart';
 import '../../Model/GetDeliveryMasterData/get_delivery_master_data.dart';
 import '../../Model/GetPatient/getPatientApiResponse.dart';
 import '../../Model/Login/login_model.dart';
-import '../../Model/LunchBreak/lunchBreakResponse.dart';
-import '../../Model/Notification/NotifficationResponse.dart';
+import '../../Model/LunchBreak/lunch_break_response.dart';
+import '../../Model/Notification/notiffication_response.dart';
 import '../../Model/OrderDetails/detail_response.dart';
 import '../../Model/ParcelBox/parcel_box_response.dart';
 import '../../Model/PharmacyModels/P_CreateOrderApiResponse/p_createOrderResponse.dart';
@@ -268,15 +270,13 @@ class ApiController {
   }
 
   ///Notification Api
-  Future<NotificationApiResponse?> getNotificaitonApi({context, required String url, dictParameter, String? token}) async {
+  Future<NotificationApiResponse?> getNotificationApi({context, required String url, dictParameter, String? token}) async {
     NotificationApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestGetForApi(context: context, url: url, dictParameter: dictParameter, token: token);
         if (response?.data != null && response?.statusCode == 200) {
           result = NotificationApiResponse.fromJson(response?.data);
-          return result;
-        } else {
           return result;
         }
       } catch (e) {
@@ -914,16 +914,13 @@ class ApiController {
     return null;
   }
 ///Create Driver new notification
-  Future driverCreateNotification({context, required String url, dictParameter, String? token}) async {
-    var result;
+  Future<CreateNotificationApiResponse?> driverCreateNotification({context, required String url, dictParameter, String? token}) async {
+    CreateNotificationApiResponse? result;
     if (await ConnectionValidator().check()) {
       try {
         final response = await requestPostForApi(context: context, url: url, dictParameter: dictParameter, token: authToken);
         if (response?.data != null && response?.statusCode == 200) {
           result = CreateNotificationApiResponse.fromJson(response?.data);
-          return result;
-
-        } else {
           return result;
         }
       } catch (e) {
@@ -1320,7 +1317,16 @@ class ApiController {
   /// End Route Api
   Future<Response?> completeDataUploadAPI({required context, String? url, dictParameter}) async {
     try {
-      Map<String, String> headers = {"Content-type": "application/json", "Authorization": "Bearer $authToken", "Connection": "Keep-Alive", "Keep-Alive": "timeout=5, max=1000"};
+      Map<String, String> headers = {
+        'Accept': 'application/json',
+        "Content-type": "application/json",
+        "Authorization": "Bearer $authToken",
+        "Connection": "Keep-Alive",
+        "Keep-Alive": "timeout=5, max=1000"
+      };
+      FormData formData = FormData.fromMap({
+        "Model":json.encode(dictParameter),
+      });
 
       PrintLog.printLog("Headers: $headers");
       PrintLog.printLog("Url:  $url");
@@ -1330,8 +1336,8 @@ class ApiController {
       BaseOptions options = BaseOptions(baseUrl: WebApiConstant.BASE_URL, receiveTimeout: const Duration(minutes: 1), connectTimeout: const Duration(minutes: 1), headers: headers);
 
       _dio.options = options;
-      Response response = await _dio.post(url!,
-          data: dictParameter,
+      Response response = await _dio.post(url ?? "",
+          data: formData,
           options: Options(
             followRedirects: false,
             validateStatus: (status) => true,

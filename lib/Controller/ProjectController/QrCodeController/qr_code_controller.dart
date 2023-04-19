@@ -6,7 +6,7 @@ import 'package:pharmdel/Controller/ProjectController/MainController/import_cont
 import 'package:pharmdel/Controller/ProjectController/QrCodeController/qr_response.dart';
 import 'package:pharmdel/Controller/WidgetController/StringDefine/StringDefine.dart';
 import 'package:xml2json/xml2json.dart';
-
+import '../../Helper/SentryExemption/sentry_exemption.dart';
 import '../../../Model/CreateOrder/driver_create_order_response.dart';
 import '../../../Model/ProcessScan/driver_process_scan_response.dart';
 import '../../../View/DeliverySchedule/delivery_schedule_screen.dart';

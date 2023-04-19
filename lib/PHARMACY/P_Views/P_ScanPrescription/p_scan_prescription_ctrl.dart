@@ -21,7 +21,7 @@ class ScanPrescriptionController extends GetxController{
   PmrApiResponse? pmrData;
   OrderInfo? orderInfo;
 
-  Location location =  Location();
+  // Location location =  Location();
   var barcodeScanRes;
   String qrType = "";
   double? startLat;

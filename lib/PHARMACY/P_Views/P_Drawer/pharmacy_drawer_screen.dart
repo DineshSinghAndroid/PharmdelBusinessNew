@@ -207,7 +207,7 @@ void initState() {
                     Get.toNamed(driverCreatePatientScreenRoute,arguments: DriverCreatePatientScreen(isScanPrescription: false));
                   }),
                   const Divider(),
-                  PharmacyDrawerTile(text: kMyNotifiaction, ontap: () {
+                  PharmacyDrawerTile(text: kMyNotification, ontap: () {
                     Get.toNamed(pharmacyNotificationScreenRoute);
                   }),
                   const Divider(),

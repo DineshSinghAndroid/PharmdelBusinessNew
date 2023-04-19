@@ -13,6 +13,7 @@ import '../../Helper/TimeChecker/timer_checker.dart';
 import '../../WidgetController/Popup/popup.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../MainController/main_controller.dart';
+import '../../Helper/SentryExemption/sentry_exemption.dart';
 
 
 class MapScreenController extends GetxController{

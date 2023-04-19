@@ -211,45 +211,78 @@ class _StartRoutePopUpState extends State<StartRoutePopUp> {
                                           if (driverType.toLowerCase() == kSharedDriver.toLowerCase())
                                             Padding(
                                               padding: const EdgeInsets.only(top: 5,bottom: 5),
-                                              child: Container(
-                                                decoration: BoxDecoration(color:AppColors.whiteColor,
-                                                    border: Border.all(color: Colors.grey.withOpacity(0.7)),
-                                                    borderRadius: BorderRadius.circular(50.0)),
-                                                child: Padding(
-                                                    padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                                                    child: DropdownButtonHideUnderline(
-                                                      child: DropdownButton<PharmacyList>(
-                                                        isExpanded: true,
-                                                        value: controller.selectedStartRoutePharmacy,
-                                                        icon: const Icon(Icons.arrow_drop_down),
-                                                        iconSize: 24,
-                                                        elevation: 16,
-                                                        hint: BuildText.buildText(text: kSelectPhar,color: AppColors.greyColor),
-                                                        style: TextStyle(color: AppColors.blackColor),
-                                                        underline: Container(
-                                                          height: 2,
-                                                          color: AppColors.blackColor,
-                                                        ),
-                                                        onChanged: (PharmacyList? newValue) {
+                                              child: Stack(
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(color:AppColors.whiteColor,
+                                                        border: Border.all(color: Colors.grey.withOpacity(0.7)),
+                                                        borderRadius: BorderRadius.circular(50.0)),
+                                                    child: Padding(
+                                                        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                                                        child: DropdownButtonHideUnderline(
+                                                          child: DropdownButton<PharmacyList>(
+                                                            isExpanded: true,
+                                                            value: controller.selectedStartRoutePharmacy,
+                                                            icon: const Icon(Icons.arrow_drop_down),
+                                                            iconSize: 24,
+                                                            elevation: 16,
+                                                            hint: BuildText.buildText(text: kSelectPhar,color: AppColors.greyColor),
+                                                            style: TextStyle(color: AppColors.blackColor),
+                                                            underline: Container(
+                                                              height: 2,
+                                                              color: AppColors.blackColor,
+                                                            ),
+                                                            onChanged: (PharmacyList? newValue) {
+                                                              setState(() {
+                                                                controller.selectedStartRoutePharmacy = newValue;
+                                                                if(controller.selectedPharmacy == null){
+                                                                  controller.selectedPharmacy = newValue;
+                                                                }
+                                                                if (newValue?.pharmacyId == "0") {
+                                                                  showEndRouteOptions = true;
+                                                                } else {
+                                                                  showEndRouteOptions = false;
+                                                                }
+                                                              });
+                                                            },
+                                                            items: controller.pharmacyList?.map<DropdownMenuItem<PharmacyList>>((PharmacyList value) {
+                                                              return DropdownMenuItem<PharmacyList>(
+                                                                  value: value,
+                                                                  child: BuildText.buildText(
+                                                                      text: value.pharmacyName ?? "",color: AppColors.blackColor
+                                                                  )
+                                                              );
+                                                            }).toList(),
+                                                          ),
+                                                        )),
+                                                  ),
+                                                  Visibility(
+                                                    visible: controller.selectedStartRoutePharmacy != null,
+                                                    child: Positioned(
+                                                      right: 5,
+                                                      top: 2,
+                                                      bottom: 2,
+                                                      child: InkWell(
+                                                        onTap: (){
                                                           setState(() {
-                                                            controller.selectedStartRoutePharmacy = newValue;
-                                                            if (newValue?.pharmacyId == "0") {
-                                                              showEndRouteOptions = true;
-                                                            } else {
-                                                              showEndRouteOptions = false;
-                                                            }
+                                                            controller.selectedStartRoutePharmacy = null;
+                                                            showEndRouteOptions = true;
                                                           });
                                                         },
-                                                        items: controller.pharmacyList?.map<DropdownMenuItem<PharmacyList>>((PharmacyList value) {
-                                                          return DropdownMenuItem<PharmacyList>(
-                                                              value: value,
-                                                              child: BuildText.buildText(
-                                                                  text: value.pharmacyName ?? "",color: AppColors.blackColor
-                                                              )
-                                                          );
-                                                        }).toList(),
+                                                        child: Container(
+                                                          height: 40,
+                                                          width: 40,
+                                                          decoration: BoxDecoration(
+                                                            color: AppColors.whiteColor,
+                                                            border: Border.all(width: 1,color: AppColors.greyColor),
+                                                            shape: BoxShape.circle
+                                                          ),
+                                                          child: Icon(Icons.clear,color: AppColors.greyColor,),
+                                                        ),
                                                       ),
-                                                    )),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ),
 
@@ -288,9 +321,12 @@ class _StartRoutePopUpState extends State<StartRoutePopUp> {
                                                         onChanged: (PharmacyList? newValue) {
                                                           setState(() {
                                                             controller.selectedEndRoutePharmacy = newValue;
+                                                            if(controller.selectedPharmacy == null && newValue?.pharmacyId != "0"){
+                                                              controller.selectedPharmacy = newValue;
+                                                            }
                                                           });
                                                         },
-                                                        items: controller.pharmacyList?.map<DropdownMenuItem<PharmacyList>>((PharmacyList value) {
+                                                        items: controller.endRoutePharmacyList.map<DropdownMenuItem<PharmacyList>>((PharmacyList value) {
                                                           return DropdownMenuItem<PharmacyList>(
                                                               value: value,
                                                               child: BuildText.buildText(
@@ -356,7 +392,8 @@ class _StartRoutePopUpState extends State<StartRoutePopUp> {
                                                 ),
 
                                                 onPressed: () async {
-                                                  PrintLog.printLog("Clicked on Continue::::::");
+                                                  try{
+                                                  PrintLog.printLog("Clicked on Continue::::::$isAddressUpdated");
 
                                                   if (driverType.toLowerCase() == kDedicatedDriver.toLowerCase()) {
                                                     PrintLog.printLog("Clicked on Continue::::::111");
@@ -364,7 +401,9 @@ class _StartRoutePopUpState extends State<StartRoutePopUp> {
                                                     if(!isAddressUpdated && endRouteId == 2 ){
                                                       Get.back();
                                                       Get.toNamed(updateAddressScreenRoute,arguments: UpdateAddressScreen(
-                                                        address1: "",address2: "",postCode: "",townName: "",userType: "",driverName: "",
+                                                        address1: "",address2: "",postCode: "",townName: "",
+                                                        userType: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType),
+                                                        driverName: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userName),
                                                       )
                                                       );
                                                     }else{
@@ -373,106 +412,47 @@ class _StartRoutePopUpState extends State<StartRoutePopUp> {
                                                       data.startRouteID = startRouteId.toString();
                                                       data.endRouteID = endRouteId.toString();
                                                       Navigator.of(context).pop(data);
-
-                                                      // await controller.startRoutesApi(
-                                                      //     context: context,
-                                                      //   startRouteId: startRouteId.toString(),
-                                                      //   endRouteId: endRouteId.toString(),
-                                                      // ).then((value) async {
-                                                      //   if(controller.isSuccess == true){
-                                                      //     Navigator.of(context).pop(true);
-                                                      //     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startRouteId, variableValue: startRouteId.toString());
-                                                      //       await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.endRouteId, variableValue: endRouteId.toString());
-                                                      //   }
-                                                      // });
                                                     }
                                                   }else{
-                                                    if(int.parse(controller.selectedStartRoutePharmacy?.pharmacyId.toString() ?? "0.0") > 0){
-                                                      startRouteId = 3;
+                                                    if(int.parse(controller.selectedStartRoutePharmacy?.pharmacyId ?? "0") > 0){
+
+                                                      endRouteId = 3;
                                                       StartOrEndRouteID data = StartOrEndRouteID();
                                                       data.startRouteID = startRouteId.toString();
                                                       data.endRouteID = endRouteId.toString();
                                                       Navigator.of(context).pop(data);
-                                                      // await controller.startRoutesApi(
-                                                      //   context: context,
-                                                      //   startRouteId: startRouteId.toString(),
-                                                      //   endRouteId: endRouteId.toString(),
-                                                      //   pharmacyID: controller.selectedStartRoutePharmacy?.pharmacyId,
-                                                      // ).then((value) async {
-                                                      //   if(controller.isSuccess == true){
-                                                      //     Navigator.of(context).pop(true);
-                                                      //     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startRouteId, variableValue: startRouteId.toString());
-                                                      //     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.endRouteId, variableValue: endRouteId.toString());
-                                                      //   }
-                                                      // });
+
+                                                    }else if(controller.selectedEndRoutePharmacy == null){
+                                                      ToastCustom.showToast(msg: kPleaseSelectEntRoute);
                                                     }else{
-                                                      if(int.parse(controller.selectedEndRoutePharmacy?.pharmacyId.toString() ?? "0.0") > 0){
-                                                        endRouteId = 4;
+
+                                                      if (isAddressUpdated || int.parse(controller.selectedEndRoutePharmacy?.pharmacyId ?? "0") > 0) {
+                                                        if (int.parse(controller.selectedEndRoutePharmacy?.pharmacyId ?? "0") > 0) {
+                                                          endRouteId = 4;
+                                                        } else {
+                                                          endRouteId = 2;
+                                                        }
+
+                                                        StartOrEndRouteID data = StartOrEndRouteID();
+                                                        data.startRouteID = startRouteId.toString();
+                                                        data.endRouteID = endRouteId.toString();
+                                                        Navigator.of(context).pop(data);
                                                       } else {
-                                                        endRouteId = 2;
+                                                        Get.back();
+                                                        Get.toNamed(updateAddressScreenRoute,arguments: UpdateAddressScreen(
+                                                          address1: "",address2: "",postCode: "",townName: "",
+                                                          userType: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType),
+                                                          driverName: AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userName),
+                                                        )
+                                                        );
                                                       }
-
-                                                      StartOrEndRouteID data = StartOrEndRouteID();
-                                                      data.startRouteID = startRouteId.toString();
-                                                      data.endRouteID = endRouteId.toString();
-                                                      Navigator.of(context).pop(data);
-
-                                                      // await controller.startRoutesApi(
-                                                      //   context: context,
-                                                      //   startRouteId: startRouteId.toString(),
-                                                      //   endRouteId: endRouteId.toString(),
-                                                      //   pharmacyID: controller.selectedEndRoutePharmacy?.pharmacyId,
-                                                      // ).then((value) async {
-                                                      //   if(controller.isSuccess == true){
-                                                      //     Navigator.of(context).pop(true);
-                                                      //     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.startRouteId, variableValue: startRouteId.toString());
-                                                      //     await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.endRouteId, variableValue: endRouteId.toString());
-                                                      //   }
-                                                      // });
                                                     }
                                                   }
 
-                                                  // if (driverType.toLowerCase() == kDedicatedDriver.toLowerCase()) {
-                                                  //   if (endId > 0) {
-                                                  //     Navigator.of(context).pop(true);
-                                                  //     if (isAddressUpdated || endId == 1) {
-                                                  //       await controller.startRoutesApi(context: context);
-                                                  //
-                                                  //       await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.end_route_at, variableValue: endType.toString());
-                                                  //       await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.start_route_from, variableValue: startGroupId.toString());
-                                                  //       endId = 0;
-                                                  //       isSelectAtLeastOneEndRouteMessage = false;
-                                                  //     } else {
-                                                  //       Navigator.push(
-                                                  //           context, MaterialPageRoute(builder: (context) => UpdateAddressScreen(address1: "",address2: "",postCode: "",townName: "",))
-                                                  //       );
-                                                  //     }
-                                                  //   } else {
-                                                  //     isSelectAtLeastOneEndRouteMessage = true;
-                                                  //     setState(() {});
-                                                  //   }
-                                                  // }
-                                                  ///
-                                                  // else {
-                                                  //   Navigator.of(context).pop(true);
-                                                  //   if (int.parse(controller.startPharmacyListDropDown?.pharmacyId.toString() ?? "") > 0) {
-                                                  //     endType = 3;
-                                                  //     await controller.startRoutesApi(context: context);
-                                                  //   } else {
-                                                  //     if (isAddressUpdated || int.parse(controller.endRoutePharmacyListDropDown?.pharmacyId.toString() ?? "") > 0) {
-                                                  //       if (int.parse(controller.endRoutePharmacyListDropDown?.pharmacyId.toString() ?? "") > 0) {
-                                                  //         endType = 4;
-                                                  //       } else {
-                                                  //         endType = 2;
-                                                  //       }
-                                                  //       await controller.startRoutesApi(context: context);
-                                                  //     } else {
-                                                  //       Navigator.push(
-                                                  //           context, MaterialPageRoute(builder: (context) => UpdateAddressScreen(address1: "",address2: "",postCode: "",townName: "",))
-                                                  //       );
-                                                  //     }
-                                                  //   }
-                                                  // }
+                                                  }catch(e){
+                                                    PrintLog.printLog("On Tap Error....$e");
+
+                                                  }
                                                 },
                                               )),
                                         ],

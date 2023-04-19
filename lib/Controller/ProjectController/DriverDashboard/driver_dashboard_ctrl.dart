@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +15,6 @@ import 'package:pharmdel/Controller/Helper/TextController/BuildText/BuildText.da
 import 'package:pharmdel/Controller/Helper/TimeChecker/timer_checker.dart';
 import 'package:pharmdel/View/CreatePatientScreen.dart/createPatientScreen.dart';
 import 'package:pharmdel/View/OrderDetails/order_detail_screen.dart';
-import 'package:pharmdel/View/SearchPatient/search_patient.dart';
 import 'package:xml2json/xml2json.dart';
 import '../../../Model/DriverDashboard/driver_dashboard_response.dart';
 import '../../../Model/DriverDashboard/get_pharmacy_info_response.dart';
@@ -22,13 +23,14 @@ import '../../../Model/DriverDashboard/update_storage_or_cd_response.dart';
 import '../../../Model/DriverRoutes/get_route_list_response.dart';
 import '../../../Model/Enum/enum.dart';
 import '../../../Model/GetDeliveryMasterData/get_delivery_master_data.dart';
-import '../../../Model/NotificationCount/notificationCountResponse.dart';
+import '../../../Model/NotificationCount/notification_count_response.dart';
 import '../../../Model/OrderDetails/detail_response.dart';
 import '../../../Model/ParcelBox/parcel_box_response.dart';
 import '../../../Model/PharmacyModels/P_GetDriverListModel/P_GetDriverListModel.dart';
 import '../../../Model/VehicleList/vehicleListResponse.dart';
 import '../../../View/DashBoard/DriverDashboard/start_route_popup_screen.dart';
 import '../../../View/MapScreen/map_screen.dart';
+import '../../../View/SearchPatient/search_patient.dart';
 import '../../../main.dart';
 import '../../ApiController/ApiController.dart';
 import '../../ApiController/WebConstant.dart';
@@ -37,10 +39,11 @@ import '../../Helper/ConnectionValidator/ConnectionValidator.dart';
 import '../../Helper/ConnectionValidator/internet_check_return.dart';
 import '../../Helper/Permission/PermissionHandler.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../Helper/Redirect/redirect.dart';
 import '../../Helper/Shared Preferences/SharedPreferences.dart';
 import '../../RouteController/RouteNames.dart';
 import '../../StopWatchController/stop_watch_controller.dart';
-import '../../WidgetController/AdditionalWidget/Default Functions/defaultFunctions.dart';
+import '../../WidgetController/AppUpdatePopUp/app_update_popup.dart';
 import '../../WidgetController/BottomSheet/BottomSheetCustom.dart';
 import '../../WidgetController/GoToDashboard/go_to_dashboard.dart';
 import '../../WidgetController/Popup/CustomDialogBox.dart';
@@ -49,9 +52,10 @@ import '../../WidgetController/Popup/popup.dart';
 import '../../WidgetController/StringDefine/StringDefine.dart';
 import '../../WidgetController/Toast/ToastCustom.dart';
 import '../LocalDBController/local_db_controller.dart';
-import '../MainController/main_controller.dart';
+import '../../Helper/SentryExemption/sentry_exemption.dart';
 
 class DriverDashboardCTRL extends GetxController{
+
   ApiController apiCtrl = ApiController();
   bool isLoading = false;
   bool isError = false;
@@ -61,6 +65,7 @@ class DriverDashboardCTRL extends GetxController{
 
   /// Internet Check
   bool isAvlInternet = false;
+  bool isDialogShowing = false;
 
   bool isShowRouteStartDialog = false;
 
@@ -97,6 +102,7 @@ class DriverDashboardCTRL extends GetxController{
   List<RouteList>? routeList;
   List<AllRouteList>? allRouteList;
   List<PharmacyList>? pharmacyList;
+  List<PharmacyList> endRoutePharmacyList = [];
   List<NHomeList>? nHomeList;
   bool? status;
   bool? isOrderAvailable;
@@ -110,7 +116,7 @@ class DriverDashboardCTRL extends GetxController{
   /// Selected top btn
   String selectedTopBtnName = "";
   int orderListType = 1;
-  String? selectedPharmacyID;
+  // String? selectedPharmacyID;
 
   /// Selected Pharmacy Info
   GetPharmacyInfoResponse? selectedPharmacyInfo;
@@ -125,7 +131,7 @@ class DriverDashboardCTRL extends GetxController{
   GetDeliveryApiResponse? driverDashboardData;
 
   /// Location Array
-  List<LocationData> locationArray = [];
+  // List<LocationData> locationArray = [];
   LocationData? locationData;
   Location? location;
 
@@ -137,6 +143,23 @@ class DriverDashboardCTRL extends GetxController{
 
   /// Get Delivery Master Data Use in Delivery Schedule
   GetDeliveryMasterDataResponse? deliveryMasterData;
+
+  /// Location
+  String currentLatitude = "0";
+  String currentLongitude = "0";
+
+  @override
+  void onInit() {
+    onInitUse();
+    super.onInit();
+  }
+
+  Future<void> onInitUse()async{
+    currentLatitude = await CheckPermission.getLatitude(Get.overlayContext!) ?? "0";
+    currentLongitude = await CheckPermission.getLongitude(Get.overlayContext!) ?? "0";
+    PrintLog.printLog("Current Lat_Long: currentLatitude=$currentLatitude  currentLongitude=$currentLongitude");
+  }
+
 
   void isBulkScanSwitchedValue(bool value){
     isBulkScanSwitched = value;
@@ -209,6 +232,16 @@ class DriverDashboardCTRL extends GetxController{
 
   }
 
+  Future<void> onTapAppBarNotification({required BuildContext context}) async{
+    isAvlInternet = await InternetCheck.checkStatus();
+    if(!isAvlInternet){
+      PrintLog.printLog("No Internet........On Tap Notification");
+      showNoInternetCustomPopUp();
+      return;
+    }
+
+    Get.toNamed(notificationScreenRoute);
+  }
 
   Future<void> onTapAppBarRefresh({required BuildContext context})async {
     await driverRoutesApi(context: context).then((value) async {
@@ -231,12 +264,35 @@ class DriverDashboardCTRL extends GetxController{
 
           }
       );
-
   }
 
   /// On Tap Scan Rx
   Future<void> onTapScanRx({required BuildContext context})async{
-    PrintLog.printLog("Clicked on Scan RX");
+    // Ex____:NoSuchMethodError: Class 'List<String>' has no instance method 'split'.
+    // dbCTRL.checkPendingCompleteDataInDB(context: context);
+    // bool isfff = false;
+    // isfff = await dbCTRL.isFoundOrderInCompleted(orderID: "1062061") ?? false;
+    // print("tes................$isfff...");
+    //
+    // await MyDatabase().getAllOrderCompleteData().then((value) async {
+    //   await Future.forEach(value, (element) async {
+    //     print("object.....${element.deliveryId.split(",").join(",")}");
+    //     // await MyDatabase().deleteCompletedDeliveryByOrderId(element.deliveryId.split(",").join(","));
+    //   });
+    // });
+
+    // await MyDatabase().deleteCompletedDeliveryByOrderId("1062061".toString());
+    // [1062061, 1062048, 1062088, 1062138, 1062325]
+    // 1062061, 1062048, 1062088, 1062138, 1062325
+    // PrintLog.printLog("Clicked on Scan RX");
+    // CheckPermission.getCurrentLocation(
+    //     context: context,
+    //     onChangedLocation: (e){
+    //
+    //     }
+    // );
+
+    ///
     isAvlInternet = await InternetCheck.checkStatus();
     if(!isAvlInternet){
       showNoInternetCustomPopUp();
@@ -315,6 +371,7 @@ class DriverDashboardCTRL extends GetxController{
   }
 
   Future<void> onAssignPreviewsRout({required BuildContext context}) async {
+    onInitUse();
     isAvlInternet = await InternetCheck.checkStatus();
     if(isAvlInternet) {
       if(routeList != null && routeList!.isNotEmpty){
@@ -334,10 +391,25 @@ class DriverDashboardCTRL extends GetxController{
         }
       }
     }else{
+
+      authToken = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.authToken) ?? "";
+      userID = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userId) ?? "";
+      userType = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userType) ?? "";
+      if(selectedRoute == null){
+        RouteList data = RouteList();
+        data.routeId = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.routeID) ?? "";
+        data.routeName = "";
+        data.branchId = "";
+        data.companyId = "";
+        data.isActive = "";
+        selectedRoute = data;
+      }
       isRouteStart = AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.isStartRoute).toString().toLowerCase() == "true" ? true:false;
       if(isRouteStart){
         orderListType=4;
-        checkCompleteDataInDB(context: context,isUpdateFailed: false);
+        checkCompleteDataInDB(context: context,isUpdateFailed: false).then((value) async {
+          await checkEndRouteData();
+        });
       }
     }
 
@@ -352,6 +424,15 @@ class DriverDashboardCTRL extends GetxController{
     }
 
     bulkScanDate = formatter.format(DateTime.now());
+
+  }
+
+  Future<void> checkEndRouteData()async {
+    if(driverDashboardData != null && driverDashboardData?.deliveryList != null && driverDashboardData!.deliveryList!.isNotEmpty ){
+      if(driverDashboardData?.deliveryList?[0].orderId == "0"){
+        endRouteApi(context: Get.overlayContext!);
+      }
+    }
   }
 
   void onTapSelectRoute({required BuildContext context,required controller}){
@@ -567,13 +648,13 @@ class DriverDashboardCTRL extends GetxController{
 
         if(value != null && value.deliveryStatusDesc?.toLowerCase() == kOutForDelivery.toLowerCase()){
           if(value.relatedOrders != null && value.relatedOrders!.length > 1 ){
-            /// Single Delivery
+            /// Multiple Deliveries
             PrintLog.printLog('Multiple DB deliveries::::::::::::${value.bagSize}');
             showAlertOrderPopUp(context: context,deliveryDetails: value);
           }else{
 
-            /// Multiple Deliveries
-            Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: value))?.then((value) {
+            /// Single Delivery
+            Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(detailData: value,isMultipleDeliveries: false,))?.then((value) {
               if(orderListType == 4 && value != "back"){
                 PrintLog.printLog("Check Uploaded Order: 1");
                 checkCompleteDataInDB(context: context,isUpdateFailed: false);
@@ -754,7 +835,7 @@ class DriverDashboardCTRL extends GetxController{
 
 
     if(getOrderDetailResponse.relatedOrders != null && getOrderDetailResponse.relatedOrders!.isNotEmpty){
-      Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: getOrderDetailResponse))?.then((value) {
+      Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(detailData: getOrderDetailResponse,isMultipleDeliveries: false,))?.then((value) {
         if(value != "back"){
           PrintLog.printLog("Check Uploaded Order: 1");
           checkCompleteDataInDB(context: context,isUpdateFailed: true);
@@ -843,6 +924,20 @@ class DriverDashboardCTRL extends GetxController{
             isOrderAvailable = result.isOrderAvailable;
             vehicleInspection = result.vehicleInspection;
             vehicleId = result.vehicleId;
+
+            endRoutePharmacyList.clear();
+            if(result.pharmacyList != null) {
+              endRoutePharmacyList.addAll(result.pharmacyList!);
+            }
+            PharmacyList selectPharmacy1 = PharmacyList();
+            selectPharmacy1.pharmacyName = "Home Location";
+            selectPharmacy1.pharmacyId = "0";
+            selectPharmacy1.address = "";
+            selectPharmacy1.lat = "0.0";
+            selectPharmacy1.lng = "0.0";
+            endRoutePharmacyList.add(selectPharmacy1);
+
+
             AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.vehicleId, variableValue: result.vehicleId.toString());
 
 
@@ -905,6 +1000,9 @@ class DriverDashboardCTRL extends GetxController{
               if(result.exemptions != null && result.exemptions!.isNotEmpty){
                 dbCTRL.saveExemptions(exemptions: driverDashboardData!.exemptions!);
               }
+              if(driverDashboardData?.checkUpdateApp != null) {
+                AppUpDatePopUp.checkUpdate(context: context,checkUpdateApp: driverDashboardData!.checkUpdateApp!);
+              }
 
               changeLoadingValue(false);
               changeSuccessValue(true);
@@ -947,7 +1045,7 @@ class DriverDashboardCTRL extends GetxController{
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-      "pharmacyId":selectedPharmacyID ?? AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.pharmacyID),
+      "pharmacyId": selectedPharmacy?.pharmacyId ?? AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.pharmacyID),
     };
 
     String url = WebApiConstant.GET_PHARMACY_INFO;
@@ -1224,11 +1322,11 @@ class DriverDashboardCTRL extends GetxController{
                 // });
 
                 if(result.relatedOrders != null && result.relatedOrders!.length > 1 && result.deliveryStatusDesc?.toLowerCase() != kPickedUp2.toLowerCase()){
-                  PrintLog.printLog('Multiple deliveries::::::::::::${result.bagSize}');
+                   PrintLog.printLog('Multiple deliveries::::::::::::${result.bagSize}');
                   showAlertOrderPopUp(context: context,deliveryDetails: result);
                 }else{
                   result.exemptions = driverDashboardData != null && driverDashboardData?.exemptions != null ? driverDashboardData!.exemptions! : await dbCTRL.getExemptionList();
-                  Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: result))?.then((value) {
+                  Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(detailData: result,isMultipleDeliveries: false,))?.then((value) {
                     if(orderListType == 4 && value != "back"){
                       PrintLog.printLog("Check Uploaded Order: 1");
                       checkCompleteDataInDB(context: context,isUpdateFailed: false);
@@ -1395,8 +1493,8 @@ class DriverDashboardCTRL extends GetxController{
       "orderid":orderID,
       "routeId": selectedRoute?.routeId ?? "0",
       "optimizeStatus": optimizeStatus,
-      "latitude": await CheckPermission.getLatitude(context),
-      "longitude": await CheckPermission.getLongitude(context),
+      "latitude": currentLatitude,
+      "longitude": currentLongitude,
       // "latitude": locationArray.last.latitude.toString(),
       // "longitude": locationArray.last.longitude.toString(),
     };
@@ -1490,7 +1588,7 @@ class DriverDashboardCTRL extends GetxController{
                     });
                     deliveryDetails.relatedOrders = selectedRelatedOrders;
                     deliveryDetails.exemptions = driverDashboardData != null && driverDashboardData?.exemptions != null ? driverDashboardData!.exemptions!:await dbCTRL.getExemptionList();
-                    Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: deliveryDetails))?.then((value) {
+                    Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(detailData: deliveryDetails,isMultipleDeliveries: true,))?.then((value) {
                       if(orderListType == 4 && value != "back"){
                         PrintLog.printLog("Check Uploaded Order: 2");
                         checkCompleteDataInDB(context: context,isUpdateFailed: false);
@@ -1501,7 +1599,7 @@ class DriverDashboardCTRL extends GetxController{
               },
             );
           }else{
-            Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(orderDetail: deliveryDetails))?.then((value) {
+            Get.toNamed(orderDetailScreenRoute,arguments: OrderDetailScreen(detailData: deliveryDetails,isMultipleDeliveries: false,))?.then((value) {
               if(orderListType == 4 && value != "back"){
                 PrintLog.printLog("Check Uploaded Order: 3");
                 checkCompleteDataInDB(context: context,isUpdateFailed: false);
@@ -1543,6 +1641,7 @@ class DriverDashboardCTRL extends GetxController{
                           context: context,
                         startRouteId: popUpData.startRouteID.toString(),
                         endRouteId: popUpData.endRouteID.toString(),
+                        pharmacyID: driverType.toLowerCase() == kSharedDriver.toLowerCase() ? selectedPharmacy?.pharmacyId:"0"
                       ).then((value) async {
                         if(isSuccess == true){
                           Navigator.of(context).pop(true);
@@ -1610,7 +1709,8 @@ class DriverDashboardCTRL extends GetxController{
                           Get.toNamed(instructionScreenRoute)?.then((value) {
                             if (isRouteStart) {
                               orderListType = 4;
-                              selectWithTypeCount( context: context,orderListNum: orderListType);
+                              checkCompleteDataInDB(context: context,isUpdateFailed: false);
+                              // selectWithTypeCount( context: context,orderListNum: orderListType);
                             }
                           });
                         }
@@ -1705,11 +1805,6 @@ class DriverDashboardCTRL extends GetxController{
       PopupCustom.showLoadingDialogOnRouteStarting();
     }
 
-    // if(isShowRouteStartDialog) {
-    //   Get.back(closeOverlays: true);
-    // isShowRouteStartDialog = false;
-    // }
-
 
     changeEmptyValue(false);
     // changeLoadingValue(true);
@@ -1721,11 +1816,11 @@ class DriverDashboardCTRL extends GetxController{
       "routeId":selectedRoute?.routeId ?? "",
       "startRouteId":startRouteId,
       "endRouteId":endRouteId,
-      "latitude": await CheckPermission.getLatitude(context),
-      "longitude":await CheckPermission.getLongitude(context),
+      "latitude": currentLatitude,
+      "longitude":currentLongitude,
       // "latitude": locationArray.last.latitude.toString(),
       // "longitude":locationArray.last.longitude.toString(),
-      "pharmacyID":pharmacyID ?? selectedPharmacyID ?? AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.pharmacyID),
+      "pharmacyID": pharmacyID ?? selectedPharmacy?.pharmacyId ?? AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.pharmacyID),
       "vehicle_id": selectedVehicleData != null ? selectedVehicleData?.id : vehicleId ?? "",
     };
 
@@ -1738,6 +1833,11 @@ class DriverDashboardCTRL extends GetxController{
       PrintLog.printLog("Clicked on Continue:::234:::url");
 
       if(result != null){
+        /// Use For Hid Show Start Route Dialog
+        if(isShowRouteStartDialog) {
+          Get.back(closeOverlays: true);
+          isShowRouteStartDialog = false;
+        }
         try {
           if (result.toString().toLowerCase() == kOutForDelivery.toLowerCase()) {
             isRouteStart = true;
@@ -1748,12 +1848,6 @@ class DriverDashboardCTRL extends GetxController{
             changeSuccessValue(true);
             selectWithTypeCount(context: context,orderListNum: orderListType);
             PrintLog.printLog(result.data);
-
-            /// Use For Hid Show Start Route Dialog
-            if(isShowRouteStartDialog) {
-              Get.back(closeOverlays: true);
-              isShowRouteStartDialog = false;
-            }
 
           }else if(result.data.startsWith("{\"error\":true")){
             changeLoadingValue(false);
@@ -1770,48 +1864,37 @@ class DriverDashboardCTRL extends GetxController{
               );
             }
 
-            /// Use For Hid Show Start Route Dialog
-            if(isShowRouteStartDialog) {
-              Get.back(closeOverlays: true);
-              isShowRouteStartDialog = false;
-            }
           } else {
+
             await AppSharedPreferences.addStringValueToSharedPref(variableName: AppSharedPreferences.isStartRoute, variableValue: "");
             ToastCustom.showToast(msg: result.data.toString());
             changeLoadingValue(false);
             changeSuccessValue(false);
             PrintLog.printLog(result.data);
 
-            /// Use For Hid Show Start Route Dialog
-            if(isShowRouteStartDialog) {
-              Get.back(closeOverlays: true);
-              isShowRouteStartDialog = false;
-            }
+
           }
 
         } catch (_) {
+
           changeSuccessValue(false);
           changeLoadingValue(false);
           changeErrorValue(true);
           PrintLog.printLog("Exception : $_");
 
-          /// Use For Hid Show Start Route Dialog
-          if(isShowRouteStartDialog) {
-            Get.back(closeOverlays: true);
-            isShowRouteStartDialog = false;
-          }
+
         }
 
       }else{
-        changeSuccessValue(false);
-        changeLoadingValue(false);
-        changeErrorValue(true);
-
         /// Use For Hid Show Start Route Dialog
         if(isShowRouteStartDialog) {
           Get.back(closeOverlays: true);
           isShowRouteStartDialog = false;
         }
+        changeSuccessValue(false);
+        changeLoadingValue(false);
+        changeErrorValue(true);
+
       }
     });
     update();
@@ -1823,9 +1906,9 @@ class DriverDashboardCTRL extends GetxController{
       orderListType = orderListNum;
         if (orderListNum == 4) {
           orderListType = 4;
-          Future.delayed(const Duration(seconds: 0), () async {
-            await getDeliveriesWithRouteStart(context: context);
-          });
+            await getDeliveriesWithRouteStart(context: context).then((value) async {
+              await checkEndRouteData();
+            });
           /// await getParcelBoxApi(context: context);
         } else {
           await driverDashboardApi(context: context);
@@ -1838,7 +1921,7 @@ class DriverDashboardCTRL extends GetxController{
   }
 
   /// On Start Route Get Deliveries
-  Future<GetDeliveryApiResponse?> getDeliveriesWithRouteStart({required BuildContext context,bool? isShowBigLoader}) async {
+  Future<GetDeliveryApiResponse?> getDeliveriesWithRouteStart({required BuildContext context,bool? isShowBigLoader,bool? isHideSmallLoader}) async {
     await InternetCheck.check();
     if(isShowBigLoader == true) {
       isShowRouteStartDialog = true;
@@ -1846,16 +1929,16 @@ class DriverDashboardCTRL extends GetxController{
     }
 
     changeEmptyValue(false);
-    changeLoadingValue(true);
+    changeLoadingValue(isHideSmallLoader == true ? false : true );
     changeNetworkValue(false);
     changeErrorValue(false);
     changeSuccessValue(false);
 
     Map<String, dynamic> dictparm = {
-      "driverId": AppSharedPreferences.getStringFromSharedPref(variableName: AppSharedPreferences.userId),
-      "routeId": selectedRoute?.routeId,
-      "latitude": await CheckPermission.getLatitude(context),
-      "longitude":await CheckPermission.getLongitude(context),
+      "driverId": userID,
+      "routeId": selectedRoute?.routeId ?? "0",
+      "latitude": currentLatitude,
+      "longitude": currentLongitude,
       // "latitude": locationArray.last.latitude.toString(),
       // "longitude":locationArray.last.longitude.toString(),
 
@@ -1912,8 +1995,6 @@ class DriverDashboardCTRL extends GetxController{
                 orderListType = 4;
                 // selectWithTypeCount(context: context,orderListNum: orderListType);
               }
-
-
               PrintLog.printLog("deliveryTime $systemDeliveryTime");
 
               if(systemDeliveryTime == null){
@@ -2048,41 +2129,39 @@ class DriverDashboardCTRL extends GetxController{
     var completeAllList = await MyDatabase().getAllOrderCompleteData();
     if (completeAllList != null && completeAllList.isNotEmpty) {
 
-      await showDialog(
+      isDialogShowing = true;
+      showDialog(
           context: Get.overlayContext!,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            /// dialogDissmissTimer(dialogContext);
             return WillPopScope(
-              onWillPop: () => Future.value(value ? false : true),
+              onWillPop: () => Future.value(false),
               child: CustomDialogBox(
-                // img: Image.asset("assets/delivery_truck.png"),
-                icon: Icon(Icons.timer),
+                icon: const Icon(Icons.timer),
                 title: kAlert,
-                btnDone: value ? null : kOkay,
-                btnNo: value ? null : "",
-                onClicked: (value){
-                  if (value) {
-                    /// timer1.cancel();
-                    /// updateSignature();
-                  }
-                },
-                descriptions: value ? kuploadingMsg1 : kUploadingMsg,
+                descriptions: kUpdatingAndEndingRouteMsg,
               ),
             );
           }
-          );
+      );
+      await dbCTRL.checkPendingCompleteDataInDB(context: context).then((value) async {
+        await endRouteApi(context: context);
+      });
+
     } else {
       if (driverDashboardData != null && driverDashboardData?.deliveryList != null && driverDashboardData!.deliveryList!.isNotEmpty && !value) {
 
-        PopupCustom.endRoutePopUp(
+        PopupCustom.simpleTruckDialogBox(
             context: Get.overlayContext!,
-            onValue: (value){
-
+            title: kAlert,
+            subTitle: kEndRouteWarning,
+            btnActionTitle: kEndRoute,
+            btnActionColor: AppColors.redColor,
+            onValue: (value) async {
+              if(value.toString() == "yes") {
+                await endRouteApi(context: context);
+              }
             },
-            onClicked: (value) async {
-              await endRouteApi(context: context);
-            }
         );
       } else{
         await endRouteApi(context: Get.overlayContext!);
@@ -2093,6 +2172,9 @@ class DriverDashboardCTRL extends GetxController{
   /// End route api
   Future<void> endRouteApi({required BuildContext context}) async {
     await InternetCheck.check();
+    if(isDialogShowing == true){
+      Get.back();
+    }
 
     changeLoadingValue(true);
     changeNetworkValue(false);
@@ -2335,27 +2417,80 @@ class DriverDashboardCTRL extends GetxController{
   }
 
   /// Get Location
-  Future getLocationData({required BuildContext context}) async {
-    CheckPermission.checkLocationPermission(context).then((value) async {
+  // Future getLocationData({required BuildContext context}) async {
+  //   CheckPermission.checkLocationPermission(context).then((value) async {
+  //
+  //       locationData = await CheckPermission.getCurrentLocation(
+  //           context: context,
+  //       onChangedLocation: (LocationData currentLocation){
+  //         locationArray.add(currentLocation);
+  //         if (locationArray.length > 5) locationArray.removeAt(0);
+  //             PrintLog.printLog("Onchanged Location Method calling.....${currentLocation.latitude}");
+  //       }
+  //       );
+  //
+  //     // locationData = await checkLocationPermission();
+  //       if(locationData != null){
+  //         locationArray.add(locationData!);
+  //       }
+  //
+  //       print("Tes2....${locationData?.latitude}");
+  //
+  //   });
+  // }
 
-        locationData = await CheckPermission.getCurrentLocation(
-            context: context,
-        onChangedLocation: (LocationData currentLocation){
-          locationArray.add(currentLocation);
-          if (locationArray.length > 5) locationArray.removeAt(0);
-              PrintLog.printLog("Onchanged Location Method calling.....${currentLocation.latitude}");
+
+
+  /// Local DB Method
+  Future<void> checkCompleteDataInDB({required BuildContext context,required bool isUpdateFailed})async{
+    isAvlInternet = await ConnectionValidator().check();
+    if(isAvlInternet && isUpdateFailed != true) {
+      await MyDatabase().getAllOrderCompleteData().then((value) async {
+        await removeOrderInDashboardList(value: value);
+      });
+
+      await dbCTRL.checkPendingCompleteDataInDB(context: context).then((value) async {
+        // await driverDashboardApi(context: context);
+        await getDeliveriesWithRouteStart(context: context,isHideSmallLoader: true);
+      });
+    }else if(isAvlInternet && isUpdateFailed == true){
+      await MyDatabase().getAllOrderCompleteData().then((value) async {
+        await removeOrderInDashboardList(value: value);
+      });
+
+      await dbCTRL.checkPendingCompleteDataInDB(context: context).then((value) {
+        driverDashboardData?.deliveryList?.clear();
+        driverDashboardApi(context: context);
+      });
+
+    }else{
+      getAllOutForDeliveryDataFromDB().then((value) {
+
+      });
+    }
+  }
+
+  /// Remove Order
+  Future<void> removeOrderInDashboardList({required List<order_complete_data> value })async{
+    if(driverDashboardData != null && driverDashboardData?.deliveryList !=null && driverDashboardData!.deliveryList!.isNotEmpty){
+      await Future.forEach(value, (element) async {
+      var newValue = element.deliveryId.toString().split(",");
+
+      newValue.forEach((element2) {
+        int indexAvl =  driverDashboardData!.deliveryList!.indexWhere((element) => element.orderId.toString() == element2.toString());
+        if(indexAvl >= 0){
+          driverDashboardData?.deliveryList?.removeAt(indexAvl);
+          update();
         }
-        );
-
-      // locationData = await checkLocationPermission();
-        if(locationData != null){
-          locationArray.add(locationData!);
-        }
-
-        print("Tes2....${locationData?.latitude}");
+      });
 
     });
+
+    }
   }
+
+
+
 
   ///---------///--------///---------///--------///---------///--------///---------///--------///---------///--------
 
@@ -2415,31 +2550,6 @@ class DriverDashboardCTRL extends GetxController{
   }
 
 
-  /// Local DB Method
-  Future<void> checkCompleteDataInDB({required BuildContext context,required bool isUpdateFailed})async{
-    isAvlInternet = await ConnectionValidator().check();
-    if(isAvlInternet && isUpdateFailed != true) {
-
-      await dbCTRL.checkPendingCompleteDataInDB(context: context).then((value) async {
-        await driverDashboardApi(context: context);
-      });
-    }else if(isAvlInternet && isUpdateFailed == true){
-      await dbCTRL.checkPendingCompleteDataInDB(context: context).then((value) {
-        driverDashboardData?.deliveryList?.clear();
-        driverDashboardApi(context: context);
-      });
-
-    }else{
-      getAllOutForDeliveryDataFromDB().then((value) {
-
-      });
-    }
-  }
-
-
-
-
-
 
 
   void changeSuccessValue(bool value){
@@ -2467,6 +2577,7 @@ class DriverDashboardCTRL extends GetxController{
   _toRadians(double degree) {
     return degree * pi / 180;
   }
+
 
   getDistance(startLatitude, startLongitude, endLatitude, endLongitude) {
     var earthRadius = 6378137.0;

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CalenderCustom{
-  CalenderCustom._privateConstructor();
-  static final CalenderCustom instance = CalenderCustom._privateConstructor();
+    CalenderCustom._privateConstructor();
+    static final CalenderCustom instance = CalenderCustom._privateConstructor();
 
   static Future<DateTime> getCalenderDate()async{
     DateTime date = DateTime.now();

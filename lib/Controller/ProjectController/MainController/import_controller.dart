@@ -10,7 +10,7 @@ export '../../../main.dart';
 /// GetX Controller
 export '../../ProjectController/DriverProfile/driverProfileController.dart';
 export '../../ProjectController/LoginController/login_controller.dart';
-export '../../ProjectController/NotificationController/notificationController.dart';
+export '../../ProjectController/NotificationController/notification_controller.dart';
 export '../../ProjectController/SetupPinController/setupPinController.dart';
 export '../../ProjectController/Splash/splash_controller.dart';
 

@@ -20,6 +20,7 @@ class OrderDetailController extends GetxController {
   bool isNetworkError = false;
   bool isSuccess = false;
 
+  OrderDetailResponse? newOrderDetail;
   DriverDashboardCTRL driverDasCTRL = Get.find();
   List<RelatedOrders> newRelatedOrders = [];
   List<String> orderIDs = [];
@@ -85,14 +86,28 @@ class OrderDetailController extends GetxController {
   void onChangeRadioBtnStatus({required int value}) {
     selectedRadioBtn = value;
     selectedDeliveryStatus = selectOrderStatus[value];
+    getStatusCode();
     update();
   }
 
   /// init Function
-  void init({required BuildContext context,required OrderDetailResponse orderDetailResponse}) {
+  void init({required BuildContext context,required OrderDetailResponse orderDetailResponse,required bool isMultipleDeliveries}) {
     newRelatedOrders.clear();
     orderIDs.clear();
     selectOrderStatus.clear();
+
+    /// Use for Remove multiple order when not selected multi order
+    if(!isMultipleDeliveries && orderDetailResponse.relatedOrders != null && orderDetailResponse.relatedOrders!.isNotEmpty){
+      for(int a = orderDetailResponse.relatedOrders!.length;a>1;a--){
+        orderDetailResponse.relatedOrders?.removeAt(a-1);
+      }
+    }
+    // if(!isMultipleDeliveries){
+    //   for(int a = newRelatedOrders.length;a>1;a--){
+    //     newRelatedOrders.removeAt(a-1);
+    //   }
+    // }
+
     if(orderDetailResponse.relatedOrders != null && orderDetailResponse.relatedOrders!.isNotEmpty  && orderDetailResponse.deliveryStatusDesc.toString().toLowerCase() != kPickedUp2.toLowerCase()){
       orderDetailResponse.relatedOrders?.forEach((element) {
        int isFindIndex = newRelatedOrders.indexWhere((newElement) => newElement.userId == element.userId);
@@ -177,6 +192,8 @@ class OrderDetailController extends GetxController {
       orderIDs.add(orderDetailResponse.orderId ?? "");
 
     }
+
+
 
 
     // redirectToDetailsPage(deliveryDetails, deliveryDetails.related_orders[0].orderId, deliveryDetails.related_orders[0].rxInvoice, deliveryDetails.delCharge, deliveryDetails.subsId);
@@ -379,7 +396,7 @@ class OrderDetailController extends GetxController {
                 remarks: remarkController.text.toString().trim() ?? "",
                 deliveredTo:  toController.text.toString().trim() ?? "",
                 orderIDs: orderIDs ?? [],
-                outForDelivery: [],
+                outForDelivery: driverDasCTRL.driverDashboardData?.deliveryList ?? [],
                 routeId: orderDetailResponse.routeId ?? "0",
                 rescheduleDate: isCheked && selectedDateTimeStamp != null && selectedDateTimeStamp != "" ? selectedDateTimeStamp  ?? "": "",
                 failedRemark: selectedDeliveryStatus.toLowerCase() == kFailed.toLowerCase()

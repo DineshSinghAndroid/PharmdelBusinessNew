@@ -70,15 +70,13 @@ class _SignOrImageScreenState extends State<SignOrImageScreen> {
   PrintLog.printLog("Is Cd Delivery: ${widget.isCdDelivery}");
   ctrl.init(context: context,routeId: widget.routeId);
   ctrl.getLocationByClick();
+  ctrl.onTapClear(currentState: _sign.currentState);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    ctrl.imagePicker?.orderImage = null;
-    ctrl.imageBase64Data = null;
-    ctrl.signatureData = null;
     Get.delete<SignOrImageController>();
     super.dispose();
   }
@@ -89,10 +87,12 @@ class _SignOrImageScreenState extends State<SignOrImageScreen> {
     return GetBuilder<SignOrImageController>(
       init: ctrl,
       builder: (controller) {
+        print("object......widget.selectedStatusCode:${widget.selectedStatusCode}...widget.isCdDelivery:${widget.isCdDelivery}");
         return LoadScreen(
           widget:  SafeArea(
             child: Scaffold(
-              appBar: AppBarCustom.appBarStyle2(
+              appBar:
+              AppBarCustom.appBarStyle2(
                   title: kCompleteOrder,
                 centerTitle: false,
                 elevation: 1,
@@ -208,6 +208,7 @@ class _SignOrImageScreenState extends State<SignOrImageScreen> {
               body: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 10),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     buildSizeBox(10.0, 0.0),
 
@@ -218,18 +219,18 @@ class _SignOrImageScreenState extends State<SignOrImageScreen> {
                           elevation: 3.0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                           child: Container(
-                            height: widget.isCdDelivery || widget.selectedStatusCode == 5 ? 250 : 500,
+                            height: widget.isCdDelivery || widget.selectedStatusCode == 5 ? 250 : 450,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(5.0)),
                             child: Stack(
                               children: <Widget>[
 
                                 /// Image
-                                controller.imagePicker?.orderImage != null
+                                controller.imageCaptured != null
                                     ? SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       child: Image.file(
-                                        File(controller.imagePicker?.orderImage?.path ?? ""),
+                                        File(controller.imageCaptured?.path ?? ""),
                                         fit: BoxFit.fill,
                                         // alignment: Alignment.topCenter,
                                       ),
@@ -302,7 +303,7 @@ class _SignOrImageScreenState extends State<SignOrImageScreen> {
                                   strokeWidth: 5.0,
                                 ),
                                 Container(
-                                  width: MediaQuery.of(context).size.width,
+                                  width: Get.width,
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(5.0),

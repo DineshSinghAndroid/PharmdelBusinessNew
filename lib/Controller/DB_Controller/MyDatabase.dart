@@ -184,6 +184,12 @@ class MyDatabase extends _$MyDatabase {
       return await (select(deliveryList)..where((t) => t.deliveryStatus.equals(4))).get();
     });
   }
+  /// FOUND DELIVERED ORDER ID
+  Future<List<order_complete_data>> getFoundOrderIdInCompletedDb(String orderId) async {
+    return transaction(() async {
+      return await (select(orderCompleteData)..where((t) => t.deliveryId.equals(orderId))).get();
+    });
+  }
 
   Future<int> updateDeliveryStatus(int orderId, String status, int selectedStatusCode) async {
     return transaction(() async {

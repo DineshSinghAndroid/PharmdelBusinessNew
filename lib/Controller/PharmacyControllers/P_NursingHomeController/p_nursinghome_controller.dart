@@ -16,6 +16,7 @@ import '../../../View/ScanPrescription/scan_prescription.dart';
 import '../../../main.dart';
 import '../../ApiController/WebConstant.dart';
 import '../../Helper/PrintLog/PrintLog.dart';
+import '../../Helper/SentryExemption/sentry_exemption.dart';
 import '../../ProjectController/MainController/main_controller.dart';
 import '../../RouteController/RouteNames.dart';
 import '../../WidgetController/BottomSheet/BottomSheetCustom.dart';
